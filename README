@@ -1,4 +1,0 @@
-all python files automatically converted to python3 with
-
-    2to3 -w *.py
-
