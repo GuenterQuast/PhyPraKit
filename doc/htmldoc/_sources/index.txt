@@ -1,0 +1,235 @@
+.. PhyPraKit documentation master file, created by
+   sphinx-quickstart on Sat Oct 15 18:03:17 2016. You
+   can adapt this file completely to your liking, but it
+   should at least contain the root `toctree` directive.
+
+.. meta:
+   :description lang=en: PhyPraKit - a collection of pyhton modules
+   for data visialisation and analysis in experimental laboratory
+   cources in Physics, developed at the faculty of physics at
+   Karlsruhe Institute of Technology (KIT)
+   :description lang=de: PhyPraKit - eine Sammlung von Funktionen in der 
+   Sprache `python` zur Visualisierung und Auswertung von Daten in den 
+   physikalischen Praktika, entwickelt an der Fakultät für Physik am 
+   Karlsruher Institut für Physik (KIT) 
+   :robots: index, follow
+   :keywords: Datenauswertung, Praktikum, Regression, Anpassung 
+
+.. moduleauthor:
+   Günter Quast <g.quast@kit.edu>
+
+
+**Dokumentation von PhyPraKit**
+===============================
+
+Übersicht:
+----------
+
+PhyPraKit ist eine Sammlung nützlicher Funktionen in der Sprache 
+`python (vers. 2.7)` zur Visualisierung und Auswertung von Daten 
+in den physikalischen Praktika.  
+Beispiele illustrieren jeweils die Anwendung.
+
+                                       `Version der Dokumentation` |date|
+
+
+.. toctree::
+   :maxdepth: 2
+
+.. |date| date:: 
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
+**Darstellung und Auswertung von Messdaten**
+============================================
+
+In allen Praktika zur Physik werden Methoden zur Darstelllung
+und Auswertung von Messdaten benötigt. Die Script- und
+Programmiersprache `python` mit den Zusatzpaketen 
+`numpy` und `matplotlib` ist ein universelles
+Werkzeug, um die Wiederholbarkeit und Reprodzierbarkeit von
+Datenauswertungen zu gewährleiseten.
+
+In der Veranstaltung "Computergestützte Datenauswertung" 
+(http://www.ekp.kit.edu/~quast/CgDA), die im neuen Studienplan
+für den Bachelorstudiengang Physik am KIT seit dem Sommersemester
+2016 angeboten wird, werden Methoden und Software zur grafischen Darstellung von Daten, deren Modellierung und Auswertung eingeführt. 
+
+Die folgen Links erlauben einen schnellen Überblick über die Inhalte
+der Vorlesung und den Beispeielen aus den Übungen: 
+
+   * Zusammenfassung der Vorlesung und Dokumentation der Code-Beispiele
+       http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html
+
+   * Installation der Software auf verschiedenen Platformen 
+      * Dokumentation in html: 
+        http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html
+      * Dokumentation in pdf:  
+        http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf     
+      * Softwarepakete:        
+        http://www.ekp.kit.edu/~quast/CgDA/Software
+
+
+Speziell für das "Praktikum zur klassischen Physik" finden sich eine 
+kurze Einführung  
+(http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf) 
+sowie die hier dokumentierten einfachen Beispiele als Startpunkt für 
+eigene Auswertungen 
+(http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/).
+
+Die vorliegende Sammlung von Funktionen im Paket `PhyPraKit` enthält 
+Funktionen zum Einlesen von Daten aus diversen Quellen, zur 
+Datenvisualisierung, Signalbearbeitung und statistischen Datenauswertung 
+und Modellanpassung sowie Werkzeuge zur Erzeugung simulierter Daten. 
+Dabei wurde absichlich Wert auf eine einfache, die Prinzipien 
+unterstreichnede Codierung gelegt und nicht der möglichst effizienten 
+bzw. allgemeinensten Implementierung der Vorzug gegeben. 
+
+
+Dokumentation der Beispiele
+===========================
+
+`PhyPraKit.py` ist ein Paket mit nützlichen Hilfsfunktionen
+   zum import in eigene Beispielen mittels::
+
+     import PhyPraKit as ppk
+
+   oder::
+
+     from PhyPraKit import ... 
+
+  * `test_readColumnData.py` ist ein Beispiel zum
+    Einlesen von Spalten aus Textdateien; die zugehörigen 
+    *Metadaten* können ebenfalls an das Script
+    übergeben werden und stehen so bei der Auswsertung zur Verfügung.
+
+  * `test_readtxt.py` liest Ausgabedateien im allgemeinem  .txt-Format
+
+       - Entfernen aller ASCII-Sonderzeichen außer dem Spalten-Trenner
+       - Ersetzen des deutschen Dezimalkommas durch Dezimalpunkt
+
+  * `test_readPicoScope.py` liest Ausgabedateien von USB-Oszillographen 
+    der Marke PicoScope im Format `.csv` oder `.txt`.
+
+  * `test_labxParser.py` liest Ausgabedateien von Leybold
+    CASSY im .labx-Format. Die Kopfzeilen und Daten von Messreihen 
+    werden als Listen in python zur Verfügung gestellt. 
+
+  * `test_AutoCorrelation.py` liest die Datei `AudioData.csv` und führt 
+    eine Analyse der Autokorrelation zur Frequenzbestimmung durch. 
+
+  * `test_Fourier.py` illustriert die Durchführung einer 
+    Fourier-Transfomation eines periodischen Signals, das in 
+    der PicoScope-Ausgabedatei `Wellenform.csv` enthalten ist.
+
+  * `test_kRegression.py` dient zur Anpassung einer Geraden an
+    Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit allen
+    Messpunkten gemeinsamen (d. h. korrelierten) relativen oder absoluten
+    systematischen Fehlern mit dem Paket `kafe`. 
+
+  * `test_linRegression.py` ist eine einfachere Version mit
+    `python`-Bordmitteln zur Anpassung einer Geraden an
+    Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung. 
+    Korrelierte Unsicherheiten werden nicht unterstützt. 
+
+  * `test_kFit.py` ist eine verallgemeinerte Version von `test_kRegression` 
+    und dient zur Anpassung einer beliebigen Funktion an Messdaten mit 
+    Fehlern in Ordinaten- und Abszissenrichtung und mit allen Messpunkten 
+    gemeinsamen (d. h. korrelierten) relativen oder absoluten systematischen 
+    Fehlern mit dem Paket `kafe`. 
+     
+  * `test_Histogram.py` ist ein Beispiel zur Darstellung und 
+    statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen) in 
+    einer und zwei Dimensionen.
+
+  * `test_generateXYata.py` zeigt, wie man mit Hilfe von Zufallszahlen 
+    "künstliche Daten" zur Veranschaulichung oder zum Test von Methoden
+    zur Datenauswertung erzeugen kann. 
+
+  Weitere python-Skripte als Beispiele zur Anwendung von Modulen
+  in `PhyPraKit`:
+
+  * `kfitf.py` ist ein Kommandozeilen-Werkzeug, mit dem man komfortabel
+    Anpassungen ausführen kann, bei denen Daten und Fit-Funktion in
+    einer einzigen Datei angegeben werden. Beispiele finden sich
+    in den Dateien mit der Endung `.fit`. 
+
+  * `Beispiel_Drehpendel.py` demonstriert die Analyse von am Drehpendel
+    mit CASSY aufgenommenen Daten. Enthalten sind einfache Funktionen zum
+    Filtern und bearbeiten der Daten, Suche nach Extrema, zur Anpassung 
+    einer Einhüllenden, zur diskreten Fourier-Transformation und zur 
+    Interpolation von Messdaten mit kubischen Spline-Funktionen. 
+
+  * `Beispiel_Hysterese.py` demonstriert die Analyse von Daten,
+    die mit einem USB-Oszilloskop der Marke `PicoScope` am
+    Versuch zur Hysterese aufgenommen wurden. Die aufgezeichneten Werte 
+    für Strom und B-Feld werden in einen Zweig für steigenden und 
+    fallenden Strom aufgeteilt, mit Hilfe von kubischen Splines 
+    interpoliert und dann integriert. 
+
+  * `Beispiel_Wellenform.py`  zeigt eine typische Auswertung
+    periodischer Daten am Beispiel der akustischen Anregung eines 
+    Metallstabs. Genutzt werden Fourier-Transformation und
+    eine Suche nach charakteristischen Extrema. Die Zeitdifferenzen
+    zwischen deren Auftreten im Muster werden bestimmt, als
+    Häufgkeitsverteilung dargestellt und die Verteilungen statistisch
+    ausgewertet.
+
+  * `Beispiel_GammaSpektroskopie.py` liest mit dem Vielkanalanalysator
+    des CASSY-Systems im `.labx` -Format gespeicherten Dateien ein
+    (Beispieldatei `GammaSpektra.labx`).
+
+Die übrigen `python`-Scripte im Verzeichnis wurden zur Erstellung
+der in der einführenden Vorlesung gezeigten Grafiken verwendet.
+
+Für die **Erstellung von Protokollen** mit Tabellen, Grafiken und Formeln
+bietet sich das Textsatz-System `LaTeX` an. Die Datei
+`Protokollvorlage.zip`
+enthält eine sehr einfach gehaltene Vorlage, die für eigene Protokolle
+verwendet werden kann. Eine sehr viel umfangreichere Einführung sowie
+ein ausführliches Beispiel bietet die Fachschaft Physik unter dem
+Link https://fachschaft.physik.kit.edu/drupal/content/latex-vorlagen
+
+
+Modul-Dokumentation 
+===================
+
+..  automodule:: PhyPraKit
+     :members:
+    
+..  automodule:: test_readColumnData  
+
+..  automodule:: test_readtxt
+
+..  automodule:: test_readPicoScope
+
+..  automodule:: test_labxParser
+
+..  automodule:: test_Histogram
+
+..  automodule:: test_Fourier
+
+..  automodule:: test_AutoCorrelation
+
+..  automodule:: test_kRegression
+
+..  automodule:: test_kFit
+
+..  automodule:: test_generateData
+
+..  automodule:: kfitf
+
+..  automodule:: Beispiel_Drehpendel
+
+..  automodule:: Beispiel_Hysterese
+
+..  automodule:: Beispiel_Wellenform
+
+..  automodule:: Beispiel_GammaSpektroskopie
+

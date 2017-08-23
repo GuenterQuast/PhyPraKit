@@ -1,0 +1,97 @@
+\begin{sphinxtheindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter A
+  \item autocorrelate() (in module PhyPraKit.PhyPraKit), \hyperpage{10}
+
+  \indexspace
+  \bigletter B
+  \item barstat() (in module PhyPraKit.PhyPraKit), \hyperpage{11}
+  \item Beispiel\_Drehpendel (module), \hyperpage{20}
+  \item Beispiel\_GammaSpektroskopie (module), \hyperpage{21}
+  \item Beispiel\_Hysterese (module), \hyperpage{20}
+  \item Beispiel\_Wellenform (module), \hyperpage{21}
+
+  \indexspace
+  \bigletter C
+  \item chi2p\_indep2d() (in module PhyPraKit.PhyPraKit), \hyperpage{11}
+  \item convolutionPeakfinder() (in module PhyPraKit.PhyPraKit), \hyperpage{11}
+
+  \indexspace
+  \bigletter F
+  \item Fourier\_fft() (in module PhyPraKit.PhyPraKit), \hyperpage{10}
+  \item FourierSpectrum() (in module PhyPraKit.PhyPraKit), \hyperpage{10}
+
+  \indexspace
+  \bigletter G
+  \item generateXYdata() (in module PhyPraKit.PhyPraKit), \hyperpage{11}
+
+  \indexspace
+  \bigletter H
+  \item hist2dstat() (in module PhyPraKit.PhyPraKit), \hyperpage{12}
+  \item histstat() (in module PhyPraKit.PhyPraKit), \hyperpage{12}
+
+  \indexspace
+  \bigletter K
+  \item kFit() (in module PhyPraKit.PhyPraKit), \hyperpage{12}
+  \item kfitf (module), \hyperpage{20}
+  \item kRegression() (in module PhyPraKit.PhyPraKit), \hyperpage{13}
+
+  \indexspace
+  \bigletter L
+  \item labxParser() (in module PhyPraKit.PhyPraKit), \hyperpage{14}
+  \item linRegression() (in module PhyPraKit.PhyPraKit), \hyperpage{14}
+  \item linRegressionXY() (in module PhyPraKit.PhyPraKit), \hyperpage{14}
+
+  \indexspace
+  \bigletter M
+  \item meanFilter() (in module PhyPraKit.PhyPraKit), \hyperpage{15}
+
+  \indexspace
+  \bigletter N
+  \item nhist() (in module PhyPraKit.PhyPraKit), \hyperpage{15}
+  \item nhist2d() (in module PhyPraKit.PhyPraKit), \hyperpage{15}
+
+  \indexspace
+  \bigletter O
+  \item odFit() (in module PhyPraKit.PhyPraKit), \hyperpage{16}
+  \item offsetFilter() (in module PhyPraKit.PhyPraKit), \hyperpage{16}
+
+  \indexspace
+  \bigletter P
+  \item PhyPraKit (module), \hyperpage{9}
+  \item PhyPraKit.PhyPraKit (module), \hyperpage{9}
+  \item profile2d() (in module PhyPraKit.PhyPraKit), \hyperpage{16}
+
+  \indexspace
+  \bigletter R
+  \item readCassy() (in module PhyPraKit.PhyPraKit), \hyperpage{17}
+  \item readColumnData() (in module PhyPraKit.PhyPraKit), \hyperpage{17}
+  \item readCSV() (in module PhyPraKit.PhyPraKit), \hyperpage{16}
+  \item readPicoScope() (in module PhyPraKit.PhyPraKit), \hyperpage{17}
+  \item readtxt() (in module PhyPraKit.PhyPraKit), \hyperpage{17}
+  \item resample() (in module PhyPraKit.PhyPraKit), \hyperpage{18}
+
+  \indexspace
+  \bigletter S
+  \item simplePeakfinder() (in module PhyPraKit.PhyPraKit), \hyperpage{18}
+  \item smearData() (in module PhyPraKit.PhyPraKit), \hyperpage{18}
+
+  \indexspace
+  \bigletter T
+  \item test\_AutoCorrelation (module), \hyperpage{19}
+  \item test\_generateData (module), \hyperpage{20}
+  \item test\_Histogram (module), \hyperpage{19}
+  \item test\_kFit (module), \hyperpage{20}
+  \item test\_kRegression (module), \hyperpage{20}
+  \item test\_labxParser (module), \hyperpage{19}
+  \item test\_readColumnData (module), \hyperpage{19}
+  \item test\_readPicoScope (module), \hyperpage{19}
+  \item test\_readtxt (module), \hyperpage{19}
+
+  \indexspace
+  \bigletter W
+  \item wmean() (in module PhyPraKit.PhyPraKit), \hyperpage{19}
+  \item writeCSV() (in module PhyPraKit.PhyPraKit), \hyperpage{19}
+
+\end{sphinxtheindex}

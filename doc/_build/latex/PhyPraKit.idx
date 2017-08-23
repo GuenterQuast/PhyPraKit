@@ -1,0 +1,46 @@
+\indexentry{PhyPraKit (module)|hyperpage}{9}
+\indexentry{PhyPraKit.PhyPraKit (module)|hyperpage}{9}
+\indexentry{FourierSpectrum() (in module PhyPraKit.PhyPraKit)|hyperpage}{10}
+\indexentry{Fourier\_fft() (in module PhyPraKit.PhyPraKit)|hyperpage}{10}
+\indexentry{autocorrelate() (in module PhyPraKit.PhyPraKit)|hyperpage}{10}
+\indexentry{barstat() (in module PhyPraKit.PhyPraKit)|hyperpage}{11}
+\indexentry{chi2p\_indep2d() (in module PhyPraKit.PhyPraKit)|hyperpage}{11}
+\indexentry{convolutionPeakfinder() (in module PhyPraKit.PhyPraKit)|hyperpage}{11}
+\indexentry{generateXYdata() (in module PhyPraKit.PhyPraKit)|hyperpage}{11}
+\indexentry{hist2dstat() (in module PhyPraKit.PhyPraKit)|hyperpage}{12}
+\indexentry{histstat() (in module PhyPraKit.PhyPraKit)|hyperpage}{12}
+\indexentry{kFit() (in module PhyPraKit.PhyPraKit)|hyperpage}{12}
+\indexentry{kRegression() (in module PhyPraKit.PhyPraKit)|hyperpage}{13}
+\indexentry{labxParser() (in module PhyPraKit.PhyPraKit)|hyperpage}{14}
+\indexentry{linRegression() (in module PhyPraKit.PhyPraKit)|hyperpage}{14}
+\indexentry{linRegressionXY() (in module PhyPraKit.PhyPraKit)|hyperpage}{14}
+\indexentry{meanFilter() (in module PhyPraKit.PhyPraKit)|hyperpage}{15}
+\indexentry{nhist() (in module PhyPraKit.PhyPraKit)|hyperpage}{15}
+\indexentry{nhist2d() (in module PhyPraKit.PhyPraKit)|hyperpage}{15}
+\indexentry{odFit() (in module PhyPraKit.PhyPraKit)|hyperpage}{16}
+\indexentry{offsetFilter() (in module PhyPraKit.PhyPraKit)|hyperpage}{16}
+\indexentry{profile2d() (in module PhyPraKit.PhyPraKit)|hyperpage}{16}
+\indexentry{readCSV() (in module PhyPraKit.PhyPraKit)|hyperpage}{16}
+\indexentry{readCassy() (in module PhyPraKit.PhyPraKit)|hyperpage}{17}
+\indexentry{readColumnData() (in module PhyPraKit.PhyPraKit)|hyperpage}{17}
+\indexentry{readPicoScope() (in module PhyPraKit.PhyPraKit)|hyperpage}{17}
+\indexentry{readtxt() (in module PhyPraKit.PhyPraKit)|hyperpage}{17}
+\indexentry{resample() (in module PhyPraKit.PhyPraKit)|hyperpage}{18}
+\indexentry{simplePeakfinder() (in module PhyPraKit.PhyPraKit)|hyperpage}{18}
+\indexentry{smearData() (in module PhyPraKit.PhyPraKit)|hyperpage}{18}
+\indexentry{wmean() (in module PhyPraKit.PhyPraKit)|hyperpage}{19}
+\indexentry{writeCSV() (in module PhyPraKit.PhyPraKit)|hyperpage}{19}
+\indexentry{test\_readColumnData (module)|hyperpage}{19}
+\indexentry{test\_readtxt (module)|hyperpage}{19}
+\indexentry{test\_readPicoScope (module)|hyperpage}{19}
+\indexentry{test\_labxParser (module)|hyperpage}{19}
+\indexentry{test\_Histogram (module)|hyperpage}{19}
+\indexentry{test\_AutoCorrelation (module)|hyperpage}{19}
+\indexentry{test\_kRegression (module)|hyperpage}{20}
+\indexentry{test\_kFit (module)|hyperpage}{20}
+\indexentry{test\_generateData (module)|hyperpage}{20}
+\indexentry{kfitf (module)|hyperpage}{20}
+\indexentry{Beispiel\_Drehpendel (module)|hyperpage}{20}
+\indexentry{Beispiel\_Hysterese (module)|hyperpage}{20}
+\indexentry{Beispiel\_Wellenform (module)|hyperpage}{21}
+\indexentry{Beispiel\_GammaSpektroskopie (module)|hyperpage}{21}
