@@ -33,10 +33,10 @@ for data visialisation and analysis in experimental laboratory
 cources in physics, developed at the faculty of physics at
 Karlsruhe Institute of Technology (KIT). As the modules are
 intended primarily for use by undertraduate students in
-Karlsruhe, the documentation of the examples is mostly in
-German language. 
+Karlsruhe, the documentation is partly in German language,
+in particular the desctiption of the the examples.
 
-cerated by: 
+Cerated by: 
 
 * Guenter Quast <guenter (dot) quast (at) online (dot) de>
 
@@ -241,8 +241,8 @@ ein ausführliches Beispiel bietet die Fachschaft Physik unter dem
 Link https://fachschaft.physik.kit.edu/drupal/content/latex-vorlagen
 
 
-Modul-Dokumentation 
-===================
+Module Documentation 
+====================
 
 ..  automodule:: PhyPraKit
      :members:

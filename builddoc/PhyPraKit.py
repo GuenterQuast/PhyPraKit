@@ -29,7 +29,8 @@ from __future__ import print_function  # for python2.7 compatibility
         - resample()          average over n samples
         - simplePeakfinder()  find peaks and dips in an array 
             recommend to ``use convolutionPeakfinder``
-        - convolutionPeakfinder() find peaks and dips in an array
+        - convolutionPeakfinder() find maxima (peaks) in an array
+        - convolutionEdgefinder() find maxima of slope (rising) edges in an array
         - Fourier_fft()       fast Fourier transformation of an array
         - FourierSpectrum()   Fourier transformation of an array 
             ``(slow, preferably use fft version)``
@@ -69,7 +70,7 @@ from __future__ import print_function  # for python2.7 compatibility
 '''
 
 # Author:       G. Quast   Dec. 2013
-# dependencies: PYTHON v2.7 or 3.5, numpy, matplotlib.pyplot, scipy 
+# dependencies: PYTHON v2.7, numpy, matplotlib.pyplot 
 #
 # last modified: Nov. 2016
 #   16-Nov-16    GQ  readPicoscope now also supports .csv export format    
@@ -81,10 +82,12 @@ from __future__ import print_function  # for python2.7 compatibility
 #                    added readCSV and writeCSV
 #   20-May-17    GQ  added readtxt to read data in "txt"-format
 #   21-May-17    GQ  simplified read_ColumnData and test_readColumnData
-#   22-May-22    GQ  re-implemented readCassy() using readtxt()
-#   25-May-22    GQ  allow scalar errors in odFit(), linRegressionXY(),
+#   22-May-17    GQ  re-implemented readCassy() using readtxt()
+#   25-May-17    GQ  allow scalar errors in odFit(), linRegressionXY(),
 #                       as in all other fit interfaces
-#-------------------------------------------------------------------
+#   27-July-17   GQ  added convolutionEdgefinder() and refactored
+#                    convolutionPeakfinder() to use similar components
+# ----------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
 from scipy import stats
@@ -629,7 +632,7 @@ def simplePeakfinder(x, a, th=0.):
     x-coordinates are determined from weighted average over 3 data points
 
   this only works for very smooth data with well defined extrema
-  use ``convolutionPeakfinder`` or ``scipy.signal.argrelmax()`` instead
+    use ``convolutionPeakfinder`` or ``scipy.signal.argrelmax()`` instead
 
     Args:
       * x: np-array of positions
@@ -659,14 +662,45 @@ def simplePeakfinder(x, a, th=0.):
 
   return np.array(xpeak), np.array(ypeak)
 
-def convolutionPeakfinder(a, width=10, th=0.1):
+def convolutionFilter(a, v, th=0.):
   ''' 
-  find positions of all Peaks and Dips in data 
+  convolute normalized array with tmplate funtion and return maxima
+
+  method: 
+    convolute array a with a template and return extrema of 
+    convoluted signal, i.e. places where template matches best
+
+  Args:
+    * a: array-like, input data
+    * a: array-like, template 
+    * th: float, 0.<= th <=1., relative threshold for places of
+      best match above (global) minimum
+
+  Returns:
+    * pidx: list, indices (in original array) of best matches
+
+  '''
+
+  anrm = (a-min(a))/(max(a)-min(a))
+  c = np.correlate( anrm, v, mode='same')
+  #c = np.convolve( anrm, np.flipud(v), 'same')
+  # remark: need reversed ordering of v to use np.convolve() for this purpose
+
+# store places of best agreement with the template 
+  pidx=[]
+  for i in range (1, len(anrm)-1):
+    if c[i]>0. and c[i]-c[i-1]>=0. and c[i]-c[i+1]>0. and anrm[i] > th : 
+      pidx.append(i) 
+  return pidx
+
+def convolutionPeakfinder(a, width=10, th=0.0):
+  ''' 
+  find positions of all Peaks in data 
     (simple version for didactical purpose, 
     consider using ``scipy.signal.find_peaks_cwt()`` )
 
   method: 
-    convolute array a with signal template of given width and
+    convolute array a with rectangular template of given width and
     return extrema of convoluted signal, i.e. places where 
     template matches best
 
@@ -677,7 +711,6 @@ def convolutionPeakfinder(a, width=10, th=0.1):
 
   Returns:
     * pidx: list, indices (in original array) of peaks
-
   ''' 
 
 #construct a (rectangular) template for a peak
@@ -687,33 +720,46 @@ def convolutionPeakfinder(a, width=10, th=0.1):
         [0.5 for i in range(2*k+1)] +\
         [-0.5 for i in range(k)], 
                dtype=np.float32 )
+  return convolutionFilter(a, v, th=th)
 
-# convolute normalized signal with template ...
-  anrm = (a-min(a))/(max(a)-min(a))
-  c = np.convolve( anrm, v, 'same')
+def convolutionEdgefinder(a, width=10, th = 0.):
+  ''' 
+  find positions of maximal positive slope in data 
 
-# ... and store places of best agreement with the template 
-  pidx=[]
-  for i in range (1, len(anrm)-1):
-    if c[i]-c[i-1]>=0. and c[i]-c[i+1]>0. and anrm[i] > th : 
-      pidx.append(i) 
+  method: 
+    convolute array `a` with an edge template of given width and
+    return extrema of convoluted signal, i.e. places of rising edges
 
-  return pidx
+  Args:
+    * a: array-like, input data
+    * width: int, width of signal to search for
+    * th: float, 0.<= th <=1., relative threshold above (global)minimum
 
+  Returns:
+    * pidx: list, indices (in original array) of rising edges
+  ''' 
+
+#construct a (rectangular) template for an edge
+  k=int(width/2)
+  v = np.array(\
+        [-0.5 for i in range(k)] +\
+               [0.] +\
+        [0.5 for i in range(k)], 
+               dtype=np.float32 )
+  return convolutionFilter(a, v, th=th)
 
 def autocorrelate(a):
-  '''calculate autocorrelation function of array 
+  '''calculate autocorrelation function of input array 
 
      method: for array of length l, calulate 
-     a[0]=sum_(i=0)^(l-1) a[i]*[i]
-     a[i]= 1/a[0] * sum_(k=0)^(l-i) a[i] * a[i+k-1] for i=1,l-1
-     uses inner product from numpy
+     a[0]=sum_(i=0)^(l-1) a[i]*[i] and 
+     a[i]= 1/a[0] * sum_(k=0)^(l-i) a[i] * a[i+k-1] for i=1,l-1 
 
      Args:
        * a: np-array 
 
      Returns 
-       * np-array of len(a) 
+       * np-array of len(a), the autocorrelation function
   '''
 
   l=len(a)
@@ -759,8 +805,9 @@ def nhist(data, bins=50, xlabel='x', ylabel='frequency') :
         * ylabel: label for y axix
 
       Returns:
-        * float arrays bin content and bin edges
+        * float arrays: bin contents and bin edges
   """
+
   bc,be = np.histogram(data,bins) # histogram data
   bincent=(be[:-1] + be[1:])/2.
   w=0.9*(be[1]-be[0])
@@ -768,11 +815,12 @@ def nhist(data, bins=50, xlabel='x', ylabel='frequency') :
   plt.xlabel(xlabel,size='x-large') # ... for x ...
   plt.ylabel(ylabel,size='x-large') # ... and y axes
 #  plt.show()
-  return bc,be
+  return bc, be
 
 def histstat(binc, bine, pr=True):
   """ Histogram.histstat
-    calculate mean of a histogram with bincontents binc and bin edges bine
+    calculate mean, standard deviation and uncertainty on mean 
+    of a histogram with bin-contents `binc` and bin-edges `bine`
  
     Args:
       * binc: array with bin content
@@ -781,6 +829,7 @@ def histstat(binc, bine, pr=True):
     Returns:
       * float: mean, sigma and sigma on mean    
   """
+
   bincent =(bine[1:]+bine[:-1])/2 # determine bincenters
   mean=sum(binc*bincent)/sum(binc)
   rms=np.sqrt(sum(binc*bincent**2)/sum(binc) - mean**2)
@@ -895,10 +944,13 @@ def chi2p_indep2d(H2d, bcx, bcy, pr=True):
   """
     perform a chi2-test on independence of x and y
 
+    method: chi2-test on compatibility of 2d-distribution, f(x,y),
+    with product of marginal distributions, f_x(x) * f_y(y)
+
     Args:
       * H2d: histogram array (as returned by histogram2d)
-      * bcx: bin contents x
-      * bcy: bin contents y
+      * bcx: bin contents x (marginal distribution x)
+      * bcy: bin contents y (marginal distribution y)
 
     Returns:
       * float: p-value w.r.t. assumption of independence
