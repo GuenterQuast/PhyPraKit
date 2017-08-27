@@ -51,11 +51,11 @@ A pdf version of this documentation is available here: PhyPraKit.pdf_.
 Installation:
 -------------
 
-To use PhyPraKit, it is sufficient if the file `PhyPraKit.py` is
-present in the same directory as the python scripts importing it.
+To use PhyPraKit, it is sufficient to place the file `PhyPraKit.py`
+in the same directory as the python scripts importing it.
 
 Installation via `pip` is also supported. The recommendation is
-to use the installation package in the sbdirectory `dist` and
+to use the installation package in the subdirectory `dist` and
 install in user space:
 
    ``pip install --user --no-cache PhyPraKit<vers.>``
