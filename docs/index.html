@@ -1,0 +1,1138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Dokumentation von PhyPraKit &#8212; PhyPraKit 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="dokumentation-von-phyprakit">
+<h1><strong>Dokumentation von PhyPraKit</strong><a class="headerlink" href="#dokumentation-von-phyprakit" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ubersicht">
+<h2>Übersicht:<a class="headerlink" href="#ubersicht" title="Permalink to this headline">¶</a></h2>
+<p>PhyPraKit ist eine Sammlung nützlicher Funktionen in der Sprache
+<cite>python (vers. 2.7 oder 3.4)</cite> zum Aufnehmen, zur Bearbeitung,
+Visualisierung  und  Auswertung von Daten in den physikalischen
+Praktika. Die Anwendung der verschiedenen Funktionen des Pakets
+werden jeweils durch Beispiele illustriert.</p>
+<blockquote>
+<div><cite>Version der Dokumentation</cite> 2017-08-01</div></blockquote>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+<div class="section" id="darstellung-und-auswertung-von-messdaten">
+<h1><strong>Darstellung und Auswertung von Messdaten</strong><a class="headerlink" href="#darstellung-und-auswertung-von-messdaten" title="Permalink to this headline">¶</a></h1>
+<p>In allen Praktika zur Physik werden Methoden zur Aufnahme,
+Bearbeitung, Darstelllung und Auswertung von Messdaten benötigt.
+Die Script- und Programmiersprache <cite>python</cite> mit den Zusatzpaketen
+<cite>numpy</cite> und <cite>matplotlib</cite> ist ein universelles Werkzeug, um die
+Wiederholbarkeit von Datenauswertungen und die Reprodzierbarkeit
+der Ergebnisse zu gewährleiseten.</p>
+<p>In der Veranstaltung &#8220;Computergestützte Datenauswertung&#8221;
+(<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA">http://www.ekp.kit.edu/~quast/CgDA</a>), die im Studienplan
+für den Bachelorstudiengang Physik am KIT seit dem Sommersemester
+2016 angeboten wird, werden Methoden und Software zur
+grafischen Darstellung von Daten, deren Modellierung und
+Auswertung eingeführt.</p>
+<p>Die folgen Links erlauben einen schnellen Überblick über die Inhalte
+der Vorlesung und die Beispeielen aus den Übungen:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="first docutils">
+<dt>Zusammenfassung der Vorlesung und Dokumentation der Code-Beispiele</dt>
+<dd><a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html</a></dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Installation der Software auf verschiedenen Platformen</dt>
+<dd><ul class="first last">
+<li>Dokumentation in html:
+<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html</a></li>
+<li>Dokumentation in pdf:
+<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf</a></li>
+<li>Softwarepakete:
+<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/Software">http://www.ekp.kit.edu/~quast/CgDA/Software</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>Speziell für das &#8220;Praktikum zur klassischen Physik&#8221; finden sich eine
+kurze Einführung
+(<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf">http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf</a>)
+sowie die hier dokumentierten einfachen Beispiele als Startpunkt für
+eigene Auswertungen
+(<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/">http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/</a>).</p>
+<p>Die vorliegende Sammlung von Funktionen im Paket <cite>PhyPraKit</cite> enthält
+Funktionen zum Einlesen von Daten aus diversen Quellen, zur
+Datenvisualisierung, Signalbearbeitung und statistischen Datenauswertung
+und Modellanpassung sowie Werkzeuge zur Erzeugung simulierter Daten.
+Dabei wurde absichtlich Wert auf eine einfache, die Prinzipien
+unterstreichnede Codierung gelegt und nicht der möglichst effizienten
+bzw. allgemeinensten Implementierung der Vorzug gegeben.</p>
+</div>
+<div class="section" id="dokumentation-der-beispiele">
+<h1>Dokumentation der Beispiele<a class="headerlink" href="#dokumentation-der-beispiele" title="Permalink to this headline">¶</a></h1>
+<dl class="docutils">
+<dt><cite>PhyPraKit.py</cite> ist ein Paket mit nützlichen Hilfsfunktionen</dt>
+<dd><p class="first">zum import in eigene Beispiele mittels:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">PhyPraKit</span> <span class="k">as</span> <span class="nn">ppk</span>
+</pre></div>
+</div>
+<p>oder:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PhyPraKit</span> <span class="k">import</span> <span class="o">...</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>Die folgenden Beispiele illustrieren die Anwendung:</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>test_readColumnData.py</cite> ist ein Beispiel zum
+Einlesen von Spalten aus Textdateien; die zugehörigen
+<em>Metadaten</em> können ebenfalls an das Script übergeben
+werden und stehen so bei der Auswertung zur Verfügung.</li>
+<li><dl class="first docutils">
+<dt><cite>test_readtxt.py</cite> liest Ausgabedateien im allgemeinem <cite>.txt</cite>-Format</dt>
+<dd><ul class="first last">
+<li>Entfernen aller ASCII-Sonderzeichen außer dem Spalten-Trenner</li>
+<li>Ersetzen des deutschen Dezimalkommas durch Dezimalpunkt</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><cite>test_readPicoScope.py</cite> liest Ausgabedateien von USB-Oszillographen
+der Marke PicoScope im Format <cite>.csv</cite> oder <cite>.txt</cite>.</li>
+<li><cite>test_labxParser.py</cite> liest Ausgabedateien von Leybold
+CASSY im <cite>.labx</cite>-Format. Die Kopfzeilen und Daten von Messreihen
+werden als Listen in <em>python</em> zur Verfügung gestellt.</li>
+<li><cite>test_convolutionFilter.py</cite> liest die Datei <cite>Wellenform.csv</cite> und
+bestimmt Maxima und fallende Flanken des Signals</li>
+<li><cite>test_AutoCorrelation.py</cite> liest die Datei <cite>AudioData.csv</cite> und führt
+eine Analyse der Autokorrelation zur Frequenzbestimmung durch.</li>
+<li><cite>test_Fourier.py</cite> illustriert die Durchführung einer
+Fourier-Transfomation eines periodischen Signals, das in
+der PicoScope-Ausgabedatei <cite>Wellenform.csv</cite> enthalten ist.</li>
+<li><cite>test_kRegression.py</cite> dient zur Anpassung einer Geraden an
+Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit allen
+Messpunkten gemeinsamen (d. h. korrelierten) relativen oder absoluten
+systematischen Fehlern mit dem Paket <cite>kafe</cite>.</li>
+<li><cite>test_linRegression.py</cite> ist eine einfachere Version mit
+<cite>python</cite>-Bordmitteln zur Anpassung einer Geraden an
+Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung.
+Korrelierte Unsicherheiten werden nicht unterstützt.</li>
+<li><cite>test_kFit.py</cite> ist eine verallgemeinerte Version von <cite>test_kRegression</cite>
+und dient zur Anpassung einer beliebigen Funktion an Messdaten mit
+Fehlern in Ordinaten- und Abszissenrichtung und mit allen Messpunkten
+gemeinsamen (d. h. korrelierten) relativen oder absoluten systematischen
+Fehlern mit dem Paket <cite>kafe</cite>.</li>
+<li><cite>test_Histogram.py</cite> ist ein Beispiel zur Darstellung und
+statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen)
+in ein oder zwei Dimensionen.</li>
+<li><cite>test_generateXYata.py</cite> zeigt, wie man mit Hilfe von Zufallszahlen
+&#8220;künstliche Daten&#8221; zur Veranschaulichung oder zum Test von Methoden
+zur Datenauswertung erzeugen kann.</li>
+</ul>
+<p>Die folgenden <em>python</em>-Skripte sind etwas komplexer und zeigen
+typische Anwendungsfälle der Module in <cite>PhyPraKit</cite>:</p>
+<ul class="simple">
+<li><cite>kfitf.py</cite> ist ein Kommandozeilen-Werkzeug, mit dem man komfortabel
+Anpassungen ausführen kann, bei denen Daten und Fit-Funktion in
+einer einzigen Datei angegeben werden. Beispiele finden sich
+in den Dateien mit der Endung <cite>.fit</cite>.</li>
+<li><cite>Beispiel_Drehpendel.py</cite> demonstriert die Analyse von am Drehpendel
+mit CASSY aufgenommenen Daten. Enthalten sind einfache Funktionen zum
+Filtern und Bearbeiten der Daten, zur Suche nach Extrema und Anpassung
+einer Einhüllenden, zur diskreten Fourier-Transformation und zur
+Interpolation von Messdaten mit kubischen Spline-Funktionen.</li>
+<li><cite>Beispiel_Hysterese.py</cite> demonstriert die Analyse von Daten,
+die mit einem USB-Oszilloskop der Marke <cite>PicoScope</cite> am
+Versuch zur Hysterese aufgenommen wurden. Die aufgezeichneten Werte
+für Strom und B-Feld werden in einen Zweig für steigenden und
+fallenden Strom aufgeteilt, mit Hilfe von kubischen Splines
+interpoliert und dann integriert.</li>
+<li><cite>Beispiel_Wellenform.py</cite>  zeigt eine typische Auswertung
+periodischer Daten am Beispiel der akustischen Anregung eines
+Metallstabs. Genutzt werden Fourier-Transformation und
+eine Suche nach charakteristischen Extrema. Die Zeitdifferenzen
+zwischen deren Auftreten im Muster werden bestimmt, als
+Häufgkeitsverteilung dargestellt und die Verteilungen statistisch
+ausgewertet.</li>
+<li><cite>Beispiel_GammaSpektroskopie.py</cite> liest mit dem Vielkanalanalysator
+des CASSY-Systems im <cite>.labx</cite> -Format gespeicherten Dateien ein
+(Beispieldatei <cite>GammaSpektra.labx</cite>).</li>
+</ul>
+</div></blockquote>
+<p>Die übrigen <cite>python</cite>-Scripte im Verzeichnis wurden zur Erstellung
+der in der einführenden Vorlesung gezeigten Grafiken verwendet.</p>
+<p>Für die <strong>Erstellung von Protokollen</strong> mit Tabellen, Grafiken und Formeln
+bietet sich das Textsatz-System <cite>LaTeX</cite> an.
+Die Datei <cite>Protokollvorlage.zip</cite>
+enthält eine sehr einfach gehaltene Vorlage, die für eigene Protokolle
+verwendet werden kann. Eine sehr viel umfangreichere Einführung sowie
+ein ausführliches Beispiel bietet die Fachschaft Physik unter dem
+Link <a class="reference external" href="https://fachschaft.physik.kit.edu/drupal/content/latex-vorlagen">https://fachschaft.physik.kit.edu/drupal/content/latex-vorlagen</a></p>
+</div>
+<div class="section" id="module-PhyPraKit">
+<span id="modul-dokumentation"></span><h1>Modul-Dokumentation<a class="headerlink" href="#module-PhyPraKit" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="PhyPraKit.FourierSpectrum">
+<code class="descclassname">PhyPraKit.</code><code class="descname">FourierSpectrum</code><span class="sig-paren">(</span><em>t</em>, <em>a</em>, <em>fmax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.FourierSpectrum" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Fourier transform of amplitude spectrum a(t), for equidistant sampling times</dt>
+<dd><p class="first">(a simple implementaion for didactical purpose only, 
+consider using <code class="docutils literal"><span class="pre">Fourier_fft()</span></code> )</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>t: np-array of time values</li>
+<li>a: np-array amplidude a(t)</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>arrays freq, amp: frequencies and amplitudes</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.Fourier_fft">
+<code class="descclassname">PhyPraKit.</code><code class="descname">Fourier_fft</code><span class="sig-paren">(</span><em>t</em>, <em>a</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.Fourier_fft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fourier transform of the amplitude spectrum a(t)</p>
+<dl class="docutils">
+<dt>method: </dt>
+<dd><p class="first">uses <cite>numpy.fft</cite> and <cite>numpy.fftfreq</cite>; 
+output amplitude is normalised to number of samples;</p>
+<dl class="last docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>t: np-array of time values</li>
+<li>a: np-array amplidude a(t)</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>arrays f, a_f: frequencies and amplitudes</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.autocorrelate">
+<code class="descclassname">PhyPraKit.</code><code class="descname">autocorrelate</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.autocorrelate" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculate autocorrelation function of input array</p>
+<p>method: for array of length l, calulate 
+a[0]=sum_(i=0)^(l-1) a[i]*[i] and 
+a[i]= 1/a[0] * sum_(k=0)^(l-i) a[i] * a[i+k-1] for i=1,l-1</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>a: np-array</li>
+</ul>
+</dd>
+<dt>Returns </dt>
+<dd><ul class="first last simple">
+<li>np-array of len(a), the autocorrelation function</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.barstat">
+<code class="descclassname">PhyPraKit.</code><code class="descname">barstat</code><span class="sig-paren">(</span><em>bincont</em>, <em>bincent</em>, <em>pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.barstat" title="Permalink to this definition">¶</a></dt>
+<dd><p>statistics from a bar chart (histogram) 
+with given bin contents and bin centres</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>bincont: array with bin content</li>
+<li>bincent: array with bin centres</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>float: mean, sigma and sigma on mean</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.chi2p_indep2d">
+<code class="descclassname">PhyPraKit.</code><code class="descname">chi2p_indep2d</code><span class="sig-paren">(</span><em>H2d</em>, <em>bcx</em>, <em>bcy</em>, <em>pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.chi2p_indep2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>perform a chi2-test on independence of x and y</p>
+<p>method: chi2-test on compatibility of 2d-distribution, f(x,y),
+with product of marginal distributions, f_x(x) * f_y(y)</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>H2d: histogram array (as returned by histogram2d)</li>
+<li>bcx: bin contents x (marginal distribution x)</li>
+<li>bcy: bin contents y (marginal distribution y)</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>float: p-value w.r.t. assumption of independence</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.convolutionEdgefinder">
+<code class="descclassname">PhyPraKit.</code><code class="descname">convolutionEdgefinder</code><span class="sig-paren">(</span><em>a</em>, <em>width=10</em>, <em>th=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.convolutionEdgefinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>find positions of maximal positive slope in data</p>
+<dl class="docutils">
+<dt>method: </dt>
+<dd>convolute array <cite>a</cite> with an edge template of given width and
+return extrema of convoluted signal, i.e. places of rising edges</dd>
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>a: array-like, input data</li>
+<li>width: int, width of signal to search for</li>
+<li>th: float, 0.&lt;= th &lt;=1., relative threshold above (global)minimum</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>pidx: list, indices (in original array) of rising edges</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.convolutionFilter">
+<code class="descclassname">PhyPraKit.</code><code class="descname">convolutionFilter</code><span class="sig-paren">(</span><em>a</em>, <em>v</em>, <em>th=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.convolutionFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>convolute normalized array with tmplate funtion and return maxima</p>
+<dl class="docutils">
+<dt>method: </dt>
+<dd>convolute array a with a template and return extrema of 
+convoluted signal, i.e. places where template matches best</dd>
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>a: array-like, input data</li>
+<li>a: array-like, template</li>
+<li>th: float, 0.&lt;= th &lt;=1., relative threshold for places of
+best match above (global) minimum</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>pidx: list, indices (in original array) of best matches</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.convolutionPeakfinder">
+<code class="descclassname">PhyPraKit.</code><code class="descname">convolutionPeakfinder</code><span class="sig-paren">(</span><em>a</em>, <em>width=10</em>, <em>th=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.convolutionPeakfinder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>find positions of all Peaks in data </dt>
+<dd>(simple version for didactical purpose, 
+consider using <code class="docutils literal"><span class="pre">scipy.signal.find_peaks_cwt()</span></code> )</dd>
+<dt>method: </dt>
+<dd>convolute array a with rectangular template of given width and
+return extrema of convoluted signal, i.e. places where 
+template matches best</dd>
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>a: array-like, input data</li>
+<li>width: int, width of signal to search for</li>
+<li>th: float, 0.&lt;= th &lt;=1., relative threshold for peaks above (global)minimum</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>pidx: list, indices (in original array) of peaks</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.generateXYdata">
+<code class="descclassname">PhyPraKit.</code><code class="descname">generateXYdata</code><span class="sig-paren">(</span><em>xdata</em>, <em>model</em>, <em>sx</em>, <em>sy</em>, <em>mpar=None</em>, <em>srelx=None</em>, <em>srely=None</em>, <em>xabscor=None</em>, <em>yabscor=None</em>, <em>xrelcor=None</em>, <em>yrelcor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.generateXYdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate measurement data according to some model
+assumes xdata is measured within the given uncertainties; 
+the model function is evaluated at the assumed &#8220;true&#8221; values 
+xtrue, and a sample of simulated measurements is obtained by 
+adding random deviations according to the uncertainties given 
+as arguments.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>xdata:  np-array, x-data (independent data)</li>
+<li>model: function that returns (true) model data (y-dat) for input x</li>
+<li>mpar: list of parameters for model (if any)</li>
+</ul>
+</dd>
+<dt>the following are single floats or arrays of length of x</dt>
+<dd><ul class="first last simple">
+<li>sx: gaussian uncertainty(ies) on x</li>
+<li>sy: gaussian uncertainty(ies) on y</li>
+<li>srelx: relative gaussian uncertainty(ies) on x</li>
+<li>srely: relative gaussian uncertainty(ies) on y</li>
+</ul>
+</dd>
+<dt>the following are common (correlated) systematic uncertainties</dt>
+<dd><ul class="first last simple">
+<li>xabscor: absolute, correlated error on x</li>
+<li>yabscor: absolute, correlated error on y</li>
+<li>xrelcor: relative, correlated error on x</li>
+<li>yrelcor: relative, correlated error on y</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>np-arrays of floats:<ul>
+<li>xtrue: true x-values</li>
+<li>ytrue: true value = model(xtrue)</li>
+<li>ydata:  simulated data</li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.hist2dstat">
+<code class="descclassname">PhyPraKit.</code><code class="descname">hist2dstat</code><span class="sig-paren">(</span><em>H2d</em>, <em>xed</em>, <em>yed</em>, <em>pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.hist2dstat" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculate statistical information from 2d Histogram</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>H2d: histogram array (as returned by histogram2d)</li>
+<li>xed: bin edges in x</li>
+<li>yed: bin edges in y</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>float: mean x</li>
+<li>float: mean y</li>
+<li>float: variance x</li>
+<li>float: variance y</li>
+<li>float: covariance of x and y</li>
+<li>float: correlation of x and y</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.histstat">
+<code class="descclassname">PhyPraKit.</code><code class="descname">histstat</code><span class="sig-paren">(</span><em>binc</em>, <em>bine</em>, <em>pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.histstat" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculate mean, standard deviation and uncertainty on mean 
+of a histogram with bin-contents <cite>binc</cite> and bin-edges <cite>bine</cite></p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>binc: array with bin content</li>
+<li>bine: array with bin edges</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>float: mean, sigma and sigma on mean</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.kFit">
+<code class="descclassname">PhyPraKit.</code><code class="descname">kFit</code><span class="sig-paren">(</span><em>func, x, y, sx, sy, p0=None, p0e=None, xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, title='Daten', axis_labels=['X', 'Y'], plot=True, quiet=False</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.kFit" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>fit function func with errors on x and y;
+uses package <cite>kafe</cite></p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>func: function to fit</li>
+<li>x:  np-array, independent data</li>
+<li>y:  np-array, dependent data</li>
+</ul>
+</dd>
+<dt>the following are single floats or arrays of length of x</dt>
+<dd><ul class="first last simple">
+<li>sx: scalar or np-array, uncertainty(ies) on x</li>
+<li>sy: scalar or np-array, uncertainty(ies) on y</li>
+<li>p0: array-like, initial guess of parameters</li>
+<li>p0e: array-like, initial guess of parameter uncertainties</li>
+<li>xabscor: absolute, correlated error(s) on x</li>
+<li>yabscor: absolute, correlated error(s) on y</li>
+<li>xrelcor: relative, correlated error(s) on x</li>
+<li>yrelcor: relative, correlated error(s) on y</li>
+<li>title:   string, title of gaph</li>
+<li>axis_labels: List of strings, axis labels x and y</li>
+<li>plot: flag to switch off graphical ouput</li>
+<li>quiet: flag to suppress text and log output</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>np-array of float: parameter values</li>
+<li>np-array of float: parameter errors</li>
+<li>np-array: cor   correlation matrix</li>
+<li>float: chi2  chi-square</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.kRegression">
+<code class="descclassname">PhyPraKit.</code><code class="descname">kRegression</code><span class="sig-paren">(</span><em>x, y, sx, sy, xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, title='Daten', axis_labels=['X', 'Y'], plot=True, quiet=False</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.kRegression" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>linear regression y(x) = ax + b  with errors on x and y;
+uses package <cite>kafe</cite></p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>x:  np-array, independent data</li>
+<li>y:  np-array, dependent data</li>
+</ul>
+</dd>
+<dt>the following are single floats or arrays of length of x</dt>
+<dd><ul class="first last simple">
+<li>sx: scalar or np-array, uncertainty(ies) on x</li>
+<li>sy: scalar or np-array, uncertainty(ies) on y</li>
+<li>xabscor: absolute, correlated error(s) on x</li>
+<li>yabscor: absolute, correlated error(s) on y</li>
+<li>xrelcor: relative, correlated error(s) on x</li>
+<li>yrelcor: relative, correlated error(s) on y</li>
+<li>title:   string, title of gaph</li>
+<li>axis_labels: List of strings, axis labels x and y</li>
+<li>plot: flag to switch off graphical ouput</li>
+<li>quiet: flag to suppress text and log output</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>float: a     slope</li>
+<li>float: b     constant</li>
+<li>float: sa    sigma on slope</li>
+<li>float: sb    sigma on constant</li>
+<li>float: cor   correlation</li>
+<li>float: chi2  chi-square</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.labxParser">
+<code class="descclassname">PhyPraKit.</code><code class="descname">labxParser</code><span class="sig-paren">(</span><em>file</em>, <em>prlevel=1</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.labxParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>read files in xml-format produced with Leybold CASSY</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>file:  input data in .labx format</li>
+<li>prlevel: control printout level, 0=no printout</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>list of strings: tags of measurmement vectors</li>
+<li>2d list:         measurement vectors read from file</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.linRegression">
+<code class="descclassname">PhyPraKit.</code><code class="descname">linRegression</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>sy</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.linRegression" title="Permalink to this definition">¶</a></dt>
+<dd><p>linear regression y(x) = ax + b</p>
+<dl class="docutils">
+<dt>method: </dt>
+<dd>analytical formula</dd>
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>x: np-array, independent data</li>
+<li>y: np-array, dependent data</li>
+<li>sy: scalar or np-array, uncertainty on y</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>float: a     slope</li>
+<li>float: b     constant</li>
+<li>float: sa  sigma on slope</li>
+<li>float: sb  sigma on constant</li>
+<li>float: cor   correlation</li>
+<li>float: chi2  chi-square</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.linRegressionXY">
+<code class="descclassname">PhyPraKit.</code><code class="descname">linRegressionXY</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>sx</em>, <em>sy</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.linRegressionXY" title="Permalink to this definition">¶</a></dt>
+<dd><p>linear regression y(x) = ax + b  with errors on x and y
+uses numerical &#8220;orthogonal distance regression&#8221; from package scipy.odr</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>x:  np-array, independent data</li>
+<li>y:  np-array, dependent data</li>
+<li>sx: scalar or np-array, uncertainty(ies) on x</li>
+<li>sy: scalar or np-array, uncertainty(ies) on y</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>float: a     slope</li>
+<li>float: b     constant</li>
+<li>float: sa    sigma on slope</li>
+<li>float: sb    sigma on constant</li>
+<li>float: cor   correlation</li>
+<li>float: chi2  chi-square</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.meanFilter">
+<code class="descclassname">PhyPraKit.</code><code class="descname">meanFilter</code><span class="sig-paren">(</span><em>a</em>, <em>width=5</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.meanFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>apply a sliding average to smoothen data,</p>
+<dl class="docutils">
+<dt>method:</dt>
+<dd><p class="first">value at index i and int(width/2) neighbours are averaged
+to from the new value at index i</p>
+<dl class="last docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>a: np-array of values</li>
+<li>width: int, number of points to average over
+(if width is an even number, width+1 is used)</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>av  smoothed signal curve</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.nhist">
+<code class="descclassname">PhyPraKit.</code><code class="descname">nhist</code><span class="sig-paren">(</span><em>data</em>, <em>bins=50</em>, <em>xlabel='x'</em>, <em>ylabel='frequency'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.nhist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Histogram.hist
+show a one-dimensional histogram</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>data: array containing float values to be histogrammed</li>
+<li>bins: number of bins</li>
+<li>xlabel: label for x-axis</li>
+<li>ylabel: label for y axix</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>float arrays: bin contents and bin edges</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.nhist2d">
+<code class="descclassname">PhyPraKit.</code><code class="descname">nhist2d</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>bins=10</em>, <em>xlabel='x axis'</em>, <em>ylabel='y axis'</em>, <em>clabel='counts'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.nhist2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Histrogram.hist2d
+create and plot a 2-dimensional histogram</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>x: array containing x values to be histogrammed</li>
+<li>y: array containing y values to be histogrammed</li>
+<li>bins: number of bins</li>
+<li>xlabel: label for x-axis</li>
+<li>ylabel: label for y axix</li>
+<li>clabel: label for colour index</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>float array: array with counts per bin</li>
+<li>float array: histogram edges in x</li>
+<li>float array: histogram edges in y</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.odFit">
+<code class="descclassname">PhyPraKit.</code><code class="descname">odFit</code><span class="sig-paren">(</span><em>fitf</em>, <em>x</em>, <em>y</em>, <em>sx</em>, <em>sy</em>, <em>p0=None</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.odFit" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>fit an arbitrary function with errors on x and y
+uses numerical &#8220;orthogonal distance regression&#8221; from package scipy.odr</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>fitf: function to fit, arguments (array:P, float:x)</li>
+<li>x:  np-array, independent data</li>
+<li>y:  np-array, dependent data</li>
+<li>sx: scalar or np-array, uncertainty(ies) on x</li>
+<li>sy: scalar or np-array, uncertainty(ies) on y</li>
+<li>p0: none, scalar or array, initial guess of parameters</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>np-array of float: parameter values</li>
+<li>np-array of float: parameter errors</li>
+<li>np-array: cor   correlation matrix</li>
+<li>float: chi2  chi-square</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.offsetFilter">
+<code class="descclassname">PhyPraKit.</code><code class="descname">offsetFilter</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.offsetFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>correct an offset in array a 
+(assuming a symmetric signal around zero)
+by subtracting the mean</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.profile2d">
+<code class="descclassname">PhyPraKit.</code><code class="descname">profile2d</code><span class="sig-paren">(</span><em>H2d</em>, <em>xed</em>, <em>yed</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.profile2d" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>generate a profile plot from 2d histogram:</dt>
+<dd><ul class="first last simple">
+<li>mean y at a centre of x-bins, standard deviations as error bars</li>
+</ul>
+</dd>
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>H2d: histogram array (as returned by histogram2d)</li>
+<li>xed: bin edges in x</li>
+<li>yed: bin edges in y</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>float: array of bin centres in x</li>
+<li>float: array mean</li>
+<li>float: array rms</li>
+<li>float: array sigma on mean</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.readCSV">
+<code class="descclassname">PhyPraKit.</code><code class="descname">readCSV</code><span class="sig-paren">(</span><em>file</em>, <em>nlhead=1</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>read Data in .csv format, skip header lines</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>file: string, file name</li>
+<li>nhead: number of header lines to skip</li>
+<li>delim: column separator</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>hlines: list of string, header lines</li>
+<li>data: 2d array, 1st index for columns</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.readCassy">
+<code class="descclassname">PhyPraKit.</code><code class="descname">readCassy</code><span class="sig-paren">(</span><em>file</em>, <em>prlevel=0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readCassy" title="Permalink to this definition">¶</a></dt>
+<dd><p>read Data exported from Cassy in .txt format</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>file: string, file name</li>
+<li>prlevel: printout level, 0 means silent</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>units: list of strings, channel units</li>
+<li>data: tuple of arrays, channel data</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.readColumnData">
+<code class="descclassname">PhyPraKit.</code><code class="descname">readColumnData</code><span class="sig-paren">(</span><em>fname</em>, <em>cchar='#'</em>, <em>delimiter=None</em>, <em>pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readColumnData" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>read column-data from file</dt>
+<dd><ul class="first last simple">
+<li>input is assumed to be columns of floats</li>
+<li>characters following &lt;cchar&gt;, and &lt;cchar&gt; itself, are ignored</li>
+<li>words with preceeding &#8216;*&#8217; are taken as keywords for meta-data,
+text following the keyword is returned in a dictionary</li>
+</ul>
+</dd>
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>string fnam:      file name</li>
+<li>int ncols:        number of columns</li>
+<li>char delimiter:   character separating columns</li>
+<li>bool pr:          print input to std out if True</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.readPicoScope">
+<code class="descclassname">PhyPraKit.</code><code class="descname">readPicoScope</code><span class="sig-paren">(</span><em>file</em>, <em>prlevel=0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readPicoScope" title="Permalink to this definition">¶</a></dt>
+<dd><p>read Data exported from PicoScope in .txt or .csv format</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>file: string, file name</li>
+<li>prlevel: printout level, 0 means silent</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>units: list of strings, channel units</li>
+<li>data: tuple of arrays, channel data</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.readtxt">
+<code class="descclassname">PhyPraKit.</code><code class="descname">readtxt</code><span class="sig-paren">(</span><em>file</em>, <em>nlhead=1</em>, <em>delim='\t'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readtxt" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>read floating point data in general txt format</dt>
+<dd>skip header lines, replace decimal comma, remove special characters</dd>
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>file: string, file name</li>
+<li>nhead: number of header lines to skip</li>
+<li>delim: column separator</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>hlines: list of string, header lines</li>
+<li>data: 2d array, 1st index for columns</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.resample">
+<code class="descclassname">PhyPraKit.</code><code class="descname">resample</code><span class="sig-paren">(</span><em>a</em>, <em>t=None</em>, <em>n=11</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.resample" title="Permalink to this definition">¶</a></dt>
+<dd><p>perform average over n data points of array a, 
+return reduced array, eventually with corresponding time values</p>
+<dl class="docutils">
+<dt>method:</dt>
+<dd><p class="first">value at index <cite>i</cite> and <cite>int(width/2)</cite> neighbours are averaged
+to from the new value at index <cite>i</cite></p>
+<dl class="last docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>a, t: np-arrays of values of same length</li>
+<li>width: int, number of values of array <cite>a</cite> to average over
+(if width is an even number, width+1 is used)</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>av: array with reduced number of samples</li>
+<li>tav:  a second, related array with reduced number of samples</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.simplePeakfinder">
+<code class="descclassname">PhyPraKit.</code><code class="descname">simplePeakfinder</code><span class="sig-paren">(</span><em>x</em>, <em>a</em>, <em>th=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.simplePeakfinder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>find positions of all maxima (peaks) in data</dt>
+<dd>x-coordinates are determined from weighted average over 3 data points</dd>
+<dt>this only works for very smooth data with well defined extrema</dt>
+<dd><p class="first">use <code class="docutils literal"><span class="pre">convolutionPeakfinder</span></code> or <code class="docutils literal"><span class="pre">scipy.signal.argrelmax()</span></code> instead</p>
+<dl class="last docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>x: np-array of positions</li>
+<li>a: np-array of values at positions x</li>
+<li>th: float, threshold for peaks</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>np-array: x positions of peaks as weighted mean over neighbours</li>
+<li>np-array: y values correspoding to peaks</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.smearData">
+<code class="descclassname">PhyPraKit.</code><code class="descname">smearData</code><span class="sig-paren">(</span><em>d</em>, <em>s</em>, <em>srel=None</em>, <em>abscor=None</em>, <em>relcor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.smearData" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Generate measurement data from &#8220;true&#8221; input d by</dt>
+<dd>adding random deviations according to the uncertainties</dd>
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>d:  np-array, (true) input data</li>
+</ul>
+</dd>
+<dt>the following are single floats or arrays of length of array d</dt>
+<dd><ul class="first last simple">
+<li>s: gaussian uncertainty(ies) (absolute)</li>
+<li>srel: gaussian uncertainties (relative)</li>
+</ul>
+</dd>
+<dt>the following are common (correlated) systematic uncertainties</dt>
+<dd><ul class="first last simple">
+<li>abscor: absolute, correlated uncertainty</li>
+<li>relcor: relative, correlated uncertainty</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>np-array of floats: dm, smeared (=measured) data</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.wmean">
+<code class="descclassname">PhyPraKit.</code><code class="descname">wmean</code><span class="sig-paren">(</span><em>x</em>, <em>sx</em>, <em>pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.wmean" title="Permalink to this definition">¶</a></dt>
+<dd><p>weighted mean of np-array x with uncertainties sx</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>x: np-array of values</li>
+<li>sx: uncertainties</li>
+<li>pr: if True, print result</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>float: mean, sigma</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.writeCSV">
+<code class="descclassname">PhyPraKit.</code><code class="descname">writeCSV</code><span class="sig-paren">(</span><em>file</em>, <em>ldata</em>, <em>hlines=[]</em>, <em>fmt='%.10g'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.writeCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>write data in .csv format, including header lines</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>file: string, file name</li>
+<li>ldata: list of columns to be written</li>
+<li>hlines: list with header lines (optional)</li>
+<li>fmt: format string (optional)</li>
+</ul>
+</dd>
+<dt>Returns: </dt>
+<dd><ul class="first last simple">
+<li>0/1  for success/fail</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-test_readColumnData"></span><span class="target" id="module-test_readtxt"></span><span class="target" id="module-test_readPicoScope"></span><span class="target" id="module-test_labxParser"></span><span class="target" id="module-test_Histogram"></span><dl class="docutils">
+<dt>test_Historgram.py</dt>
+<dd>demonstrate histogram functionality in PhyPraKit</dd>
+</dl>
+<span class="target" id="module-test_convolutionFilter"></span><span class="target" id="module-test_AutoCorrelation"></span><span class="target" id="module-test_Fourier"></span><span class="target" id="module-test_kRegression"></span><span class="target" id="module-test_kFit"></span><span class="target" id="module-test_generateData"></span><span class="target" id="module-kfitf"></span><p>kfitf.py</p>
+<p>Perform a fit with the kafe package driven by input file</p>
+<p>usage: kfitf.py [-h] [-n] [-s] [-c] [&#8211;noinfo] [-f FORMAT] filename</p>
+<dl class="docutils">
+<dt>positional arguments:</dt>
+<dd>filename                       name of fit input file</dd>
+<dt>optional arguments:</dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></td>
+<td>show this help message and exit</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-n</span>, <span class="option">--noplot</span></kbd></td>
+<td>suppress ouput of plots on screen</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-s</span>, <span class="option">--saveplot</span></kbd></td>
+<td>save plot(s) in file(s)</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-c</span>, <span class="option">--contour</span></kbd></td>
+<td>plot contours and profiles</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--noinfo</span></kbd></td>
+<td>suppress fit info on plot</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--noband</span></kbd></td>
+<td>suppress 1-sigma band around function</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--format <var>FMT</var></span></kbd></td>
+<td>graphics output format, default FMT = pdf</td></tr>
+</tbody>
+</table>
+</dd>
+</dl>
+<span class="target" id="module-Beispiel_Drehpendel"></span><span class="target" id="module-Beispiel_Hysterese"></span><span class="target" id="module-Beispiel_Wellenform"></span><span class="target" id="module-Beispiel_GammaSpektroskopie"></span></div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><strong>Dokumentation von PhyPraKit</strong></a><ul>
+<li><a class="reference internal" href="#ubersicht">Übersicht:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#darstellung-und-auswertung-von-messdaten"><strong>Darstellung und Auswertung von Messdaten</strong></a></li>
+<li><a class="reference internal" href="#dokumentation-der-beispiele">Dokumentation der Beispiele</a></li>
+<li><a class="reference internal" href="#module-PhyPraKit">Modul-Dokumentation</a></li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, Günter Quast.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
+    </div>
+  </body>
+</html>
