@@ -431,7 +431,7 @@ def labxParser(file, prlevel=1):
   return vtags, varray
 
 
-def writeCSV(file, ldata, hlines=[], fmt='%.10g', delim=',', nline='\n'):
+def writeCSV(file, ldata, hlines=[], fmt='%.10g', delim=',', nline='\n', **kwargs):
   '''
   write data in .csv format, including header lines
   
@@ -465,10 +465,40 @@ def writeCSV(file, ldata, hlines=[], fmt='%.10g', delim=',', nline='\n'):
 
   try:
     np.savetxt(f, np.array(ldata).transpose(),
-                fmt=fmt, delimiter=delim, newline=nline)
+                fmt=fmt, delimiter=delim, newline=nline, **kwargs)
     return 0
   except:
     return 1
+
+def writeTexTable(file, ldata, cnames=[], fmt='%.10g'):
+  ''' write data formatted as latex tabular
+
+  Args:
+    * file: string, file name
+    * ldata: list of columns to be written
+    * cnames: list of column names (optional)
+    * fmt: format string (optional)
+  
+  Returns:
+    * 0/1 for success/fail
+  '''
+  delim = " & "
+  nline = "\\\\\n"
+
+  #create header for latex tabular environment
+  head = "\\begin{tabular}{"+len(ldata)*"c"+"}\n"
+  if type(cnames)==type(''):
+    head += cnames
+  elif type(cnames)==type([]) and len(cnames)>0:
+    for element in cnames:
+      head += element + " & "
+    head = head[:-3]
+  #create footer
+  foot = "\\end{tabular}"
+  #write file, comments ahs to be empty because of numpy putting a comment symbol
+  #in front of the header and footer
+  return writeCSV(file, ldata, fmt=fmt, delim=delim, nline=nline,
+                  header=head, footer=foot, comments='')
 
 ## ------- section 2: statistics  -----------------------
 
