@@ -87,6 +87,8 @@ from __future__ import print_function  # for python2.7 compatibility
 #                       as in all other fit interfaces
 #   27-July-17   GQ  added convolutionEdgefinder() and refactored
 #                    convolutionPeakfinder() to use similar components
+#   05-Feb-19    CV  added line ending chars to createCSV(), to export
+#                    data for example as a latex table
 # ----------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
@@ -429,7 +431,7 @@ def labxParser(file, prlevel=1):
   return vtags, varray
 
 
-def writeCSV(file, ldata, hlines=[], fmt='%.10g'):
+def writeCSV(file, ldata, hlines=[], fmt='%.10g', delim=',', nline='\n'):
   '''
   write data in .csv format, including header lines
   
@@ -438,6 +440,8 @@ def writeCSV(file, ldata, hlines=[], fmt='%.10g'):
     * ldata: list of columns to be written
     * hlines: list with header lines (optional)
     * fmt: format string (optional)
+    * delim: delimiter to seperate values (default comma)
+    * nline: newline string (default: \n)
 
   Returns: 
     * 0/1  for success/fail
@@ -448,16 +452,20 @@ def writeCSV(file, ldata, hlines=[], fmt='%.10g'):
   # open file for read (if necessary)
   if type(file)==type(' '): f = open(file, 'w') # file is a file name
   else: f=file     # assume input is file handle of an open file 
+  
+  #check if \n is contained in newline, if not add it
+  if "\n" not in nline:
+    nline += "\n"
 
   if type(hlines)==type(' '):
-     f.write(hlines+'\n')
+     f.write(hlines+nline)
   elif type(hlines)==type([]):
     for i in range(len(hlines)):
-      f.write(hlines[i]+'\n')
+      f.write(hlines[i]+nline)
 
   try:
     np.savetxt(f, np.array(ldata).transpose(),
-                fmt=fmt, delimiter =',', newline='\n')
+                fmt=fmt, delimiter=delim, newline=nline)
     return 0
   except:
     return 1
