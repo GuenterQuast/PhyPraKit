@@ -21,6 +21,7 @@ from __future__ import print_function  # for python2.7 compatibility
         - readCassy()      read CASSY output file in .txt format   
         - labxParser()     read CASSY output file, .labx format   
         - writeCSV()       write data in csv-format (opt. with header)
+        - writeTexTable()  write data in LaTeX table format
 
       2. signal processing:
 
@@ -72,7 +73,7 @@ from __future__ import print_function  # for python2.7 compatibility
 # Author:       G. Quast   Dec. 2013
 # dependencies: PYTHON v2.7, numpy, matplotlib.pyplot 
 #
-# last modified: Nov. 2016
+# last modified: Feb. 2019
 #   16-Nov-16    GQ  readPicoscope now also supports .csv export format    
 #                GQ  added fuctions for signal processing/analysis
 #   17-Nov-16    GQ  added readCassy for Cassy data in .txt format
@@ -89,6 +90,7 @@ from __future__ import print_function  # for python2.7 compatibility
 #                    convolutionPeakfinder() to use similar components
 #   05-Feb-19    CV  added line ending chars to createCSV(), to export
 #                    data for example as a latex table
+#   07-Feb-19    GQ  merged pull request by CV, vers. 1.0.2
 # ----------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt

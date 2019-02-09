@@ -1,14 +1,14 @@
 '''
 .. module:: _version_info
-   :platform: python 2.7, 3.4
-   :synopsis: Version 1.0.1 of PhyPraKit, rel. August 2017
+   :platform: python 2.7, >=3.4
+   :synopsis: Version 1.0.2 of PhyPraKit, rel. Feb. 2019
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 '''
 
 major = 1
 minor = 0
-revision = 1
+revision = 2
 
 def _get_version_tuple():
   '''

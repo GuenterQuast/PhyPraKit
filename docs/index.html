@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>PhyPraKit Documentation &#8212; PhyPraKit 1.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -27,7 +24,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -49,10 +46,10 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><cite>Version</cite> 2017-08-27</div></blockquote>
+<div><cite>Version</cite> 2019-02-09</div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
-<p>PhyPraKit is a collection of python modules <cite>(pyhton 2.7)</cite>
+<p><strong>PhyPraKit</strong> is a collection of python modules <cite>(pyhton 2.7)</cite>
 for data visialisation and analysis in experimental laboratory
 cources in physics, developed at the faculty of physics at
 Karlsruhe Institute of Technology (KIT). As the modules are
@@ -66,18 +63,18 @@ in particular the desctiption of the the examples.</p>
 <p>A pdf version of this documentation is available here: <a class="reference external" href="PhyPraKit.pdf">PhyPraKit.pdf</a>.</p>
 <div class="section" id="installation">
 <h3>Installation:<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
-<p>To use PhyPraKit, it is sufficient if the file <cite>PhyPraKit.py</cite> is
-present in the same directory as the python scripts importing it.</p>
+<p>To use PhyPraKit, it is sufficient to place the file <cite>PhyPraKit.py</cite>
+in the same directory as the python scripts importing it.</p>
 <p>Installation via <cite>pip</cite> is also supported. The recommendation is
-to use the installation package in the sbdirectory <cite>dist</cite> and
+to use the installation package in the subdirectory <cite>dist</cite> and
 install in user space:</p>
 <blockquote>
 <div><code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">--no-cache</span> <span class="pre">PhyPraKit&lt;vers.&gt;</span></code></div></blockquote>
 </div>
 <div class="section" id="ubersicht">
 <h3>Übersicht:<a class="headerlink" href="#ubersicht" title="Permalink to this headline">¶</a></h3>
-<p>PhyPraKit ist eine Sammlung nützlicher Funktionen in der Sprache
-<cite>python (vers. 2.7 oder 3.4)</cite> zum Aufnehmen, zur Bearbeitung,
+<p><strong>PhyPraKit</strong> ist eine Sammlung nützlicher Funktionen in der Sprache
+<cite>python (vers. 2.7 oder &gt;=3.4)</cite> zum Aufnehmen, zur Bearbeitung,
 Visualisierung  und  Auswertung von Daten in den physikalischen
 Praktika. Die Anwendung der verschiedenen Funktionen des Pakets
 werden jeweils durch Beispiele illustriert.</p>
@@ -102,7 +99,7 @@ Die Script- und Programmiersprache <cite>python</cite> mit den Zusatzpaketen
 <cite>numpy</cite> und <cite>matplotlib</cite> ist ein universelles Werkzeug, um die
 Wiederholbarkeit von Datenauswertungen und die Reprodzierbarkeit
 der Ergebnisse zu gewährleiseten.</p>
-<p>In der Veranstaltung &#8220;Computergestützte Datenauswertung&#8221;
+<p>In der Veranstaltung “Computergestützte Datenauswertung”
 (<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA">http://www.ekp.kit.edu/~quast/CgDA</a>), die im Studienplan
 für den Bachelorstudiengang Physik am KIT seit dem Sommersemester
 2016 angeboten wird, werden Methoden und Software zur
@@ -111,15 +108,16 @@ Auswertung eingeführt.</p>
 <p>Die folgen Links erlauben einen schnellen Überblick über die Inhalte
 der Vorlesung und die Beispeielen aus den Übungen:</p>
 <blockquote>
-<div><ul class="simple">
+<div><ul>
 <li><dl class="first docutils">
 <dt>Zusammenfassung der Vorlesung und Dokumentation der Code-Beispiele</dt>
-<dd><a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html</a></dd>
+<dd><p class="first last"><a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html</a></p>
+</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>Installation der Software auf verschiedenen Platformen</dt>
-<dd><ul class="first last">
+<dd><ul class="first last simple">
 <li>Dokumentation in html:
 <a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html</a></li>
 <li>Dokumentation in pdf:
@@ -132,7 +130,7 @@ der Vorlesung und die Beispeielen aus den Übungen:</p>
 </li>
 </ul>
 </div></blockquote>
-<p>Speziell für das &#8220;Praktikum zur klassischen Physik&#8221; finden sich eine
+<p>Speziell für das “Praktikum zur klassischen Physik” finden sich eine
 kurze Einführung
 (<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf">http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf</a>)
 sowie die hier dokumentierten einfachen Beispiele als Startpunkt für
@@ -148,65 +146,156 @@ bzw. allgemeinensten Implementierung der Vorzug gegeben.</p>
 </div>
 <div class="section" id="dokumentation-der-beispiele">
 <h1>Dokumentation der Beispiele<a class="headerlink" href="#dokumentation-der-beispiele" title="Permalink to this headline">¶</a></h1>
-<dl class="docutils">
-<dt><cite>PhyPraKit.py</cite> ist ein Paket mit nützlichen Hilfsfunktionen</dt>
-<dd><p class="first">zum import in eigene Beispiele mittels:</p>
+<p><strong>`PhyPraKit.py`</strong> ist ein Paket mit nützlichen Hilfsfunktionen
+zum import in eigene Beispiele mittels:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">PhyPraKit</span> <span class="k">as</span> <span class="nn">ppk</span>
 </pre></div>
 </div>
 <p>oder:</p>
-<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PhyPraKit</span> <span class="k">import</span> <span class="o">...</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PhyPraKit</span> <span class="k">import</span> <span class="o">...</span>
 </pre></div>
 </div>
-</dd>
-</dl>
-<p>Die folgenden Beispiele illustrieren die Anwendung:</p>
+<p><strong>`PhyPraKit.py`</strong> enthält folgende Funktionen:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Data input:</li>
+</ol>
 <blockquote>
 <div><ul class="simple">
-<li><cite>test_readColumnData.py</cite> ist ein Beispiel zum
+<li>readColumnData() read data and meta-data from text file</li>
+<li>readCSV()        read data in csv-format from file with header</li>
+<li>readtxt()        read data in “txt”-format from file with header</li>
+<li>readPicoScope()  read data from PicoScope</li>
+<li>readCassy()      read CASSY output file in .txt format</li>
+<li>labxParser()     read CASSY output file, .labx format</li>
+<li>writeCSV()       write data in csv-format (opt. with header)</li>
+<li>writeTexTable()  write data in LaTeX table format</li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>signal processing:</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>offsetFilter()      subtract an offset in array a</li>
+<li>meanFilter()        apply sliding average to smoothen data</li>
+<li>resample()          average over n samples</li>
+<li>simplePeakfinder()  find peaks and dips in an array
+recommend to use <cite>convolutionPeakfinder</cite></li>
+<li>convolutionPeakfinder() find maxima (peaks) in an array</li>
+<li>convolutionEdgefinder() find maxima of slope (rising) edges in an array</li>
+<li>Fourier_fft()       fast Fourier transformation of an array</li>
+<li>FourierSpectrum()   Fourier transformation of an array
+<cite>(slow, preferably use fft version)</cite></li>
+<li>autocorrelate()     autocorrelation function</li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li>statistics:</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>wmean()  weighted mean</li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li>histograms tools:</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>barstat()   statistical information (mean, sigma, erroron mean) from bar chart</li>
+<li>nhist()    histogram plot based on np.historgram() and plt.bar()
+<code class="docutils literal"><span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist()</span> <span class="pre">instead</span></code></li>
+<li>histstat() statistical information from 1d-histogram</li>
+<li>nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()
+<code class="docutils literal"><span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist2d()</span> <span class="pre">instead</span></code></li>
+<li>hist2dstat() statistical information from 1d-histogram</li>
+<li>profile2d()  “profile plot” for 2d data</li>
+<li>chi2p_indep2d() chi2 test on independence of data</li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li>linear regression:</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>linRegression()    linear regression, y=ax+b, with analytical formula</li>
+<li>linRegressionXY()  linear regression, y=ax+b, with x and y errors
+<code class="docutils literal"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">use</span> <span class="pre">`odFit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></li>
+<li>odFit()            fit function with x and y errors (scipy ODR)</li>
+<li>kRegression()      regression, y=ax+b, with (correlated) error on x, and y
+<code class="docutils literal"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">use</span> <span class="pre">`kFit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></li>
+<li>kFit()             fit function with (correlated) errors on x and y (kafe)</li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="6">
+<li>simulated data with MC-method:</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>smearData()          add random deviations to input data</li>
+<li>generateXYdata()     generate simulated data</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<p>Die folgenden <strong>Beispiele</strong> illustrieren die Anwendung:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><cite>test_readColumnData.py</cite> ist ein Beispiel zum
 Einlesen von Spalten aus Textdateien; die zugehörigen
 <em>Metadaten</em> können ebenfalls an das Script übergeben
-werden und stehen so bei der Auswertung zur Verfügung.</li>
+werden und stehen so bei der Auswertung zur Verfügung.</p>
+</li>
 <li><dl class="first docutils">
 <dt><cite>test_readtxt.py</cite> liest Ausgabedateien im allgemeinem <cite>.txt</cite>-Format</dt>
-<dd><ul class="first last">
+<dd><ul class="first last simple">
 <li>Entfernen aller ASCII-Sonderzeichen außer dem Spalten-Trenner</li>
 <li>Ersetzen des deutschen Dezimalkommas durch Dezimalpunkt</li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><cite>test_readPicoScope.py</cite> liest Ausgabedateien von USB-Oszillographen
-der Marke PicoScope im Format <cite>.csv</cite> oder <cite>.txt</cite>.</li>
-<li><cite>test_labxParser.py</cite> liest Ausgabedateien von Leybold
+<li><p class="first"><cite>test_readPicoScope.py</cite> liest Ausgabedateien von USB-Oszillographen
+der Marke PicoScope im Format <cite>.csv</cite> oder <cite>.txt</cite>.</p>
+</li>
+<li><p class="first"><cite>test_labxParser.py</cite> liest Ausgabedateien von Leybold
 CASSY im <cite>.labx</cite>-Format. Die Kopfzeilen und Daten von Messreihen
-werden als Listen in <em>python</em> zur Verfügung gestellt.</li>
-<li><cite>test_convolutionFilter.py</cite> liest die Datei <cite>Wellenform.csv</cite> und
-bestimmt Maxima und fallende Flanken des Signals</li>
-<li><cite>test_AutoCorrelation.py</cite> liest die Datei <cite>AudioData.csv</cite> und führt
-eine Analyse der Autokorrelation zur Frequenzbestimmung durch.</li>
-<li><cite>test_Fourier.py</cite> illustriert die Durchführung einer
+werden als Listen in <em>python</em> zur Verfügung gestellt.</p>
+</li>
+<li><p class="first"><cite>test_convolutionFilter.py</cite> liest die Datei <cite>Wellenform.csv</cite> und
+bestimmt Maxima und fallende Flanken des Signals</p>
+</li>
+<li><p class="first"><cite>test_AutoCorrelation.py</cite> liest die Datei <cite>AudioData.csv</cite> und führt
+eine Analyse der Autokorrelation zur Frequenzbestimmung durch.</p>
+</li>
+<li><p class="first"><cite>test_Fourier.py</cite> illustriert die Durchführung einer
 Fourier-Transfomation eines periodischen Signals, das in
-der PicoScope-Ausgabedatei <cite>Wellenform.csv</cite> enthalten ist.</li>
-<li><cite>test_kRegression.py</cite> dient zur Anpassung einer Geraden an
+der PicoScope-Ausgabedatei <cite>Wellenform.csv</cite> enthalten ist.</p>
+</li>
+<li><p class="first"><cite>test_kRegression.py</cite> dient zur Anpassung einer Geraden an
 Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit allen
 Messpunkten gemeinsamen (d. h. korrelierten) relativen oder absoluten
-systematischen Fehlern mit dem Paket <cite>kafe</cite>.</li>
-<li><cite>test_linRegression.py</cite> ist eine einfachere Version mit
+systematischen Fehlern mit dem Paket <cite>kafe</cite>.</p>
+</li>
+<li><p class="first"><cite>test_linRegression.py</cite> ist eine einfachere Version mit
 <cite>python</cite>-Bordmitteln zur Anpassung einer Geraden an
 Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung.
-Korrelierte Unsicherheiten werden nicht unterstützt.</li>
-<li><cite>test_kFit.py</cite> ist eine verallgemeinerte Version von <cite>test_kRegression</cite>
+Korrelierte Unsicherheiten werden nicht unterstützt.</p>
+</li>
+<li><p class="first"><cite>test_kFit.py</cite> ist eine verallgemeinerte Version von <cite>test_kRegression</cite>
 und dient zur Anpassung einer beliebigen Funktion an Messdaten mit
 Fehlern in Ordinaten- und Abszissenrichtung und mit allen Messpunkten
 gemeinsamen (d. h. korrelierten) relativen oder absoluten systematischen
-Fehlern mit dem Paket <cite>kafe</cite>.</li>
-<li><cite>test_Histogram.py</cite> ist ein Beispiel zur Darstellung und
+Fehlern mit dem Paket <cite>kafe</cite>.</p>
+</li>
+<li><p class="first"><cite>test_Histogram.py</cite> ist ein Beispiel zur Darstellung und
 statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen)
-in ein oder zwei Dimensionen.</li>
-<li><cite>test_generateXYata.py</cite> zeigt, wie man mit Hilfe von Zufallszahlen
-&#8220;künstliche Daten&#8221; zur Veranschaulichung oder zum Test von Methoden
-zur Datenauswertung erzeugen kann.</li>
+in ein oder zwei Dimensionen.</p>
+</li>
+<li><p class="first"><cite>test_generateXYata.py</cite> zeigt, wie man mit Hilfe von Zufallszahlen
+“künstliche Daten” zur Veranschaulichung oder zum Test von Methoden
+zur Datenauswertung erzeugen kann.</p>
+</li>
 </ul>
 <p>Die folgenden <em>python</em>-Skripte sind etwas komplexer und zeigen
 typische Anwendungsfälle der Module in <cite>PhyPraKit</cite>:</p>
@@ -442,7 +531,7 @@ template matches best</dd>
 <code class="descclassname">PhyPraKit.</code><code class="descname">generateXYdata</code><span class="sig-paren">(</span><em>xdata</em>, <em>model</em>, <em>sx</em>, <em>sy</em>, <em>mpar=None</em>, <em>srelx=None</em>, <em>srely=None</em>, <em>xabscor=None</em>, <em>yabscor=None</em>, <em>xrelcor=None</em>, <em>yrelcor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.generateXYdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate measurement data according to some model
 assumes xdata is measured within the given uncertainties; 
-the model function is evaluated at the assumed &#8220;true&#8221; values 
+the model function is evaluated at the assumed “true” values 
 xtrue, and a sample of simulated measurements is obtained by 
 adding random deviations according to the uncertainties given 
 as arguments.</p>
@@ -666,7 +755,7 @@ uses package <cite>kafe</cite></p>
 <dt id="PhyPraKit.linRegressionXY">
 <code class="descclassname">PhyPraKit.</code><code class="descname">linRegressionXY</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>sx</em>, <em>sy</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.linRegressionXY" title="Permalink to this definition">¶</a></dt>
 <dd><p>linear regression y(x) = ax + b  with errors on x and y
-uses numerical &#8220;orthogonal distance regression&#8221; from package scipy.odr</p>
+uses numerical “orthogonal distance regression” from package scipy.odr</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><ul class="first last simple">
@@ -768,7 +857,7 @@ create and plot a 2-dimensional histogram</p>
 <code class="descclassname">PhyPraKit.</code><code class="descname">odFit</code><span class="sig-paren">(</span><em>fitf</em>, <em>x</em>, <em>y</em>, <em>sx</em>, <em>sy</em>, <em>p0=None</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.odFit" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>fit an arbitrary function with errors on x and y
-uses numerical &#8220;orthogonal distance regression&#8221; from package scipy.odr</p>
+uses numerical “orthogonal distance regression” from package scipy.odr</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><ul class="first last simple">
@@ -878,7 +967,7 @@ by subtracting the mean</p>
 <dd><ul class="first last simple">
 <li>input is assumed to be columns of floats</li>
 <li>characters following &lt;cchar&gt;, and &lt;cchar&gt; itself, are ignored</li>
-<li>words with preceeding &#8216;*&#8217; are taken as keywords for meta-data,
+<li>words with preceeding ‘*’ are taken as keywords for meta-data,
 text following the keyword is returned in a dictionary</li>
 </ul>
 </dd>
@@ -994,7 +1083,7 @@ to from the new value at index <cite>i</cite></p>
 <dt id="PhyPraKit.smearData">
 <code class="descclassname">PhyPraKit.</code><code class="descname">smearData</code><span class="sig-paren">(</span><em>d</em>, <em>s</em>, <em>srel=None</em>, <em>abscor=None</em>, <em>relcor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.smearData" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
-<dt>Generate measurement data from &#8220;true&#8221; input d by</dt>
+<dt>Generate measurement data from “true” input d by</dt>
 <dd>adding random deviations according to the uncertainties</dd>
 <dt>Args:</dt>
 <dd><ul class="first last simple">
@@ -1043,8 +1132,9 @@ to from the new value at index <cite>i</cite></p>
 
 <dl class="function">
 <dt id="PhyPraKit.writeCSV">
-<code class="descclassname">PhyPraKit.</code><code class="descname">writeCSV</code><span class="sig-paren">(</span><em>file</em>, <em>ldata</em>, <em>hlines=[]</em>, <em>fmt='%.10g'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.writeCSV" title="Permalink to this definition">¶</a></dt>
-<dd><p>write data in .csv format, including header lines</p>
+<code class="descclassname">PhyPraKit.</code><code class="descname">writeCSV</code><span class="sig-paren">(</span><em>file</em>, <em>ldata</em>, <em>hlines=[]</em>, <em>fmt='%.10g'</em>, <em>delim='</em>, <em>'</em>, <em>nline='\n'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.writeCSV" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>write data in .csv format, including header lines</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><ul class="first last simple">
@@ -1052,11 +1142,40 @@ to from the new value at index <cite>i</cite></p>
 <li>ldata: list of columns to be written</li>
 <li>hlines: list with header lines (optional)</li>
 <li>fmt: format string (optional)</li>
+<li>delim: delimiter to seperate values (default comma)</li>
+<li>nline: newline string (default:</li>
 </ul>
 </dd>
+</dl>
+</div></blockquote>
+<p>)</p>
+<blockquote>
+<div><dl class="docutils">
 <dt>Returns: </dt>
 <dd><ul class="first last simple">
 <li>0/1  for success/fail</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="PhyPraKit.writeTexTable">
+<code class="descclassname">PhyPraKit.</code><code class="descname">writeTexTable</code><span class="sig-paren">(</span><em>file</em>, <em>ldata</em>, <em>cnames=[]</em>, <em>fmt='%.10g'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.writeTexTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>write data formatted as latex tabular</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>file: string, file name</li>
+<li>ldata: list of columns to be written</li>
+<li>cnames: list of column names (optional)</li>
+<li>fmt: format string (optional)</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd><ul class="first last simple">
+<li>0/1 for success/fail</li>
 </ul>
 </dd>
 </dl>
@@ -1068,7 +1187,7 @@ to from the new value at index <cite>i</cite></p>
 </dl>
 <span class="target" id="module-test_convolutionFilter"></span><span class="target" id="module-test_AutoCorrelation"></span><span class="target" id="module-test_Fourier"></span><span class="target" id="module-test_kRegression"></span><span class="target" id="module-test_kFit"></span><span class="target" id="module-test_generateData"></span><span class="target" id="module-kfitf"></span><p>kfitf.py</p>
 <p>Perform a fit with the kafe package driven by input file</p>
-<p>usage: kfitf.py [-h] [-n] [-s] [-c] [&#8211;noinfo] [-f FORMAT] filename</p>
+<p>usage: kfitf.py [-h] [-n] [-s] [-c] [–noinfo] [-f FORMAT] filename</p>
 <dl class="docutils">
 <dt>positional arguments:</dt>
 <dd>filename                       name of fit input file</dd>
@@ -1161,7 +1280,7 @@ to from the new value at index <cite>i</cite></p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Günter Quast.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
     </div>
   </body>
 </html>

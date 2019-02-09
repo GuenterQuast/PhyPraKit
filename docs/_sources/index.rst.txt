@@ -28,7 +28,7 @@
 About
 =====
 
-PhyPraKit is a collection of python modules `(pyhton 2.7)` 
+**PhyPraKit** is a collection of python modules `(pyhton 2.7)` 
 for data visialisation and analysis in experimental laboratory
 cources in physics, developed at the faculty of physics at
 Karlsruhe Institute of Technology (KIT). As the modules are
@@ -51,11 +51,11 @@ A pdf version of this documentation is available here: PhyPraKit.pdf_.
 Installation:
 -------------
 
-To use PhyPraKit, it is sufficient if the file `PhyPraKit.py` is
-present in the same directory as the python scripts importing it.
+To use PhyPraKit, it is sufficient to place the file `PhyPraKit.py`
+in the same directory as the python scripts importing it.
 
 Installation via `pip` is also supported. The recommendation is
-to use the installation package in the sbdirectory `dist` and
+to use the installation package in the subdirectory `dist` and
 install in user space:
 
    ``pip install --user --no-cache PhyPraKit<vers.>``
@@ -64,8 +64,8 @@ install in user space:
 Übersicht:
 ----------
 
-PhyPraKit ist eine Sammlung nützlicher Funktionen in der Sprache 
-`python (vers. 2.7 oder 3.4)` zum Aufnehmen, zur Bearbeitung, 
+**PhyPraKit** ist eine Sammlung nützlicher Funktionen in der Sprache 
+`python (vers. 2.7 oder >=3.4)` zum Aufnehmen, zur Bearbeitung, 
 Visualisierung  und  Auswertung von Daten in den physikalischen 
 Praktika. Die Anwendung der verschiedenen Funktionen des Pakets   
 werden jeweils durch Beispiele illustriert.
@@ -135,16 +135,79 @@ bzw. allgemeinensten Implementierung der Vorzug gegeben.
 Dokumentation der Beispiele
 ===========================
 
-`PhyPraKit.py` ist ein Paket mit nützlichen Hilfsfunktionen
-   zum import in eigene Beispiele mittels::
+**`PhyPraKit.py`** ist ein Paket mit nützlichen Hilfsfunktionen
+zum import in eigene Beispiele mittels::
 
      import PhyPraKit as ppk
 
-   oder::
+oder::
 
      from PhyPraKit import ... 
 
-Die folgenden Beispiele illustrieren die Anwendung:
+
+
+**`PhyPraKit.py`** enthält folgende Funktionen:
+
+
+      1. Data input:
+
+        - readColumnData() read data and meta-data from text file
+        - readCSV()        read data in csv-format from file with header
+        - readtxt()        read data in "txt"-format from file with header
+        - readPicoScope()  read data from PicoScope
+        - readCassy()      read CASSY output file in .txt format   
+        - labxParser()     read CASSY output file, .labx format   
+        - writeCSV()       write data in csv-format (opt. with header)
+        - writeTexTable()  write data in LaTeX table format
+
+      2. signal processing:
+
+        - offsetFilter()      subtract an offset in array a
+        - meanFilter()        apply sliding average to smoothen data
+        - resample()          average over n samples
+        - simplePeakfinder()  find peaks and dips in an array 
+          recommend to use `convolutionPeakfinder`
+        - convolutionPeakfinder() find maxima (peaks) in an array
+        - convolutionEdgefinder() find maxima of slope (rising) edges in an array
+        - Fourier_fft()       fast Fourier transformation of an array
+        - FourierSpectrum()   Fourier transformation of an array 
+          `(slow, preferably use fft version)`
+        - autocorrelate()     autocorrelation function
+
+      3. statistics:
+
+        - wmean()  weighted mean
+
+      4. histograms tools:
+
+        - barstat()   statistical information (mean, sigma, erroron mean) from bar chart
+        - nhist()    histogram plot based on np.historgram() and plt.bar()
+          ``use matplotlib.pyplot.hist() instead``
+        - histstat() statistical information from 1d-histogram
+        - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()
+          ``use matplotlib.pyplot.hist2d() instead``  
+        - hist2dstat() statistical information from 1d-histogram
+        - profile2d()  "profile plot" for 2d data
+        - chi2p_indep2d() chi2 test on independence of data
+
+      5. linear regression:
+
+        - linRegression()    linear regression, y=ax+b, with analytical formula
+        - linRegressionXY()  linear regression, y=ax+b, with x and y errors 
+          ``! deprecated, use `odFit` with linear model instead``
+        - odFit()            fit function with x and y errors (scipy ODR)
+        - kRegression()      regression, y=ax+b, with (correlated) error on x, and y 
+          ``! deprecated, use `kFit` with linear model instead``
+        - kFit()             fit function with (correlated) errors on x and y (kafe)
+
+      6. simulated data with MC-method:
+
+        - smearData()          add random deviations to input data
+        - generateXYdata()     generate simulated data 
+
+
+
+Die folgenden **Beispiele** illustrieren die Anwendung:
 
   * `test_readColumnData.py` ist ein Beispiel zum
     Einlesen von Spalten aus Textdateien; die zugehörigen 
@@ -152,8 +215,8 @@ Die folgenden Beispiele illustrieren die Anwendung:
     werden und stehen so bei der Auswertung zur Verfügung.
 
   * `test_readtxt.py` liest Ausgabedateien im allgemeinem `.txt`-Format
-       - Entfernen aller ASCII-Sonderzeichen außer dem Spalten-Trenner
-       - Ersetzen des deutschen Dezimalkommas durch Dezimalpunkt
+     - Entfernen aller ASCII-Sonderzeichen außer dem Spalten-Trenner
+     - Ersetzen des deutschen Dezimalkommas durch Dezimalpunkt
 
   * `test_readPicoScope.py` liest Ausgabedateien von USB-Oszillographen 
     der Marke PicoScope im Format `.csv` oder `.txt`.
