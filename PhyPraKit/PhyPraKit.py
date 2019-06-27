@@ -160,7 +160,7 @@ def readColumnData(fname, cchar='#', delimiter=None, pr=True):
 
   return arr, mdict
 
-def readCSV(file, nlhead=1):
+def readCSV(file, nlhead=1, delim=','):
   '''
   read Data in .csv format, skip header lines
   
@@ -186,7 +186,7 @@ def readCSV(file, nlhead=1):
    hlines.append(f.readline()) # header line(s)
 
   # read data
-  data = np.loadtxt(f, delimiter=',', unpack=True) # column-wise data
+  data = np.loadtxt(f, delimiter=delim , unpack=True) # column-wise data
   return hlines, data
 
 
@@ -433,7 +433,8 @@ def labxParser(file, prlevel=1):
   return vtags, varray
 
 
-def writeCSV(file, ldata, hlines=[], fmt='%.10g', delim=',', nline='\n', **kwargs):
+def writeCSV(file, ldata, hlines=[], fmt='%.10g',
+             delim=',', nline='\n', **kwargs):
   '''
   write data in .csv format, including header lines
   
@@ -615,8 +616,8 @@ def Fourier_fft(t, a):
 
   n = len(t)
   dt = (t[-1]-t[0])/(n-1.)       # time step
-  freq = fftfreq(n, dt)[:n/2]    # only positive frequencies
-  amp = abs(fft(a))[:n/2]*2./n
+  freq = fftfreq(n, dt)[:n//2]   # only positive frequencies
+  amp = abs(fft(a))[:n//2]*2./n
 
   return freq, amp
 
