@@ -91,6 +91,8 @@ from __future__ import print_function  # for python2.7 compatibility
 #   05-Feb-19    CV  added line ending chars to createCSV(), to export
 #                    data for example as a latex table
 #   07-Feb-19    GQ  merged pull request by CV, vers. 1.0.2
+#   27-Jun-19    GQ  fixed readCV and integer arithmetics in Fourier_fft
+#   08-Jul-19    GQ  fixed ' ' as deliminter in readtxt()
 # ----------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
@@ -239,7 +241,9 @@ def readtxt(file, nlhead=1, delim='\t'):
   for i in range (nlhead):
     hlines.append(next(lfilt)) # header line(s)
 
-  # read float data
+  # read float data with loadtext()
+  if delim ==' ' or delim =='\t':
+    delim = None   # loadtext takes care of white spaces by default
   data = np.loadtxt(lfilt, dtype=np.float32, delimiter=delim, unpack=True)
   return hlines, data
 
