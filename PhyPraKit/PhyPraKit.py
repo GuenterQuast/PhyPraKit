@@ -93,7 +93,8 @@ from __future__ import print_function  # for python2.7 compatibility
 #   07-Feb-19    GQ  merged pull request by CV, vers. 1.0.2
 #   27-Jun-19    GQ  fixed readCV and integer arithmetics in Fourier_fft
 #   08-Jul-19    GQ  fixed ' ' as deliminter in readtxt()
-# ----------------------------------------------------------------------
+#   27-Jul-19    GQ  added caption to writeTexTable and f.close to writeCSV()
+# ---------------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
 from scipy import stats
@@ -473,19 +474,21 @@ def writeCSV(file, ldata, hlines=[], fmt='%.10g',
   try:
     np.savetxt(f, np.array(ldata).transpose(),
                 fmt=fmt, delimiter=delim, newline=nline, **kwargs)
+    f.close()
     return 0
   except:
     return 1
 
-def writeTexTable(file, ldata, cnames=[], fmt='%.10g'):
+def writeTexTable(file, ldata, cnames=[], caption='', fmt='%.10g'):
   ''' write data formatted as latex tabular
 
   Args:
     * file: string, file name
     * ldata: list of columns to be written
     * cnames: list of column names (optional)
+    * caption: LaTeX table caption (optional)
     * fmt: format string (optional)
-  
+
   Returns:
     * 0/1 for success/fail
   '''
@@ -493,17 +496,19 @@ def writeTexTable(file, ldata, cnames=[], fmt='%.10g'):
   nline = "\\\\\n"
 
   #create header for latex tabular environment
-  head = "\\begin{tabular}{"+len(ldata)*"c"+"}\n"
+  head = "\\begin{tabular}{"+len(ldata)*"c"+"}\n\\hline\n"
   if type(cnames)==type(''):
-    head += cnames
+    head += cnames 
   elif type(cnames)==type([]) and len(cnames)>0:
     for element in cnames:
       head += element + " & "
-    head = head[:-3]
+    head=head[:-3] +'\\\\'  # remove last '&' and replace by '\\'
+    head+='\n\\hline\n%' # last header line is a comment line
   #create footer
-  foot = "\\end{tabular}"
-  #write file, comments ahs to be empty because of numpy putting a comment symbol
-  #in front of the header and footer
+  foot = '\n\\hline\n\\end{tabular}'
+  if caption != '': foot += '\n\\caption{' + caption +'}'
+  foot+='\n%' # last footer line is a comment line
+  # write to file
   return writeCSV(file, ldata, fmt=fmt, delim=delim, nline=nline,
                   header=head, footer=foot, comments='')
 
