@@ -10,10 +10,13 @@ from __future__ import print_function  # for python2.7 compatibility
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 '''
 import kafe # must be imported first to properly set matplotlib backend
-from kafe.function_tools import FitFunction, LaTeX, ASCII
-
-from PhyPraKit import readCSV, writeTexTable, writeCSV
 import numpy as np, matplotlib.pyplot as plt
+
+# some more useful functions from kafe
+from kafe.function_tools import FitFunction, LaTeX, ASCII
+from kafe.fit import round_to_significance
+# 
+from PhyPraKit import readCSV, writeTexTable, writeCSV
 
 # -- the model function (as in kafe, with decorator functions)
 @ASCII(expression='slope * x + y_intercept')
@@ -49,6 +52,7 @@ dat.add_error_source('y','simple', syabscor, correlated=True)
 fit = kafe.Fit(dat, model) 
 #    ... run it ...
 fit.do_fit(quiet=False)
+
 #   ... harvest results in local variables
 par, par_err, cov, chi2 = fit.get_results() # for kafe vers. > 1.1.0
 cor = cov/np.outer(par_err, par_err)
@@ -75,7 +79,14 @@ if writeTexTable('include/Table1.tex', data,
 # save kafe Figure (in include-directory for LaTeX)
 kplot.figure.savefig('include/Figure1.pdf') 
 
-# finally, summarize and print results 
+# finally, summarize and print results
+#   first, round to reasonable number of digits
+lp=len(par)
+p=[0.]*lp
+pe=[0.]*lp
+for i in range(lp):
+  p[i], pe[i] = round_to_significance(par[i], par_err[i])
+
 print('*==* data set')
 print('  x = ', xdat)
 print('  sx = ', sigx_abs)
@@ -83,9 +94,10 @@ print('  y = ', ydat)
 print('  sy = ', ey)
 print('*==* fit result:')
 print("  -> chi2:         %.3g"%chi2)
-np.set_printoptions(precision=3)
-print("  -> parameters:   ", par)
+#np.set_printoptions(precision=3)
+print("  -> parameters:   ", p)
+print("  -> uncertainties:", pe) 
 np.set_printoptions(precision=2)
-print("  -> uncertainties:", par_err) 
 print("  -> correlation matrix:\n", cor) 
+
 
