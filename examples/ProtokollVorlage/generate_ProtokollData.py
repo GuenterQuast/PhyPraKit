@@ -12,7 +12,7 @@ from __future__ import print_function  # for python2.7 compatibility
 import kafe # must be imported first to properly set matplotlib backend
 from kafe.function_tools import FitFunction, LaTeX, ASCII
 
-from PhyPraKit import generateXYdata, writeTexTable, writeCSV
+from PhyPraKit import readCSV, writeTexTable, writeCSV
 import numpy as np, matplotlib.pyplot as plt
 
 # -- the model function (as in kafe, with decorator functions)
@@ -22,33 +22,27 @@ import numpy as np, matplotlib.pyplot as plt
 def model (x, slope=1.0, y_intercept=0.0):
     return slope * x + y_intercept
 
-### --- generate toy data
-# set parameters
+### --- read data and set errors
+hlines, data= readCSV('ToyData.dat')
+xdat = data[0]
+ydat = data[1]
+nd=len(xdat)
 sigx_abs = 0.2 # absolute error on x 
 sigy_rel = 0.1 # relative error on y
 #       errors of this kind only supported by kafe
 sxrelcor=0.05 #  a relative, correlated error on x 
 syabscor=0.1  #  an absolute, correlated error on y
-xmin =  1.
-xmax =  10.
-xdata=np.arange(xmin, xmax+1. ,1.)
-nd=len(xdata)
-mpars=[1., 0.3]
-# generate the data ("true" x and y, smeared y)
-xt, yt, ydata = generateXYdata(xdata, model, sigx_abs, 0., 
-                srely=sigy_rel, xrelcor=sxrelcor, yabscor=syabscor, 
-                mpar=mpars )
 
 ### --- perform a fit with kafe
 #    create the kafe data set ...
-dat = kafe.Dataset(data=(xdata, ydata),
+dat = kafe.Dataset(data=(xdat, ydat),
                    title='ToyData',
                    axis_labels=['X', 'Y'],
                    basename='kRegression') 
 #    ... and add all error sources  
 dat.add_error_source('x','simple', sigx_abs)
 dat.add_error_source('x','simple', sxrelcor, relative=True, correlated=True)
-ey = np.absolute(sigy_rel* yt * np.ones(nd)) # array of relative y errors
+ey = np.absolute(sigy_rel* ydat * np.ones(nd)) # array of relative y errors
 dat.add_error_source('y','simple', ey)
 dat.add_error_source('y','simple', syabscor, correlated=True)
 #    set-up the fit ...
@@ -66,7 +60,7 @@ kplot.plot_all()
 plt.draw(); plt.pause(2.) # show plot for 2s.
 
 # save input data as table (in include-direcotory for LaTeX)
-data = np.array([xdata, sigx_abs*np.ones(nd), ydata, ey])
+data = np.array([xdat, sigx_abs*np.ones(nd), ydat, ey])
 if writeTexTable('include/Table1.tex', data,
               cnames=['X', '$\\sigma_X$', 'Y', '$\\sigma_Y$' ],
                  caption='ToyData; außer den in der Tabelle ' +
@@ -83,15 +77,15 @@ kplot.figure.savefig('include/Figure1.pdf')
 
 # finally, summarize and print results 
 print('*==* data set')
-print(('  x = ', xdata))
-print(('  sx = ', sigx_abs))
-print(('  y = ', ydata))
-print(('  sy = ', ey))
+print('  x = ', xdat)
+print('  sx = ', sigx_abs)
+print('  y = ', ydat)
+print('  sy = ', ey)
 print('*==* fit result:')
-print(("  -> chi2:         %.3g"%chi2))
+print("  -> chi2:         %.3g"%chi2)
 np.set_printoptions(precision=3)
-print(("  -> parameters:   ", par))
+print("  -> parameters:   ", par)
 np.set_printoptions(precision=2)
-print(("  -> uncertainties:", par_err)) 
-print(("  -> correlation matrix:\n", cor)) 
+print("  -> uncertainties:", par_err) 
+print("  -> correlation matrix:\n", cor) 
 
