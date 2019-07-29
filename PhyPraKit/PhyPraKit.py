@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# module PhyPraKit.py, pyhton3 version
+#!/usr/bin/python3
+# module PhyPraKit.py, python3 version
 from __future__ import print_function  # for python2.7 compatibility
 ''' 
 .. module PhyPraKit   

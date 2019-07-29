@@ -32,12 +32,14 @@ clean-all:
 # Abhaengigkeiten und Aktionen spezifizieren
 
 $(INCLUDEFILES): $(ANALYSIS)
-	@./$(ANALYSIS)
+	python3 $(ANALYSIS)
+
 
 # use double-colon rules to distingish 2 cases:
+
 #  1) analysis script is newer than target
 $(MAIN).pdf:: $(ANALYSIS)
-	@./$(ANALYSIS)
+	python3 $(ANALYSIS)
 
 # 2) any LaTeX input is newer than target
 $(MAIN).pdf:: $(TEXFILES) $(INCLUDEFILES)

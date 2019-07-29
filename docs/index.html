@@ -46,7 +46,7 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><cite>Version</cite> 2019-02-09</div></blockquote>
+<div><cite>Version</cite> 2019-07-29</div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
 <p><strong>PhyPraKit</strong> is a collection of python modules <cite>(pyhton 2.7)</cite>
@@ -108,16 +108,15 @@ Auswertung eingeführt.</p>
 <p>Die folgen Links erlauben einen schnellen Überblick über die Inhalte
 der Vorlesung und die Beispeielen aus den Übungen:</p>
 <blockquote>
-<div><ul>
+<div><ul class="simple">
 <li><dl class="first docutils">
 <dt>Zusammenfassung der Vorlesung und Dokumentation der Code-Beispiele</dt>
-<dd><p class="first last"><a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html</a></p>
-</dd>
+<dd><a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html</a></dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>Installation der Software auf verschiedenen Platformen</dt>
-<dd><ul class="first last simple">
+<dd><ul class="first last">
 <li>Dokumentation in html:
 <a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html</a></li>
 <li>Dokumentation in pdf:
@@ -240,62 +239,51 @@ recommend to use <cite>convolutionPeakfinder</cite></li>
 </div></blockquote>
 <p>Die folgenden <strong>Beispiele</strong> illustrieren die Anwendung:</p>
 <blockquote>
-<div><ul>
-<li><p class="first"><cite>test_readColumnData.py</cite> ist ein Beispiel zum
+<div><ul class="simple">
+<li><cite>test_readColumnData.py</cite> ist ein Beispiel zum
 Einlesen von Spalten aus Textdateien; die zugehörigen
 <em>Metadaten</em> können ebenfalls an das Script übergeben
-werden und stehen so bei der Auswertung zur Verfügung.</p>
-</li>
+werden und stehen so bei der Auswertung zur Verfügung.</li>
 <li><dl class="first docutils">
 <dt><cite>test_readtxt.py</cite> liest Ausgabedateien im allgemeinem <cite>.txt</cite>-Format</dt>
-<dd><ul class="first last simple">
+<dd><ul class="first last">
 <li>Entfernen aller ASCII-Sonderzeichen außer dem Spalten-Trenner</li>
 <li>Ersetzen des deutschen Dezimalkommas durch Dezimalpunkt</li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><p class="first"><cite>test_readPicoScope.py</cite> liest Ausgabedateien von USB-Oszillographen
-der Marke PicoScope im Format <cite>.csv</cite> oder <cite>.txt</cite>.</p>
-</li>
-<li><p class="first"><cite>test_labxParser.py</cite> liest Ausgabedateien von Leybold
+<li><cite>test_readPicoScope.py</cite> liest Ausgabedateien von USB-Oszillographen
+der Marke PicoScope im Format <cite>.csv</cite> oder <cite>.txt</cite>.</li>
+<li><cite>test_labxParser.py</cite> liest Ausgabedateien von Leybold
 CASSY im <cite>.labx</cite>-Format. Die Kopfzeilen und Daten von Messreihen
-werden als Listen in <em>python</em> zur Verfügung gestellt.</p>
-</li>
-<li><p class="first"><cite>test_convolutionFilter.py</cite> liest die Datei <cite>Wellenform.csv</cite> und
-bestimmt Maxima und fallende Flanken des Signals</p>
-</li>
-<li><p class="first"><cite>test_AutoCorrelation.py</cite> liest die Datei <cite>AudioData.csv</cite> und führt
-eine Analyse der Autokorrelation zur Frequenzbestimmung durch.</p>
-</li>
-<li><p class="first"><cite>test_Fourier.py</cite> illustriert die Durchführung einer
+werden als Listen in <em>python</em> zur Verfügung gestellt.</li>
+<li><cite>test_convolutionFilter.py</cite> liest die Datei <cite>Wellenform.csv</cite> und
+bestimmt Maxima und fallende Flanken des Signals</li>
+<li><cite>test_AutoCorrelation.py</cite> liest die Datei <cite>AudioData.csv</cite> und führt
+eine Analyse der Autokorrelation zur Frequenzbestimmung durch.</li>
+<li><cite>test_Fourier.py</cite> illustriert die Durchführung einer
 Fourier-Transfomation eines periodischen Signals, das in
-der PicoScope-Ausgabedatei <cite>Wellenform.csv</cite> enthalten ist.</p>
-</li>
-<li><p class="first"><cite>test_kRegression.py</cite> dient zur Anpassung einer Geraden an
+der PicoScope-Ausgabedatei <cite>Wellenform.csv</cite> enthalten ist.</li>
+<li><cite>test_kRegression.py</cite> dient zur Anpassung einer Geraden an
 Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit allen
 Messpunkten gemeinsamen (d. h. korrelierten) relativen oder absoluten
-systematischen Fehlern mit dem Paket <cite>kafe</cite>.</p>
-</li>
-<li><p class="first"><cite>test_linRegression.py</cite> ist eine einfachere Version mit
+systematischen Fehlern mit dem Paket <cite>kafe</cite>.</li>
+<li><cite>test_linRegression.py</cite> ist eine einfachere Version mit
 <cite>python</cite>-Bordmitteln zur Anpassung einer Geraden an
 Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung.
-Korrelierte Unsicherheiten werden nicht unterstützt.</p>
-</li>
-<li><p class="first"><cite>test_kFit.py</cite> ist eine verallgemeinerte Version von <cite>test_kRegression</cite>
+Korrelierte Unsicherheiten werden nicht unterstützt.</li>
+<li><cite>test_kFit.py</cite> ist eine verallgemeinerte Version von <cite>test_kRegression</cite>
 und dient zur Anpassung einer beliebigen Funktion an Messdaten mit
 Fehlern in Ordinaten- und Abszissenrichtung und mit allen Messpunkten
 gemeinsamen (d. h. korrelierten) relativen oder absoluten systematischen
-Fehlern mit dem Paket <cite>kafe</cite>.</p>
-</li>
-<li><p class="first"><cite>test_Histogram.py</cite> ist ein Beispiel zur Darstellung und
+Fehlern mit dem Paket <cite>kafe</cite>.</li>
+<li><cite>test_Histogram.py</cite> ist ein Beispiel zur Darstellung und
 statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen)
-in ein oder zwei Dimensionen.</p>
-</li>
-<li><p class="first"><cite>test_generateXYata.py</cite> zeigt, wie man mit Hilfe von Zufallszahlen
+in ein oder zwei Dimensionen.</li>
+<li><cite>test_generateXYata.py</cite> zeigt, wie man mit Hilfe von Zufallszahlen
 “künstliche Daten” zur Veranschaulichung oder zum Test von Methoden
-zur Datenauswertung erzeugen kann.</p>
-</li>
+zur Datenauswertung erzeugen kann.</li>
 </ul>
 <p>Die folgenden <em>python</em>-Skripte sind etwas komplexer und zeigen
 typische Anwendungsfälle der Module in <cite>PhyPraKit</cite>:</p>
@@ -920,7 +908,7 @@ by subtracting the mean</p>
 
 <dl class="function">
 <dt id="PhyPraKit.readCSV">
-<code class="descclassname">PhyPraKit.</code><code class="descname">readCSV</code><span class="sig-paren">(</span><em>file</em>, <em>nlhead=1</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readCSV" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">PhyPraKit.</code><code class="descname">readCSV</code><span class="sig-paren">(</span><em>file</em>, <em>nlhead=1</em>, <em>delim='</em>, <em>'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>read Data in .csv format, skip header lines</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -1162,7 +1150,7 @@ to from the new value at index <cite>i</cite></p>
 
 <dl class="function">
 <dt id="PhyPraKit.writeTexTable">
-<code class="descclassname">PhyPraKit.</code><code class="descname">writeTexTable</code><span class="sig-paren">(</span><em>file</em>, <em>ldata</em>, <em>cnames=[]</em>, <em>fmt='%.10g'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.writeTexTable" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">PhyPraKit.</code><code class="descname">writeTexTable</code><span class="sig-paren">(</span><em>file</em>, <em>ldata</em>, <em>cnames=[]</em>, <em>caption=''</em>, <em>fmt='%.10g'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.writeTexTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>write data formatted as latex tabular</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -1170,6 +1158,7 @@ to from the new value at index <cite>i</cite></p>
 <li>file: string, file name</li>
 <li>ldata: list of columns to be written</li>
 <li>cnames: list of column names (optional)</li>
+<li>caption: LaTeX table caption (optional)</li>
 <li>fmt: format string (optional)</li>
 </ul>
 </dd>
@@ -1280,7 +1269,7 @@ to from the new value at index <cite>i</cite></p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Günter Quast.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>
