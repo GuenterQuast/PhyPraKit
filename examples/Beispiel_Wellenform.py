@@ -1,4 +1,3 @@
-from __future__ import print_function  # for python2.7 compatibility
 '''Beispiel_Wellenform.py 
 
    Einlesen von Daten aus dem mit PicoScope erstellten Dateien
@@ -12,6 +11,7 @@ from __future__ import print_function  # for python2.7 compatibility
 
 '''
 
+from __future__ import print_function  # for python2.7 compatibility
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":

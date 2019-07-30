@@ -1,4 +1,3 @@
-from __future__ import print_function  # for python2.7 compatibility
 '''test_Fourier.py 
    Read data exported with PicoScope usb-oscilloscpe,
    here the accoustic excitation of a steel rod
@@ -9,6 +8,8 @@ from __future__ import print_function  # for python2.7 compatibility
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 '''
+
+from __future__ import print_function  # for python2.7 compatibility
 
 # -----example Code illustrating usage of FourierSpectrum ------
 if __name__ == "__main__":

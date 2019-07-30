@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
 '''kfitf.py
 
    Perform a fit with the kafe package driven by input file

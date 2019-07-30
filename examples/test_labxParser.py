@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function  # for python2.7 compatibility
-
 '''test_labxParser.py
    read files in xml-format produced with the Leybold Cassy system
     
@@ -9,6 +7,8 @@ from __future__ import print_function  # for python2.7 compatibility
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 '''
+
+from __future__ import print_function  # for python2.7 compatibility
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":

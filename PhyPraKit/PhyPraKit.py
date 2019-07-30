@@ -439,7 +439,7 @@ def labxParser(file, prlevel=1):
 
 
 def writeCSV(file, ldata, hlines=[], fmt='%.10g',
-             delim=',', nline='\n', **kwargs):
+              delim=',', nline='\n', **kwargs):
   '''
   write data in .csv format, including header lines
   
@@ -449,12 +449,12 @@ def writeCSV(file, ldata, hlines=[], fmt='%.10g',
     * hlines: list with header lines (optional)
     * fmt: format string (optional)
     * delim: delimiter to seperate values (default comma)
-    * nline: newline string (default: \n)
+    * nline: newline string
 
   Returns: 
     * 0/1  for success/fail
-
   '''
+
 # --------------------------------------------------------------------
 
   # open file for read (if necessary)
@@ -492,6 +492,7 @@ def writeTexTable(file, ldata, cnames=[], caption='', fmt='%.10g'):
   Returns:
     * 0/1 for success/fail
   '''
+
   delim = " & "
   nline = "\\\\\n"
 

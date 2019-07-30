@@ -1,5 +1,3 @@
-from __future__ import print_function  # for python2.7 compatibility
-
 '''test_readtxt.py 
    uses readtxt() to read floating-point column-data in very general 
    .txt formats, here the output from PicoTech 8 channel data logger,
@@ -9,6 +7,8 @@ from __future__ import print_function  # for python2.7 compatibility
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 '''
+
+from __future__ import print_function  # for python2.7 compatibility
 
 # -----example Code illustrating usage of readtxt() -------------
 if __name__ == "__main__":

@@ -1,4 +1,3 @@
-from __future__ import print_function  # for python2.7 compatibility
 '''test_AutoCorrelation.py
 
    test function `autocorrelate()` in PhyPraKit; 
@@ -12,6 +11,8 @@ from __future__ import print_function  # for python2.7 compatibility
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 '''
+
+from __future__ import print_function  # for python2.7 compatibility
 
 # ---------------------------------------------------------------
 if __name__ == "__main__":

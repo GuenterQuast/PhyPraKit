@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-from __future__ import print_function  # for python2.7 compatibility
 '''test_generateDate
    test generation of simulated data
    this simulates a measurement with given x-values with uncertainties;
@@ -11,6 +10,9 @@ from __future__ import print_function  # for python2.7 compatibility
 ..  moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 '''
+
+from __future__ import print_function  # for python2.7 compatibility
+
 import numpy as np, matplotlib.pyplot as plt
 from PhyPraKit import generateXYdata
 

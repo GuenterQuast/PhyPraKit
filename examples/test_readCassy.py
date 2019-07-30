@@ -1,11 +1,11 @@
-from __future__ import print_function  # for python2.7 compatibility
-
 '''test_readCassy.py 
    read data exported by Leybold Cassylab in .txt format 
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 '''
+
+from __future__ import print_function  # for python2.7 compatibility
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":

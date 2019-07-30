@@ -1,4 +1,3 @@
-from __future__ import print_function  # for python2.7 compatibility
 '''test_convolutionFilter.py 
    Read data exported with PicoScope usb-oscilloscpe,
    here the accoustic excitation of a steel rod
@@ -10,6 +9,7 @@ from __future__ import print_function  # for python2.7 compatibility
 
 '''
 
+from __future__ import print_function  # for python2.7 compatibility
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":

@@ -1,6 +1,4 @@
 #! /usr/bin/env python
-from __future__ import print_function  # for python2.7 compatibility
-
 '''test_kRegression
    test linear regression with kafe using kFit from PhyPrakKit
    uncertainties in x and y and correlated 
@@ -8,6 +6,9 @@ from __future__ import print_function  # for python2.7 compatibility
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 '''
+
+from __future__ import print_function  # for python2.7 compatibility
+
 import kafe # must be imported first to set backend
 from PhyPraKit import generateXYdata, kFit
 from kafe.function_library import linear_2par

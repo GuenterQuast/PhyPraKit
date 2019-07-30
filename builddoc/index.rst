@@ -28,12 +28,12 @@
 About
 =====
 
-**PhyPraKit** is a collection of python modules `(pyhton 2.7)` 
+**PhyPraKit** is a collection of python modules
 for data visialisation and analysis in experimental laboratory
-cources in physics, developed at the faculty of physics at
+cources in physics, in use at the faculty of physics at
 Karlsruhe Institute of Technology (KIT). As the modules are
 intended primarily for use by undertraduate students in
-Karlsruhe, the documentation is partly in German language,
+Germany, the documentation is partly in German language,
 in particular the desctiption of the the examples.
 
 Cerated by: 
@@ -44,7 +44,6 @@ Cerated by:
 A pdf version of this documentation is available here: PhyPraKit.pdf_.
 
 .. _PhyPraKit.pdf: PhyPraKit.pdf
-
 
 
   
@@ -66,7 +65,7 @@ install in user space:
 
 **PhyPraKit** ist eine Sammlung nützlicher Funktionen in der Sprache 
 `python (vers. 2.7 oder >=3.4)` zum Aufnehmen, zur Bearbeitung, 
-Visualisierung  und  Auswertung von Daten in den physikalischen 
+Visualisierung und Auswertung von Daten in den physikalischen 
 Praktika. Die Anwendung der verschiedenen Funktionen des Pakets   
 werden jeweils durch Beispiele illustriert.
 			     
@@ -125,10 +124,10 @@ eigene Auswertungen
 
 Die vorliegende Sammlung von Funktionen im Paket `PhyPraKit` enthält 
 Funktionen zum Einlesen von Daten aus diversen Quellen, zur 
-Datenvisualisierung, Signalbearbeitung und statistischen Datenauswertung 
+Datenvisualisierung, Signalbearbeitung und zur statistischen Datenauswertung 
 und Modellanpassung sowie Werkzeuge zur Erzeugung simulierter Daten. 
 Dabei wurde absichtlich Wert auf eine einfache, die Prinzipien 
-unterstreichnede Codierung gelegt und nicht der möglichst effizienten 
+unterstreichende Codierung gelegt und nicht der möglichst effizienten 
 bzw. allgemeinensten Implementierung der Vorzug gegeben. 
 
 
@@ -162,7 +161,7 @@ oder::
 
       2. signal processing:
 
-        - offsetFilter()      subtract an offset in array a
+        - offsetFilter()      subtract an offset in an input array
         - meanFilter()        apply sliding average to smoothen data
         - resample()          average over n samples
         - simplePeakfinder()  find peaks and dips in an array 
