@@ -4,27 +4,18 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>PhyPraKit Documentation &#8212; PhyPraKit 1.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -46,15 +37,15 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><cite>Version</cite> 2019-07-29</div></blockquote>
+<div><cite>Version</cite> 2019-07-30</div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
-<p><strong>PhyPraKit</strong> is a collection of python modules <cite>(pyhton 2.7)</cite>
+<p><strong>PhyPraKit</strong> is a collection of python modules
 for data visialisation and analysis in experimental laboratory
-cources in physics, developed at the faculty of physics at
+cources in physics, in use at the faculty of physics at
 Karlsruhe Institute of Technology (KIT). As the modules are
 intended primarily for use by undertraduate students in
-Karlsruhe, the documentation is partly in German language,
+Germany, the documentation is partly in German language,
 in particular the desctiption of the the examples.</p>
 <p>Cerated by:</p>
 <ul class="simple">
@@ -69,13 +60,13 @@ in the same directory as the python scripts importing it.</p>
 to use the installation package in the subdirectory <cite>dist</cite> and
 install in user space:</p>
 <blockquote>
-<div><code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">--no-cache</span> <span class="pre">PhyPraKit&lt;vers.&gt;</span></code></div></blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">--no-cache</span> <span class="pre">PhyPraKit&lt;vers.&gt;</span></code></div></blockquote>
 </div>
 <div class="section" id="ubersicht">
 <h3>Übersicht:<a class="headerlink" href="#ubersicht" title="Permalink to this headline">¶</a></h3>
 <p><strong>PhyPraKit</strong> ist eine Sammlung nützlicher Funktionen in der Sprache
 <cite>python (vers. 2.7 oder &gt;=3.4)</cite> zum Aufnehmen, zur Bearbeitung,
-Visualisierung  und  Auswertung von Daten in den physikalischen
+Visualisierung und Auswertung von Daten in den physikalischen
 Praktika. Die Anwendung der verschiedenen Funktionen des Pakets
 werden jeweils durch Beispiele illustriert.</p>
 <div class="toctree-wrapper compound">
@@ -137,21 +128,21 @@ eigene Auswertungen
 (<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/">http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/</a>).</p>
 <p>Die vorliegende Sammlung von Funktionen im Paket <cite>PhyPraKit</cite> enthält
 Funktionen zum Einlesen von Daten aus diversen Quellen, zur
-Datenvisualisierung, Signalbearbeitung und statistischen Datenauswertung
+Datenvisualisierung, Signalbearbeitung und zur statistischen Datenauswertung
 und Modellanpassung sowie Werkzeuge zur Erzeugung simulierter Daten.
 Dabei wurde absichtlich Wert auf eine einfache, die Prinzipien
-unterstreichnede Codierung gelegt und nicht der möglichst effizienten
+unterstreichende Codierung gelegt und nicht der möglichst effizienten
 bzw. allgemeinensten Implementierung der Vorzug gegeben.</p>
 </div>
 <div class="section" id="dokumentation-der-beispiele">
 <h1>Dokumentation der Beispiele<a class="headerlink" href="#dokumentation-der-beispiele" title="Permalink to this headline">¶</a></h1>
 <p><strong>`PhyPraKit.py`</strong> ist ein Paket mit nützlichen Hilfsfunktionen
 zum import in eigene Beispiele mittels:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">PhyPraKit</span> <span class="k">as</span> <span class="nn">ppk</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">PhyPraKit</span> <span class="k">as</span> <span class="nn">ppk</span>
 </pre></div>
 </div>
 <p>oder:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PhyPraKit</span> <span class="k">import</span> <span class="o">...</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PhyPraKit</span> <span class="k">import</span> <span class="o">...</span>
 </pre></div>
 </div>
 <p><strong>`PhyPraKit.py`</strong> enthält folgende Funktionen:</p>
@@ -176,7 +167,7 @@ zum import in eigene Beispiele mittels:</p>
 </ol>
 <blockquote>
 <div><ul class="simple">
-<li>offsetFilter()      subtract an offset in array a</li>
+<li>offsetFilter()      subtract an offset in an input array</li>
 <li>meanFilter()        apply sliding average to smoothen data</li>
 <li>resample()          average over n samples</li>
 <li>simplePeakfinder()  find peaks and dips in an array
@@ -204,10 +195,10 @@ recommend to use <cite>convolutionPeakfinder</cite></li>
 <div><ul class="simple">
 <li>barstat()   statistical information (mean, sigma, erroron mean) from bar chart</li>
 <li>nhist()    histogram plot based on np.historgram() and plt.bar()
-<code class="docutils literal"><span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist()</span> <span class="pre">instead</span></code></li>
+<code class="docutils literal notranslate"><span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist()</span> <span class="pre">instead</span></code></li>
 <li>histstat() statistical information from 1d-histogram</li>
 <li>nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()
-<code class="docutils literal"><span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist2d()</span> <span class="pre">instead</span></code></li>
+<code class="docutils literal notranslate"><span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist2d()</span> <span class="pre">instead</span></code></li>
 <li>hist2dstat() statistical information from 1d-histogram</li>
 <li>profile2d()  “profile plot” for 2d data</li>
 <li>chi2p_indep2d() chi2 test on independence of data</li>
@@ -220,10 +211,10 @@ recommend to use <cite>convolutionPeakfinder</cite></li>
 <div><ul class="simple">
 <li>linRegression()    linear regression, y=ax+b, with analytical formula</li>
 <li>linRegressionXY()  linear regression, y=ax+b, with x and y errors
-<code class="docutils literal"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">use</span> <span class="pre">`odFit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></li>
+<code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">use</span> <span class="pre">`odFit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></li>
 <li>odFit()            fit function with x and y errors (scipy ODR)</li>
 <li>kRegression()      regression, y=ax+b, with (correlated) error on x, and y
-<code class="docutils literal"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">use</span> <span class="pre">`kFit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></li>
+<code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">use</span> <span class="pre">`kFit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></li>
 <li>kFit()             fit function with (correlated) errors on x and y (kafe)</li>
 </ul>
 </div></blockquote>
@@ -333,7 +324,7 @@ Link <a class="reference external" href="https://fachschaft.physik.kit.edu/drupa
 <dd><dl class="docutils">
 <dt>Fourier transform of amplitude spectrum a(t), for equidistant sampling times</dt>
 <dd><p class="first">(a simple implementaion for didactical purpose only, 
-consider using <code class="docutils literal"><span class="pre">Fourier_fft()</span></code> )</p>
+consider using <code class="docutils literal notranslate"><span class="pre">Fourier_fft()</span></code> )</p>
 <blockquote class="last">
 <div><dl class="docutils">
 <dt>Args:</dt>
@@ -494,7 +485,7 @@ best match above (global) minimum</li>
 <dd><dl class="docutils">
 <dt>find positions of all Peaks in data </dt>
 <dd>(simple version for didactical purpose, 
-consider using <code class="docutils literal"><span class="pre">scipy.signal.find_peaks_cwt()</span></code> )</dd>
+consider using <code class="docutils literal notranslate"><span class="pre">scipy.signal.find_peaks_cwt()</span></code> )</dd>
 <dt>method: </dt>
 <dd>convolute array a with rectangular template of given width and
 return extrema of convoluted signal, i.e. places where 
@@ -1047,7 +1038,7 @@ to from the new value at index <cite>i</cite></p>
 <dt>find positions of all maxima (peaks) in data</dt>
 <dd>x-coordinates are determined from weighted average over 3 data points</dd>
 <dt>this only works for very smooth data with well defined extrema</dt>
-<dd><p class="first">use <code class="docutils literal"><span class="pre">convolutionPeakfinder</span></code> or <code class="docutils literal"><span class="pre">scipy.signal.argrelmax()</span></code> instead</p>
+<dd><p class="first">use <code class="docutils literal notranslate"><span class="pre">convolutionPeakfinder</span></code> or <code class="docutils literal notranslate"><span class="pre">scipy.signal.argrelmax()</span></code> instead</p>
 <dl class="last docutils">
 <dt>Args:</dt>
 <dd><ul class="first last simple">
@@ -1121,8 +1112,7 @@ to from the new value at index <cite>i</cite></p>
 <dl class="function">
 <dt id="PhyPraKit.writeCSV">
 <code class="descclassname">PhyPraKit.</code><code class="descname">writeCSV</code><span class="sig-paren">(</span><em>file</em>, <em>ldata</em>, <em>hlines=[]</em>, <em>fmt='%.10g'</em>, <em>delim='</em>, <em>'</em>, <em>nline='\n'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.writeCSV" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>write data in .csv format, including header lines</p>
+<dd><p>write data in .csv format, including header lines</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><ul class="first last simple">
@@ -1131,21 +1121,15 @@ to from the new value at index <cite>i</cite></p>
 <li>hlines: list with header lines (optional)</li>
 <li>fmt: format string (optional)</li>
 <li>delim: delimiter to seperate values (default comma)</li>
-<li>nline: newline string (default:</li>
+<li>nline: newline string</li>
 </ul>
 </dd>
-</dl>
-</div></blockquote>
-<p>)</p>
-<blockquote>
-<div><dl class="docutils">
 <dt>Returns: </dt>
 <dd><ul class="first last simple">
 <li>0/1  for success/fail</li>
 </ul>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 <dl class="function">
@@ -1170,11 +1154,77 @@ to from the new value at index <cite>i</cite></p>
 </dl>
 </dd></dl>
 
-<span class="target" id="module-test_readColumnData"></span><span class="target" id="module-test_readtxt"></span><span class="target" id="module-test_readPicoScope"></span><span class="target" id="module-test_labxParser"></span><span class="target" id="module-test_Histogram"></span><dl class="docutils">
+<span class="target" id="module-test_readColumnData"></span><dl class="docutils">
+<dt>test_readColumnData.py</dt>
+<dd>test data input from text file with module PhyPraKit.readColumnData</dd>
+</dl>
+<span class="target" id="module-test_readtxt"></span><dl class="docutils">
+<dt>test_readtxt.py </dt>
+<dd>uses readtxt() to read floating-point column-data in very general 
+.txt formats, here the output from PicoTech 8 channel data logger,
+with ‘       ‘ separated values, 2 header lines,
+german decimal comma and special character ‘^&#64;’</dd>
+</dl>
+<span class="target" id="module-test_readPicoScope"></span><dl class="docutils">
+<dt>test_readPicoSocpe.py </dt>
+<dd>read data exported by PicoScope usb-oscilloscope</dd>
+</dl>
+<span class="target" id="module-test_labxParser"></span><dl class="docutils">
+<dt>test_labxParser.py</dt>
+<dd><p class="first">read files in xml-format produced with the Leybold Cassy system</p>
+<p class="last">uses PhyPraPit.labxParser()</p>
+</dd>
+</dl>
+<span class="target" id="module-test_Histogram"></span><dl class="docutils">
 <dt>test_Historgram.py</dt>
 <dd>demonstrate histogram functionality in PhyPraKit</dd>
 </dl>
-<span class="target" id="module-test_convolutionFilter"></span><span class="target" id="module-test_AutoCorrelation"></span><span class="target" id="module-test_Fourier"></span><span class="target" id="module-test_kRegression"></span><span class="target" id="module-test_kFit"></span><span class="target" id="module-test_generateData"></span><span class="target" id="module-kfitf"></span><p>kfitf.py</p>
+<span class="target" id="module-test_convolutionFilter"></span><dl class="docutils">
+<dt>test_convolutionFilter.py </dt>
+<dd><p class="first">Read data exported with PicoScope usb-oscilloscpe,
+here the accoustic excitation of a steel rod</p>
+<p class="last">Demonstrates usage of convolutionFilter for detection
+of signal maxima and falling edges</p>
+</dd>
+</dl>
+<span class="target" id="module-test_AutoCorrelation"></span><p>test_AutoCorrelation.py</p>
+<blockquote>
+<div><p>test function <cite>autocorrelate()</cite> in PhyPraKit; 
+determines the frequency of a periodic signal from maxima and minima
+of the autocorrelation function and performs statistical analysis
+of time between peaks/dips</p>
+<p>uses <cite>readCSV()</cite>, <cite>autocorrelate()</cite>, <cite>convolutionPeakfinder()</cite> 
+and <cite>histstat()</cite> from PhyPraKit</p>
+</div></blockquote>
+<span class="target" id="module-test_Fourier"></span><dl class="docutils">
+<dt>test_Fourier.py </dt>
+<dd><p class="first">Read data exported with PicoScope usb-oscilloscpe,
+here the accoustic excitation of a steel rod</p>
+<p class="last">Demonstraion of a Fourier transformation of the signal</p>
+</dd>
+</dl>
+<span class="target" id="module-test_kRegression"></span><dl class="docutils">
+<dt>test_kRegression</dt>
+<dd>test linear regression with kafe using kFit from PhyPrakKit
+uncertainties in x and y and correlated 
+absolute and relative uncertainties</dd>
+</dl>
+<span class="target" id="module-test_kFit"></span><dl class="docutils">
+<dt>test_kFit</dt>
+<dd>test fiting an arbitrary fucntion with kafe, 
+with uncertainties in x and y and correlated 
+absolute and relative uncertainties</dd>
+</dl>
+<span class="target" id="module-test_generateData"></span><dl class="docutils">
+<dt>test_generateDate</dt>
+<dd>test generation of simulated data
+this simulates a measurement with given x-values with uncertainties;
+random deviations are then added to arrive at the true values, from
+which the true y-values are then calculated according to a model
+function. In the last step, these true y-values are smeared
+by adding random deviations to obtain a sample of measured values</dd>
+</dl>
+<span class="target" id="module-kfitf"></span><p>kfitf.py</p>
 <p>Perform a fit with the kafe package driven by input file</p>
 <p>usage: kfitf.py [-h] [-n] [-s] [-c] [–noinfo] [-f FORMAT] filename</p>
 <dl class="docutils">
@@ -1210,7 +1260,55 @@ to from the new value at index <cite>i</cite></p>
 </table>
 </dd>
 </dl>
-<span class="target" id="module-Beispiel_Drehpendel"></span><span class="target" id="module-Beispiel_Hysterese"></span><span class="target" id="module-Beispiel_Wellenform"></span><span class="target" id="module-Beispiel_GammaSpektroskopie"></span></div>
+<span class="target" id="module-Beispiel_Drehpendel"></span><p>Beispiel_Drehpendel.py</p>
+<blockquote>
+<div><p>Auswertung der Daten aus einer im CASSY labx-Format gespeicherten Datei
+am Beispiel des Drehpendels</p>
+<ul class="simple">
+<li>Einlesen der Daten im .labx-Format</li>
+<li>Säubern der Daten durch verschiedene Filterfunktionen:
+- offset-Korrektur
+- Glättung durch gleitenden Mittelwert
+- Zusammenfassung benachberter Daten durch Mittelung</li>
+<li>Fourier-Transformation (einfach und fft)</li>
+<li>Suche nach Extrema (<cite>peaks</cite> und <cite>dips</cite>)</li>
+<li>Anpassung von Funkionen an Einhüllende der Maxima und Minima</li>
+<li>Interpolation durch Spline-Funktionen</li>
+<li>numerische Ableitung und Ableitung der Splines</li>
+<li>Phasenraum-Darstellung (aufgezeichnete Wellenfunktion
+gegen deren Ableitung nach der Zeit)</li>
+</ul>
+</div></blockquote>
+<span class="target" id="module-Beispiel_Hysterese"></span><p>Beispiel_Hysterese.py</p>
+<blockquote>
+<div><p>Auswertung der Daten aus einer mit PicoScope erstellten Datei
+im txt-Format am Beispiel des Hystereseversuchs</p>
+<ul class="simple">
+<li>Einlesen der Daten aus PicoScope-Datei vom Typ .txt oder .csv</li>
+<li>Darstellung  Kanal_a vs. Kanal_b</li>
+<li>Auftrennung in zwei Zweige für steigenden bzw. abnehmenden Strom</li>
+<li>Interpolation durch kubische Splines</li>
+<li>Integration der Spline-Funktionen</li>
+</ul>
+</div></blockquote>
+<span class="target" id="module-Beispiel_Wellenform"></span><p>Beispiel_Wellenform.py</p>
+<blockquote>
+<div><p>Einlesen von Daten aus dem mit PicoScope erstellten Dateien
+am Beispiel der akustischen Anregung eines Stabes</p>
+<ul class="simple">
+<li>Fourier-Analyse des Signals</li>
+<li>Bestimmung der Resonanzfrequenz mittels Autokorrelation</li>
+</ul>
+</div></blockquote>
+<span class="target" id="module-Beispiel_GammaSpektroskopie"></span><p>Beispiel_GammaSpektroskopie.py</p>
+<blockquote>
+<div><p>Darstellung der Daten aus einer im CASSY labx-Format gespeicherten Datei
+am Beispiel der Gamma-Spektroskopie</p>
+<ul class="simple">
+<li>Einlesen der Daten im .labx-Format</li>
+</ul>
+</div></blockquote>
+</div>
 
 
           </div>
@@ -1243,12 +1341,14 @@ to from the new value at index <cite>i</cite></p>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1269,7 +1369,7 @@ to from the new value at index <cite>i</cite></p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Günter Quast.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
     </div>
   </body>
 </html>
