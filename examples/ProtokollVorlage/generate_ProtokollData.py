@@ -65,7 +65,7 @@ plt.draw(); plt.pause(2.) # show plot for 2s.
 
 # save input data as table (in include-direcotory for LaTeX)
 data = np.array([xdat, sigx_abs*np.ones(nd), ydat, ey])
-if writeTexTable('include/Table1.tex', data,
+if writeTexTable('analysis/Table1.tex', data,
               cnames=['X', '$\\sigma_X$', 'Y', '$\\sigma_Y$' ],
                  caption='ToyData; außer den in der Tabelle ' +
                  'angegbenen Unsicherheiten gibt es noch eine ' +
@@ -77,7 +77,7 @@ if writeTexTable('include/Table1.tex', data,
   print('Error from writeTexTable ')
 
 # save kafe Figure (in include-directory for LaTeX)
-kplot.figure.savefig('include/Figure1.pdf') 
+kplot.figure.savefig('analysis/Figure1.pdf') 
 
 # finally, summarize and print results
 #   first, round to reasonable number of digits

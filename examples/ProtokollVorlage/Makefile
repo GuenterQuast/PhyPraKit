@@ -18,7 +18,7 @@ ANALYSIS=generate_ProtokollData.py
 # Abhaengigkeiten
 TEXFILES=$(wildcard *.tex)
                           #  alle .tex-Dateien im Hauptverzeichnis
-INCLUDEFILES=$(wildcard include/*.tex) $(wildcard include/*.png)
+INCLUDEFILES=$(wildcard analysis/*.tex) $(wildcard include/*.png)
                           # alle Bild- und tex-Dateien im include-Vereichnis
 
 # Targets: 

@@ -187,7 +187,7 @@ in einem \verb|python|-Skript zu erstellen und mit Hilfe des
 \verb|\include|-Befehls in ein Textdokument einzubinden.
 Damit solche automatisiert erzeugten \texttt{include}-Dateien
 gefunden werden, sollten sie in einem eigenen Verzeichnis,
-z.\,B. \texttt{./include/} enthalten sein.
+z.\,B. \texttt{./analysis/} enthalten sein.
 Die Tabelle\,\ref{tab:InputData} wurde mit Hilfe des Scripts
 \verb|generate_ProtokollData.py| erzeugt, das eine Funktionsanpassung
 an die in der Tabelle enthaltenen Rohdaten vornimmt. 
@@ -198,14 +198,14 @@ und mit dem folgenden \LaTeX-Quelltext in das Dokument eingebunden:
 \begin{verbatim}
 \begin{table}[htbp]
   \centering
-  \include{include/Table1}
+  \include{analysis/Table1}
   \label{tab:InputData}
 \end{table}
 \end{verbatim}
 
 \begin{table}[htbp]
   \centering
-  \include{include/Table1}
+  \include{analysis/Table1}
   \label{tab:InputData}
 \end{table}
 
@@ -215,7 +215,7 @@ Die Ergebnisgrafik\,\ref{fig:Result} wurde ebenfalls im oben beschriebenen
 \begin{verbatim}
 \begin{figure}[htbp]
   \centering
-    \includegraphics[width=1.0\linewidth]{include/Figure1}
+    \includegraphics[width=1.0\linewidth]{analysis/Figure1}
     \caption{Grafik aus Skript generate\_ProtokollData.py.}
     \label{fig:Result}
 \end{figure}
@@ -223,7 +223,7 @@ Die Ergebnisgrafik\,\ref{fig:Result} wurde ebenfalls im oben beschriebenen
 
 \begin{figure}[htbp]
   \centering
-    \includegraphics[width=0.8\linewidth]{include/Figure1}
+    \includegraphics[width=0.8\linewidth]{analysis/Figure1}
     \caption{Grafik aus Skript generate\_ProtokollData.py.}
     \label{fig:Result}
 \end{figure}
