@@ -5,14 +5,14 @@
 # Haupt-Dokument für LaTeX
 MAIN=ProtokollVorlage
 # Analyse-Script
-ANALYSIS=generate_ProtokollData.py
+ANALYSIS=analysis.py
 
 # Befehle
 LATEX=pdflatex
       # Latex-Befehl
 BIBTEX=bibtex
       # zum Einlesen des Literaturverzeichnisses
-ANALYSIS=generate_ProtokollData.py 
+ANALYSIS=analysis.py
       # Ausfuehren der Analyse
 
 # Abhaengigkeiten
