@@ -94,6 +94,7 @@ from __future__ import print_function  # for python2.7 compatibility
 #   27-Jun-19    GQ  fixed readCV and integer arithmetics in Fourier_fft
 #   08-Jul-19    GQ  fixed ' ' as deliminter in readtxt()
 #   27-Jul-19    GQ  added caption to writeTexTable and f.close to writeCSV()
+#   01-Nov-19    GQ  fixed extraction of file extension in readPicoScope
 # ---------------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
@@ -270,7 +271,7 @@ def readPicoScope(file, prlevel=0):
   units=line2         # contains the units
   line3=f.readline()  # this is an empty line in PicoScope data
 
-  if file.split('.')[1]=="csv":
+  if file.split('.')[-1]=="csv":
     delim=','
   else:  
     delim='\t'
