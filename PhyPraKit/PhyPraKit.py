@@ -700,19 +700,19 @@ def simplePeakfinder(x, a, th=0.):
   y = (a-min(a))/(max(a)-min(a))
 # 
   xpeak=[]
-  ypeak=[]
+  apeak=[]
   if y[0]-y[1]>th and y[0]-y[2]>th:
     xpeak.append(x[0])    
-    ypeak.append(y[0])    
+    apeak.append(a[0])    
   for i in range(1,len(x)-1):
-    if y[i]-y[i-1]>=0. and y[i]-y[i+1]>th: 
+    if y[i]-y[i-1]>th and y[i]-y[i+1]>th: 
       xpeak.append(sum(x[i-1:i+1]*y[i-1:i+1])/sum(y[i-1:i+1]))    
-      ypeak.append(y[i])    
+      apeak.append(a[i])    
   if y[-1]-y[-2]>th and y[-1]-y[-3]>th:
     xpeak.append(x[-1])    
-    ypeak.append(y[-1])    
+    apeak.append(a[-1])    
 
-  return np.array(xpeak), np.array(ypeak)
+  return np.array(xpeak), np.array(apeak)
 
 def convolutionFilter(a, v, th=0.):
   ''' 
