@@ -27,7 +27,7 @@ doc/build/_build
 #########
 
 MANIFEST
-dist
+# dist
 /build
 
 # LaTeX auxiliary files
