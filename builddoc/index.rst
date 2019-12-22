@@ -175,7 +175,8 @@ oder::
 
       3. statistics:
 
-        - wmean()  weighted mean
+        - wmean()             weighted mean
+	- chi2prob()          chi2 probability 
 
       4. histograms tools:
 

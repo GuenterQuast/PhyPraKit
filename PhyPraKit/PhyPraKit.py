@@ -537,7 +537,21 @@ def wmean(x, sx, pr=True):
   if pr:
     print("\n weighted mean = %.3g +/- %.3g"%(mean, smean))
   return mean, smean
-  
+
+def chi2prob(chi2, ndf):
+  """ chi2-probability
+ 
+    Args:
+      * chi2: chi2 value
+      * ndf: number of degrees of freedom
+
+    Returns:
+      * float: chi2 probability
+  """
+
+  return 1.- stats.chi2.cdf(chi2, ndf)
+
+
 ## ------- section 3: signal processing -----------------
 
 def offsetFilter(a):
