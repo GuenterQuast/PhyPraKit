@@ -199,6 +199,7 @@ oder::
         - kRegression()      regression, y=ax+b, with (correlated) error on x, and y 
           ``! deprecated, use `kFit` with linear model instead``
         - kFit()             fit function with (correlated) errors on x and y (kafe)
+        - k2Fit()            fit function with (correlated) errors on x and y (kafe2)
 
       6. simulated data with MC-method:
 
@@ -249,7 +250,11 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     und dient zur Anpassung einer beliebigen Funktion an Messdaten mit 
     Fehlern in Ordinaten- und Abszissenrichtung und mit allen Messpunkten 
     gemeinsamen (d. h. korrelierten) relativen oder absoluten systematischen 
-    Fehlern mit dem Paket `kafe`. 
+    Fehlern mit dem Paket `kafe`.
+
+  * `test_k2Fit.py` verwendet die Version *kafe2* zur Anpassung einer
+    Funktion an Messdaten mit unabhängigen oder korrelierten relativen oder
+    absoluten Unsicherheiten in Ordinaten- und Abszissenrichtung.
      
   * `test_Histogram.py` ist ein Beispiel zur Darstellung und 
     statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen) 
