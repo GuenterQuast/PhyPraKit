@@ -1,7 +1,7 @@
 #! /usr/bin/env python
-'''test_kFit
+'''test_k2Fit
 
-   test fitting an arbitrary fucntion with kafe, 
+   test fitting an arbitrary fucntion with kafe2, 
    with uncertainties in x and y and correlated 
    absolute and relative uncertainties
 
@@ -10,8 +10,8 @@
 
 from __future__ import print_function  # for python2.7 compatibility
 
-import kafe # must be imported first to properly set matplotlib backend
-from PhyPraKit import generateXYdata, kFit
+# import kafe2 # must be imported first to properly set matplotlib backend
+from PhyPraKit import generateXYdata, k2Fit
 import numpy as np, matplotlib.pyplot as plt
 
 # -- the model function
@@ -37,11 +37,13 @@ xt, yt, ydata = generateXYdata(xdata, model, sigx_abs, 0.,
 ey=sigy_rel* yt * np.ones(nd) # set array of relative y errors
 
 # fit with kafe
-par, pare, cor, chi2 = kFit(model,
+par, pare, cor, chi2 = k2Fit(model,
     xdata, ydata, sigx_abs, ey,          # data and uncertaintites
     p0=None, p0e=None,                   # initial guess and range
     xrelcor=sxrelcor, yabscor=syabscor,  # correlated uncertainties
-    plot=True, quiet=True)               # options 
+    axis_labels=['x-data','random y'],   # nice names
+    model_name = r'{0}\,x^2 + {1}\,x + {2}',     # model fuction
+    plot=True)                           # options 
 
 print('*==* data set')
 print('  x = ', xdata)
@@ -53,6 +55,6 @@ print("  -> chi2:         %.3g"%chi2)
 np.set_printoptions(precision=3)
 print("  -> parameters:   ", par)
 np.set_printoptions(precision=2)
-print("  -> uncertainties:", pare)
-print("  -> correlation matrix:\n", cor) 
+print("  -> uncertainties:", pare) 
+print("  -> correlation matrix: \n", cor) 
 

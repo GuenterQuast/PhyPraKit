@@ -62,6 +62,7 @@ from __future__ import print_function  # for python2.7 compatibility
         - kRegression()      regression, y=ax+b, with (correlated) error on x, and y 
           ``! deprecated, use `kFit` with linear model instead``
         - kFit()             fit function with (correlated) errors on x and y (kafe)
+        - k2Fit()            fit function with (correlated) errors on x and y (kafe2)
 
       6. simulated data with MC-method:
 
@@ -1331,6 +1332,87 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
     kplot.show()
     
   return par, pare, cor, chi2
+
+def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
+           xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
+           axis_labels=['x-data', 'y-data'], model_name=(r'?'),
+           plot=True):
+  """
+    fit function func with errors on x and y;
+    uses package `kafe2`
+
+    Args:
+      * func: function to fit
+      * x:  np-array, independent data
+      * y:  np-array, dependent data
+
+    the following are single floats or arrays of length of x
+      * sx: scalar or np-array, uncertainty(ies) on x      
+      * sy: scalar or np-array, uncertainty(ies) on y
+      * p0: array-like, initial guess of parameters
+      * p0e: array-like, initial guess of parameter uncertainties
+      * xabscor: absolute, correlated error(s) on x
+      * yabscor: absolute, correlated error(s) on y
+      * xrelcor: relative, correlated error(s) on x
+      * yrelcor: relative, correlated error(s) on y
+      * axis_labels: List of strings, axis labels x and y
+      * model_name: latex expression for model function
+      * plot: flag to switch off graphical ouput
+
+   Returns:
+      * np-array of float: parameter values
+      * np-array of float: parameter errors
+      * np-array: cor   correlation matrix 
+      * float: chi2  \chi-square
+  """  
+  # for fit with kafe2
+  from kafe2 import XYContainer, XYFit, Plot
+
+  # create a data set ...
+  dat = XYContainer(x, y)
+  # ... and add all error sources  
+  dat.add_simple_error(axis='x', err_val=sx)
+  dat.add_simple_error(axis='y', err_val=sy)
+  if xabscor != None:
+    dat.add_simple_error(axis='x', err_val=xabscor, correlation=1.)
+  if yabscor != None:
+    dat.add_simple_error(axis='y', err_val=yabscor, correlation=1.)
+  if xrelcor != None:
+    dat.add_simple_error(axis='x', err_val=xrelcor,
+                         correlation=1., relative=True)
+  if yrelcor != None:
+    dat.add_simple_error(axis='y',err_val=yrelcor,
+                         correlation=1., relative=True)
+  # set up and run fit
+  fit = XYFit(dat, func) 
+  fit.assign_model_function_latex_expression(model_name)
+  if p0 is not None: fit.set_parameters(p0, p0e)
+  fit.do_fit()                        
+
+# harvest results
+#  par, perr, cov, chi2 = fit.get_results() # for kafe vers. > 1.1.0
+  par = np.array(fit.parameter_values) 
+  pare = np.array(fit.parameter_errors)
+  cor = np.array(fit.parameter_cor_mat)
+  chi2 = fit.cost_function_value
+
+  if(plot):
+    kplot=Plot(fit)
+    kplot.customize('data', 'label', ['data'])
+    kplot.customize('data', 'markersize', [6])
+    kplot.customize('data', 'color', ['darkblue'])
+    kplot.customize('model_line', 'label', ['model'])
+    kplot.customize('model_error_band', 'label', ['model uncertainty'])
+    kplot.customize('model_line', 'color', ['darkred'])
+       
+    kplot.plot()
+    # not nice: in kafe2 so far have to set axis lables at plot time   
+    kplot.axes[0]['main'].set_xlabel(axis_labels[0], size='large')  
+    kplot.axes[0]['main'].set_ylabel(axis_labels[1], size='large')
+    plt.show()
+    
+  return par, pare, cor, chi2
+
 
 ## ------- section 6: simulated data -------------------------
 
