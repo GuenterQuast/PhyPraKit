@@ -335,6 +335,8 @@ Module Documentation
 
 ..  automodule:: test_kFit
 
+..  automodule:: test_k2Fit
+
 ..  automodule:: test_generateData
 
 ..  automodule:: kfitf
