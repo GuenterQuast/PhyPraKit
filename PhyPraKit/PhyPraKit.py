@@ -1209,7 +1209,7 @@ def kRegression(x, y, sx, sy,
       * yrelcor: relative, correlated error(s) on y
       * title:   string, title of gaph
       * axis_labels: List of strings, axis labels x and y
-      * plot: flag to switch off graphical ouput
+      * plot: flag to switch off graphical output
       * quiet: flag to suppress text and log output
 
    Returns:
@@ -1288,7 +1288,7 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
       * yrelcor: relative, correlated error(s) on y
       * title:   string, title of gaph
       * axis_labels: List of strings, axis labels x and y
-      * plot: flag to switch off graphical ouput
+      * plot: flag to switch off graphical output
       * quiet: flag to suppress text and log output
 
    Returns:
@@ -1335,7 +1335,8 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
 
 def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
            xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
-           axis_labels=['x-data', 'y-data'], model_name=(r'?'),
+           axis_labels=['x-data', 'y-data'], data_legend = 'data',
+           model_name=(r'?'), model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
            plot=True):
   """
     fit function func with errors on x and y;
@@ -1355,10 +1356,12 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
       * yabscor: absolute, correlated error(s) on y
       * xrelcor: relative, correlated error(s) on x
       * yrelcor: relative, correlated error(s) on y
-      * axis_labels: List of strings, axis labels x and y
+      * axis_labels: list of strings, axis labels x and y
+      * data_legend: legend entry for data points
       * model_name: latex expression for model function
-      * plot: flag to switch off graphical ouput
-
+      * model_legend: legend entry for model
+      * model_band: legend entry for model uncertainty band
+      * plot: flag to switch off graphical output
    Returns:
       * np-array of float: parameter values
       * np-array of float: parameter errors
@@ -1398,11 +1401,11 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
 
   if(plot):
     kplot=Plot(fit)
-    kplot.customize('data', 'label', ['data'])
+    kplot.customize('data', 'label', [data_legend])
     kplot.customize('data', 'markersize', [6])
     kplot.customize('data', 'color', ['darkblue'])
-    kplot.customize('model_line', 'label', ['model'])
-    kplot.customize('model_error_band', 'label', ['model uncertainty'])
+    kplot.customize('model_line', 'label', [model_legend])
+    kplot.customize('model_error_band', 'label', [model_band])
     kplot.customize('model_line', 'color', ['darkred'])
        
     kplot.plot()

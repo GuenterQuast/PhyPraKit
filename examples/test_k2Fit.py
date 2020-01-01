@@ -38,12 +38,17 @@ ey=sigy_rel* yt * np.ones(nd) # set array of relative y errors
 
 # fit with kafe
 par, pare, cor, chi2 = k2Fit(model,
-    xdata, ydata, sigx_abs, ey,          # data and uncertaintites
-    p0=None, p0e=None,                   # initial guess and range
-    xrelcor=sxrelcor, yabscor=syabscor,  # correlated uncertainties
-    axis_labels=['x-data','random y'],   # nice names
-    model_name = r'{0}\,x^2 + {1}\,x + {2}',     # model fuction
-    plot=True)                           # options 
+    xdata, ydata, sigx_abs, ey,               # data and uncertaintites
+    p0=None, p0e=None,                        # initial guess and range
+    xrelcor=sxrelcor, yabscor=syabscor,       # correlated uncertainties
+    axis_labels=['x-data','random y'],        # nice names
+    data_legend = 'random data',              # legend entry for data points
+    model_name = r'{0}\,x^2 + {1}\,x + {2}',  # model fuction
+    model_legend = 'quadratic model',         # legend entry for model line
+    #model_band = None,                       # name for model uncertainty band
+    plot=True)                                # options 
+# setting any of the above names to None will remove the entry from the legend,
+#  if not specified, use default  
 
 print('*==* data set')
 print('  x = ', xdata)
