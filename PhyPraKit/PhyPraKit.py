@@ -1335,6 +1335,7 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
 
 def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
            xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
+           constraints= None,
            axis_labels=['x-data', 'y-data'], data_legend = 'data',
            model_name=(r'?'), model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
            plot=True):
@@ -1356,6 +1357,7 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
       * yabscor: absolute, correlated error(s) on y
       * xrelcor: relative, correlated error(s) on x
       * yrelcor: relative, correlated error(s) on y
+      * parameter constrains (name, value, uncertainty)        
       * axis_labels: list of strings, axis labels x and y
       * data_legend: legend entry for data points
       * model_name: latex expression for model function
@@ -1387,9 +1389,18 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
     dat.add_simple_error(axis='y',err_val=yrelcor,
                          correlation=1., relative=True)
   # set up and run fit
-  fit = XYFit(dat, func) 
+  fit = XYFit(dat, func)
+  
   fit.assign_model_function_latex_expression(model_name)
+
   if p0 is not None: fit.set_parameters(p0, p0e)
+
+  if constraints is not None:
+    if not (isinstance(constraints[0], tuple) or isinstance(constraints[0], list)):
+      constraints = (constraints,)
+    for c in constraints:
+      fit.add_parameter_constraint(*c)
+      
   fit.do_fit()                        
 
 # harvest results
