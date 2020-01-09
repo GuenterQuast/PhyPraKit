@@ -1190,7 +1190,7 @@ def odFit(fitf, x, y, sx, sy, p0=None):
 
 def kRegression(x, y, sx, sy,
     xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
-        title='Daten', axis_labels=['X', 'Y'], 
+        title='Daten', axis_labels=['x', 'y-data'], 
         plot=True, quiet=False):
   """
     linear regression y(x) = ax + b  with errors on x and y;
@@ -1265,9 +1265,9 @@ def kRegression(x, y, sx, sy,
 
 
 def kFit(func, x, y, sx, sy, p0=None, p0e=None,
-    xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
-        title='Daten', axis_labels=['X', 'Y'], 
-        plot=True, quiet=False):
+         xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
+         constraints= None, title='Daten', axis_labels=['X', 'Y'], 
+         plot=True, quiet=False):
   """
     fit function func with errors on x and y;
     uses package `kafe`
@@ -1286,8 +1286,10 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
       * yabscor: absolute, correlated error(s) on y
       * xrelcor: relative, correlated error(s) on x
       * yrelcor: relative, correlated error(s) on y
+      * parameter constrains (name, value, uncertainty)        
       * title:   string, title of gaph
       * axis_labels: List of strings, axis labels x and y
+      * constraints: 
       * plot: flag to switch off graphical output
       * quiet: flag to suppress text and log output
 
@@ -1302,7 +1304,8 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
 
   # create a data set ...
   dat = kafe.Dataset(data=(x,y), title=title, axis_labels=axis_labels,
-                       basename='kRegression') 
+          basename='kRegression')
+
   # ... and add all error sources  
   dat.add_error_source('x','simple',sx)
   dat.add_error_source('y','simple',sy)
@@ -1314,9 +1317,22 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
     dat.add_error_source('x','simple', xrelcor, relative=True, correlated=True)
   if yrelcor != None:
     dat.add_error_source('y','simple', yrelcor, relative=True, correlated=True)
-  # set up and run fit
+
+  # set up fit ...
   fit = kafe.Fit(dat, func) 
   if p0 is not None: fit.set_parameters(p0, p0e)
+  if constraints is not None:
+    if not (isinstance(constraints[0], tuple) or isinstance(constraints[0], list)):
+      constraints = (constraints,)
+    cparn = []
+    cparv = []
+    cpare = []
+    for c in constraints:
+      cparn.append(c[0])
+      cparv.append(c[1])
+      cpare.append(c[2])
+    fit.constrain_parameters( cparn, cparv, cpare ) 
+  # ... and run fit
   fit.do_fit(quiet=quiet)                        
 
 # harvest results
@@ -1327,7 +1343,22 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
   chi2 = fit.minimizer.get_fit_info('fcn') 
 
   if(plot):
-    kplot=kafe.Plot(fit)
+  # instantiate a kafe.PlotStyle and change (some) options
+    ps=kafe.PlotStyle()
+    ps.pointsizes = [5] # smaller points
+    ps.markercolors = ['b','g','c','m','k','r'] # different colors
+    ps.markers = ['x','o', '^', 's', 'D', 'v', 'h', '*', '+'] # other markers
+    ps.lines = ['--', '-.', ':', '-'] # other line styles
+    ps.linecolors = ['r', 'b', 'g', 'c', 'm', 'k'] # other line colors
+#    ps.rcparams_kw['figure.figsize'] = (15, 7.5)
+    ps.rcparams_kw['legend.fontsize'] = 15  # font size for legend
+    ps.axis_label_coords = ((1.02, -.05), (-0.1, 1.02))
+    ps.rcparams_kw['axes.labelsize'] = 25   # 
+    ps.rcparams_kw['xtick.labelsize'] = 20  # axis tick mark sizes
+    ps.rcparams_kw['ytick.labelsize'] = 20  # 
+    ps.axis_label_pad = (5, 6)  # distance of tick labels from axes
+
+    kplot=kafe.Plot(fit, plotstyle=ps)
     kplot.plot_all()
     kplot.show()
     
@@ -1412,13 +1443,17 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
 
   if(plot):
     kplot=Plot(fit)
+    # set some custom options
     kplot.customize('data', 'label', [data_legend])
+    kplot.customize('data', 'marker', ['o'])
     kplot.customize('data', 'markersize', [6])
     kplot.customize('data', 'color', ['darkblue'])
     kplot.customize('model_line', 'label', [model_legend])
-    kplot.customize('model_error_band', 'label', [model_band])
     kplot.customize('model_line', 'color', ['darkred'])
-       
+    kplot.customize('model_line', 'linestyle', ['--'])
+    kplot.customize('model_error_band', 'label', [model_band])
+    kplot.customize('model_error_band', 'color', ['red'])
+    kplot.customize('model_error_band', 'alpha', [0.1])     
     kplot.plot()
     # not nice: in kafe2 so far have to set axis lables at plot time   
     kplot.axes[0]['main'].set_xlabel(axis_labels[0], size='large')  
