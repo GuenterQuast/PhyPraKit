@@ -1419,10 +1419,14 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
   if yrelcor != None:
     dat.add_simple_error(axis='y',err_val=yrelcor,
                          correlation=1., relative=True)
+  dat.label = data_legend
+  dat.axis_labels = axis_labels
+
   # set up and run fit
   fit = XYFit(dat, func)
   
   fit.assign_model_function_latex_expression(model_name)
+  fit.model_label = model_legend
 
   if p0 is not None: fit.set_parameters(p0, p0e)
 
@@ -1444,20 +1448,15 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
   if(plot):
     kplot=Plot(fit)
     # set some custom options
-    kplot.customize('data', 'label', [data_legend])
     kplot.customize('data', 'marker', ['o'])
     kplot.customize('data', 'markersize', [6])
     kplot.customize('data', 'color', ['darkblue'])
-    kplot.customize('model_line', 'label', [model_legend])
     kplot.customize('model_line', 'color', ['darkred'])
     kplot.customize('model_line', 'linestyle', ['--'])
     kplot.customize('model_error_band', 'label', [model_band])
     kplot.customize('model_error_band', 'color', ['red'])
     kplot.customize('model_error_band', 'alpha', [0.1])     
     kplot.plot()
-    # not nice: in kafe2 so far have to set axis lables at plot time   
-    kplot.axes[0]['main'].set_xlabel(axis_labels[0], size='large')  
-    kplot.axes[0]['main'].set_ylabel(axis_labels[1], size='large')
     plt.show()
     
   return par, pare, cor, chi2
