@@ -1265,9 +1265,9 @@ def kRegression(x, y, sx, sy,
 
 
 def kFit(func, x, y, sx, sy, p0=None, p0e=None,
-         xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
-         constraints= None, title='Daten', axis_labels=['X', 'Y'], 
-         plot=True, quiet=False):
+         xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, constraints= None,
+         plot=True, title='Daten', axis_labels=['X', 'Y'], 
+         fit_info=True, quiet=False):
   """
     fit function func with errors on x and y;
     uses package `kafe`
@@ -1291,6 +1291,9 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
       * axis_labels: List of strings, axis labels x and y
       * constraints: 
       * plot: flag to switch off graphical output
+      * title: name of data set
+      * axis labels: labels for x and y axis
+      * fit info: controls display of fit results on figure
       * quiet: flag to suppress text and log output
 
    Returns:
@@ -1345,6 +1348,7 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
   if(plot):
   # instantiate a kafe.PlotStyle and change (some) options
     ps=kafe.PlotStyle()
+  # some 'nice' options
     ps.pointsizes = [5] # smaller points
     ps.markercolors = ['b','g','c','m','k','r'] # different colors
     ps.markers = ['x','o', '^', 's', 'D', 'v', 'h', '*', '+'] # other markers
@@ -1359,17 +1363,19 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
     ps.axis_label_pad = (5, 6)  # distance of tick labels from axes
 
     kplot=kafe.Plot(fit, plotstyle=ps)
-    kplot.plot_all()
+    info = 'all'
+    if not fit_info: info=None
+    kplot.plot_all(show_info_for=info)
     kplot.show()
     
   return par, pare, cor, chi2
 
 def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
-           xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
-           constraints= None,
-           axis_labels=['x-data', 'y-data'], data_legend = 'data',
-           model_name=(r'?'), model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
-           plot=True):
+           xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, constraints= None,
+           plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
+           model_expression=None, model_name=None,
+           model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
+           fit_info=True):
   """
     fit function func with errors on x and y;
     uses package `kafe2`
@@ -1389,12 +1395,14 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
       * xrelcor: relative, correlated error(s) on x
       * yrelcor: relative, correlated error(s) on y
       * parameter constrains (name, value, uncertainty)        
+      * plot: flag to switch off graphical output
       * axis_labels: list of strings, axis labels x and y
       * data_legend: legend entry for data points
-      * model_name: latex expression for model function
+      * model_name: latex name for model function
+      * model_expression: latex expression for model function
       * model_legend: legend entry for model
       * model_band: legend entry for model uncertainty band
-      * plot: flag to switch off graphical output
+      * fit info: controls display of fit results on figure
    Returns:
       * np-array of float: parameter values
       * np-array of float: parameter errors
@@ -1425,7 +1433,8 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
   # set up and run fit
   fit = XYFit(dat, func)
   
-  fit.assign_model_function_latex_expression(model_name)
+  fit.assign_model_function_latex_name(model_name)
+  fit.assign_model_function_latex_expression(model_expression)
   fit.model_label = model_legend
 
   if p0 is not None: fit.set_parameters(p0, p0e)
@@ -1447,16 +1456,17 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
 
   if(plot):
     kplot=Plot(fit)
-    # set some custom options
+    # set some 'nice' options
     kplot.customize('data', 'marker', ['o'])
     kplot.customize('data', 'markersize', [6])
     kplot.customize('data', 'color', ['darkblue'])
     kplot.customize('model_line', 'color', ['darkred'])
     kplot.customize('model_line', 'linestyle', ['--'])
-    kplot.customize('model_error_band', 'label', [model_band])
     kplot.customize('model_error_band', 'color', ['red'])
+    # set user options
+    kplot.customize('model_error_band', 'label', [model_band])
     kplot.customize('model_error_band', 'alpha', [0.1])     
-    kplot.plot()
+    kplot.plot(with_fit_info=fit_info)
     plt.show()
     
   return par, pare, cor, chi2

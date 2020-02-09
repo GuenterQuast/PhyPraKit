@@ -36,17 +36,20 @@ xt, yt, ydata = generateXYdata(xdata, model, sigx_abs, 0.,
   mpar=mpars )
 ey=sigy_rel* yt * np.ones(nd) # set array of relative y errors
 
-# fit with kafe
+# fit with kafe2
 par, pare, cor, chi2 = k2Fit(model,
     xdata, ydata, sigx_abs, ey,               # data and uncertaintites
     p0=None, p0e=None,                        # initial guess and range
     xrelcor=sxrelcor, yabscor=syabscor,       # correlated uncertainties
+    plot=True,                                # show plot, options below  
     axis_labels=['x-data','random y'],        # nice names
     data_legend = 'random data',              # legend entry for data points
-    model_name = r'{0}\,x^2 + {1}\,x + {2}',  # model fuction
+    model_name = 'quadratic',                 # name for model
+    model_expression = r'{0}\,x^2 + {1}\,x + {2}',  # model fuction
     model_legend = 'quadratic model',         # legend entry for model line
     #model_band = None,                       # name for model uncertainty band
-    plot=True)                                # options 
+    fit_info=True )                           # fit results in figure
+
 # setting any of the above names to None will remove the entry from the legend,
 #  if not specified, use default  
 
