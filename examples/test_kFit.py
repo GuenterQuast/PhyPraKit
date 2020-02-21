@@ -41,7 +41,12 @@ par, pare, cor, chi2 = kFit(model,
     xdata, ydata, sigx_abs, ey,          # data and uncertaintites
     p0=None, p0e=None,                   # initial guess and range
     xrelcor=sxrelcor, yabscor=syabscor,  # correlated uncertainties
-    plot=True, quiet=True)               # options 
+    plot=True,                           # show result figure
+    title='test data',                   # name for data set
+    axis_labels=['x-data', 'random y'],  # axis labels
+    fit_info=True,                       # show fit result on figure
+    quiet=True)                          # output to text console 
+
 
 print('*==* data set')
 print('  x = ', xdata)
