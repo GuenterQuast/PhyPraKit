@@ -43,7 +43,7 @@ par, pare, cor, chi2 = k2Fit(model,
     xrelcor=sxrelcor, yabscor=syabscor,       # correlated uncertainties
     axis_labels=['x-data','random y'],        # nice names
     data_legend = 'random data',              # legend entry for data points
-    model_name = r'{0}\,x^2 + {1}\,x + {2}',  # model fuction
+    model_name = r'{a}\,{x}^2 + {b}\,{x} + {c}',  # model fuction
     model_legend = 'quadratic model',         # legend entry for model line
     #model_band = None,                       # name for model uncertainty band
     plot=True)                                # options 
