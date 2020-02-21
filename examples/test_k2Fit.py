@@ -44,12 +44,8 @@ par, pare, cor, chi2 = k2Fit(model,
     plot=True,                                # show plot, options below  
     axis_labels=['x-data','random y'],        # nice names
     data_legend = 'random data',              # legend entry for data points
-<<<<<<< HEAD
-    model_name = r'{a}\,{x}^2 + {b}\,{x} + {c}',  # model fuction
-=======
     model_name = 'quadratic',                 # name for model
-    model_expression = r'{0}\,x^2 + {1}\,x + {2}',  # model fuction
->>>>>>> 5d1e6ebb66ae4ef6ab77fe72a029c2e73cd71adf
+    model_expression = r'{a}\,{x}^2 + {b}\,{x} + {c}',  # model fuction
     model_legend = 'quadratic model',         # legend entry for model line
     #model_band = None,                       # name for model uncertainty band
     fit_info=True )                           # fit results in figure
