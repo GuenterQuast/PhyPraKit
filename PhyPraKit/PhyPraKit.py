@@ -1466,7 +1466,7 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
     # set user options
     kplot.customize('model_error_band', 'label', [model_band])
     kplot.customize('model_error_band', 'alpha', [0.1])     
-    kplot.plot(with_fit_info=fit_info)
+    kplot.plot(fit_info=fit_info)
     plt.show()
     
   return par, pare, cor, chi2
