@@ -39,7 +39,11 @@ from __future__ import print_function  # for python2.7 compatibility
 
       3. statistics:
 
-        - wmean()  weighted mean
+        - wmean()                  weighted mean
+        - BuildCovarianceMatrix()  build coraviance matrix
+        - Cov2Cor                  covariance matrix to correlation matrix
+        - Cor2Cov                  correlations + errors to covariance matrix 
+        - chi2prob                 caclulate chi^2 probability 
 
       4. histograms tools:
 
@@ -53,7 +57,7 @@ from __future__ import print_function  # for python2.7 compatibility
         - profile2d()  "profile plot" for 2d data
         - chi2p_indep2d() chi2 test on independence of data
 
-      5. linear regression:
+      5. linear regression and fitting:
 
         - linRegression()    linear regression, y=ax+b, with analytical formula
         - linRegressionXY()  linear regression, y=ax+b, with x and y errors 
@@ -528,8 +532,6 @@ def wmean(x, sx, pr=True):
     Returns:
       * float: mean, sigma 
   """
-# -------------------------------------------------------
-
   w = 1/sx**2
   sumw = np.sum(w)
   mean = np.sum(w*x)/sumw
@@ -538,6 +540,64 @@ def wmean(x, sx, pr=True):
   if pr:
     print("\n weighted mean = %.3g +/- %.3g"%(mean, smean))
   return mean, smean
+
+
+def BuildCovarianceMatrix(sig, sigc=[]):
+  """
+    Construct a covariance matrix from independent and correlated error components
+
+  Args: 
+   * sig: iterable of independent errors 
+   * sigc: list of iterables of correlated uncertainties
+  
+  Returns: 
+   covariance Matrix as numpy-array
+  """
+  
+  # construct a numpy array with diagonal elements 
+  su = np.array(sig)
+  V = np.diagflat(su*su)
+
+  # if given, add off-diagonal components
+  if sigc != []:
+    for s in sigc:
+      sc = np.array(s)
+      V += np.outer(sc, sc)
+  return V
+
+def Cov2Cor(V):
+  """
+    Convert a covariance-matrix into diagonal errors + Correlation matrix
+
+  Args: 
+   * V: covariance matrix as numpy array
+   * sigc: list of iterables of correlated uncertainties
+  
+  Returns: 
+   * diag uncertainties (sqrt of diagonal elements)
+   * C: correlation matrix as numpy array
+  """
+  diag = np.sqrt(np.diag(V))  
+  C = V/np.outer(diag, diag)             
+  return diag, C
+
+
+def Cor2Cov(sig, C):
+  """
+    Convert a covariance-matrix into diagonal errors + Correlation matrix
+
+  Args: 
+   * V: covariance matrix as numpy array
+   * sigc: list of iterables of correlated uncertainties
+  
+  Returns: 
+   * diag uncertainties (sqrt of diagonal elements)
+   * C: correlation matrix as numpy array
+  """
+  V = C * np.outer(sig, sig)             
+  return V
+
+# -------------------------------------------------------
 
 def chi2prob(chi2, ndf):
   """ chi2-probability
