@@ -1477,16 +1477,31 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
   # ... and add all error sources  
   dat.add_simple_error(axis='x', err_val=sx)
   dat.add_simple_error(axis='y', err_val=sy)
+# construct covariance matrix
   if xabscor != None:
-    dat.add_simple_error(axis='x', err_val=xabscor, correlation=1.)
+    if len(np.shape(np.array(xabscor))) <2:
+      dat.add_simple_error(axis='x', err_val=xabscor, correlation=1.)
+    else:
+      for c in xabscor:
+        dat.add_simple_error(axis='x', err_val=c, correlation=1.)
   if yabscor != None:
-    dat.add_simple_error(axis='y', err_val=yabscor, correlation=1.)
+    if len(np.shape(np.array(yabscor))) < 2:
+      dat.add_simple_error(axis='y', err_val=yabscor, correlation=1.)
+    else:
+      for c in yabscor:
+        dat.add_simple_error(axis='y', err_val=c, correlation=1.)
   if xrelcor != None:
-    dat.add_simple_error(axis='x', err_val=xrelcor,
-                         correlation=1., relative=True)
+    if len(np.shape(np.array(xrelcor))) < 2:
+      dat.add_simple_error(axis='x', err_val=xrelcor, correlation=1., relative=True)
+    else:
+      for c in xrelcor:
+        dat.add_simple_error(axis='x', err_val=c, correlation=1., relative=True)
   if yrelcor != None:
-    dat.add_simple_error(axis='y',err_val=yrelcor,
-                         correlation=1., relative=True)
+    if len(np.shape(np.array(yrelcor))) < 2:
+      dat.add_simple_error(axis='y', err_val=yrelcor, correlation=1., relative=True)
+    else:
+     for c in yrelcor:
+       dat.add_simple_error(axis='y', err_val=c, correlation=1., relative=True)
   dat.label = data_legend
   dat.axis_labels = axis_labels
 
