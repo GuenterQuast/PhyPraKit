@@ -1,6 +1,8 @@
 initial beta version Oct. 2016
 =========================
 
-vers. 1.0.0 in released May 2017
-vers. 1.0.1 in pyhton 3 released Aug. 2017
-	
+v1.0.0 May 2017
+v1.0.1 Aug. 2017  python 3 support
+v1.0.2 Feb. 2019  improved documentation an minor extensions
+v1.0.3 Aug. 2019  added LaTeX example "ProtokollVorlage" 
+v1.1.0 Mar. 2020  support for kafe2 and additions to statistics analysis
