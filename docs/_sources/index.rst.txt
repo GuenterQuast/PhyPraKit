@@ -175,8 +175,11 @@ oder::
 
       3. statistics:
 
-        - wmean()             weighted mean
-	- chi2prob()          chi2 probability 
+        - wmean()                  weighted mean
+        - BuildCovarianceMatrix()  build coraviance matrix
+        - Cov2Cor()                covariance matrix to correlation matrix
+        - Cor2Cov()                correlations + errors to covariance matrix 
+        - chi2prob()               caclulate chi^2 probability 
 
       4. histograms tools:
 
