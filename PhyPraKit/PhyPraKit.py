@@ -521,26 +521,38 @@ def writeTexTable(file, ldata, cnames=[], caption='', fmt='%.10g'):
 
 ## ------- section 2: statistics  -----------------------
 
-def wmean(x, sx, pr=True):
-  """ weighted mean of np-array x with uncertainties sx
+def wmean(x, sx, V=None, pr=True):
+  """ weighted mean of np-array x with uncertainties sx 
+      or covariance matrix V; if both are given, sx**2 is added 
+      to the diagonal elements of the covariance matrix
  
     Args:
       * x: np-array of values
-      * sx: uncertainties
+      * sx: np-array uncertainties
+      * V: optional, covariance matrix of x
       * pr: if True, print result
 
     Returns:
       * float: mean, sigma 
   """
-  w = 1/sx**2
+  
+  if type(V) == type(None):
+    w = 1/sx**2
+  else:
+    cov = V 
+    if type(sx) != type(None):  # add independent errors to diagonal of V
+      np.fill_diagonal(cov, V.diagonal() + sx*sx) 
+    # calculate inverse of covariance matrix
+    covI = np.mat(cov).I
+    w = np.sum(covI, axis=0)
+#
   sumw = np.sum(w)
-  mean = np.sum(w*x)/sumw
+  mean = np.inner(w,x)/sumw
   smean = np.sqrt(1./sumw)
   # eventually, print out the data we just read:
   if pr:
     print("\n weighted mean = %.3g +/- %.3g"%(mean, smean))
   return mean, smean
-
 
 def BuildCovarianceMatrix(sig, sigc=[]):
   """

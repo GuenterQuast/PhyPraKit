@@ -36,7 +36,7 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p><cite>Version</cite> 2020-03-13</p>
+<div><p><cite>Version</cite> 2020-03-14</p>
 </div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
@@ -1154,12 +1154,15 @@ to from the new value at index <cite>i</cite></p>
 
 <dl class="function">
 <dt id="PhyPraKit.wmean">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">wmean</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">sx</em>, <em class="sig-param">pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.wmean" title="Permalink to this definition">¶</a></dt>
-<dd><p>weighted mean of np-array x with uncertainties sx</p>
-<dl class="simple">
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">wmean</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">sx</em>, <em class="sig-param">V=None</em>, <em class="sig-param">pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.wmean" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>weighted mean of np-array x with uncertainties sx </dt><dd><p>or covariance matrix V; if both are given, sx**2 is added 
+to the diagonal elements of the covariance matrix</p>
+</dd>
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>x: np-array of values</p></li>
-<li><p>sx: uncertainties</p></li>
+<li><p>sx: np-array uncertainties</p></li>
+<li><p>V: optional, covariance matrix of x</p></li>
 <li><p>pr: if True, print result</p></li>
 </ul>
 </dd>
