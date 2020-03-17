@@ -1381,17 +1381,34 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
   dat = kafe.Dataset(data=(x,y), title=title, axis_labels=axis_labels,
           basename='kRegression')
 
-  # ... and add all error sources  
-  dat.add_error_source('x','simple',sx)
-  dat.add_error_source('y','simple',sy)
+  # ... add independent ...   
+  dat.add_error_source('x','simple', sx)
+  dat.add_error_source('y','simple', sy)
+  # ... and correlated error sources 
   if xabscor != None:
-    dat.add_error_source('x','simple', xabscor, correlated=True)
+    if len(np.shape(np.array(xabscor))) <2:
+      dat.add_error_source('x', 'simple', xabscor, correlated= True)
+    else:
+      for c in xabscor:
+        dat.add_error_source('x', 'simple', c, correlated= True)
   if yabscor != None:
-    dat.add_error_source('y','simple', yabscor, correlated=True)
+    if len(np.shape(np.array(yabscor))) < 2:
+      dat.add_error_source('y','simple', yabscor, correlated=True)
+    else:
+      for c in yabscor:
+        dat.add_error_source('y','simple', c, correlated=True)
   if xrelcor != None:
-    dat.add_error_source('x','simple', xrelcor, relative=True, correlated=True)
+    if len(np.shape(np.array(xrelcor))) < 2:
+      dat.add_error_source('x','simple', xrelcor, relative=True, correlated=True)
+    else:
+      for c in xrelcor:
+        dat.add_error_source('x','simple', c, relative=True, correlated=True)
   if yrelcor != None:
-    dat.add_error_source('y','simple', yrelcor, relative=True, correlated=True)
+    if len(np.shape(np.array(yrelcor))) < 2:
+      dat.add_error_source('y','simple', yrelcor, relative=True, correlated=True)
+    else:
+     for c in yrelcor:
+       dat.add_error_source('y','simple', c, relative=True, correlated=True)
 
   # set up fit ...
   fit = kafe.Fit(dat, func) 
