@@ -1492,12 +1492,14 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
       * model_legend: legend entry for model
       * model_band: legend entry for model uncertainty band
       * fit info: controls display of fit results on figure
-   Returns:
+
+    Returns:
       * np-array of float: parameter values
       * np-array of float: parameter errors
       * np-array: cor   correlation matrix 
       * float: chi2  \chi-square
   """  
+
   # for fit with kafe2
   from kafe2 import XYContainer, XYFit, Plot
 

@@ -36,7 +36,7 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p><cite>Version</cite> 2020-03-14</p>
+<div><p><cite>Version</cite> 2020-03-19</p>
 </div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
@@ -655,8 +655,7 @@ of a histogram with bin-contents <cite>binc</cite> and bin-edges <cite>bine</cit
 <dl class="function">
 <dt id="PhyPraKit.k2Fit">
 <code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">k2Fit</code><span class="sig-paren">(</span><em class="sig-param">func, x, y, sx, sy, p0=None, p0e=None, xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, constraints=None, plot=True, axis_labels=['x-data', 'y-data'], data_legend='data', model_expression=None, model_name=None, model_legend='model', model_band='$\\pm 1 \\sigma$', fit_info=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.k2Fit" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>fit function func with errors on x and y;
+<dd><p>fit function func with errors on x and y;
 uses package <cite>kafe2</cite></p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
@@ -685,9 +684,6 @@ uses package <cite>kafe2</cite></p>
 <li><p>fit info: controls display of fit results on figure</p></li>
 </ul>
 </dd>
-</dl>
-</div></blockquote>
-<dl class="simple">
 <dt>Returns:</dt><dd><ul class="simple">
 <li><p>np-array of float: parameter values</p></li>
 <li><p>np-array of float: parameter errors</p></li>
