@@ -147,7 +147,7 @@ def readColumnData(fname, cchar='#', delimiter=None, pr=True):
            keys[words[0]]=' '.join(words[1:]) # get rest of line 
          else:
            # have a valid line, change delimiter to white space
-           if (delim != None): line=line.replace(delim, ' ')
+           if (delim is not None): line=line.replace(delim, ' ')
            yield line  # pass line to loadtxt()
 #   -- end filter_lines
 
@@ -163,7 +163,7 @@ def readColumnData(fname, cchar='#', delimiter=None, pr=True):
     print("\n*==* readColumnData: file read successfully")
     print("keywords found:")
     for key in mdict:
-      if (mdict[key]!=None): print(key, ':', mdict[key])
+      if (mdict[key] is not None): print(key, ':', mdict[key])
     print("data read:")
     for i in range(arr.shape[0]): print(arr[i])
 
@@ -216,7 +216,7 @@ def readtxt(file, nlhead=1, delim='\t'):
 # --------------------------------------------------------------------
 # -- helper function to filter input lines
   def specialCharFilter(f, delim):
-    '''a generator fo filter lines read from file
+    '''a generator to filter lines read from file
          replace German ',' by '.', remove special characters 
 
       Args:
@@ -246,9 +246,11 @@ def readtxt(file, nlhead=1, delim='\t'):
   lfilt = specialCharFilter(f, delim) # python generator 
   # read header
   for i in range (nlhead):
-    hlines.append(next(lfilt)) # header line(s)
+    h = next(lfilt)
+#    print(h)
+    hlines.append(h)  # header line(s)
 
-  # read float data with loadtext()
+  # read float data with loadtxt()
   if delim ==' ' or delim =='\t':
     delim = None   # loadtext takes care of white spaces by default
   data = np.loadtxt(lfilt, dtype=np.float32, delimiter=delim, unpack=True)
@@ -296,7 +298,7 @@ def readPicoScope(file, prlevel=0):
   else:  
     return units, data
 
-
+  
 def readCassy(file, prlevel=0):
   '''
   read Data exported from Cassy in .txt format
@@ -324,9 +326,9 @@ def readCassy(file, prlevel=0):
      
   if len(data) != nc:
     print("  !!! number of data columns inconsistent with number of units")
-    exit(1)
-  else:  
-    return tags, data
+#    exit(1)
+ 
+  return tags, data
 
 
 def labxParser(file, prlevel=1):
@@ -536,11 +538,11 @@ def wmean(x, sx, V=None, pr=True):
       * float: mean, sigma 
   """
   
-  if type(V) == type(None):
+  if V is None:
     w = 1/sx**2
   else:
     cov = V 
-    if type(sx) != type(None):  # add independent errors to diagonal of V
+    if sx is not None:  # add independent errors to diagonal of V
       np.fill_diagonal(cov, V.diagonal() + sx*sx) 
     # calculate inverse of covariance matrix
     covI = np.mat(cov).I
@@ -1302,13 +1304,13 @@ def kRegression(x, y, sx, sy,
   # ... and add all error sources  
   dat.add_error_source('x', 'simple', sx)
   dat.add_error_source('y', 'simple', sy)
-  if xabscor != None:
+  if xabscor is not None:
     dat.add_error_source('x', 'simple', xabscor, correlated=True)
-  if yabscor != None:
+  if yabscor is not None:
     dat.add_error_source('y', 'simple', yabscor, correlated=True)
-  if xrelcor != None:
+  if xrelcor is not None:
     dat.add_error_source('x', 'simple', xrelcor, relative=True, correlated=True)
-  if yrelcor != None:
+  if yrelcor is not None:
     dat.add_error_source('y', 'simple', yrelcor, relative=True, correlated=True)
   # set up and run fit
   fit = kafe.Fit(dat, linear_2par) 
@@ -1385,25 +1387,25 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
   dat.add_error_source('x','simple', sx)
   dat.add_error_source('y','simple', sy)
   # ... and correlated error sources 
-  if xabscor != None:
+  if xabscor is not None:
     if len(np.shape(np.array(xabscor))) <2:
       dat.add_error_source('x', 'simple', xabscor, correlated= True)
     else:
       for c in xabscor:
         dat.add_error_source('x', 'simple', c, correlated= True)
-  if yabscor != None:
+  if yabscor is not None:
     if len(np.shape(np.array(yabscor))) < 2:
       dat.add_error_source('y','simple', yabscor, correlated=True)
     else:
       for c in yabscor:
         dat.add_error_source('y','simple', c, correlated=True)
-  if xrelcor != None:
+  if xrelcor is not None:
     if len(np.shape(np.array(xrelcor))) < 2:
       dat.add_error_source('x','simple', xrelcor, relative=True, correlated=True)
     else:
       for c in xrelcor:
         dat.add_error_source('x','simple', c, relative=True, correlated=True)
-  if yrelcor != None:
+  if yrelcor is not None:
     if len(np.shape(np.array(yrelcor))) < 2:
       dat.add_error_source('y','simple', yrelcor, relative=True, correlated=True)
     else:
@@ -1509,25 +1511,25 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
   dat.add_simple_error(axis='x', err_val=sx)
   dat.add_simple_error(axis='y', err_val=sy)
 # construct covariance matrix
-  if xabscor != None:
+  if xabscor is not None:
     if len(np.shape(np.array(xabscor))) <2:
       dat.add_simple_error(axis='x', err_val=xabscor, correlation=1.)
     else:
       for c in xabscor:
         dat.add_simple_error(axis='x', err_val=c, correlation=1.)
-  if yabscor != None:
+  if yabscor is not None:
     if len(np.shape(np.array(yabscor))) < 2:
       dat.add_simple_error(axis='y', err_val=yabscor, correlation=1.)
     else:
       for c in yabscor:
         dat.add_simple_error(axis='y', err_val=c, correlation=1.)
-  if xrelcor != None:
+  if xrelcor is not None:
     if len(np.shape(np.array(xrelcor))) < 2:
       dat.add_simple_error(axis='x', err_val=xrelcor, correlation=1., relative=True)
     else:
       for c in xrelcor:
         dat.add_simple_error(axis='x', err_val=c, correlation=1., relative=True)
-  if yrelcor != None:
+  if yrelcor is not None:
     if len(np.shape(np.array(yrelcor))) < 2:
       dat.add_simple_error(axis='y', err_val=yrelcor, correlation=1., relative=True)
     else:
