@@ -225,17 +225,20 @@ def readtxt(file, nlhead=1, delim='\t'):
         * a valid line with numerical data
     '''
     while True:
-      l=f.readline().strip()  # remove leading and trailing white spaces
-      if (not l): break       # end-of-file reached, exit
+      l=f.readline()      # read one line
+      if (not l): break   # end-of-file reached, exit
 
-      # remove ascii contol characters (except delimiter) 
+    # remove white spaces and contol characters, fix German floats 
+        # remove leading and trailing white spaces
+      l=l.strip()         
+        # remove ascii contol characters (except delimiter) 
       for i in range(32):
         if delim != chr(i) : l=l.replace(chr(i),'') 
       if l=='': continue        # skip empty lines
-      # replace German decimal comma (if not CSV format)
-      if delim != ',' : filtline=l.replace(',','.') 
+        # replace German decimal comma (if not CSV format)
+      if delim != ',' : filtline=l.replace(',', '.') 
 
-      yield filtline                # pass filtered line to loadtxt()
+      yield filtline           # pass filtered line to loadtxt()
 #   -- end specialCharFilter
 
   # open file for read (if necessary)
@@ -326,7 +329,7 @@ def readCassy(file, prlevel=0):
      
   if len(data) != nc:
     print("  !!! number of data columns inconsistent with number of units")
-#    exit(1)
+    exit(1)
  
   return tags, data
 
