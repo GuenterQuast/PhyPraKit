@@ -1506,43 +1506,43 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
   """  
 
   # for fit with kafe2
-  from kafe2 import XYContainer, XYFit, Plot
+  from kafe2 import XYContainer, Fit, Plot
 
   # create a data set ...
   dat = XYContainer(x, y)
   # ... and add all error sources  
-  dat.add_simple_error(axis='x', err_val=sx)
-  dat.add_simple_error(axis='y', err_val=sy)
+  dat.add_error(axis='x', err_val=sx)
+  dat.add_error(axis='y', err_val=sy)
 # construct covariance matrix
   if xabscor is not None:
     if len(np.shape(np.array(xabscor))) <2:
-      dat.add_simple_error(axis='x', err_val=xabscor, correlation=1.)
+      dat.add_error(axis='x', err_val=xabscor, correlation=1.)
     else:
       for c in xabscor:
-        dat.add_simple_error(axis='x', err_val=c, correlation=1.)
+        dat.add_error(axis='x', err_val=c, correlation=1.)
   if yabscor is not None:
     if len(np.shape(np.array(yabscor))) < 2:
-      dat.add_simple_error(axis='y', err_val=yabscor, correlation=1.)
+      dat.add_error(axis='y', err_val=yabscor, correlation=1.)
     else:
       for c in yabscor:
-        dat.add_simple_error(axis='y', err_val=c, correlation=1.)
+        dat.add_error(axis='y', err_val=c, correlation=1.)
   if xrelcor is not None:
     if len(np.shape(np.array(xrelcor))) < 2:
-      dat.add_simple_error(axis='x', err_val=xrelcor, correlation=1., relative=True)
+      dat.add_error(axis='x', err_val=xrelcor, correlation=1., relative=True)
     else:
       for c in xrelcor:
-        dat.add_simple_error(axis='x', err_val=c, correlation=1., relative=True)
+        dat.add_error(axis='x', err_val=c, correlation=1., relative=True)
   if yrelcor is not None:
     if len(np.shape(np.array(yrelcor))) < 2:
-      dat.add_simple_error(axis='y', err_val=yrelcor, correlation=1., relative=True)
+      dat.add_error(axis='y', err_val=yrelcor, correlation=1., relative=True)
     else:
      for c in yrelcor:
-       dat.add_simple_error(axis='y', err_val=c, correlation=1., relative=True)
+       dat.add_error(axis='y', err_val=c, correlation=1., relative=True)
   dat.label = data_legend
   dat.axis_labels = axis_labels
 
   # set up and run fit
-  fit = XYFit(dat, func)
+  fit = Fit(dat, func)
   
   fit.assign_model_function_latex_name(model_name)
   fit.assign_model_function_latex_expression(model_expression)
