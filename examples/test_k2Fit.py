@@ -34,7 +34,7 @@ mpars=[0.3, -1.5, 0.5]
 xt, yt, ydata = generateXYdata(xdata, model, sigx_abs, 0., 
   srely=sigy_rel, xrelcor=sxrelcor, yabscor=syabscor, 
   mpar=mpars )
-ey=sigy_rel* yt * np.ones(nd) # set array of relative y errors
+ey=sigy_rel* np.abs(yt) * np.ones(nd) # set array of relative y errors
 
 # fit with kafe2
 par, pare, cor, chi2 = k2Fit(model,
