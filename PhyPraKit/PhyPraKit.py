@@ -1502,7 +1502,7 @@ def k2Fit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
            plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
            model_expression=None, model_name=None,
            model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
-           fit_info=True):
+           fit_info=True, quiet=True):
   """
     fit function func with errors on x and y;
     uses package `kafe2`
@@ -1530,6 +1530,7 @@ def k2Fit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
       * model_legend: legend entry for model
       * model_band: legend entry for model uncertainty band
       * fit_info: controls display of fit results on figure
+      * quiet: controls text output
 
     Returns:
       * np-array of float: parameter values
@@ -1604,6 +1605,8 @@ def k2Fit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
   cor = np.array(fit.parameter_cor_mat)
   chi2 = fit.cost_function_value
 
+  if not quiet: fit.report()
+  
   if(plot):
     kplot=Plot(fit)
     # set some 'nice' options
