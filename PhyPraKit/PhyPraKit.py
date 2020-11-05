@@ -100,6 +100,8 @@ from __future__ import print_function  # for python2.7 compatibility
 #   08-Jul-19    GQ  fixed ' ' as deliminter in readtxt()
 #   27-Jul-19    GQ  added caption to writeTexTable and f.close to writeCSV()
 #   01-Nov-19    GQ  fixed extraction of file extension in readPicoScope
+#   05-Nov-20    GQ  changed to GNU GPL, automatic handling of missing uncertainties
+#                      in odFit, kFit and k2Fit
 # ---------------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
@@ -1123,7 +1125,7 @@ def chi2p_indep2d(H2d, bcx, bcy, pr=True):
 
 ## ------- section 5: linear regression ----------------------
 
-def linRegression(x, y, sy):
+def linRegression(x, y, sy=None):
   """
     linear regression y(x) = ax + b 
 
@@ -1142,7 +1144,12 @@ def linRegression(x, y, sy):
       * float: sb  sigma on constant
       * float: cor   correlation
       * float: chi2  \chi-square
-  """  
+  """
+  # set y-errors to 1. if not given
+  if sy is None:
+    sy=np.ones(len(y))
+    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
+
   # calculate auxilary quantities
   S1  = sum(1./sy**2)
   Sx  = sum(x/sy**2)
@@ -1163,7 +1170,7 @@ def linRegression(x, y, sy):
   return a, b, sa, sb, cor, chi2
 
 
-def linRegressionXY(x, y, sx, sy):
+def linRegressionXY(x, y, sx=None, sy=None):
   """
     linear regression y(x) = ax + b  with errors on x and y
     uses numerical "orthogonal distance regression" from package scipy.odr
@@ -1187,6 +1194,13 @@ def linRegressionXY(x, y, sx, sy):
   def fitf(P, x):     # the linear model (note order or parameters for odr !)
     return P[1]*x + P[0]
 
+  # set y-errors to 1. if not given
+  if sy is None:
+    sy=np.ones(len(y))
+    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
+  if sx is None:
+    sx=0.
+    
   # transform uncertainties to numpy-arrays, if necessary
   if not hasattr(sx,'__iter__'): sx=sx*np.ones(len(x))
   if not hasattr(sy,'__iter__'): sy=sy*np.ones(len(y))
@@ -1209,7 +1223,7 @@ def linRegressionXY(x, y, sx, sy):
   return a, b, sa, sb, cor, chi2
 
 
-def odFit(fitf, x, y, sx, sy, p0=None):
+def odFit(fitf, x, y, sx=None, sy=None, p0=None):
   """
     fit an arbitrary function with errors on x and y
     uses numerical "orthogonal distance regression" from package scipy.odr
@@ -1235,8 +1249,14 @@ def odFit(fitf, x, y, sx, sy, p0=None):
   def fitf_ODR(p, x):
     return fitf(x, *p)
 
+
+  # set y-errors to 1. if not given
+  if sy is None:
+    sy=np.ones(len(y))
+    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
   # transform uncertainties to numpy-arrays, if necessary
-  if not hasattr(sx,'__iter__'): sx=sx*np.ones(len(x))
+  if sx is not None:
+    if not hasattr(sx,'__iter__'): sx=sx*np.ones(len(x))
   if not hasattr(sy,'__iter__'): sy=sy*np.ones(len(y))
 
   # perform a simple fit with y-errors only to obtatain start values 
@@ -1245,7 +1265,7 @@ def odFit(fitf, x, y, sx, sy, p0=None):
   #print ' -> par= ', par0
   #print ' -> pare= ', np.sqrt(np.diag(cov0))
 
-  if(not np.sum(sx)):          # if no x-errors, we are done
+  if(sx is None or not np.sum(sx)):          # if no x-errors, we are done
     pare=np.sqrt(np.diag(cov0))
     cor = cov0/np.outer(pare,pare)
     chi2 = np.sum(((fitf(np.array(x), *par0) - y)/sy)**2)
@@ -1304,8 +1324,15 @@ def kRegression(x, y, sx, sy,
   # create a data set ...
   dat = kafe.Dataset(data=(x,y), title=title, axis_labels=axis_labels,
                        basename='kRegression') 
+
+  # ... check if errors are provided ...
+  if sy is None:
+    sy=np.ones(len(y))
+    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
+  
   # ... and add all error sources  
-  dat.add_error_source('x', 'simple', sx)
+  if sx is not None:
+    dat.add_error_source('x', 'simple', sx)
   dat.add_error_source('y', 'simple', sy)
   if xabscor is not None:
     dat.add_error_source('x', 'simple', xabscor, correlated=True)
@@ -1341,7 +1368,7 @@ def kRegression(x, y, sx, sy,
   return a, b, sa, sb, cor, chi2  
 
 
-def kFit(func, x, y, sx, sy, p0=None, p0e=None,
+def kFit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
          xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, constraints= None,
          plot=True, title='Daten', axis_labels=['X', 'Y'], 
          fit_info=True, quiet=False):
@@ -1386,8 +1413,14 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
   dat = kafe.Dataset(data=(x,y), title=title, axis_labels=axis_labels,
           basename='kRegression')
 
+  # ... check if errors are provided ...
+  if sy is None:
+    sy=np.ones(len(y))
+    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
+  
   # ... add independent ...   
-  dat.add_error_source('x','simple', sx)
+  if sx is not None:
+    dat.add_error_source('x','simple', sx)
   dat.add_error_source('y','simple', sy)
   # ... and correlated error sources 
   if xabscor is not None:
@@ -1464,7 +1497,7 @@ def kFit(func, x, y, sx, sy, p0=None, p0e=None,
     
   return par, pare, cor, chi2
 
-def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
+def k2Fit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
            xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, constraints= None,
            plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
            model_expression=None, model_name=None,
@@ -1496,7 +1529,7 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
       * model_expression: latex expression for model function
       * model_legend: legend entry for model
       * model_band: legend entry for model uncertainty band
-      * fit info: controls display of fit results on figure
+      * fit_info: controls display of fit results on figure
 
     Returns:
       * np-array of float: parameter values
@@ -1511,8 +1544,14 @@ def k2Fit(func, x, y, sx, sy, p0=None, p0e=None,
   # create a data set ...
   dat = XYContainer(x, y)
   # ... and add all error sources  
-  dat.add_error(axis='x', err_val=sx)
+
+  if sy is None:
+    sy=np.ones(len(y))
+    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
   dat.add_error(axis='y', err_val=sy)
+  if sx is not None:
+    dat.add_error(axis='x', err_val=sx)
+
 # construct covariance matrix
   if xabscor is not None:
     if len(np.shape(np.array(xabscor))) <2:
