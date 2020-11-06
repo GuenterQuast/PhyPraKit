@@ -46,7 +46,7 @@ A pdf version of this documentation is available here: PhyPraKit.pdf_.
 .. _PhyPraKit.pdf: PhyPraKit.pdf
 
 
-  
+
 Installation:
 -------------
 
@@ -149,7 +149,7 @@ oder::
 
 
       1. Data input:
-
+    
         - readColumnData() read data and meta-data from text file
         - readCSV()        read data in csv-format from file with header
         - readtxt()        read data in "txt"-format from file with header
@@ -158,9 +158,9 @@ oder::
         - labxParser()     read CASSY output file, .labx format   
         - writeCSV()       write data in csv-format (opt. with header)
         - writeTexTable()  write data in LaTeX table format
-
+    
       2. signal processing:
-
+    
         - offsetFilter()      subtract an offset in an input array
         - meanFilter()        apply sliding average to smoothen data
         - resample()          average over n samples
@@ -172,17 +172,17 @@ oder::
         - FourierSpectrum()   Fourier transformation of an array 
           `(slow, preferably use fft version)`
         - autocorrelate()     autocorrelation function
-
+    
       3. statistics:
-
+    
         - wmean()                  weighted mean
         - BuildCovarianceMatrix()  build coraviance matrix
         - Cov2Cor()                covariance matrix to correlation matrix
         - Cor2Cov()                correlations + errors to covariance matrix 
         - chi2prob()               caclulate chi^2 probability 
-
+    
       4. histograms tools:
-
+    
         - barstat()   statistical information (mean, sigma, erroron mean) from bar chart
         - nhist()    histogram plot based on np.historgram() and plt.bar()
           ``use matplotlib.pyplot.hist() instead``
@@ -192,9 +192,9 @@ oder::
         - hist2dstat() statistical information from 1d-histogram
         - profile2d()  "profile plot" for 2d data
         - chi2p_indep2d() chi2 test on independence of data
-
+    
       5. linear regression:
-
+    
         - linRegression()    linear regression, y=ax+b, with analytical formula
         - linRegressionXY()  linear regression, y=ax+b, with x and y errors 
           ``! deprecated, use `odFit` with linear model instead``
@@ -203,9 +203,9 @@ oder::
           ``! deprecated, use `kFit` with linear model instead``
         - kFit()             fit function with (correlated) errors on x and y (kafe)
         - k2Fit()            fit function with (correlated) errors on x and y (kafe2)
-
+    
       6. simulated data with MC-method:
-
+    
         - smearData()          add random deviations to input data
         - generateXYdata()     generate simulated data 
 
@@ -217,52 +217,42 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     Einlesen von Spalten aus Textdateien; die zugehörigen 
     *Metadaten* können ebenfalls an das Script übergeben 
     werden und stehen so bei der Auswertung zur Verfügung.
-
   * `test_readtxt.py` liest Ausgabedateien im allgemeinem `.txt`-Format
      - Entfernen aller ASCII-Sonderzeichen außer dem Spalten-Trenner
      - Ersetzen des deutschen Dezimalkommas durch Dezimalpunkt
-
   * `test_readPicoScope.py` liest Ausgabedateien von USB-Oszillographen 
     der Marke PicoScope im Format `.csv` oder `.txt`.
-
   * `test_labxParser.py` liest Ausgabedateien von Leybold
     CASSY im `.labx`-Format. Die Kopfzeilen und Daten von Messreihen 
     werden als Listen in *python* zur Verfügung gestellt. 
-
   * `test_convolutionFilter.py` liest die Datei `Wellenform.csv` und 
     bestimmt Maxima und fallende Flanken des Signals 
-
   * `test_AutoCorrelation.py` liest die Datei `AudioData.csv` und führt 
     eine Analyse der Autokorrelation zur Frequenzbestimmung durch. 
-
   * `test_Fourier.py` illustriert die Durchführung einer 
     Fourier-Transfomation eines periodischen Signals, das in 
     der PicoScope-Ausgabedatei `Wellenform.csv` enthalten ist.
-
   * `test_kRegression.py` dient zur Anpassung einer Geraden an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit allen
     Messpunkten gemeinsamen (d. h. korrelierten) relativen oder absoluten
     systematischen Fehlern mit dem Paket `kafe`. 
-
   * `test_linRegression.py` ist eine einfachere Version mit
     `python`-Bordmitteln zur Anpassung einer Geraden an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung. 
     Korrelierte Unsicherheiten werden nicht unterstützt. 
-
   * `test_kFit.py` ist eine verallgemeinerte Version von `test_kRegression` 
     und dient zur Anpassung einer beliebigen Funktion an Messdaten mit 
     Fehlern in Ordinaten- und Abszissenrichtung und mit allen Messpunkten 
     gemeinsamen (d. h. korrelierten) relativen oder absoluten systematischen 
     Fehlern mit dem Paket `kafe`.
-
   * `test_k2Fit.py` verwendet die Version *kafe2* zur Anpassung einer
     Funktion an Messdaten mit unabhängigen oder korrelierten relativen oder
     absoluten Unsicherheiten in Ordinaten- und Abszissenrichtung.
-     
+  * `test_simplek2Fit.py` illustriert die Durchführung einer einfachen
+    linearen Regression mit *kafe2*.
   * `test_Histogram.py` ist ein Beispiel zur Darstellung und 
     statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen) 
     in ein oder zwei Dimensionen.
-
   * `test_generateXYata.py` zeigt, wie man mit Hilfe von Zufallszahlen 
     "künstliche Daten" zur Veranschaulichung oder zum Test von Methoden
     zur Datenauswertung erzeugen kann. 

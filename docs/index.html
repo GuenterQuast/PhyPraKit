@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PhyPraKit Documentation &#8212; PhyPraKit 1.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
@@ -24,7 +25,8 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>  
 
@@ -36,7 +38,7 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p><cite>Version</cite> 2020-04-04</p>
+<div><p><cite>Version</cite> 2020-11-06</p>
 </div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
@@ -142,7 +144,7 @@ zum import in eigene Beispiele mittels:</p>
 </pre></div>
 </div>
 <p>oder:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PhyPraKit</span> <span class="k">import</span> <span class="o">...</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PhyPraKit</span> <span class="kn">import</span> <span class="o">...</span>
 </pre></div>
 </div>
 <p><strong>`PhyPraKit.py`</strong> enthält folgende Funktionen:</p>
@@ -276,6 +278,11 @@ Fehlern mit dem Paket <cite>kafe</cite>.</p></li>
 <li><p><cite>test_k2Fit.py</cite> verwendet die Version <em>kafe2</em> zur Anpassung einer
 Funktion an Messdaten mit unabhängigen oder korrelierten relativen oder
 absoluten Unsicherheiten in Ordinaten- und Abszissenrichtung.</p></li>
+<li><dl class="simple">
+<dt><cite>test_simplek2Fit.py</cite> illustriert die Durchführung einer einfachen linearen</dt><dd><p>Regression mit <em>kafe2</em>.</p>
+</dd>
+</dl>
+</li>
 <li><p><cite>test_Histogram.py</cite> ist ein Beispiel zur Darstellung und
 statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen)
 in ein oder zwei Dimensionen.</p></li>
@@ -325,9 +332,9 @@ Link <a class="reference external" href="https://fachschaft.physik.kit.edu/drupa
 </div>
 <div class="section" id="module-PhyPraKit">
 <span id="module-documentation"></span><h1>Module Documentation<a class="headerlink" href="#module-PhyPraKit" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.BuildCovarianceMatrix">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">BuildCovarianceMatrix</code><span class="sig-paren">(</span><em class="sig-param">sig</em>, <em class="sig-param">sigc=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.BuildCovarianceMatrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">BuildCovarianceMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sig</span></em>, <em class="sig-param"><span class="n">sigc</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.BuildCovarianceMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>Construct a covariance matrix from independent and correlated error components</p>
 </div></blockquote>
@@ -342,9 +349,9 @@ Link <a class="reference external" href="https://fachschaft.physik.kit.edu/drupa
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.Cor2Cov">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">Cor2Cov</code><span class="sig-paren">(</span><em class="sig-param">sig</em>, <em class="sig-param">C</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.Cor2Cov" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">Cor2Cov</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sig</span></em>, <em class="sig-param"><span class="n">C</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.Cor2Cov" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>Convert a covariance-matrix into diagonal errors + Correlation matrix</p>
 </div></blockquote>
@@ -362,9 +369,9 @@ Link <a class="reference external" href="https://fachschaft.physik.kit.edu/drupa
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.Cov2Cor">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">Cov2Cor</code><span class="sig-paren">(</span><em class="sig-param">V</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.Cov2Cor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">Cov2Cor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">V</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.Cov2Cor" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>Convert a covariance-matrix into diagonal errors + Correlation matrix</p>
 </div></blockquote>
@@ -382,9 +389,9 @@ Link <a class="reference external" href="https://fachschaft.physik.kit.edu/drupa
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.FourierSpectrum">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">FourierSpectrum</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">a</em>, <em class="sig-param">fmax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.FourierSpectrum" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">FourierSpectrum</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">fmax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.FourierSpectrum" title="Permalink to this definition">¶</a></dt>
 <dd><dl>
 <dt>Fourier transform of amplitude spectrum a(t), for equidistant sampling times</dt><dd><p>(a simple implementaion for didactical purpose only, 
 consider using <code class="docutils literal notranslate"><span class="pre">Fourier_fft()</span></code> )</p>
@@ -405,9 +412,9 @@ consider using <code class="docutils literal notranslate"><span class="pre">Four
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.Fourier_fft">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">Fourier_fft</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">a</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.Fourier_fft" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">Fourier_fft</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">a</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.Fourier_fft" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fourier transform of the amplitude spectrum a(t)</p>
 <dl>
 <dt>method: </dt><dd><p>uses <cite>numpy.fft</cite> and <cite>numpy.fftfreq</cite>; 
@@ -427,9 +434,9 @@ output amplitude is normalised to number of samples;</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.autocorrelate">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">autocorrelate</code><span class="sig-paren">(</span><em class="sig-param">a</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.autocorrelate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">autocorrelate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.autocorrelate" title="Permalink to this definition">¶</a></dt>
 <dd><p>calculate autocorrelation function of input array</p>
 <p>method: for array of length l, calulate 
 a[0]=sum_(i=0)^(l-1) a[i]*[i] and 
@@ -446,9 +453,9 @@ a[i]= 1/a[0] * sum_(k=0)^(l-i) a[i] * a[i+k-1] for i=1,l-1</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.barstat">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">barstat</code><span class="sig-paren">(</span><em class="sig-param">bincont</em>, <em class="sig-param">bincent</em>, <em class="sig-param">pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.barstat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">barstat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bincont</span></em>, <em class="sig-param"><span class="n">bincent</span></em>, <em class="sig-param"><span class="n">pr</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.barstat" title="Permalink to this definition">¶</a></dt>
 <dd><p>statistics from a bar chart (histogram) 
 with given bin contents and bin centres</p>
 <dl class="simple">
@@ -464,9 +471,9 @@ with given bin contents and bin centres</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.chi2p_indep2d">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">chi2p_indep2d</code><span class="sig-paren">(</span><em class="sig-param">H2d</em>, <em class="sig-param">bcx</em>, <em class="sig-param">bcy</em>, <em class="sig-param">pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.chi2p_indep2d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">chi2p_indep2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">H2d</span></em>, <em class="sig-param"><span class="n">bcx</span></em>, <em class="sig-param"><span class="n">bcy</span></em>, <em class="sig-param"><span class="n">pr</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.chi2p_indep2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>perform a chi2-test on independence of x and y</p>
 <p>method: chi2-test on compatibility of 2d-distribution, f(x,y),
 with product of marginal distributions, f_x(x) * f_y(y)</p>
@@ -484,9 +491,9 @@ with product of marginal distributions, f_x(x) * f_y(y)</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.chi2prob">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">chi2prob</code><span class="sig-paren">(</span><em class="sig-param">chi2</em>, <em class="sig-param">ndf</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.chi2prob" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">chi2prob</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chi2</span></em>, <em class="sig-param"><span class="n">ndf</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.chi2prob" title="Permalink to this definition">¶</a></dt>
 <dd><p>chi2-probability</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
@@ -501,9 +508,9 @@ with product of marginal distributions, f_x(x) * f_y(y)</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.convolutionEdgefinder">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">convolutionEdgefinder</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">width=10</em>, <em class="sig-param">th=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.convolutionEdgefinder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">convolutionEdgefinder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">th</span><span class="o">=</span><span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.convolutionEdgefinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>find positions of maximal positive slope in data</p>
 <dl class="simple">
 <dt>method: </dt><dd><p>convolute array <cite>a</cite> with an edge template of given width and
@@ -522,9 +529,9 @@ return extrema of convoluted signal, i.e. places of rising edges</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.convolutionFilter">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">convolutionFilter</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">v</em>, <em class="sig-param">th=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.convolutionFilter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">convolutionFilter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">th</span><span class="o">=</span><span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.convolutionFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>convolute normalized array with tmplate funtion and return maxima</p>
 <dl class="simple">
 <dt>method: </dt><dd><p>convolute array a with a template and return extrema of 
@@ -544,9 +551,9 @@ best match above (global) minimum</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.convolutionPeakfinder">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">convolutionPeakfinder</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">width=10</em>, <em class="sig-param">th=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.convolutionPeakfinder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">convolutionPeakfinder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">th</span><span class="o">=</span><span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.convolutionPeakfinder" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>find positions of all Peaks in data </dt><dd><p>(simple version for didactical purpose, 
 consider using <code class="docutils literal notranslate"><span class="pre">scipy.signal.find_peaks_cwt()</span></code> )</p>
@@ -568,9 +575,9 @@ template matches best</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.generateXYdata">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">generateXYdata</code><span class="sig-paren">(</span><em class="sig-param">xdata</em>, <em class="sig-param">model</em>, <em class="sig-param">sx</em>, <em class="sig-param">sy</em>, <em class="sig-param">mpar=None</em>, <em class="sig-param">srelx=None</em>, <em class="sig-param">srely=None</em>, <em class="sig-param">xabscor=None</em>, <em class="sig-param">yabscor=None</em>, <em class="sig-param">xrelcor=None</em>, <em class="sig-param">yrelcor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.generateXYdata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">generateXYdata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xdata</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">sx</span></em>, <em class="sig-param"><span class="n">sy</span></em>, <em class="sig-param"><span class="n">mpar</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srelx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srely</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.generateXYdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate measurement data according to some model
 assumes xdata is measured within the given uncertainties; 
 the model function is evaluated at the assumed “true” values 
@@ -611,9 +618,9 @@ as arguments.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.hist2dstat">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">hist2dstat</code><span class="sig-paren">(</span><em class="sig-param">H2d</em>, <em class="sig-param">xed</em>, <em class="sig-param">yed</em>, <em class="sig-param">pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.hist2dstat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">hist2dstat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">H2d</span></em>, <em class="sig-param"><span class="n">xed</span></em>, <em class="sig-param"><span class="n">yed</span></em>, <em class="sig-param"><span class="n">pr</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.hist2dstat" title="Permalink to this definition">¶</a></dt>
 <dd><p>calculate statistical information from 2d Histogram</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
@@ -634,9 +641,9 @@ as arguments.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.histstat">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">histstat</code><span class="sig-paren">(</span><em class="sig-param">binc</em>, <em class="sig-param">bine</em>, <em class="sig-param">pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.histstat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">histstat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">binc</span></em>, <em class="sig-param"><span class="n">bine</span></em>, <em class="sig-param"><span class="n">pr</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.histstat" title="Permalink to this definition">¶</a></dt>
 <dd><p>calculate mean, standard deviation and uncertainty on mean 
 of a histogram with bin-contents <cite>binc</cite> and bin-edges <cite>bine</cite></p>
 <dl class="simple">
@@ -652,9 +659,9 @@ of a histogram with bin-contents <cite>binc</cite> and bin-edges <cite>bine</cit
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.k2Fit">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">k2Fit</code><span class="sig-paren">(</span><em class="sig-param">func, x, y, sx, sy, p0=None, p0e=None, xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, constraints=None, plot=True, axis_labels=['x-data', 'y-data'], data_legend='data', model_expression=None, model_name=None, model_legend='model', model_band='$\\pm 1 \\sigma$', fit_info=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.k2Fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">k2Fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0e</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x-data', 'y-data']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_expression</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em>, <em class="sig-param"><span class="n">model_band</span><span class="o">=</span><span class="default_value">'$\\pm 1 \\sigma$'</span></em>, <em class="sig-param"><span class="n">fit_info</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.k2Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>fit function func with errors on x and y;
 uses package <cite>kafe2</cite></p>
 <dl class="simple">
@@ -681,7 +688,8 @@ uses package <cite>kafe2</cite></p>
 <li><p>model_expression: latex expression for model function</p></li>
 <li><p>model_legend: legend entry for model</p></li>
 <li><p>model_band: legend entry for model uncertainty band</p></li>
-<li><p>fit info: controls display of fit results on figure</p></li>
+<li><p>fit_info: controls display of fit results on figure</p></li>
+<li><p>quiet: controls text output</p></li>
 </ul>
 </dd>
 <dt>Returns:</dt><dd><ul class="simple">
@@ -694,9 +702,9 @@ uses package <cite>kafe2</cite></p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.kFit">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">kFit</code><span class="sig-paren">(</span><em class="sig-param">func, x, y, sx, sy, p0=None, p0e=None, xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, constraints=None, plot=True, title='Daten', axis_labels=['X', 'Y'], fit_info=True, quiet=False</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.kFit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">kFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0e</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">'Daten'</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['X', 'Y']</span></em>, <em class="sig-param"><span class="n">fit_info</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.kFit" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>fit function func with errors on x and y;
 uses package <cite>kafe</cite></p>
@@ -740,9 +748,9 @@ uses package <cite>kafe</cite></p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.kRegression">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">kRegression</code><span class="sig-paren">(</span><em class="sig-param">x, y, sx, sy, xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, title='Daten', axis_labels=['x', 'y-data'], plot=True, quiet=False</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.kRegression" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">kRegression</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span></em>, <em class="sig-param"><span class="n">sy</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">'Daten'</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'y-data']</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.kRegression" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>linear regression y(x) = ax + b  with errors on x and y;
 uses package <cite>kafe</cite></p>
@@ -780,9 +788,9 @@ uses package <cite>kafe</cite></p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.labxParser">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">labxParser</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">prlevel=1</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.labxParser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">labxParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">prlevel</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.labxParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>read files in xml-format produced with Leybold CASSY</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
@@ -798,9 +806,9 @@ uses package <cite>kafe</cite></p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.linRegression">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">linRegression</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">sy</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.linRegression" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">linRegression</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.linRegression" title="Permalink to this definition">¶</a></dt>
 <dd><p>linear regression y(x) = ax + b</p>
 <dl class="simple">
 <dt>method: </dt><dd><p>analytical formula</p>
@@ -823,9 +831,9 @@ uses package <cite>kafe</cite></p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.linRegressionXY">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">linRegressionXY</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">sx</em>, <em class="sig-param">sy</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.linRegressionXY" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">linRegressionXY</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.linRegressionXY" title="Permalink to this definition">¶</a></dt>
 <dd><p>linear regression y(x) = ax + b  with errors on x and y
 uses numerical “orthogonal distance regression” from package scipy.odr</p>
 <dl class="simple">
@@ -848,9 +856,9 @@ uses numerical “orthogonal distance regression” from package scipy.odr</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.meanFilter">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">meanFilter</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">width=5</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.meanFilter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">meanFilter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.meanFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>apply a sliding average to smoothen data,</p>
 <dl>
 <dt>method:</dt><dd><p>value at index i and int(width/2) neighbours are averaged
@@ -871,9 +879,9 @@ to from the new value at index i</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.nhist">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">nhist</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">bins=50</em>, <em class="sig-param">xlabel='x'</em>, <em class="sig-param">ylabel='frequency'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.nhist" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">nhist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">bins</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">'x'</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">'frequency'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.nhist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Histogram.hist
 show a one-dimensional histogram</p>
 <dl class="simple">
@@ -891,9 +899,9 @@ show a one-dimensional histogram</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.nhist2d">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">nhist2d</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">bins=10</em>, <em class="sig-param">xlabel='x axis'</em>, <em class="sig-param">ylabel='y axis'</em>, <em class="sig-param">clabel='counts'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.nhist2d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">nhist2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">bins</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">'x axis'</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">'y axis'</span></em>, <em class="sig-param"><span class="n">clabel</span><span class="o">=</span><span class="default_value">'counts'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.nhist2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Histrogram.hist2d
 create and plot a 2-dimensional histogram</p>
 <dl class="simple">
@@ -915,9 +923,9 @@ create and plot a 2-dimensional histogram</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.odFit">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">odFit</code><span class="sig-paren">(</span><em class="sig-param">fitf</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">sx</em>, <em class="sig-param">sy</em>, <em class="sig-param">p0=None</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.odFit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">odFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.odFit" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>fit an arbitrary function with errors on x and y
 uses numerical “orthogonal distance regression” from package scipy.odr</p>
@@ -944,17 +952,17 @@ uses numerical “orthogonal distance regression” from package scipy.odr</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.offsetFilter">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">offsetFilter</code><span class="sig-paren">(</span><em class="sig-param">a</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.offsetFilter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">offsetFilter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.offsetFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>correct an offset in array a 
 (assuming a symmetric signal around zero)
 by subtracting the mean</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.profile2d">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">profile2d</code><span class="sig-paren">(</span><em class="sig-param">H2d</em>, <em class="sig-param">xed</em>, <em class="sig-param">yed</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.profile2d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">profile2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">H2d</span></em>, <em class="sig-param"><span class="n">xed</span></em>, <em class="sig-param"><span class="n">yed</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.profile2d" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>generate a profile plot from 2d histogram:</dt><dd><ul class="simple">
 <li><p>mean y at a centre of x-bins, standard deviations as error bars</p></li>
@@ -976,9 +984,9 @@ by subtracting the mean</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.readCSV">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">readCSV</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">nlhead=1</em>, <em class="sig-param">delim='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readCSV" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">readCSV</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">nlhead</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">delim</span><span class="o">=</span><span class="default_value">','</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>read Data in .csv format, skip header lines</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
@@ -995,9 +1003,9 @@ by subtracting the mean</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.readCassy">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">readCassy</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">prlevel=0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readCassy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">readCassy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">prlevel</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readCassy" title="Permalink to this definition">¶</a></dt>
 <dd><p>read Data exported from Cassy in .txt format</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
@@ -1013,9 +1021,9 @@ by subtracting the mean</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.readColumnData">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">readColumnData</code><span class="sig-paren">(</span><em class="sig-param">fname</em>, <em class="sig-param">cchar='#'</em>, <em class="sig-param">delimiter=None</em>, <em class="sig-param">pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readColumnData" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">readColumnData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span></em>, <em class="sig-param"><span class="n">cchar</span><span class="o">=</span><span class="default_value">'#'</span></em>, <em class="sig-param"><span class="n">delimiter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pr</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readColumnData" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>read column-data from file</dt><dd><ul class="simple">
 <li><p>input is assumed to be columns of floats</p></li>
@@ -1034,9 +1042,9 @@ text following the keyword is returned in a dictionary</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.readPicoScope">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">readPicoScope</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">prlevel=0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readPicoScope" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">readPicoScope</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">prlevel</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readPicoScope" title="Permalink to this definition">¶</a></dt>
 <dd><p>read Data exported from PicoScope in .txt or .csv format</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
@@ -1052,9 +1060,9 @@ text following the keyword is returned in a dictionary</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.readtxt">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">readtxt</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">nlhead=1</em>, <em class="sig-param">delim='\t'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readtxt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">readtxt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">nlhead</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">delim</span><span class="o">=</span><span class="default_value">'\t'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.readtxt" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>read floating point data in general txt format</dt><dd><p>skip header lines, replace decimal comma, remove special characters</p>
 </dd>
@@ -1072,9 +1080,9 @@ text following the keyword is returned in a dictionary</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.resample">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">resample</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">t=None</em>, <em class="sig-param">n=11</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.resample" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">resample</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">t</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">11</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.resample" title="Permalink to this definition">¶</a></dt>
 <dd><p>perform average over n data points of array a, 
 return reduced array, eventually with corresponding time values</p>
 <dl>
@@ -1097,9 +1105,9 @@ to from the new value at index <cite>i</cite></p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.simplePeakfinder">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">simplePeakfinder</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">a</em>, <em class="sig-param">th=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.simplePeakfinder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">simplePeakfinder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">th</span><span class="o">=</span><span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.simplePeakfinder" title="Permalink to this definition">¶</a></dt>
 <dd><dl>
 <dt>find positions of all maxima (peaks) in data</dt><dd><p>x-coordinates are determined from weighted average over 3 data points</p>
 </dd>
@@ -1121,9 +1129,9 @@ to from the new value at index <cite>i</cite></p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.smearData">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">smearData</code><span class="sig-paren">(</span><em class="sig-param">d</em>, <em class="sig-param">s</em>, <em class="sig-param">srel=None</em>, <em class="sig-param">abscor=None</em>, <em class="sig-param">relcor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.smearData" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">smearData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">srel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">abscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">relcor</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.smearData" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Generate measurement data from “true” input d by</dt><dd><p>adding random deviations according to the uncertainties</p>
 </dd>
@@ -1148,9 +1156,9 @@ to from the new value at index <cite>i</cite></p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.wmean">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">wmean</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">sx</em>, <em class="sig-param">V=None</em>, <em class="sig-param">pr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.wmean" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">wmean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">sx</span></em>, <em class="sig-param"><span class="n">V</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pr</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.wmean" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>weighted mean of np-array x with uncertainties sx </dt><dd><p>or covariance matrix V; if both are given, sx**2 is added 
 to the diagonal elements of the covariance matrix</p>
@@ -1169,9 +1177,9 @@ to the diagonal elements of the covariance matrix</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.writeCSV">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">writeCSV</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">ldata</em>, <em class="sig-param">hlines=[]</em>, <em class="sig-param">fmt='%.10g'</em>, <em class="sig-param">delim='</em>, <em class="sig-param">'</em>, <em class="sig-param">nline='\n'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.writeCSV" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">writeCSV</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">ldata</span></em>, <em class="sig-param"><span class="n">hlines</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">fmt</span><span class="o">=</span><span class="default_value">'%.10g'</span></em>, <em class="sig-param"><span class="n">delim</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">nline</span><span class="o">=</span><span class="default_value">'\n'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.writeCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>write data in .csv format, including header lines</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
@@ -1190,9 +1198,9 @@ to the diagonal elements of the covariance matrix</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="PhyPraKit.writeTexTable">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">writeTexTable</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">ldata</em>, <em class="sig-param">cnames=[]</em>, <em class="sig-param">caption=''</em>, <em class="sig-param">fmt='%.10g'</em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.writeTexTable" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">writeTexTable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">ldata</span></em>, <em class="sig-param"><span class="n">cnames</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">caption</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">fmt</span><span class="o">=</span><span class="default_value">'%.10g'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.writeTexTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>write data formatted as latex tabular</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
@@ -1365,6 +1373,7 @@ am Beispiel der Gamma-Spektroskopie</p>
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -1402,7 +1411,7 @@ am Beispiel der Gamma-Spektroskopie</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1416,12 +1425,13 @@ am Beispiel der Gamma-Spektroskopie</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Günter Quast.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>
