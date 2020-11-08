@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 '''test_k2Fit
 
-   test fitting an arbitrary fucntion with kafe2, 
+   test fitting an arbitrary function with kafe2, 
    with uncertainties in x and y and correlated 
    absolute and relative uncertainties
 
