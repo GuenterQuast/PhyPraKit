@@ -8,7 +8,7 @@ About
 =====
 
 PhyPraKit is a collection of python modules `(supporting pyhton 2.7
-(dprecated) and python <=3.5)` for data visialisation and analysis
+(dprecated) and python >=3.5)` for data visialisation and analysis
 in experimental laboratory cources in physics, developed at the
 faculty of physics at Karlsruhe Institute of Technology (KIT).
 As the modules are intended primarily for use by undertraduate
