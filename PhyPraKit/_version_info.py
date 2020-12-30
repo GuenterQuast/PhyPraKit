@@ -1,7 +1,7 @@
 '''
 .. module:: _version_info
-   :platform: python 2.7, >=3.4
-   :synopsis: Version 1.0.2 of PhyPraKit, rel. Feb. 2019
+   :platform: python 2.7, >=3.5
+   :synopsis: Version 1.1.1 of PhyPraKit, rel. Nov. 2020
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 '''
