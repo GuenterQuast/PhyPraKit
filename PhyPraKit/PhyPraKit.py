@@ -62,9 +62,12 @@ from __future__ import print_function  # for python2.7 compatibility
         - linRegression()    linear regression, y=ax+b, with analytical formula
         - linRegressionXY()  linear regression, y=ax+b, with x and y errors 
           ``! deprecated, use `odFit` with linear model instead``
+        - kRegression()      linear regression, y=ax+b, with (correlated) 
+                             error on x, and y 
+          ``! deprecated, use `kFit` or `k2Fit` with linear model instead``
         - odFit()            fit function with x and y errors (scipy ODR)
-        - kRegression()      regression, y=ax+b, with (correlated) error on x, and y 
-          ``! deprecated, use `kFit` with linear model instead``
+        - mFit()             fit with iminuit with correlated y errors,
+                                profile likelihood and contour lines  
         - kFit()             fit function with (correlated) errors on x and y (kafe)
         - k2Fit()            fit function with (correlated) errors on x and y (kafe2)
 
@@ -75,10 +78,10 @@ from __future__ import print_function  # for python2.7 compatibility
 
 '''
 
-# Author:       G. Quast   Dec. 2013
-# dependencies: PYTHON v2.7, numpy, matplotlib.pyplot 
+# Author:       G. Quast   Dec. 2015
+# dependencies: PYTHON v2.7 or >v3.5, numpy, matplotlib.pyplot 
 #
-# last modified: Feb. 2019
+# last modified: Jan. 2020
 #   16-Nov-16    GQ  readPicoscope now also supports .csv export format    
 #                GQ  added fuctions for signal processing/analysis
 #   17-Nov-16    GQ  added readCassy for Cassy data in .txt format
@@ -102,6 +105,7 @@ from __future__ import print_function  # for python2.7 compatibility
 #   01-Nov-19    GQ  fixed extraction of file extension in readPicoScope
 #   05-Nov-20    GQ  changed to GNU GPL, automatic handling of missing uncertainties
 #                      in odFit, kFit and k2Fit
+#   03-Jan-21    GQ  added fit example with iminuit
 # ---------------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
@@ -1123,7 +1127,7 @@ def chi2p_indep2d(H2d, bcx, bcy, pr=True):
   return pval
 
 
-## ------- section 5: linear regression ----------------------
+## ------- section 5: (linear) regression and fits ------------------
 
 def linRegression(x, y, sy=None):
   """
@@ -1175,6 +1179,8 @@ def linRegressionXY(x, y, sx=None, sy=None):
     linear regression y(x) = ax + b  with errors on x and y
     uses numerical "orthogonal distance regression" from package scipy.odr
 
+    !!! deprecated, consider using odFit() with linear model instead 
+
     Args:
       * x:  np-array, independent data
       * y:  np-array, dependent data
@@ -1191,7 +1197,7 @@ def linRegressionXY(x, y, sx=None, sy=None):
   """  
   from scipy import odr
 
-  def fitf(P, x):     # the linear model (note order or parameters for odr !)
+  def fitf(P, x):     # the linear model (note order of parameters for odr !)
     return P[1]*x + P[0]
 
   # set y-errors to 1. if not given
@@ -1234,7 +1240,7 @@ def odFit(fitf, x, y, sx=None, sy=None, p0=None):
       * y:  np-array, dependent data
       * sx: scalar or np-array, uncertainty(ies) on x      
       * sy: scalar or np-array, uncertainty(ies) on y
-      * p0: none, scalar or array, initial guess of parameters
+      * p0: array-like, initial guess of parameters
 
    Returns:
       * np-array of float: parameter values
@@ -1292,6 +1298,8 @@ def kRegression(x, y, sx, sy,
   """
     linear regression y(x) = ax + b  with errors on x and y;
     uses package `kafe`
+
+    !!! deprecated, consider using kFit() or k2Fit() with linear model 
 
     Args:
       * x:  np-array, independent data
@@ -1368,6 +1376,192 @@ def kRegression(x, y, sx, sy,
   return a, b, sa, sb, cor, chi2  
 
 
+def mFit(fitf, x, y, sy, p0=None,
+         run_minos=True, plot=True, plot_cor=True):
+  """
+    fit an arbitrary function f(x) with (correlated) errors on y    
+    with package iminuit
+
+   This example illustrates the special features of iminuit:
+    - definition of a custom cost function  used to implement 
+      the least squares method with correlated errors   
+    - profile likelihood for asymmetric errors
+    - plotting of profile likeliood and confidence contours
+
+   supports iminuit vers. < 2.0 and >= 2.0
+
+    Args:
+      * fitf: model function to fit, arguments (float:x, float: *args)
+      * x:  np-array, independent data
+      * y:  np-array, dependent data
+      * sy: scalar or one-d or two-d np-array , uncertainties on y data
+      * p0: array-like, initial guess of parameters
+      * run_minos: run minos profile likelihood scan if True
+      * plot: show data and model if True
+      * plot_cor: show profile liklihoods and conficence contours
+
+    Returns:
+      * np-array of float: parameter values
+      * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
+      * np-array: correlation matrix 
+      * float: chi2 of fit at minimum
+  """  
+
+  from iminuit import __version__, Minuit
+  from inspect import signature, Parameter  
+
+  # define custom cost function for iminuit
+  class LSQwithCov:
+    """
+    custom Least-SQuares cost function with error matrix
+    """
+  
+    def __init__(self, x, y, err, model):
+    
+      from iminuit.util import describe, make_func_code
+
+      self.model = model 
+      # set proper signature of model function for iminuit
+      self.func_code = make_func_code(describe(model)[1:])
+      self.x = np.asarray(x)
+      self.y = np.asarray(y)
+      # initialize uncertainties and eventually covariance matrix
+      self.init_errors(err)
+    
+    def init_errors(self, err):
+      # special init to reinitialize covariance matrix (if needed)
+      self.err = np.asarray(err)
+      self.errdim = self.err.ndim
+      if self.errdim == 2:
+      # got a covariance matrix, need inverse
+        self.iCov = np.matrix(self.err).I
+      else:
+        self.iCov = 1./(self.err*self.err)
+        
+    def __call__(self, *par):  # we accept a variable number of model parameters
+      resid = self.y - self.model(self.x, *par)
+      if self.errdim < 2:
+        # fast caclulation for simple errors
+        return np.sum(resid * self.iCov*resid)
+      else:
+        # with full inverse covariance matrix for correlated errors
+        return np.inner(np.matmul(resid.T, self.iCov), resid)
+
+  # --- end definition of class LSQwithCov ----
+
+  # set the cost function
+  costf = LSQwithCov(x, y, sy, fitf)
+
+  # inspect parameters of model function and set start values for fit
+  sig=signature(fitf)
+  parnames=list(sig.parameters.keys())
+  ipardict={}
+  if p0 is not None:
+    for i, pnam in enumerate(parnames[1:]):
+      ipardict[pnam] = p0[i]
+  else:
+    # try defaults of parameters from argument list
+    for i, pnam in enumerate(parnames[1:]):
+      dv = sig.parameters[pnam].default   
+      if dv is not Parameter.empty:
+          ipardict[pnam] = dv
+      else:
+          ipardict[pnam] = 0.  #  use zero in worst case
+
+  # create Minuit object
+  m = Minuit(costf, **ipardict, errordef=1.)  
+
+  # perform fit
+  m.migrad()  # finds minimum of cost function
+  # possibly, improve error matrix, in most cases done in MIGRAD already
+  ## m.hesse()
+
+  # extract result parametes !!! this part depends on iminuit version !!!
+  chi2 = m.fval               # chi2 
+  npar = m.nfit               # numer of parameters
+  ndof = len(x) - npar        # degrees of freedom
+  if __version__< '2':
+    parnames = m.values.keys()  # parameter names
+    parvals = np.array(m.values.values()) # best-fit values
+    parerrs = np.array(m.errors.values()) # parameter uncertainties
+    cov=np.array(m.matrix())
+  else:
+  # vers. >=2.0 
+    parnames = m.parameters      # parameter names
+    parvals = np.array(m.values) # best-fit values
+    parerrs = np.array(m.errors) # parameter uncertainties
+    cov=np.array(m.covariance)
+  cor = cov/np.outer(parerrs, parerrs)
+
+  # run profile likelihood scan to check for asymmetric errors
+  if run_minos:
+    minos_err = m.minos()
+    pmerrs = [] 
+#    print("MINOS errors:")
+    if __version__< '2':
+      for pnam in m.merrors.keys():
+        pmerrs.append([m.merrors[pnam][2], m.merrors[pnam][3]])
+     #   print(f"{3*' '}{pnam}: {m.merrors[pnam][2]:.2g}",
+     #                       f"+{m.merrors[pnam][3]:.2g}")
+    else:
+      for pnam in m.merrors.keys():
+        pmerrs.append([m.merrors[pnam].lower, m.merrors[pnam].upper])
+      #  print(f"{3*' '}{pnam}: {m.merrors[pnam].lower:.2g}",
+      #                      f"+{m.merrors[pnam].upper:.2g}")      
+    pmerrs=np.array(pmerrs)
+
+  # produce graphical output if requested 
+  if plot:
+   # draw data and fitted line
+    fig1 = plt.figure(figsize=(7.5, 6.5))
+    plt.errorbar(x, y, sy, fmt="o", label="data")
+    xplt=np.linspace(min(x), max(x), 100)
+    plt.plot(xplt, fitf(xplt, *parvals), label="fit")
+    plt.xlabel('x',size='x-large')
+    plt.ylabel('y = f(x, *par)', size='x-large')
+   # display legend with some fit info
+    fit_info = [
+      f"$\\chi^2$ / $n_\\mathrm{{dof}}$ = {chi2:.1f} / {ndof}",]
+    if run_minos:
+      for p, v, e in zip(parnames, parvals, pmerrs):
+        fit_info.append(f"{p} = ${v:.3f}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$")
+    else:
+      for p, v, e in zip(parnames, parvals, parerrs):
+        fit_info.append(f"{p} = ${v:.2g}\\pm {e:.2g}$")
+    plt.legend(title="\n".join(fit_info))
+
+  if plot_cor:
+  # plot array of profiles and contours
+    fsize=3.5
+    cor_fig, axarr = plt.subplots(npar, npar,
+                                  figsize=(fsize*npar, fsize*npar))
+    ip = -1
+    for i in range(0, npar):
+      ip += 1
+      jp = -1
+      for j in range(0, npar):
+        jp += 1
+        if ip > jp:
+         # empty space
+           axarr[jp, ip].axis('off')
+        elif ip == jp:
+          # plot profile
+          plt.sca(axarr[ip, ip])
+          m.draw_mnprofile(parnames[i], subtract_min=True)
+          plt.ylabel('$\Delta\chi^2$')
+        else:
+          plt.sca(axarr[jp, ip])
+          m.draw_mncontour(parnames[i], parnames[j])
+
+  if not run_minos:
+  # same return format for symmetric errors
+    pmerrs = np.zeros( (npar,2) )
+    pmerrs[:, 0] = -parerrs
+    pmerrs[:, 1] = parerrs
+
+  return parvals, pmerrs, cor, chi2
+
+
 def kFit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
          xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, constraints= None,
          plot=True, title='Daten', axis_labels=['X', 'Y'], 
@@ -1375,6 +1569,8 @@ def kFit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
   """
     fit function func with errors on x and y;
     uses package `kafe`
+
+    !!! deprecated, consider using k2Fit() with kafe2 instead
 
     Args:
       * func: function to fit

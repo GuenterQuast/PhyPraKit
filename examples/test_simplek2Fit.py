@@ -25,9 +25,6 @@ ey=None
 # fit with kafe2
 par, pare, cor, chi2 = k2Fit(model, xdata, ydata, sy=ey)
 
-# setting any of the above names to None will remove the entry from the legend,
-#  if not specified, use default  
-
 print('*==* data set')
 print('  x = ', xdata)
 print('  y = ', ydata)

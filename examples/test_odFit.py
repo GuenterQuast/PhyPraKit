@@ -9,7 +9,6 @@
 
 from __future__ import print_function  # for python2.7 compatibility
 
-# import kafe2 # must be imported first to properly set matplotlib backend
 from PhyPraKit import generateXYdata, odFit
 import numpy as np, matplotlib.pyplot as plt
 

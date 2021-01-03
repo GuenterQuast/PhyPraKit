@@ -184,26 +184,30 @@ oder::
       4. histograms tools:
     
         - barstat()   statistical information (mean, sigma, erroron mean) from bar chart
-        - nhist()    histogram plot based on np.historgram() and plt.bar()
-          ``use matplotlib.pyplot.hist() instead``
+        - nhist()    histogram plot based on np.historgram() and plt.bar()  
+            ``use matplotlib.pyplot.hist() instead``
         - histstat() statistical information from 1d-histogram
-        - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()
-          ``use matplotlib.pyplot.hist2d() instead``  
+        - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()  
+            ``use matplotlib.pyplot.hist2d() instead``  
         - hist2dstat() statistical information from 1d-histogram
         - profile2d()  "profile plot" for 2d data
         - chi2p_indep2d() chi2 test on independence of data
     
       5. linear regression:
-    
+
         - linRegression()    linear regression, y=ax+b, with analytical formula
-        - linRegressionXY()  linear regression, y=ax+b, with x and y errors 
-          ``! deprecated, use `odFit` with linear model instead``
+        - linRegressionXY()  linear regression, y=ax+b, with x and y errors   
+            ``! deprecated, use `odFit` with linear model instead``
+	    
+        - kRegression()      linear regression, y=ax+b, with (correlated) errors on x and y   
+            ``! deprecated, use `kFit` or `k2Fit` with linear model instead``
+	    
         - odFit()            fit function with x and y errors (scipy ODR)
-        - kRegression()      regression, y=ax+b, with (correlated) error on x, and y 
-          ``! deprecated, use `kFit` with linear model instead``
+        - mFit()             fit with iminuit with correlated y errors,
+	  profile likelihood and contour lines  
         - kFit()             fit function with (correlated) errors on x and y (kafe)
         - k2Fit()            fit function with (correlated) errors on x and y (kafe2)
-    
+
       6. simulated data with MC-method:
     
         - smearData()          add random deviations to input data
@@ -239,17 +243,26 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
   * `test_linRegression.py` ist eine einfachere Version mit
     `python`-Bordmitteln zur Anpassung einer Geraden an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung. 
-    Korrelierte Unsicherheiten werden nicht unterstützt. 
-  * `test_kFit.py` ist eine verallgemeinerte Version von `test_kRegression` 
-    und dient zur Anpassung einer beliebigen Funktion an Messdaten mit 
-    Fehlern in Ordinaten- und Abszissenrichtung und mit allen Messpunkten 
-    gemeinsamen (d. h. korrelierten) relativen oder absoluten systematischen 
-    Fehlern mit dem Paket `kafe`.
+    Korrelierte Unsicherheiten werden nicht unterstützt.
+  * `test_mFit` nutzt das Paket imunit, das den am CERN entwicklten
+    Minimierer MINUIT nutzt. iminuit erlaubt insbesondere die Definition
+    einer eigenen Kostenfunktion. Im Beispiel hier ist die Methode der
+    kleinsten Fehlerquadrate mit Kovarianzmatrix gezeigt. Ferner
+    unterstützt iminuit die Erzeugung und Darstellung von Profil-Likelihood-Kurven
+    und Konfidenzkonturen, die im Beispiel illustriert werden.
+    Die Behandlung von Unsicherheiten in x-Richtung ist (noch) nicht
+    implementiert, durch Iteration und Anpassung der Kostenfunktion
+    aber recht einfach machbar.
+  * `test_kFit.py` dient zur Anpassung einer beliebigen Funktion an
+    Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit
+    allen Messpunkten gemeinsamen (d. h. korrelierten) relativen oder
+    absoluten systematischen Fehlern mit dem Paket `kafe`.
   * `test_k2Fit.py` verwendet die Version *kafe2* zur Anpassung einer
     Funktion an Messdaten mit unabhängigen oder korrelierten relativen oder
     absoluten Unsicherheiten in Ordinaten- und Abszissenrichtung.
-  * `test_simplek2Fit.py` illustriert die Durchführung einer einfachen linearen  
-     Regression mit *kafe2*.
+  * `test_simplek2Fit.py` illustriert die Durchführung einer einfachen
+    linearen Regression mit *kafe2* mit einer minimalen Anzal eigner
+    Codezeilen. 
   * `test_Histogram.py` ist ein Beispiel zur Darstellung und 
     statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen) 
     in ein oder zwei Dimensionen.
@@ -325,6 +338,10 @@ Module Documentation
 ..  automodule:: test_Fourier
 
 ..  automodule:: test_kRegression
+
+..  automodule:: test_odFit
+
+..  automodule:: test_mFit
 
 ..  automodule:: test_kFit
 

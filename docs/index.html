@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PhyPraKit Documentation &#8212; PhyPraKit 1.1 documentation</title>
+    <title>PhyPraKit Documentation &#8212; PhyPraKit 1.1.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.1.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>  
@@ -38,7 +38,7 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p><cite>Version</cite> 2020-11-06</p>
+<div><p><cite>Version</cite> 2021-01-03</p>
 </div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
@@ -200,11 +200,17 @@ recommend to use <cite>convolutionPeakfinder</cite></p></li>
 <blockquote>
 <div><ul class="simple">
 <li><p>barstat()   statistical information (mean, sigma, erroron mean) from bar chart</p></li>
-<li><p>nhist()    histogram plot based on np.historgram() and plt.bar()
-<code class="docutils literal notranslate"><span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist()</span> <span class="pre">instead</span></code></p></li>
+<li><dl class="simple">
+<dt>nhist()    histogram plot based on np.historgram() and plt.bar()</dt><dd><p><code class="docutils literal notranslate"><span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist()</span> <span class="pre">instead</span></code></p>
+</dd>
+</dl>
+</li>
 <li><p>histstat() statistical information from 1d-histogram</p></li>
-<li><p>nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()
-<code class="docutils literal notranslate"><span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist2d()</span> <span class="pre">instead</span></code></p></li>
+<li><dl class="simple">
+<dt>nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()</dt><dd><p><code class="docutils literal notranslate"><span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist2d()</span> <span class="pre">instead</span></code></p>
+</dd>
+</dl>
+</li>
 <li><p>hist2dstat() statistical information from 1d-histogram</p></li>
 <li><p>profile2d()  “profile plot” for 2d data</p></li>
 <li><p>chi2p_indep2d() chi2 test on independence of data</p></li>
@@ -216,11 +222,19 @@ recommend to use <cite>convolutionPeakfinder</cite></p></li>
 <blockquote>
 <div><ul class="simple">
 <li><p>linRegression()    linear regression, y=ax+b, with analytical formula</p></li>
-<li><p>linRegressionXY()  linear regression, y=ax+b, with x and y errors
-<code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">use</span> <span class="pre">`odFit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></p></li>
+<li><dl class="simple">
+<dt>linRegressionXY()  linear regression, y=ax+b, with x and y errors</dt><dd><p><code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">use</span> <span class="pre">`odFit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>kRegression()      linear regression, y=ax+b, with (correlated) errors on x and y</dt><dd><p><code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">use</span> <span class="pre">`kFit`</span> <span class="pre">or</span> <span class="pre">`k2Fit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></p>
+</dd>
+</dl>
+</li>
 <li><p>odFit()            fit function with x and y errors (scipy ODR)</p></li>
-<li><p>kRegression()      regression, y=ax+b, with (correlated) error on x, and y
-<code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">use</span> <span class="pre">`kFit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></p></li>
+<li><p>mFit()             fit with iminuit with correlated y errors,
+profile likelihood and contour lines</p></li>
 <li><p>kFit()             fit function with (correlated) errors on x and y (kafe)</p></li>
 <li><p>k2Fit()            fit function with (correlated) errors on x and y (kafe2)</p></li>
 </ul>
@@ -270,19 +284,25 @@ systematischen Fehlern mit dem Paket <cite>kafe</cite>.</p></li>
 <cite>python</cite>-Bordmitteln zur Anpassung einer Geraden an
 Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung.
 Korrelierte Unsicherheiten werden nicht unterstützt.</p></li>
-<li><p><cite>test_kFit.py</cite> ist eine verallgemeinerte Version von <cite>test_kRegression</cite>
-und dient zur Anpassung einer beliebigen Funktion an Messdaten mit
-Fehlern in Ordinaten- und Abszissenrichtung und mit allen Messpunkten
-gemeinsamen (d. h. korrelierten) relativen oder absoluten systematischen
-Fehlern mit dem Paket <cite>kafe</cite>.</p></li>
+<li><p><cite>test_mFit</cite> nutzt das Paket imunit, das den am CERN entwicklten
+Minimierer MINUIT nutzt. iminuit erlaubt insbesondere die Definition
+einer eigenen Kostenfunktion. Im Beispiel hier ist die Methode der
+kleinsten Fehlerquadrate mit Kovarianzmatrix gezeigt. Ferner
+unterstützt iminuit die Erzeugung und Darstellung von Profil-Likelihood-Kurven
+und Konfidenzkonturen, die im Beispiel illustriert werden.
+Die Behandlung von Unsicherheiten in x-Richtung ist (noch) nicht
+implementiert, durch Iteration und Anpassung der Kostenfunktion
+aber recht einfach machbar.</p></li>
+<li><p><cite>test_kFit.py</cite> dient zur Anpassung einer beliebigen Funktion an
+Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit
+allen Messpunkten gemeinsamen (d. h. korrelierten) relativen oder
+absoluten systematischen Fehlern mit dem Paket <cite>kafe</cite>.</p></li>
 <li><p><cite>test_k2Fit.py</cite> verwendet die Version <em>kafe2</em> zur Anpassung einer
 Funktion an Messdaten mit unabhängigen oder korrelierten relativen oder
 absoluten Unsicherheiten in Ordinaten- und Abszissenrichtung.</p></li>
-<li><dl class="simple">
-<dt><cite>test_simplek2Fit.py</cite> illustriert die Durchführung einer einfachen linearen</dt><dd><p>Regression mit <em>kafe2</em>.</p>
-</dd>
-</dl>
-</li>
+<li><p><cite>test_simplek2Fit.py</cite> illustriert die Durchführung einer einfachen
+linearen Regression mit <em>kafe2</em> mit einer minimalen Anzal eigner
+Codezeilen.</p></li>
 <li><p><cite>test_Histogram.py</cite> ist ein Beispiel zur Darstellung und
 statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen)
 in ein oder zwei Dimensionen.</p></li>
@@ -708,6 +728,7 @@ uses package <cite>kafe2</cite></p>
 <dd><blockquote>
 <div><p>fit function func with errors on x and y;
 uses package <cite>kafe</cite></p>
+<p>!!! deprecated, consider using k2Fit() with kafe2 instead</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>func: function to fit</p></li>
@@ -754,6 +775,7 @@ uses package <cite>kafe</cite></p>
 <dd><blockquote>
 <div><p>linear regression y(x) = ax + b  with errors on x and y;
 uses package <cite>kafe</cite></p>
+<p>!!! deprecated, consider using kFit() or k2Fit() with linear model</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>x:  np-array, independent data</p></li>
@@ -836,6 +858,7 @@ uses package <cite>kafe</cite></p>
 <code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">linRegressionXY</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.linRegressionXY" title="Permalink to this definition">¶</a></dt>
 <dd><p>linear regression y(x) = ax + b  with errors on x and y
 uses numerical “orthogonal distance regression” from package scipy.odr</p>
+<p>!!! deprecated, consider using odFit() with linear model instead</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>x:  np-array, independent data</p></li>
@@ -854,6 +877,47 @@ uses numerical “orthogonal distance regression” from package scipy.odr</p>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="PhyPraKit.mFit">
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">mFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sy</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_minos</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.mFit" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>fit an arbitrary function f(x) with (correlated) errors on y    
+with package iminuit</p>
+</div></blockquote>
+<dl class="simple">
+<dt>This example illustrates the special features of iminuit:</dt><dd><ul class="simple">
+<li><p>definition of a custom cost function  used to implement 
+the least squares method with correlated errors</p></li>
+<li><p>profile likelihood for asymmetric errors</p></li>
+<li><p>plotting of profile likeliood and confidence contours</p></li>
+</ul>
+</dd>
+</dl>
+<p>supports iminuit vers. &lt; 2.0 and &gt;= 2.0</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>fitf: model function to fit, arguments (float:x, float: <a href="#id1"><span class="problematic" id="id2">*</span></a>args)</p></li>
+<li><p>x:  np-array, independent data</p></li>
+<li><p>y:  np-array, dependent data</p></li>
+<li><p>sy: scalar or one-d or two-d np-array , uncertainties on y data</p></li>
+<li><p>p0: array-like, initial guess of parameters</p></li>
+<li><p>run_minos: run minos profile likelihood scan if True</p></li>
+<li><p>plot: show data and model if True</p></li>
+<li><p>plot_cor: show profile liklihoods and conficence contours</p></li>
+</ul>
+</dd>
+<dt>Returns:</dt><dd><ul class="simple">
+<li><p>np-array of float: parameter values</p></li>
+<li><p>2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos.</p></li>
+<li><p>np-array: correlation matrix</p></li>
+<li><p>float: chi2 of fit at minimum</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py function">
@@ -936,7 +1000,7 @@ uses numerical “orthogonal distance regression” from package scipy.odr</p>
 <li><p>y:  np-array, dependent data</p></li>
 <li><p>sx: scalar or np-array, uncertainty(ies) on x</p></li>
 <li><p>sy: scalar or np-array, uncertainty(ies) on y</p></li>
-<li><p>p0: none, scalar or array, initial guess of parameters</p></li>
+<li><p>p0: array-like, initial guess of parameters</p></li>
 </ul>
 </dd>
 </dl>
@@ -1270,15 +1334,37 @@ uncertainties in x and y and correlated
 absolute and relative uncertainties</p>
 </dd>
 </dl>
+<span class="target" id="module-test_odFit"></span><p>test_odFit</p>
+<blockquote>
+<div><p>test fitting an arbitrary fucntion with scipy odr, 
+with uncertainties in x and y</p>
+</div></blockquote>
+<span class="target" id="module-test_mFit"></span><dl>
+<dt>test_iminuit.py</dt><dd><p>Fitting with iminiut</p>
+<dl>
+<dt>This example illustrates the special features of iminuit:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>definition of a custom cost function </dt><dd><p>used to implement least squares method with correlated errors</p>
+</dd>
+</dl>
+</li>
+<li><p>profile likelihood for asymmetric errors</p></li>
+<li><p>plotting of profile likeliood and confidence contours</p></li>
+</ul>
+<p>supports iminuit vers. &lt; 2.0 and &gt;= 2.0</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <span class="target" id="module-test_kFit"></span><p>test_kFit</p>
 <blockquote>
-<div><p>test fitting an arbitrary fucntion with kafe, 
+<div><p>test fitting an arbitrary function with kafe, 
 with uncertainties in x and y and correlated 
 absolute and relative uncertainties</p>
 </div></blockquote>
 <span class="target" id="module-test_k2Fit"></span><p>test_k2Fit</p>
 <blockquote>
-<div><p>test fitting an arbitrary fucntion with kafe2, 
+<div><p>test fitting an arbitrary function with kafe2, 
 with uncertainties in x and y and correlated 
 absolute and relative uncertainties</p>
 </div></blockquote>
@@ -1425,7 +1511,7 @@ am Beispiel der Gamma-Spektroskopie</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.1.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>
