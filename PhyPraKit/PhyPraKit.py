@@ -1369,6 +1369,7 @@ def kRegression(x, y, sx, sy,
   chi2 = fit.minimizer.get_fit_info('fcn') 
 
   if(plot):
+    kplot=kafe.Plot(fit, asymmetric_parameter_errors=True)
     kplot=kafe.Plot(fit)
     kplot.plot_all()
     kplot.show()
@@ -1377,9 +1378,11 @@ def kRegression(x, y, sx, sy,
 
 
 def mFit(fitf, x, y, sy, p0=None,
-         run_minos=True, plot=True, plot_cor=True):
+         yabscor=None, yrelcor=None,        
+         plot=True, plot_cor=True):
   """
-    fit an arbitrary function f(x) with (correlated) errors on y    
+    fit an arbitrary function f(x) to data with 
+    uncorrelated and correlated absolute and/or relative errors on y 
     with package iminuit
 
    This example illustrates the special features of iminuit:
@@ -1396,7 +1399,8 @@ def mFit(fitf, x, y, sy, p0=None,
       * y:  np-array, dependent data
       * sy: scalar or one-d or two-d np-array , uncertainties on y data
       * p0: array-like, initial guess of parameters
-      * run_minos: run minos profile likelihood scan if True
+      * yabscor: absolute, correlated error(s) on y
+      * yrelcor: relative, correlated error(s) on y
       * plot: show data and model if True
       * plot_cor: show profile liklihoods and conficence contours
 
@@ -1449,8 +1453,149 @@ def mFit(fitf, x, y, sy, p0=None,
 
   # --- end definition of class LSQwithCov ----
 
+  # --- helper functions ----
+  
+  def buildCovarianceMatrix(nd, e, eabscor=None, erelcor=None, data=None):
+    """
+    Build a covariance matrix from independent and correlated error components
+
+    Independent errors must be given; they define the diagonal of the matrix.
+    Correlated absolute and/or relative uncertainties enter in the diagonal 
+    and off-diagonal elements of the covariance matrix. Covariance matrix
+    elements of the individual components are added to from the complete
+    Covariance Matrix.
+
+    Args:
+      * nd: number of data points
+      * e: scalar, array of float, 2d-array of float: 
+       independent uncertainties or a full covariance matrix
+      * eabscor: floats or array of float of list of arrays of float:
+          absolute correlated uncertainties
+      * erelcor: floats or array of float of list of arrays of float:
+          relative correlated uncertainties
+      * data: array of float: data, needed to compute relative uncertainties
+
+    Returns:
+      * nd x nd np-array of float: covariance matrix 
+    """
+
+    # 1. independent errors
+    e_ = np.array(sy)*np.ones(nd) # ensure array of length nd
+    if e_.ndim == 2: # already got a matrix, take as covariance matrix
+      cov = e_
+    else:
+      cov = np.diag(e_*e_) # set diagonal elements of covariance matrix
+
+     # 2. add absolute, correlated error components  
+    if eabscor is not None:
+      if len(np.shape(np.array(eabscor))) < 2: # has one entry
+        c_ = np.array(eabscor)*np.ones(nd)
+        cov += np.outer(c_, c_) 
+      else:            # got a list, add each component
+        for c in eabscor:
+          c_ = np.array(eabscor)*np.ones(nd)
+          cov += np.outer(c_, c_) 
+
+    # 3. add relative, correlated error components  
+    if erelcor is not None:
+      if len(np.shape(np.array(erelcor))) < 2: # has one entry
+        c_ = np.array(erelcor) * y
+        cov += np.outer(c_, c_) 
+      else:            # got a list, add each component
+        for c in erelcor:
+          c_ = np.array(c) * y
+          cov += np.outer(c_, c_) 
+
+    return cov
+
+
+  def plotModel(iminuitObject, model, x, y, e):
+    """
+    Plot model function and data 
+
+    Args: 
+      * iminuitObject
+      * model function
+      * np-array of float: x of data
+      * np-array of float: y of data
+      * np-array of float: y-uncertainties      
+
+    Returns:
+      * matplotlib figure
+    """
+    
+   # extract parameter properties
+    pmerrs = []
+    m = iminuitObject
+    if __version__< '2':
+      pnams = m.values.keys()  # parameter names
+      pvals = np.array(m.values.values()) # best-fit values
+      for pnam in m.merrors.keys():
+        pmerrs.append([m.merrors[pnam][2], m.merrors[pnam][3]])
+    else:   # vers. >=2.0 
+      pnams = m.parameters      # parameter names
+      pvals = np.array(m.values) # best-fit values
+      for pnam in m.merrors.keys():
+        pmerrs.append([m.merrors[pnam].lower, m.merrors[pnam].upper])
+    pmerrs=np.array(pmerrs)
+      
+   # draw data and fitted line
+    fig_model = plt.figure(figsize=(7.5, 6.5))
+    plt.errorbar(x, y, e, fmt="o", label="data")
+    xplt=np.linspace(x[0], x[-1], 100)
+    plt.plot(xplt, model(xplt, *pvals), label="fit")
+    plt.xlabel('x',size='x-large')
+    plt.ylabel('y = f(x, *par)', size='x-large')
+  # display legend with some fit info
+    fit_info = [
+    f"$\\chi^2$ / $n_\\mathrm{{dof}}$ = {chi2:.1f} / {ndof}",]
+    for p, v, e in zip(parnames, parvals, pmerrs):
+      fit_info.append(f"{p} = ${v:.3f}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$")
+    plt.legend(title="\n".join(fit_info))
+
+    return fig_model
+
+  def plotContours(iminuitObject):
+    """
+    Plot grid of profile curves and contours lines from iminuit object
+
+    Arg: 
+      * iminuitObject
+
+    Returns:
+      * matplotlib figure 
+    """
+    
+    npar = iminuitObject.nfit    # numer of parameters
+    fsize=3.5
+    cor_fig, axarr = plt.subplots(npar, npar,
+                                figsize=(fsize*npar, fsize*npar))
+    ip = -1
+    for i in range(0, npar):
+      ip += 1
+      jp = -1
+      for j in range(0, npar):
+        jp += 1
+        if ip > jp:
+         # empty space
+          axarr[jp, ip].axis('off')
+        elif ip == jp:
+         # plot profile
+          plt.sca(axarr[ip, ip])
+          iminuitObject.draw_mnprofile(parnames[i], subtract_min=True)
+          plt.ylabel('$\Delta\chi^2$')
+        else:
+          plt.sca(axarr[jp, ip])
+          m.draw_mncontour(parnames[i], parnames[j]) 
+    return cor_fig 
+ 
+  # --- end function definitions ----
+  
+  # construct error matrix from input  
+  nd = len(y)
+  dcov = buildCovarianceMatrix(nd, sy, eabscor=yabscor, erelcor=yrelcor, data=y) 
   # set the cost function
-  costf = LSQwithCov(x, y, sy, fitf)
+  costf = LSQwithCov(x, y, dcov, fitf)
 
   # inspect parameters of model function and set start values for fit
   sig=signature(fitf)
@@ -1494,71 +1639,31 @@ def mFit(fitf, x, y, sy, p0=None,
   cor = cov/np.outer(parerrs, parerrs)
 
   # run profile likelihood scan to check for asymmetric errors
-  if run_minos:
-    minos_err = m.minos()
-    pmerrs = [] 
-#    print("MINOS errors:")
-    if __version__< '2':
-      for pnam in m.merrors.keys():
-        pmerrs.append([m.merrors[pnam][2], m.merrors[pnam][3]])
-     #   print(f"{3*' '}{pnam}: {m.merrors[pnam][2]:.2g}",
-     #                       f"+{m.merrors[pnam][3]:.2g}")
-    else:
-      for pnam in m.merrors.keys():
-        pmerrs.append([m.merrors[pnam].lower, m.merrors[pnam].upper])
-      #  print(f"{3*' '}{pnam}: {m.merrors[pnam].lower:.2g}",
-      #                      f"+{m.merrors[pnam].upper:.2g}")      
-    pmerrs=np.array(pmerrs)
+  minos_err = m.minos()
+  pmerrs = [] 
+#  print("MINOS errors:")
+  if __version__< '2':
+    for pnam in m.merrors.keys():
+      pmerrs.append([m.merrors[pnam][2], m.merrors[pnam][3]])
+   #   print(f"{3*' '}{pnam}: {m.merrors[pnam][2]:.2g}",
+   #                       f"+{m.merrors[pnam][3]:.2g}")
+  else:
+    for pnam in m.merrors.keys():
+      pmerrs.append([m.merrors[pnam].lower, m.merrors[pnam].upper])
+    #  print(f"{3*' '}{pnam}: {m.merrors[pnam].lower:.2g}",
+    #                      f"+{m.merrors[pnam].upper:.2g}")      
+  pmerrs=np.array(pmerrs)
 
   # produce graphical output if requested 
   if plot:
    # draw data and fitted line
-    fig1 = plt.figure(figsize=(7.5, 6.5))
-    plt.errorbar(x, y, sy, fmt="o", label="data")
-    xplt=np.linspace(min(x), max(x), 100)
-    plt.plot(xplt, fitf(xplt, *parvals), label="fit")
-    plt.xlabel('x',size='x-large')
-    plt.ylabel('y = f(x, *par)', size='x-large')
-   # display legend with some fit info
-    fit_info = [
-      f"$\\chi^2$ / $n_\\mathrm{{dof}}$ = {chi2:.1f} / {ndof}",]
-    if run_minos:
-      for p, v, e in zip(parnames, parvals, pmerrs):
-        fit_info.append(f"{p} = ${v:.3f}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$")
-    else:
-      for p, v, e in zip(parnames, parvals, parerrs):
-        fit_info.append(f"{p} = ${v:.2g}\\pm {e:.2g}$")
-    plt.legend(title="\n".join(fit_info))
-
-  if plot_cor:
-  # plot array of profiles and contours
-    fsize=3.5
-    cor_fig, axarr = plt.subplots(npar, npar,
-                                  figsize=(fsize*npar, fsize*npar))
-    ip = -1
-    for i in range(0, npar):
-      ip += 1
-      jp = -1
-      for j in range(0, npar):
-        jp += 1
-        if ip > jp:
-         # empty space
-           axarr[jp, ip].axis('off')
-        elif ip == jp:
-          # plot profile
-          plt.sca(axarr[ip, ip])
-          m.draw_mnprofile(parnames[i], subtract_min=True)
-          plt.ylabel('$\Delta\chi^2$')
-        else:
-          plt.sca(axarr[jp, ip])
-          m.draw_mncontour(parnames[i], parnames[j])
-
-  if not run_minos:
-  # same return format for symmetric errors
-    pmerrs = np.zeros( (npar,2) )
-    pmerrs[:, 0] = -parerrs
-    pmerrs[:, 1] = parerrs
-
+    e = np.sqrt(np.diag(dcov))
+    fig_model = plotModel(m, costf.model, x, y, e)
+    if plot_cor:
+   # plot array of profiles and contours
+      fit_cont = plotContours(m)
+    plt.show()
+    
   return parvals, pmerrs, cor, chi2
 
 
@@ -1698,7 +1803,7 @@ def k2Fit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
            plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
            model_expression=None, model_name=None,
            model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
-           fit_info=True, quiet=True):
+           fit_info=True, asym_parerrs=True, plot_cor=False, quiet=True):
   """
     fit function func with errors on x and y;
     uses package `kafe2`
@@ -1726,6 +1831,8 @@ def k2Fit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
       * model_legend: legend entry for model
       * model_band: legend entry for model uncertainty band
       * fit_info: controls display of fit results on figure
+      * asym_parerrs: show (asymmetric) errors from profile-likelihood scan
+      * plot_cor: show profile curves and contour lines
       * quiet: controls text output
 
     Returns:
@@ -1736,7 +1843,7 @@ def k2Fit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
   """  
 
   # for fit with kafe2
-  from kafe2 import XYContainer, Fit, Plot
+  from kafe2 import XYContainer, Fit, Plot, ContoursProfiler
 
   # create a data set ...
   dat = XYContainer(x, y)
@@ -1801,9 +1908,9 @@ def k2Fit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
   cor = np.array(fit.parameter_cor_mat)
   chi2 = fit.cost_function_value
 
-  if not quiet: fit.report()
+  if not quiet: fit.report(asymmetric_parameter_errors=True)
   
-  if(plot):
+  if plot:
     kplot=Plot(fit)
     # set some 'nice' options
     kplot.customize('data', 'marker', ['o'])
@@ -1815,9 +1922,13 @@ def k2Fit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
     # set user options
     kplot.customize('model_error_band', 'label', [model_band])
     kplot.customize('model_error_band', 'alpha', [0.1])     
-    kplot.plot(fit_info=fit_info)
-    plt.show()
-    
+    kplot.plot(fit_info=fit_info, asymmetric_parameter_errors=True)
+
+    if plot_cor:
+      cpf = ContoursProfiler(fit)
+      cpf.plot_profiles_contours_matrix() # plot profile likelihood and contours
+    plt.show()    
+      
   return par, pare, cor, chi2
 
 

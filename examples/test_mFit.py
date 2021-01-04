@@ -29,14 +29,26 @@ if __name__ == "__main__": # --------------------------------------
   np.random.seed(314159)      # initialize random generator
   nd=10
   data_x = np.linspace(0, 1, nd)       # x of data points
-  sigy_abs = np.sqrt(0.05*model(data_x, **mpardict) + 0.07*0.07) 
-  xt, yt, data_y = generateXYdata(data_x, model, 0., sigy_abs,
-                                      mpar=mpardict.values() )
+  srel = 0.05*model(data_x, **mpardict) 
+  sabs = 0.07
+  sigy = np.sqrt(sabs*sabs + srel * srel) # indep. errors
+  cabs = 0.05  # common absolute uncertainty
+  crel = 0.03  # common relative uncertainty
+
+  xt, yt, data_y = generateXYdata(
+    data_x, model, 0., sigy,
+    yabscor=cabs, yrelcor=crel,
+    mpar=mpardict.values()
+  )
 
 # perform fit to data with iminuit
-  parvals, parerrs, cor, chi2 = mFit(model, data_x, data_y, sigy_abs,
-                                     p0=(2., 1.),
-                                     run_minos=True, plot=True, plot_cor=True)
+  parvals, parerrs, cor, chi2 = mFit(
+       model, data_x, data_y, sigy,
+       p0=(2., 1.), # start values of fit
+       yabscor = cabs, # correlated absolute error
+       yrelcor = crel, # correlated relative error
+       plot = True, plot_cor = True
+  )
 
 # Print results to illustrate how to use output
   print('\n*==* Fit Result:')

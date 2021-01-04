@@ -48,6 +48,7 @@ par, pare, cor, chi2 = k2Fit(model,
     model_expression = r'{a}\,{x}^2 + {b}\,{x} + {c}',  # model fuction
     model_legend = 'quadratic model',         # legend entry for model line
     #model_band = None,                       # name for model uncertainty band
+    plot_cor = False,                         # profile likelihood and contours
     fit_info=True )                           # fit results in figure
 
 # setting any of the above names to None will remove the entry from the legend,
