@@ -38,7 +38,7 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p><cite>Version</cite> 2021-01-03</p>
+<div><p><cite>Version</cite> 2021-01-05</p>
 </div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
@@ -458,7 +458,7 @@ output amplitude is normalised to number of samples;</p>
 <dt id="PhyPraKit.autocorrelate">
 <code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">autocorrelate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.autocorrelate" title="Permalink to this definition">¶</a></dt>
 <dd><p>calculate autocorrelation function of input array</p>
-<p>method: for array of length l, calulate 
+<p>method: for array of length l, calculate 
 a[0]=sum_(i=0)^(l-1) a[i]*[i] and 
 a[i]= 1/a[0] * sum_(k=0)^(l-i) a[i] * a[i+k-1] for i=1,l-1</p>
 <dl class="simple">
@@ -681,7 +681,7 @@ of a histogram with bin-contents <cite>binc</cite> and bin-edges <cite>bine</cit
 
 <dl class="py function">
 <dt id="PhyPraKit.k2Fit">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">k2Fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0e</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x-data', 'y-data']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_expression</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em>, <em class="sig-param"><span class="n">model_band</span><span class="o">=</span><span class="default_value">'$\\pm 1 \\sigma$'</span></em>, <em class="sig-param"><span class="n">fit_info</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.k2Fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">k2Fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x-data', 'y-data']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_expression</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em>, <em class="sig-param"><span class="n">model_band</span><span class="o">=</span><span class="default_value">'$\\pm 1 \\sigma$'</span></em>, <em class="sig-param"><span class="n">fit_info</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">asym_parerrs</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.k2Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>fit function func with errors on x and y;
 uses package <cite>kafe2</cite></p>
 <dl class="simple">
@@ -695,7 +695,6 @@ uses package <cite>kafe2</cite></p>
 <li><p>sx: scalar or np-array, uncertainty(ies) on x</p></li>
 <li><p>sy: scalar or np-array, uncertainty(ies) on y</p></li>
 <li><p>p0: array-like, initial guess of parameters</p></li>
-<li><p>p0e: array-like, initial guess of parameter uncertainties</p></li>
 <li><p>xabscor: absolute, correlated error(s) on x</p></li>
 <li><p>yabscor: absolute, correlated error(s) on y</p></li>
 <li><p>xrelcor: relative, correlated error(s) on x</p></li>
@@ -709,6 +708,8 @@ uses package <cite>kafe2</cite></p>
 <li><p>model_legend: legend entry for model</p></li>
 <li><p>model_band: legend entry for model uncertainty band</p></li>
 <li><p>fit_info: controls display of fit results on figure</p></li>
+<li><p>asym_parerrs: show (asymmetric) errors from profile-likelihood scan</p></li>
+<li><p>plot_cor: show profile curves and contour lines</p></li>
 <li><p>quiet: controls text output</p></li>
 </ul>
 </dd>
@@ -881,28 +882,37 @@ uses numerical “orthogonal distance regression” from package scipy.odr</p>
 
 <dl class="py function">
 <dt id="PhyPraKit.mFit">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">mFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sy</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_minos</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.mFit" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>fit an arbitrary function f(x) with (correlated) errors on y    
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">mFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">erelx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">erely</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_minos</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.mFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit an arbitrary function f(x) to data
+with uncorrelated and correlated absolute and/or relative errors 
+on y amd x  
 with package iminuit</p>
+<dl>
+<dt>mFit supports different error categories:</dt><dd><ul class="simple">
+<li><p>indpendent absolulte and relative uncertainties on x and y</p></li>
+<li><p>correlated absolulte and relative uncertainties on x and y</p></li>
+</ul>
+<ul class="simple">
+<li><p>relative uncertainties are calculated with reference to model</p></li>
+</ul>
+<blockquote>
+<div><p>in an iterated fit</p>
 </div></blockquote>
-<dl class="simple">
-<dt>This example illustrates the special features of iminuit:</dt><dd><ul class="simple">
-<li><p>definition of a custom cost function  used to implement 
-the least squares method with correlated errors</p></li>
-<li><p>profile likelihood for asymmetric errors</p></li>
-<li><p>plotting of profile likeliood and confidence contours</p></li>
+<ul class="simple">
+<li><p>x-uncertainties are projected on y in an iterative fit
+covariance matrix is updated dynamically during fitting</p></li>
 </ul>
 </dd>
-</dl>
-<p>supports iminuit vers. &lt; 2.0 and &gt;= 2.0</p>
-<blockquote>
-<div><dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>fitf: model function to fit, arguments (float:x, float: <a href="#id1"><span class="problematic" id="id2">*</span></a>args)</p></li>
 <li><p>x:  np-array, independent data</p></li>
 <li><p>y:  np-array, dependent data</p></li>
-<li><p>sy: scalar or one-d or two-d np-array , uncertainties on y data</p></li>
+<li><p>sx: scalar or 1d or 2d np-array , uncertainties on x data</p></li>
+<li><p>sy: scalar or 1d or 2d np-array , uncertainties on x data</p></li>
+<li><p>erelx: scalar or np-array, relative uncertainties x</p></li>
+<li><p>erely: scalar or np-array, relative uncertainties y</p></li>
+<li><p>yabscor: scalar or np-array, absolute, correlated error(s) on y</p></li>
+<li><p>yrelcor: scalar or np-array, relative, correlated error(s) on y</p></li>
 <li><p>p0: array-like, initial guess of parameters</p></li>
 <li><p>run_minos: run minos profile likelihood scan if True</p></li>
 <li><p>plot: show data and model if True</p></li>
@@ -913,11 +923,10 @@ the least squares method with correlated errors</p></li>
 <li><p>np-array of float: parameter values</p></li>
 <li><p>2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos.</p></li>
 <li><p>np-array: correlation matrix</p></li>
-<li><p>float: chi2 of fit at minimum</p></li>
+<li><p>float: chi2  chi-square of fit a minimum</p></li>
 </ul>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 <dl class="py function">

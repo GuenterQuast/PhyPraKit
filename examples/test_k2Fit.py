@@ -39,7 +39,7 @@ ey=sigy_rel* np.abs(yt) * np.ones(nd) # set array of relative y errors
 # fit with kafe2
 par, pare, cor, chi2 = k2Fit(model,
     xdata, ydata, sigx_abs, ey,               # data and uncertaintites
-    p0=None, p0e=None,                        # initial guess and range
+    p0=None,                                  # initial guess para,eter values
     xrelcor=sxrelcor, yabscor=syabscor,       # correlated uncertainties
     plot=True,                                # show plot, options below  
     axis_labels=['x-data','random y'],        # nice names

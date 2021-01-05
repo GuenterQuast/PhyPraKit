@@ -18,37 +18,55 @@ import numpy as np, matplotlib.pyplot as plt
 
 if __name__ == "__main__": # --------------------------------------  
   #
-  # Example of an application
-  # 
-  # the model function to fit
+  # Example of an application of mFit()
+  #  supprting 8 different error categories:
+  #  - indpendent absolulte and relative uncertainties on x and y
+  #  - correlated absolulte and relative uncertainties on x and y
+  # relative uncertainties are calculated with reference to model
+  #  in an iterated fit
+  # x-uncertainties are projected on y in an iterative fit
+  # covariance matrix is updated dynamically during fitting
+  
+  # define the model function to fit
   def model(x, A=1., x0=1.):
     return A*np.exp(-x/x0)
   mpardict = {'A':1., 'x0':0.5}  # model parameters
-    
+
+# set error components for x and y data
+  sabsy = 0.07
+  srely = 0.05
+  cabsy = 0.05
+  crely = 0.03
+  sabsx = 0.05
+  srelx = 0.05
+  cabsx = 0.05
+  crelx = 0.03
+
 # generate pseudo data
   np.random.seed(314159)      # initialize random generator
   nd=10
   data_x = np.linspace(0, 1, nd)       # x of data points
-  srel = 0.05*model(data_x, **mpardict) 
-  sabs = 0.07
-  sigy = np.sqrt(sabs*sabs + srel * srel) # indep. errors
-  cabs = 0.05  # common absolute uncertainty
-  crel = 0.03  # common relative uncertainty
+  sigy = np.sqrt(sabsy**2+ (srely*model(data_x, **mpardict))**2)
+  sigx = np.sqrt(sabsx**2 + (srelx * data_x)**2)
+  xt, yt, data_y = generateXYdata(data_x, model, sigx, sigy,
+                                      xabscor=cabsx,
+                                      xrelcor=crelx,
+                                      yabscor=cabsy,
+                                      yrelcor=crely,
+                                      mpar=mpardict.values() )
 
-  xt, yt, data_y = generateXYdata(
-    data_x, model, 0., sigy,
-    yabscor=cabs, yrelcor=crel,
-    mpar=mpardict.values()
-  )
-
-# perform fit to data with iminuit
-  parvals, parerrs, cor, chi2 = mFit(
-       model, data_x, data_y, sigy,
-       p0=(2., 1.), # start values of fit
-       yabscor = cabs, # correlated absolute error
-       yrelcor = crel, # correlated relative error
-       plot = True, plot_cor = True
-  )
+# perform fit to data with mFit based in imiunit
+  parvals, parerrs, cor, chi2 = mFit(model, data_x, data_y,
+                                     sx=sabsx,
+                                     sy=sabsy,
+                                     erelx=srelx,
+                                     erely=srely,
+                                     xabscor=cabsx,
+                                     xrelcor=crelx,
+                                     yabscor=cabsy,
+                                     yrelcor=crely,
+                                     p0=(1., 0.5),
+                                     plot=True, plot_cor=True)
 
 # Print results to illustrate how to use output
   print('\n*==* Fit Result:')
@@ -59,3 +77,5 @@ if __name__ == "__main__": # --------------------------------------
   print(f" correlations : \n", cor)
   
   plt.show()
+
+  
