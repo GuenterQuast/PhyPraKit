@@ -1376,7 +1376,7 @@ def kRegression(x, y, sx, sy,
     
   return a, b, sa, sb, cor, chi2  
 
-def mFit(fitf, x, y, sx=None, sy=None, erelx=None, erely=None, 
+def mFit(fitf, x, y, sx=None, sy=None, srelx=None, srely=None, 
          xabscor=None, xrelcor=None,        
          yabscor=None, yrelcor=None,        
          p0=None, run_minos=True, plot=True, plot_cor=True):
@@ -1401,8 +1401,8 @@ def mFit(fitf, x, y, sx=None, sy=None, erelx=None, erely=None,
     * y:  np-array, dependent data
     * sx: scalar or 1d or 2d np-array , uncertainties on x data
     * sy: scalar or 1d or 2d np-array , uncertainties on x data
-    * erelx: scalar or np-array, relative uncertainties x
-    * erely: scalar or np-array, relative uncertainties y
+    * srelx: scalar or np-array, relative uncertainties x
+    * srely: scalar or np-array, relative uncertainties y
     * yabscor: scalar or np-array, absolute, correlated error(s) on y
     * yrelcor: scalar or np-array, relative, correlated error(s) on y
     * p0: array-like, initial guess of parameters
@@ -1452,6 +1452,7 @@ def mFit(fitf, x, y, sx=None, sy=None, erelx=None, erely=None,
 
       self.covy = err2
       self.covx = None
+      self.cov = self.covy
       
     def init_ErrorComponents(self, ex, ey, erelx, erely, cabsx, crelx, cabsy, crely):
       # if set, covariance matrix will be recomputed each time in the fit
@@ -1465,30 +1466,39 @@ def mFit(fitf, x, y, sx=None, sy=None, erelx=None, erely=None,
        self.crely = crely
        # rebuild covariance matrix during fitting procedure
        self.rebuildCov=True
-       
+       self.staticCov=None
+       self.errdim = 2  # use full covariance matrix in fit
+
     def rebuild_Cov(self):
       """
       (Re-)Build the covariance matrix from components
       """
       nd = len(self.x)
       cov = np.zeros( (nd, nd) )
-      # Start with y-uncertainties
-      e_ = np.array(self.ey)*np.ones(nd) # ensure array of length nd
-      if e_.ndim == 2: # already got a matrix, take as covariance matrix
-        cov += e_
-      else:
-        cov += np.diag(e_*e_) # set diagonal elements of covariance matrix
-      if erely is not None:
-        er_ = np.array(erely)*np.ones(nd)
-        cov += np.diag(er_*er_) * self.model(self.x, *self.mpar)            
-      if self.cabsy is not None:
-        if len(np.shape(np.array(self.cabsy))) < 2: # has one entry
-          c_ = np.array(self.cabsy) * np.ones(nd)
-          cov += np.outer(c_, c_) 
-        else:            # got a list, add each list element
-          for c in self.cabsy:
-            c_ = np.array(self.cabsy)*np.ones(nd)
+
+      # Start with static y-uncertainties
+      if self.staticCov is None:
+        e_ = np.array(self.ey)*np.ones(nd) # ensure array of length nd
+        if e_.ndim == 2: # already got a matrix, take as covariance matrix
+          cov += e_
+        else:
+          cov += np.diag(e_*e_) # set diagonal elements of covariance matrix
+        if self.cabsy is not None:
+          if len(np.shape(np.array(self.cabsy))) < 2: # has one entry
+            c_ = np.array(self.cabsy) * np.ones(nd)
             cov += np.outer(c_, c_) 
+          else:            # got a list, add each list element
+            for c in self.cabsy:
+              c_ = np.array(self.cabsy)*np.ones(nd)
+              cov += np.outer(c_, c_) 
+        self.staticCov = np.array(cov, copy=True)
+      else:
+        cov=np.array(self.staticCov, copy=True)
+
+      # ... parameter-dependent y-uncertainties  
+      if self.erely is not None:
+        er_ = np.array(self.erely)*np.ones(nd)
+        cov += np.diag(er_*er_) * self.model(self.x, *self.mpar)            
       if self.crely is not None:
         if len(np.shape(np.array(self.crely))) < 2: # has one entry
           c_ = np.array(self.crely) * self.model(self.x, *self.mpar)
@@ -1497,9 +1507,10 @@ def mFit(fitf, x, y, sx=None, sy=None, erelx=None, erely=None,
           for c in self.crely:
             c_ = np.array(c) * self.model(self.x, *self.mpar)
             cov += np.outer(c_, c_)
-      self.covy = cov
-      
-      if (self.ex is not None and self.ex !=0) or erelx is not None:
+      self.covy = np.array(cov, copy=True)
+
+      # ... x-uncertainties (all are parameter-dependent) 
+      if (self.ex is not None and self.ex !=0) or self.erelx is not None:
         covx = np.zeros( (len(x), len(x)) )
        # build covariance matrix for x
         e_ = np.array(self.ex)*np.ones(nd) # ensure array of length nd
@@ -1507,8 +1518,8 @@ def mFit(fitf, x, y, sx=None, sy=None, erelx=None, erely=None,
           covx += e_
         else:
           covx += np.diag(e_*e_) # set diagonal elements of covariance matrix
-        if erelx is not None:
-          er_ = np.array(erelx)*np.ones(nd)
+        if self.erelx is not None:
+          er_ = np.array(self.erelx)*np.ones(nd)
           covx += np.diag(er_*er_) * self.x                      
         if self.cabsx is not None:
           if len(np.shape(np.array(self.cabsx))) < 2: # has one entry
@@ -1526,27 +1537,26 @@ def mFit(fitf, x, y, sx=None, sy=None, erelx=None, erely=None,
             for c in self.crelx:
               c_ = np.array(c) * self.x
               covx += np.outer(c_, c_) 
-        self.covx = covx
+        self.covx = np.array(covx, copy=True)
+        
        # determine derivatives of model function w.r.t. x, distance dx from smallest uncertaintey
         dx = np.sqrt(min(np.diag(covx)))/10.
         mprime = 0.5/dx * (self.model(self.x + dx, *self.mpar) - self.model(self.x - dx, *self.mpar))
-        # project on y
-        covx_projected = np.outer(mprime, mprime) * covx
-        # add to covariance matrix to obtain full covariance matrix for fit
-        cov += covx_projected
-      else:
-        covx_projected = None
-
+        # project on y and add to covariance matrix
+        cov += np.outer(mprime, mprime) * covx
+        self.cov = np.array(cov, copy=True)
+ 
  #     print('*!!! rebuild_Cov:')
  #     print('covy:\n',covy)
  #     print('covx=:\n',covx)
  #     print('deriv:}n',mprime)
- #     if covx is not None: print('covx_proj:\n',covx_projected)
  #     sys.exit()
       
       # set inverse covariance matrix 
       self.iCov = np.matrix(cov).I
-      self.errdim = 2  # use full covariance matrix in fit
+
+    def get_Cov(self):
+      return self.cov
 
     def get_xCov(self):
       return self.covx
@@ -1727,7 +1737,7 @@ def mFit(fitf, x, y, sx=None, sy=None, erelx=None, erely=None,
   # construct error matrix from input  
   nd = len(y)
   # build (initial) covariance matrix - ignore x-errors
-  dcov = buildCovarianceMatrix(nd, sy, erel=erely, eabscor=yabscor, erelcor=yrelcor, data=y) 
+  dcov = buildCovarianceMatrix(nd, sy, erel=srely, eabscor=yabscor, erelcor=yrelcor, data=y) 
   
   # set the cost function
   costf = LSQwithCov(x, y, dcov, fitf)
@@ -1749,16 +1759,20 @@ def mFit(fitf, x, y, sx=None, sy=None, erelx=None, erely=None,
         ipardict[pnam] = 0.  #  use zero in worst case
 
   # create Minuit object
-  m = Minuit(costf, **ipardict, errordef=1.)  
+  if __version__ < '2':
+    m = Minuit(costf, **ipardict, errordef=1.)
+  else:
+    m = Minuit(costf, **ipardict)  
+    m.errordef = 1.
 
   # perform fit
   m.migrad()  # finds minimum of cost function
 
   # possibly, need to iterate fit
-  if sx is not None or erelx is not None or xabscor is not None or xrelcor is not None \
-     or erely is not None or yrelcor is not None : 
+  if sx is not None or srelx is not None or xabscor is not None or xrelcor is not None \
+     or srely is not None or yrelcor is not None : 
     print('*==* mFit iterating to take into account parameter-dependent uncertainties')
-    costf.init_ErrorComponents(sx, sy, erelx, erely, xabscor, xrelcor, yabscor, yrelcor)
+    costf.init_ErrorComponents(sx, sy, srelx, srely, xabscor, xrelcor, yabscor, yrelcor)
     m.migrad()
 
   # possibly, improve error matrix, in most cases done in MIGRAD already
@@ -1802,6 +1816,8 @@ def mFit(fitf, x, y, sx=None, sy=None, erelx=None, erely=None,
     ey = costf.get_yCov()
     if ey.ndim ==2:
       ey = np.sqrt(np.diag(ey))
+    else:
+      ey = np.sqrt(ey)
     ex = costf.get_xCov()
     if ex is not None:
       ex = np.sqrt(np.diag(ex))
@@ -1945,12 +1961,14 @@ def kFit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
     
   return par, pare, cor, chi2
 
-def k2Fit(func, x, y, sx=None, sy=None, p0=None, 
-           xabscor=None, yabscor=None, xrelcor=None, yrelcor=None, constraints= None,
-           plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
-           model_expression=None, model_name=None,
-           model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
-           fit_info=True, asym_parerrs=True, plot_cor=False, quiet=True):
+def k2Fit(func, x, y,
+    sx=None, sy=None, srelx=None, srely=None, 
+    xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
+    constraints= None, p0=None,
+    plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
+    model_expression=None, model_name=None,
+    model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
+    fit_info=True, asym_parerrs=True, plot_cor=False, quiet=True):
   """
     fit function func with errors on x and y;
     uses package `kafe2`
@@ -1963,12 +1981,14 @@ def k2Fit(func, x, y, sx=None, sy=None, p0=None,
     the following are single floats or arrays of length of x
       * sx: scalar or np-array, uncertainty(ies) on x      
       * sy: scalar or np-array, uncertainty(ies) on y
-      * p0: array-like, initial guess of parameters
+      * srelx: scalar or np-array, relative uncertainties x
+      * srely: scalar or np-array, relative uncertainties y
       * xabscor: absolute, correlated error(s) on x
       * yabscor: absolute, correlated error(s) on y
       * xrelcor: relative, correlated error(s) on x
       * yrelcor: relative, correlated error(s) on y
       * parameter constrains (name, value, uncertainty)        
+      * p0: array-like, initial guess of parameters
       * plot: flag to switch off graphical output
       * axis_labels: list of strings, axis labels x and y
       * data_legend: legend entry for data points
@@ -2001,6 +2021,8 @@ def k2Fit(func, x, y, sx=None, sy=None, p0=None,
   dat.add_error(axis='y', err_val=sy)
   if sx is not None:
     dat.add_error(axis='x', err_val=sx)
+  if srelx is not None: 
+    dat.add_error(axis='x', err_val=srelx, relative=True)
 
 # construct covariance matrix
   if xabscor is not None:
@@ -2026,7 +2048,11 @@ def k2Fit(func, x, y, sx=None, sy=None, p0=None,
         
   # set up fit object
   fit = Fit(dat, func)
-  # possibly add relative errors with reference to model
+  
+  # add possibly specified relative errors with reference to model
+  if srely is not None: 
+    fit.add_error(axis='y', err_val=srely,
+                    relative=True, reference='model')
   if yrelcor is not None:
     if len(np.shape(np.array(yrelcor))) < 2:
       fit.add_error(axis='y', err_val=yrelcor, correlation=1.,
