@@ -34,16 +34,16 @@ if __name__ == "__main__": # --------------------------------------
 
 # set error components for x and y data
   sabsy = 0.07
-  srely = 0.05
-  cabsy = 0.05
-  crely = 0.03
+  srely = 0.05 # 5% of model value
+  cabsy = 0.04
+  crely = 0.03 # 3% of model value
   sabsx = 0.05
-  srelx = 0.05
-  cabsx = 0.05
-  crelx = 0.03
+  srelx = 0.04 # 4%
+  cabsx = 0.03
+  crelx = 0.02 # 2%
 
 # generate pseudo data
-  np.random.seed(314159)      # initialize random generator
+  np.random.seed(314)      # initialize random generator
   nd=10
   data_x = np.linspace(0, 1, nd)       # x of data points
   sigy = np.sqrt(sabsy**2+ (srely*model(data_x, **mpardict))**2)
@@ -75,7 +75,8 @@ if __name__ == "__main__": # --------------------------------------
   print(f" neg. parameter errors: ", parerrs[:,0])
   print(f" pos. parameter errors: ", parerrs[:,1])
   print(f" correlations : \n", cor)
-  
+
+# show figures   
   plt.show()
 
   

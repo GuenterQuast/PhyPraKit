@@ -1383,8 +1383,7 @@ def mFit(fitf, x, y, sx=None, sy=None, srelx=None, srely=None,
   """
   Fit an arbitrary function f(x) to data
   with uncorrelated and correlated absolute and/or relative errors 
-  on y amd x  
-  with package iminuit
+  on y and x with package iminuit
 
   mFit supports different error categories:
     - indpendent absolulte and relative uncertainties on x and y
@@ -1414,7 +1413,7 @@ def mFit(fitf, x, y, sx=None, sy=None, srelx=None, srely=None,
     * np-array of float: parameter values
     * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
     * np-array: correlation matrix 
-    * float: chi2  \chi-square of fit a minimum
+    * float: chi2  \chi-square of fit at minimum
   """  
 
   from iminuit import __version__, Minuit
@@ -1497,8 +1496,8 @@ def mFit(fitf, x, y, sx=None, sy=None, srelx=None, srely=None,
 
       # ... parameter-dependent y-uncertainties  
       if self.erely is not None:
-        er_ = np.array(self.erely)*np.ones(nd)
-        cov += np.diag(er_*er_) * self.model(self.x, *self.mpar)            
+        er_ = np.array(self.erely) * self.model(self.x, *self.mpar)
+        cov += np.diag(er_*er_) 
       if self.crely is not None:
         if len(np.shape(np.array(self.crely))) < 2: # has one entry
           c_ = np.array(self.crely) * self.model(self.x, *self.mpar)
@@ -1675,7 +1674,7 @@ def mFit(fitf, x, y, sx=None, sy=None, srelx=None, srely=None,
   # draw data and fitted line
     fig_model = plt.figure(figsize=(7.5, 6.5))
     if ex is not None:
-      plt.errorbar(x, y, xerr=ex, yerr=ey, fmt='x')
+      plt.errorbar(x, y, xerr=ex, yerr=ey, fmt='x', label='data')
     else:
       plt.errorbar(x, y, ey, fmt="x", label='data')
     xplt=np.linspace(x[0], x[-1], 100)
@@ -1823,7 +1822,6 @@ def mFit(fitf, x, y, sx=None, sy=None, srelx=None, srely=None,
       ex = np.sqrt(np.diag(ex))
   fig_model = plotModel(m, costf.model, x, y, ex, ey)
 
-
   if plot_cor:
     fig_cont = plotContours(m)
 
@@ -1964,14 +1962,14 @@ def kFit(func, x, y, sx=None, sy=None, p0=None, p0e=None,
 def k2Fit(func, x, y,
     sx=None, sy=None, srelx=None, srely=None, 
     xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
-    constraints= None, p0=None,
+    ref_to_model=False, constraints= None, p0=None,
     plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
     model_expression=None, model_name=None,
     model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
     fit_info=True, asym_parerrs=True, plot_cor=False, quiet=True):
   """
-    fit function func with errors on x and y;
-    uses package `kafe2`
+    fit function func with absolute and/or relative dorrelated and/or
+    uncorrelated errors on x and y with package `kafe2`
 
     Args:
       * func: function to fit
@@ -1987,6 +1985,8 @@ def k2Fit(func, x, y,
       * yabscor: absolute, correlated error(s) on y
       * xrelcor: relative, correlated error(s) on x
       * yrelcor: relative, correlated error(s) on y
+      * ref_to_model, bool: refer relative errors to model if true,
+        else use measured data
       * parameter constrains (name, value, uncertainty)        
       * p0: array-like, initial guess of parameters
       * plot: flag to switch off graphical output
@@ -2050,17 +2050,22 @@ def k2Fit(func, x, y,
   fit = Fit(dat, func)
   
   # add possibly specified relative errors with reference to model
+  #   - needs methods of fit object 
+  if ref_to_model == True:
+    ref='model'
+  else:
+    ref='data'
   if srely is not None: 
     fit.add_error(axis='y', err_val=srely,
-                    relative=True, reference='model')
+                    relative=True, reference=ref)
   if yrelcor is not None:
     if len(np.shape(np.array(yrelcor))) < 2:
       fit.add_error(axis='y', err_val=yrelcor, correlation=1.,
-                    relative=True, reference='model')
+                    relative=True, reference=ref)
     else:
      for c in yrelcor:
        fit.add_error(axis='y', err_val=c, correlation=1.,
-                     relative=True, reference='model')
+                     relative=True, reference=ref)
 
   # provide text for labelling       
   dat.label = data_legend
