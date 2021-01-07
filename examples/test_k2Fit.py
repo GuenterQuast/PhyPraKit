@@ -27,7 +27,8 @@ def model(x, a=0.1, b=1., c=1.):
 sigy_abs = 0.1 # abs. independent errors on y
 sigy_rel = 0.05 # relative error on y
 syabscor=0.1  #  an absolute, correlated error on y
-sigx_abs = 0.1 # absolute error on x 
+sigx_abs = 0.1 # absolute error on x
+sigx_rel = 0.  # relative error on x
 sxrelcor=0.02  #  a relative, correlated error on x 
 
 # generate the data
@@ -52,7 +53,7 @@ par, pare, cor, chi2 = k2Fit(model,
     xrelcor=sxrelcor,    # correlated x rel.
     yabscor=syabscor,    # correlated y abs.
     yrelcor=None,        # correlated y rel.
-    ref_to_model=True,  # reference of rel. uncert. to model
+    ref_to_model=True,   # reference of rel. uncert. to model
     p0=(0.5,-1.,1.),     # initial guess for parameter values
     plot=True,           # show plot, options below  
     fit_info=True,       # show fit results in figure
@@ -64,15 +65,16 @@ par, pare, cor, chi2 = k2Fit(model,
     model_legend = 'quadratic model',  # legend entry for model line
     model_band = None                  # name for model uncertainty band
     )                      
-
 # setting any of the above names to None will remove the entry from the legend,
-#  if not specified, use default  
+#  if not specified, default is used  
 
 print('*==* data set')
 print('  x = ', xdata)
-print('  sx = ', sigx_abs)
 print('  y = ', ydata)
-print('  sy = ', ey)
+np.set_printoptions(precision=3)
+print('  sx = ', np.sqrt(sigx_abs**2 + (sigx_rel*xdata)**2) )
+print('  sy = ', np.sqrt(sigy_abs**2 + (sigy_rel*model(xdata, *par))**2) )
+
 print('*==* fit result:')
 print("  -> chi2:         %.3g"%chi2)
 np.set_printoptions(precision=3)
