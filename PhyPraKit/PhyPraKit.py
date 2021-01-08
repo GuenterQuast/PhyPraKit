@@ -105,7 +105,7 @@ from __future__ import print_function  # for python2.7 compatibility
 #   01-Nov-19    GQ  fixed extraction of file extension in readPicoScope
 #   05-Nov-20    GQ  changed to GNU GPL, automatic handling of missing uncertainties
 #                      in odFit, kFit and k2Fit
-#   03-Jan-21    GQ  added fit example with iminuit
+#   08-Jan-21    GQ  added fit example with iminuit
 # ---------------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
@@ -1380,7 +1380,8 @@ def mFit(fitf, x, y, sx=None, sy=None,
          srelx=None, srely=None, 
          xabscor=None, xrelcor=None,        
          yabscor=None, yrelcor=None,        
-         p0=None, plot=True, plot_cor=True):
+         p0=None, constraints=None,
+         plot=True, plot_cor=True):
   """
   Fit an arbitrary function f(x) to data
   with uncorrelated and correlated absolute and/or relative errors 
@@ -1406,6 +1407,7 @@ def mFit(fitf, x, y, sx=None, sy=None,
     * yabscor: scalar or np-array, absolute, correlated error(s) on y
     * yrelcor: scalar or np-array, relative, correlated error(s) on y
     * p0: array-like, initial guess of parameters
+    * constraints: list or list of lists with [name, value, error]
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
 
@@ -1575,18 +1577,44 @@ def mFit(fitf, x, y, sx=None, sy=None,
       self.data = data
       self.model = model 
       # set proper signature of model function for iminuit
-      self.func_code = make_func_code(describe(model)[1:])
-    
-    def __call__(self, *par):  # we accept a variable number of model parameters
-      resid = self.data.y - self.model(self.data.x, *par)
+      pnams = describe(model)[1:]
+      self.func_code = make_func_code(pnams)
+      # dictionary assigning parameter name to index
+      self.pnam2id = {
+        pnams[i] : i for i in range(0,len(pnams))
+        } 
+      self.constraints = None
+
+    def addConstraints(self, constraints):
+      # add parameter constraints
+      #  format: list or list of lists with [name, value, uncertainty]
+      if isinstance(constraints[1], list):
+        self.constraints = constraints
+      else:
+        self.constraints = [constraints]
+         
+    def __call__(self, *par):  # accept a variable number of model parameters
+      # called iteratively by minuit
+
+      dc = 0.
+      #  first, take into account possible parameter constraints  
+      if self.constraints is not None:
+        for c in self.constraints:
+          r = ( par[self.pnam2id[c[0]]] - c[1]) /c[2] 
+          dc += r*r
+
+      # check if Covariance matrix needs rebuilding
       if self.data.rebuildCov:
         self.data.rebuild_Cov(par)
+
+      # add chi2 of data wrt. model  
+      resid =  self.data.y - self.model(self.data.x, *par)
       if data.errdim < 2:
         # fast calculation for simple errors
-        return np.sum(resid * self.data.iCov*resid)
+        return dc + np.sum(resid * self.data.iCov*resid)
       else:
         # with full inverse covariance matrix for correlated errors
-        return np.inner(np.matmul(resid.T, self.data.iCov), resid)
+        return dc + np.inner(np.matmul(resid.T, self.data.iCov), resid)
   
   # --- end definition of class LSQwithCov ----
 
@@ -1771,6 +1799,9 @@ def mFit(fitf, x, y, sx=None, sy=None,
       else:
         ipardict[pnam] = 0.  #  use zero in worst case
 
+  if constraints is not None:
+    costf.addConstraints(constraints)
+        
   # create Minuit object
   if __version__ < '2':
     m = Minuit(costf, **ipardict, errordef=1.)
