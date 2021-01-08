@@ -1407,7 +1407,7 @@ def mFit(fitf, x, y, sx=None, sy=None,
     * yabscor: scalar or np-array, absolute, correlated error(s) on y
     * yrelcor: scalar or np-array, relative, correlated error(s) on y
     * p0: array-like, initial guess of parameters
-    * constraints: list or list of lists with [name, value, error]
+    * constraints: list or list of lists with [name or id, value, error]
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
 
@@ -1583,7 +1583,7 @@ def mFit(fitf, x, y, sx=None, sy=None,
       self.pnam2id = {
         pnams[i] : i for i in range(0,len(pnams))
         } 
-      self.constraints = None
+      self.nconstraints = 0 
 
     def addConstraints(self, constraints):
       # add parameter constraints
@@ -1592,15 +1592,20 @@ def mFit(fitf, x, y, sx=None, sy=None,
         self.constraints = constraints
       else:
         self.constraints = [constraints]
-         
+      self.nconstraints = len(self.constraints)
+      
     def __call__(self, *par):  # accept a variable number of model parameters
       # called iteratively by minuit
 
       dc = 0.
       #  first, take into account possible parameter constraints  
-      if self.constraints is not None:
+      if self.nconstraints:
         for c in self.constraints:
-          r = ( par[self.pnam2id[c[0]]] - c[1]) /c[2] 
+          if type(c[0])==type(' '):
+            p_id = self.pnam2id[c[0]]
+          else:
+            p_id = c[0]
+          r = ( par[p_id] - c[1]) / c[2] 
           dc += r*r
 
       # check if Covariance matrix needs rebuilding
@@ -1829,7 +1834,7 @@ def mFit(fitf, x, y, sx=None, sy=None,
   # extract result parametes !!! this part depends on iminuit version !!!
   chi2 = m.fval               # chi2 
   npar = m.nfit               # numer of parameters
-  ndof = len(x) - npar   # degrees of freedom
+  ndof = len(x) + costf.nconstraints - npar        # degrees of freedom
   if __version__< '2':
     parnames = m.values.keys()  # parameter names
     parvals = np.array(m.values.values()) # best-fit values

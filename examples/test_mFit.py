@@ -66,7 +66,8 @@ if __name__ == "__main__": # --------------------------------------
                                      yabscor=cabsy,
                                      yrelcor=crely,
                                      p0=(1., 0.5),
-                            #         constraints=['A', 1., 0.03],
+                                  #   constraints=['A', 1., 0.03],
+                                  #   constraints=[0, 1., 0.03],
                                      plot=True, plot_cor=True)
 
 # Print results to illustrate how to use output
