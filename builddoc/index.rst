@@ -244,24 +244,27 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     `python`-Bordmitteln zur Anpassung einer Geraden an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung. 
     Korrelierte Unsicherheiten werden nicht unterstützt.
-  * `test_mFit` nutzt das Paket imunit, das den am CERN entwicklten
-    Minimierer MINUIT nutzt. iminuit erlaubt insbesondere die Definition
-    einer eigenen Kostenfunktion. Im Beispiel hier ist die Methode der
-    kleinsten Fehlerquadrate mit Kovarianzmatrix gezeigt. Ferner
-    unterstützt iminuit die Erzeugung und Darstellung von Profil-Likelihood-Kurven
-    und Konfidenzkonturen, die im Beispiel illustriert werden.
-    Die Behandlung von Unsicherheiten in x-Richtung ist (noch) nicht
-    implementiert, durch Iteration und Anpassung der Kostenfunktion
-    aber recht einfach machbar.
-  * `test_kFit.py` dient zur Anpassung einer beliebigen Funktion an
+  * `test_mFit` dient zur Anpassung einer beliebigen Funktion an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit
     allen Messpunkten gemeinsamen (d. h. korrelierten) relativen oder
-    absoluten systematischen Fehlern mit dem Paket `kafe`.
+    absoluten systematischen Fehlern. Dazu wird das Paket imunit
+    verwendet, das den am CERN entwicklten Minimierer MINUIT nutzt.
+    Da die Kostenfunktion frei definiert und auch während der Anpassung
+    dynamisch aktualisiert werden kann, ist die Implementierung von
+    Parameter-abhängigen Unsicherheiten möglich. Ferner unterstützt
+    iminuit die Erzeugung und Darstellung von Profil-Likelihood-Kurven
+    und Konfidenzkonturen, die so mit mFit ebenfalls dargestellt
+    werden können. 
+  * `test_kFit.py` ist mittlerweile veraltet und dient ebenfalls
+    zur Anpassung einer beliebigen Funktion an Messdaten mit Fehlern
+    in Ordinaten- und Abszissenrichtung und mit allen Messpunkten
+    gemeinsamen (d. h. korrelierten) relativen oder absoluten
+    systematischen Fehlern mit dem Paket `kafe`.
   * `test_k2Fit.py` verwendet die Version *kafe2* zur Anpassung einer
     Funktion an Messdaten mit unabhängigen oder korrelierten relativen oder
     absoluten Unsicherheiten in Ordinaten- und Abszissenrichtung.
   * `test_simplek2Fit.py` illustriert die Durchführung einer einfachen
-    linearen Regression mit *kafe2* mit einer minimalen Anzal eigner
+    linearen Regression mit *kafe2* mit einer minimalen Anzal eigener
     Codezeilen. 
   * `test_Histogram.py` ist ein Beispiel zur Darstellung und 
     statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen) 
@@ -270,7 +273,7 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     "künstliche Daten" zur Veranschaulichung oder zum Test von Methoden
     zur Datenauswertung erzeugen kann. 
 
-  Die folgenden *python*-Skripte sind etwas komplexer und zeigen 
+  Die folgenden *python*-Skripte sind etwas komplexer und illustrieren 
   typische Anwendungsfälle der Module in `PhyPraKit`:
 
   * `kfitf.py` ist ein Kommandozeilen-Werkzeug, mit dem man komfortabel
