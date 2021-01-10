@@ -1,14 +1,36 @@
-#! /usr/bin/env python3
-"""iminuitFit.py
-   Fitting with iminiut
+"""
+  package iminuitFit.py
+  
+  Fitting with `iminiut` (https://iminuit.readthedocs.io/en/stable/)
 
-   This example illustrates the special features of iminuit:
-    - definition of a custom cost function 
-         used to implement least squares method with correlated errors   
-    - profile likelihood for asymmetric errors
-    - plotting of profile likeliood and confidence contours
+  This class `iminuitFit.py` uses iminuit for fitting a model 
+  to data with indepentent and/or correlated absoute and/or 
+  relative uncertainties in the x- and y-directions. 
+   
+  A user-defined cost function in iminuit with uncertainties 
+  that depend on model parameters is dynamically updated during 
+  the fitting process. Data points with relative errors can thus
+  be referred to the model instead of the data. The derivative
+  of the model function w.r.t. x is used to project the 
+  covariance matrix of x-uncertainties on the y-axis. 
 
-    supports iminuit vers. < 2.0 and >= 2.0
+  The implementation in this example is minimalistic and
+  intended to illustrate the principle of an advanced usage
+  of `iminuit`. It is also meant to stimulate own studies with 
+  special, user-defined cost functions.
+
+  The main features of this package are:
+  - definition of a custom cost function 
+  - implement least squares method with correlated errors
+  - correlated x-uncertainties by projection on the y-axis
+  - relative errors with reference to the model values  
+  - evaluation of profile likelihoods, supporting asymetric errors 
+  - plotting of profile likeliood and confidence contours
+
+  supports iminuit vers. < 2.0 and >= 2.0
+
+  A fully functional example is provided by the function `mFit()`
+  in PhyPraKit and the python script `examples/test_mFit.py`
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """

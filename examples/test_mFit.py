@@ -1,7 +1,9 @@
 #! /usr/bin/env python3
 """test_iminuitFit.py
    Fitting example with iminiut
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
+
 """
 
 import numpy as np, matplotlib.pyplot as plt 
