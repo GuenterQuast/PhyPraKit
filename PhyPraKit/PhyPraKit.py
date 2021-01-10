@@ -1395,8 +1395,8 @@ def mFit(fitf, x, y, sx=None, sy=None,
   on y and x with package iminuit
 
   mFit supports different error categories:  
-    * indpendent absolulte and relative uncertainties on x and y
-    * correlated absolulte and relative uncertainties on x and y  
+    - indpendent absolulte and relative uncertainties on x and y
+    - correlated absolulte and relative uncertainties on x and y  
   
   The fit is iterated and the covariance matrix updated dynamically
   during fitting to determine  
@@ -1690,6 +1690,7 @@ def mFit(fitf, x, y, sx=None, sy=None,
       for pnam in m.merrors.keys():
         pmerrs.append([m.merrors[pnam].lower, m.merrors[pnam].upper])
     pmerrs=np.array(pmerrs)
+    chi2 = m.fval
     ndof =costFunction.ndof
 
   # get data
@@ -1720,7 +1721,7 @@ def mFit(fitf, x, y, sx=None, sy=None,
    # display legend with some fit info
     fit_info = [
     f"$\\chi^2$ / $n_\\mathrm{{dof}}$ = {chi2:.1f} / {ndof}",]
-    for p, v, e in zip(parnames, parvals, pmerrs):
+    for p, v, e in zip(pnams, pvals, pmerrs):
       fit_info.append(f"{p} = ${v:.3f}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$")
     plt.legend(title="\n".join(fit_info))
     return fig_model
