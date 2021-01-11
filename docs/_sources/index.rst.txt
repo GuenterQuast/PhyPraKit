@@ -185,10 +185,10 @@ oder::
     
         - barstat()   statistical information (mean, sigma, erroron mean) from bar chart
         - nhist()    histogram plot based on np.historgram() and plt.bar()  
-            ``use matplotlib.pyplot.hist() instead``
+          ``use matplotlib.pyplot.hist() instead``
         - histstat() statistical information from 1d-histogram
         - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()  
-            ``use matplotlib.pyplot.hist2d() instead``  
+          ``use matplotlib.pyplot.hist2d() instead``  
         - hist2dstat() statistical information from 1d-histogram
         - profile2d()  "profile plot" for 2d data
         - chi2p_indep2d() chi2 test on independence of data
@@ -197,10 +197,10 @@ oder::
 
         - linRegression()    linear regression, y=ax+b, with analytical formula
         - linRegressionXY()  linear regression, y=ax+b, with x and y errors   
-            ``! deprecated, use `odFit` with linear model instead``
+          ``! deprecated, use `odFit` with linear model instead``
 	    
         - kRegression()      linear regression, y=ax+b, with (correlated) errors on x and y   
-            ``! deprecated, use `kFit` or `k2Fit` with linear model instead``
+          ``! deprecated, use `kFit` or `k2Fit` with linear model instead``
 	    
         - odFit()            fit function with x and y errors (scipy ODR)
         - mFit()             fit with iminuit with correlated y errors,
@@ -323,7 +323,11 @@ Module Documentation
 
 ..  automodule:: PhyPraKit
      :members:
-    
+     :imported-members:
+
+..  automodule:: PhyPraKit.iminuitFit
+     :members:
+	
 ..  automodule:: test_readColumnData  
 
 ..  automodule:: test_readtxt

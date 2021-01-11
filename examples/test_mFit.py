@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-"""test_iminuitFit.py
+"""test_mFit.py
    Fitting example with iminiut
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>

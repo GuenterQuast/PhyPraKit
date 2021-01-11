@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Beispiel_Drehpendel.py 
+'''Beispiel_Drehpendel.py  
 
    Auswertung der Daten aus einer im CASSY labx-Format gespeicherten Datei
    am Beispiel des Drehpendels

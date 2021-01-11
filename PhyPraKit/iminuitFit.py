@@ -1,5 +1,4 @@
-"""
-  package iminuitFit.py
+"""package iminuitFit.py
   
   Fitting with `iminiut` (https://iminuit.readthedocs.io/en/stable/)
 
@@ -107,9 +106,9 @@ def build_CovarianceMatrix(nd, e=None, erel=None,
 
 
 class iminuitFit():
-  """
-  Fit an arbitrary funtion f(x, *par) data with
-   independent and/or correlated absolute and/or relative untertaintie
+  """  
+  Fit an arbitrary funtion f(x, *par) to data with
+   independent and/or correlated absolute and/or relative untertainties
   """
 
   def __init__(self):
@@ -203,7 +202,6 @@ class iminuitFit():
   def result(self):
   # report results as numpy arrays
     m=self.minuit
-    print('Fit results:')
     # extract result parametes !!! this part depends on iminuit version !!!
     chi2 = m.fval                                   # chi2 
     npar = m.nfit                                   # numer of parameters

@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-'''test_generateDate
+'''test_generateData
    test generation of simulated data
    this simulates a measurement with given x-values with uncertainties;
    random deviations are then added to arrive at the true values, from

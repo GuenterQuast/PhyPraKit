@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 '''test_odFit
-
    test fitting an arbitrary fucntion with scipy odr, 
    with uncertainties in x and y 
 

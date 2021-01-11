@@ -1,5 +1,4 @@
 '''test_AutoCorrelation.py
-
    test function `autocorrelate()` in PhyPraKit; 
    determines the frequency of a periodic signal from maxima and minima
    of the autocorrelation function and performs statistical analysis

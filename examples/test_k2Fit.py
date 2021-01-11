@@ -1,14 +1,12 @@
 #! /usr/bin/env python
 """
 test_k2Fit
-
-   Illustrate fitting of an arbitrary function with kafe2
-
+   Illustrate fitting of an arbitrary function with kafe2  
    This example illustrates the special features of kafe2:
-    - correlated errors for x and y data  
-    - relative errors with reference to model
-    - profile likelihood method to evaluate asymmetric errors
-    - plotting of profile likeliood and confidence contours
+   - correlated errors for x and y data  
+   - relative errors with reference to model
+   - profile likelihood method to evaluate asymmetric errors
+   - plotting of profile likeliood and confidence contours
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """

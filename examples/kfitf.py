@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 '''kfitf.py
-
-   Perform a fit with the kafe package driven by input file
-
+   Perform a fit with the kafe package driven by input file  
    usage: kfitf.py [-h] [-n] [-s] [-c] [--noinfo] [-f FORMAT] filename
 
    positional arguments:

@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 # module PhyPraKit.py, python3 version
 from __future__ import print_function  # for python2.7 compatibility
-''' 
+'''
 .. module PhyPraKit   
    :synopsis: a collection of tools for data analysis
-     recommended for "Physikalisches Praktikum am KIT"
+   recommended for "Physikalisches Praktikum am KIT"
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
@@ -48,11 +48,11 @@ from __future__ import print_function  # for python2.7 compatibility
       4. histograms tools:
 
         - barstat()   statistical information (mean, sigma, erroron mean) from bar chart
-        - nhist()    histogram plot based on np.historgram() and plt.bar()
-            ``use matplotlib.pyplot.hist() instead``
+        - nhist()    histogram plot based on np.historgram() and plt.bar()  
+          ``better use matplotlib.pyplot.hist() instead``  
         - histstat() statistical information from 1d-histogram
-        - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()
-            ``use matplotlib.pyplot.hist2d() instead``  
+        - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()  
+          ``better use matplotlib.pyplot.hist2d() instead``  
         - hist2dstat() statistical information from 1d-histogram
         - profile2d()  "profile plot" for 2d data
         - chi2p_indep2d() chi2 test on independence of data
@@ -63,11 +63,11 @@ from __future__ import print_function  # for python2.7 compatibility
         - linRegressionXY()  linear regression, y=ax+b, with x and y errors 
           ``! deprecated, use `odFit` with linear model instead``
         - kRegression()      linear regression, y=ax+b, with (correlated) 
-                             error on x, and y 
-          ``! deprecated, consider using `k2Fit` with linear model instead``
+                             error on x, and y   
+         ``! deprecated, consider using `k2Fit` with linear model instead``
         - odFit()            fit function with x and y errors (scipy ODR)
-        - mFit()             fit with iminuit with correlated y errors,
-                                profile likelihood and contour lines  
+        - mFit()             fit with iminuit with correlated x and y errors,
+          profile likelihood and contour lines  
         - kFit()             fit function with (correlated) errors on x and y (kafe)
         - k2Fit()            fit function with (correlated) errors on x and y (kafe2)
 
@@ -594,7 +594,6 @@ def Cov2Cor(V):
 
   Args: 
    * V: covariance matrix as numpy array
-   * sigc: list of iterables of correlated uncertainties
   
   Returns: 
    * diag uncertainties (sqrt of diagonal elements)
@@ -610,12 +609,11 @@ def Cor2Cov(sig, C):
     Convert a covariance-matrix into diagonal errors + Correlation matrix
 
   Args: 
-   * V: covariance matrix as numpy array
-   * sigc: list of iterables of correlated uncertainties
+   * sig: 1d numpy array of correlated uncertainties
+   * C: correlation matrix as numpy array
   
   Returns: 
-   * diag uncertainties (sqrt of diagonal elements)
-   * C: correlation matrix as numpy array
+   * V: covariance matrix as numpy array
   """
   V = C * np.outer(sig, sig)             
   return V

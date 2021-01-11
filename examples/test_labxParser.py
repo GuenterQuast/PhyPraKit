@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 '''test_labxParser.py
-   read files in xml-format produced with the Leybold Cassy system
-    
+   read files in xml-format produced with the Leybold Cassy system  
    uses PhyPraPit.labxParser()
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
