@@ -50,8 +50,9 @@ A pdf version of this documentation is available here: PhyPraKit.pdf_.
 Installation:
 -------------
 
-To use PhyPraKit, it is sufficient to place the file `PhyPraKit.py`
-in the same directory as the python scripts importing it.
+To use PhyPraKit, it is sufficient to place the the direcotory
+`PhyPraKit` and all the files in it in the same directory as the
+python scripts importing it.
 
 Installation via `pip` is also supported. The recommendation is
 to use the installation package in the subdirectory `dist` and
@@ -97,23 +98,14 @@ In der Veranstaltung "Computergestützte Datenauswertung"
 (http://www.ekp.kit.edu/~quast/CgDA), die im Studienplan
 für den Bachelorstudiengang Physik am KIT seit dem Sommersemester
 2016 angeboten wird, werden Methoden und Software zur 
-grafischen Darstellung von Daten, deren Modellierung und 
-Auswertung eingeführt. 
+grafischen Darstellung von Daten, deren Auswertung und
+Modellierung eingeführt. Die Installation der empfohlenen
+Software ist unter dem foltenden Link beschrieben:
 
-Die folgen Links erlauben einen schnellen Überblick über die Inhalte
-der Vorlesung und die Beispeielen aus den Übungen: 
-
-   * Zusammenfassung der Vorlesung und Dokumentation der Code-Beispiele
-       http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html
-
-   * Installation der Software auf verschiedenen Platformen 
       * Dokumentation in html: 
         http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html
       * Dokumentation in pdf:  
         http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf     
-      * Softwarepakete:        
-        http://www.ekp.kit.edu/~quast/CgDA/Software
-
 
 Speziell für das "Praktikum zur klassischen Physik" finden sich eine 
 kurze Einführung  
@@ -122,10 +114,11 @@ sowie die hier dokumentierten einfachen Beispiele als Startpunkt für
 eigene Auswertungen 
 (http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/).
 
-Die vorliegende Sammlung von Funktionen im Paket `PhyPraKit` enthält 
+Die vorliegende Sammlung im Paket `PhyPraKit` enthält 
 Funktionen zum Einlesen von Daten aus diversen Quellen, zur 
-Datenvisualisierung, Signalbearbeitung und zur statistischen Datenauswertung 
-und Modellanpassung sowie Werkzeuge zur Erzeugung simulierter Daten. 
+Datenvisualisierung, Signalbearbeitung und zur statistischen
+Datenauswertung und Modellanpassung sowie Werkzeuge zur Erzeugung
+simulierter Daten. 
 Dabei wurde absichtlich Wert auf eine einfache, die Prinzipien 
 unterstreichende Codierung gelegt und nicht der möglichst effizienten 
 bzw. allgemeinensten Implementierung der Vorzug gegeben. 
@@ -193,7 +186,7 @@ oder::
         - profile2d()  "profile plot" for 2d data
         - chi2p_indep2d() chi2 test on independence of data
     
-      5. linear regression:
+      5. linear regression and function fitting:
 
         - linRegression()    linear regression, y=ax+b, with analytical formula
         - linRegressionXY()  linear regression, y=ax+b, with x and y errors   
@@ -236,10 +229,6 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
   * `test_Fourier.py` illustriert die Durchführung einer 
     Fourier-Transfomation eines periodischen Signals, das in 
     der PicoScope-Ausgabedatei `Wellenform.csv` enthalten ist.
-  * `test_kRegression.py` dient zur Anpassung einer Geraden an
-    Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit allen
-    Messpunkten gemeinsamen (d. h. korrelierten) relativen oder absoluten
-    systematischen Fehlern mit dem Paket `kafe`. 
   * `test_linRegression.py` ist eine einfachere Version mit
     `python`-Bordmitteln zur Anpassung einer Geraden an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung. 

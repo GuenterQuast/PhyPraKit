@@ -57,7 +57,7 @@ from __future__ import print_function  # for python2.7 compatibility
         - profile2d()  "profile plot" for 2d data
         - chi2p_indep2d() chi2 test on independence of data
 
-      5. linear regression and fitting:
+      5. linear regression and function fitting:
 
         - linRegression()    linear regression, y=ax+b, with analytical formula
         - linRegressionXY()  linear regression, y=ax+b, with x and y errors 
