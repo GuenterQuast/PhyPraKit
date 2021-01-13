@@ -62,7 +62,7 @@ def build_CovarianceMatrix(nd, e=None, erel=None,
     * data: array of float: data, needed only for relative uncertainties
 
   Returns:
-    * nd x nd np-array of float: covariance matrix 
+    * np-array of float: covariance matrix 
   """
 
   # 1. independent errors

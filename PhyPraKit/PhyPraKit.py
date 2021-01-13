@@ -1,14 +1,11 @@
 #!/usr/bin/python3
 # module PhyPraKit.py, python3 version
 from __future__ import print_function  # for python2.7 compatibility
-'''
-.. module PhyPraKit   
-   :synopsis: a collection of tools for data analysis
-   recommended for "Physikalisches Praktikum am KIT"
+def A0_readme():
+  # name chosen to make sure sphinx puts this docstring at the top
+  """Package PhyPrakit
 
-.. moduleauthor:: Guenter Quast <g.quast@kit.edu>
-
-**PhyPraKit**  for Data Handling, Visualisation and Analysis
+  **PhyPraKit**  for Data Handling, Visualisation and Analysis
 
   contains the following functions:
 
@@ -76,8 +73,10 @@ from __future__ import print_function  # for python2.7 compatibility
         - smearData()          add random deviations to input data
         - generateXYdata()     generate simulated data 
 
-'''
-
+  """
+  # print the above docstring if called
+  print(A0_readme.__doc__)
+  
 # Author:       G. Quast   Dec. 2015
 # dependencies: PYTHON v2.7 or >v3.5, numpy, matplotlib.pyplot 
 #

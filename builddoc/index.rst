@@ -34,7 +34,7 @@ cources in physics, in use at the faculty of physics at
 Karlsruhe Institute of Technology (KIT). As the modules are
 intended primarily for use by undertraduate students in
 Germany, the documentation is partly in German language,
-in particular the desctiption of the the examples.
+in particular the desctiption of the examples.
 
 Cerated by: 
 
@@ -311,8 +311,8 @@ Module Documentation
 ====================
 
 ..  automodule:: PhyPraKit
-     :members:
      :imported-members:
+     :members:
 
 ..  automodule:: PhyPraKit.iminuitFit
      :members:
