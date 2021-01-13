@@ -25,13 +25,13 @@ def A0_readme():
         - offsetFilter()      subtract an offset in array a
         - meanFilter()        apply sliding average to smoothen data
         - resample()          average over n samples
-        - simplePeakfinder()  find peaks and dips in an array 
-            recommend to ``use convolutionPeakfinder``
+        - simplePeakfinder()  find peaks and dips in an array,  
+          recommend to use ``convolutionPeakfinder``
         - convolutionPeakfinder() find maxima (peaks) in an array
         - convolutionEdgefinder() find maxima of slope (rising) edges in an array
         - Fourier_fft()       fast Fourier transformation of an array
-        - FourierSpectrum()   Fourier transformation of an array 
-            ``(slow, preferably use fft version)``
+        - FourierSpectrum()   Fourier transformation of an array   
+          ``(slow, preferably use fft version)``
         - autocorrelate()     autocorrelation function
 
       3. statistics:
@@ -45,7 +45,7 @@ def A0_readme():
       4. histograms tools:
 
         - barstat()   statistical information (mean, sigma, erroron mean) from bar chart
-        - nhist()    histogram plot based on np.historgram() and plt.bar()  
+        - nhist()    histogram plot based on np.historgram() and plt.bar()    
           ``better use matplotlib.pyplot.hist() instead``  
         - histstat() statistical information from 1d-histogram
         - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()  
@@ -57,10 +57,10 @@ def A0_readme():
       5. linear regression and function fitting:
 
         - linRegression()    linear regression, y=ax+b, with analytical formula
-        - linRegressionXY()  linear regression, y=ax+b, with x and y errors 
+        - linRegressionXY()  linear regression, y=ax+b, with x and y errors  
           ``! deprecated, use `odFit` with linear model instead``
         - kRegression()      linear regression, y=ax+b, with (correlated) 
-                             error on x, and y   
+         errors on x, and y   
          ``! deprecated, consider using `k2Fit` with linear model instead``
         - odFit()            fit function with x and y errors (scipy ODR)
         - mFit()             fit with iminuit with correlated x and y errors,
@@ -730,9 +730,9 @@ def Fourier_fft(t, a):
 
 def FourierSpectrum(t, a, fmax=None):
   '''
-  Fourier transform of amplitude spectrum a(t), for equidistant sampling times
-   (a simple implementaion for didactical purpose only, 
-   consider using ``Fourier_fft()`` )
+  Fourier transform of amplitude spectrum a(t), for equidistant sampling
+  times (a simple implementaion for didactical purpose only,
+  consider using ``Fourier_fft()`` )
 
     Args:
       * t: np-array of time values

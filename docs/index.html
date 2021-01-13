@@ -38,7 +38,7 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p><cite>Version</cite> 2021-01-12</p>
+<div><p><cite>Version</cite> 2021-01-13</p>
 </div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
@@ -48,7 +48,7 @@ cources in physics, in use at the faculty of physics at
 Karlsruhe Institute of Technology (KIT). As the modules are
 intended primarily for use by undertraduate students in
 Germany, the documentation is partly in German language,
-in particular the desctiption of the the examples.</p>
+in particular the desctiption of the examples.</p>
 <p>Cerated by:</p>
 <ul class="simple">
 <li><p>Guenter Quast &lt;guenter (dot) quast (at) online (dot) de&gt;</p></li>
@@ -56,8 +56,9 @@ in particular the desctiption of the the examples.</p>
 <p>A pdf version of this documentation is available here: <a class="reference external" href="PhyPraKit.pdf">PhyPraKit.pdf</a>.</p>
 <div class="section" id="installation">
 <h3>Installation:<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
-<p>To use PhyPraKit, it is sufficient to place the file <cite>PhyPraKit.py</cite>
-in the same directory as the python scripts importing it.</p>
+<p>To use PhyPraKit, it is sufficient to place the the direcotory
+<cite>PhyPraKit</cite> and all the files in it in the same directory as the
+python scripts importing it.</p>
 <p>Installation via <cite>pip</cite> is also supported. The recommendation is
 to use the installation package in the subdirectory <cite>dist</cite> and
 install in user space:</p>
@@ -97,29 +98,15 @@ der Ergebnisse zu gewährleiseten.</p>
 (<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA">http://www.ekp.kit.edu/~quast/CgDA</a>), die im Studienplan
 für den Bachelorstudiengang Physik am KIT seit dem Sommersemester
 2016 angeboten wird, werden Methoden und Software zur
-grafischen Darstellung von Daten, deren Modellierung und
-Auswertung eingeführt.</p>
-<p>Die folgen Links erlauben einen schnellen Überblick über die Inhalte
-der Vorlesung und die Beispeielen aus den Übungen:</p>
+grafischen Darstellung von Daten, deren Auswertung und
+Modellierung eingeführt. Die Installation der empfohlenen
+Software ist unter dem foltenden Link beschrieben:</p>
 <blockquote>
 <div><ul class="simple">
-<li><dl class="simple">
-<dt>Zusammenfassung der Vorlesung und Dokumentation der Code-Beispiele</dt><dd><p><a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-html/CgDA_ZusFas.html</a></p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Installation der Software auf verschiedenen Platformen</dt><dd><ul>
 <li><p>Dokumentation in html:
 <a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html</a></p></li>
 <li><p>Dokumentation in pdf:
 <a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf</a></p></li>
-<li><p>Softwarepakete:
-<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/Software">http://www.ekp.kit.edu/~quast/CgDA/Software</a></p></li>
-</ul>
-</dd>
-</dl>
-</li>
 </ul>
 </div></blockquote>
 <p>Speziell für das “Praktikum zur klassischen Physik” finden sich eine
@@ -128,10 +115,11 @@ kurze Einführung
 sowie die hier dokumentierten einfachen Beispiele als Startpunkt für
 eigene Auswertungen
 (<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/">http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/</a>).</p>
-<p>Die vorliegende Sammlung von Funktionen im Paket <cite>PhyPraKit</cite> enthält
+<p>Die vorliegende Sammlung im Paket <cite>PhyPraKit</cite> enthält
 Funktionen zum Einlesen von Daten aus diversen Quellen, zur
-Datenvisualisierung, Signalbearbeitung und zur statistischen Datenauswertung
-und Modellanpassung sowie Werkzeuge zur Erzeugung simulierter Daten.
+Datenvisualisierung, Signalbearbeitung und zur statistischen
+Datenauswertung und Modellanpassung sowie Werkzeuge zur Erzeugung
+simulierter Daten.
 Dabei wurde absichtlich Wert auf eine einfache, die Prinzipien
 unterstreichende Codierung gelegt und nicht der möglichst effizienten
 bzw. allgemeinensten Implementierung der Vorzug gegeben.</p>
@@ -211,7 +199,7 @@ recommend to use <cite>convolutionPeakfinder</cite></p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="5">
-<li><p>linear regression:</p></li>
+<li><p>linear regression and function fitting:</p></li>
 </ol>
 <blockquote>
 <div><ul class="simple">
@@ -264,10 +252,6 @@ eine Analyse der Autokorrelation zur Frequenzbestimmung durch.</p></li>
 <li><p><cite>test_Fourier.py</cite> illustriert die Durchführung einer
 Fourier-Transfomation eines periodischen Signals, das in
 der PicoScope-Ausgabedatei <cite>Wellenform.csv</cite> enthalten ist.</p></li>
-<li><p><cite>test_kRegression.py</cite> dient zur Anpassung einer Geraden an
-Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit allen
-Messpunkten gemeinsamen (d. h. korrelierten) relativen oder absoluten
-systematischen Fehlern mit dem Paket <cite>kafe</cite>.</p></li>
 <li><p><cite>test_linRegression.py</cite> ist eine einfachere Version mit
 <cite>python</cite>-Bordmitteln zur Anpassung einer Geraden an
 Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung.
@@ -349,6 +333,108 @@ in Physics Lab Courses, recommended for “Physikalisches Praktikum am KIT”</p
 </dd>
 </dl>
 <dl class="py function">
+<dt id="PhyPraKit.A0_readme">
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">A0_readme</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.A0_readme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Package PhyPrakit</p>
+<p><strong>PhyPraKit</strong>  for Data Handling, Visualisation and Analysis</p>
+<p>contains the following functions:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Data input:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>readColumnData() read data and meta-data from text file</p></li>
+<li><p>readCSV()        read data in csv-format from file with header</p></li>
+<li><p>readtxt()        read data in “txt”-format from file with header</p></li>
+<li><p>readPicoScope()  read data from PicoScope</p></li>
+<li><p>readCassy()      read CASSY output file in .txt format</p></li>
+<li><p>labxParser()     read CASSY output file, .labx format</p></li>
+<li><p>writeCSV()       write data in csv-format (opt. with header)</p></li>
+<li><p>writeTexTable()  write data in LaTeX table format</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>signal processing:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>offsetFilter()      subtract an offset in array a</p></li>
+<li><p>meanFilter()        apply sliding average to smoothen data</p></li>
+<li><p>resample()          average over n samples</p></li>
+<li><p>simplePeakfinder()  find peaks and dips in an array,  
+recommend to use <code class="docutils literal notranslate"><span class="pre">convolutionPeakfinder</span></code></p></li>
+<li><p>convolutionPeakfinder() find maxima (peaks) in an array</p></li>
+<li><p>convolutionEdgefinder() find maxima of slope (rising) edges in an array</p></li>
+<li><p>Fourier_fft()       fast Fourier transformation of an array</p></li>
+<li><p>FourierSpectrum()   Fourier transformation of an array   
+<code class="docutils literal notranslate"><span class="pre">(slow,</span> <span class="pre">preferably</span> <span class="pre">use</span> <span class="pre">fft</span> <span class="pre">version)</span></code></p></li>
+<li><p>autocorrelate()     autocorrelation function</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p>statistics:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>wmean()                  weighted mean</p></li>
+<li><p>BuildCovarianceMatrix()  build coraviance matrix</p></li>
+<li><p>Cov2Cor                  covariance matrix to correlation matrix</p></li>
+<li><p>Cor2Cov                  correlations + errors to covariance matrix</p></li>
+<li><p>chi2prob                 caclulate chi^2 probability</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li><p>histograms tools:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>barstat()   statistical information (mean, sigma, erroron mean) from bar chart</p></li>
+<li><p>nhist()    histogram plot based on np.historgram() and plt.bar()    
+<code class="docutils literal notranslate"><span class="pre">better</span> <span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist()</span> <span class="pre">instead</span></code></p></li>
+<li><p>histstat() statistical information from 1d-histogram</p></li>
+<li><p>nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()  
+<code class="docutils literal notranslate"><span class="pre">better</span> <span class="pre">use</span> <span class="pre">matplotlib.pyplot.hist2d()</span> <span class="pre">instead</span></code></p></li>
+<li><p>hist2dstat() statistical information from 1d-histogram</p></li>
+<li><p>profile2d()  “profile plot” for 2d data</p></li>
+<li><p>chi2p_indep2d() chi2 test on independence of data</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>linear regression and function fitting:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>linRegression()    linear regression, y=ax+b, with analytical formula</p></li>
+<li><p>linRegressionXY()  linear regression, y=ax+b, with x and y errors  
+<code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">use</span> <span class="pre">`odFit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></p></li>
+<li><p>kRegression()      linear regression, y=ax+b, with (correlated)</p></li>
+</ul>
+<blockquote>
+<div><p>errors on x, and y   
+<code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">consider</span> <span class="pre">using</span> <span class="pre">`k2Fit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></p>
+</div></blockquote>
+<ul class="simple">
+<li><p>odFit()            fit function with x and y errors (scipy ODR)</p></li>
+<li><p>mFit()             fit with iminuit with correlated x and y errors,
+profile likelihood and contour lines</p></li>
+<li><p>kFit()             fit function with (correlated) errors on x and y (kafe)</p></li>
+<li><p>k2Fit()            fit function with (correlated) errors on x and y (kafe2)</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="6">
+<li><p>simulated data with MC-method:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>smearData()          add random deviations to input data</p></li>
+<li><p>generateXYdata()     generate simulated data</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
 <dt id="PhyPraKit.BuildCovarianceMatrix">
 <code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">BuildCovarianceMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sig</span></em>, <em class="sig-param"><span class="n">sigc</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.BuildCovarianceMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
@@ -406,8 +492,8 @@ in Physics Lab Courses, recommended for “Physikalisches Praktikum am KIT”</p
 <dl class="py function">
 <dt id="PhyPraKit.FourierSpectrum">
 <code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">FourierSpectrum</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">fmax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.FourierSpectrum" title="Permalink to this definition">¶</a></dt>
-<dd><dl>
-<dt>Fourier transform of amplitude spectrum a(t), for equidistant sampling times</dt><dd><p>(a simple implementaion for didactical purpose only, 
+<dd><p>Fourier transform of amplitude spectrum a(t), for equidistant sampling
+times (a simple implementaion for didactical purpose only,
 consider using <code class="docutils literal notranslate"><span class="pre">Fourier_fft()</span></code> )</p>
 <blockquote>
 <div><dl class="simple">
@@ -422,8 +508,6 @@ consider using <code class="docutils literal notranslate"><span class="pre">Four
 </dd>
 </dl>
 </div></blockquote>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1324,7 +1408,7 @@ relative correlated uncertainties</p></li>
 </ul>
 </dd>
 <dt>Returns:</dt><dd><ul class="simple">
-<li><p>nd x nd np-array of float: covariance matrix</p></li>
+<li><p>np-array of float: covariance matrix</p></li>
 </ul>
 </dd>
 </dl>

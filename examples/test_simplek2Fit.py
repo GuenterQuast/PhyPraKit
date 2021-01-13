@@ -16,23 +16,25 @@ import numpy as np, matplotlib.pyplot as plt
 def model(x, a=1., b=0):
    return a*x + b 
 
-# parameters for the generation of test data
-xmin =  1.
-xmax =  10.
-xdata=np.arange(xmin, xmax+1. ,1.)
-ydata=[1.1, 1.9, 2.95, 4.1, 4.9, 6.2, 6.85, 8.05, 8.9, 10.15]
-ey=None
-# fit with kafe2
-par, pare, cor, chi2 = k2Fit(model, xdata, ydata, sy=ey)
+if __name__ == "__main__": # --------------------------------------  
 
-print('*==* data set')
-print('  x = ', xdata)
-print('  y = ', ydata)
-print('  sy = ', ey)
-print('*==* fit result:')
-print("  -> chi2:         %.3g"%chi2)
-np.set_printoptions(precision=3)
-print("  -> parameters:   ", par)
-np.set_printoptions(precision=2)
-print("  -> uncertainties:", pare) 
-print("  -> correlation matrix: \n", cor) 
+# parameters for the generation of test data
+  xmin =  1.
+  xmax =  10.
+  xdata=np.arange(xmin, xmax+1. ,1.)
+  ydata=[1.1, 1.9, 2.95, 4.1, 4.9, 6.2, 6.85, 8.05, 8.9, 10.15]
+  ey=None
+# fit with kafe2
+  par, pare, cor, chi2 = k2Fit(model, xdata, ydata, sy=ey)
+
+  print('*==* data set')
+  print('  x = ', xdata)
+  print('  y = ', ydata)
+  print('  sy = ', ey)
+  print('*==* fit result:')
+  print("  -> chi2:         %.3g"%chi2)
+  np.set_printoptions(precision=3)
+  print("  -> parameters:   ", par)
+  np.set_printoptions(precision=2)
+  print("  -> uncertainties:", pare) 
+  print("  -> correlation matrix: \n", cor) 
