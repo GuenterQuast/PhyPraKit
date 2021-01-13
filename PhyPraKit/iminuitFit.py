@@ -515,7 +515,8 @@ class iminuitFit():
   @staticmethod
   def plotContours(iminuitObject):
     """
-    Plot grid of profile curves and contours lines from iminuit object
+    Plot grid of profile curves and one- and tow-sigma
+    contours lines from iminuit object
 
     Arg: 
       * iminuitObject
@@ -523,14 +524,27 @@ class iminuitFit():
     Returns:
       * matplotlib figure 
     """
+
+    def CL2Chi2(CL):
+      '''
+      Helper function to calculate DeltaChi2 from confidence level CL
+      '''
+      return -2.*np.log(1.-CL)
+
+    def Chi22CL(dc2):
+     '''
+     Helper function to calculate confidence level CL from DeltaChi2
+     '''
+     return (1. - np.exp(-dc2 / 2.))
+
+
     
     npar = iminuitObject.nfit    # numer of parameters
     if __version__< '2':
-      pnams = m.values.keys()  # parameter names
+      pnams = iminuitObject.values.keys()  # parameter names
     else:
   # vers. >=2.0 
-      pnams = m.parameters      # parameter names
-
+      pnams = iminuitObject.parameters      # parameter names
 
     fsize=3.5
     cor_fig, axarr = plt.subplots(npar, npar,
@@ -551,6 +565,9 @@ class iminuitFit():
           plt.ylabel('$\Delta\chi^2$')
         else:
           plt.sca(axarr[jp, ip])
-          m.draw_mncontour(pnams[i], pnams[j]) 
+          if __version__ <'2':
+            iminuitObject.draw_mncontour(pnams[i], pnams[j])
+          else:
+            iminuitObject.draw_mncontour(pnams[i], pnams[j],
+              cl=(Chi22CL(1.), Chi22CL(4.)) )
     return cor_fig 
-            
