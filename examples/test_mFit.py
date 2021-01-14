@@ -56,7 +56,7 @@ if __name__ == "__main__": # --------------------------------------
                                      p0=(1., 0.5),
 #                                     constraints=['A', 1., 0.03],
 #                                     constraints=[0, 1., 0.03],
-                                     plot=True, plot_cor=False)
+                                     plot=True, plot_cor=True)
 
 # Print results to illustrate how to use output
   print('\n*==* Fit Result:')
