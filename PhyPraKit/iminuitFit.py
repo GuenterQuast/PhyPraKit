@@ -307,54 +307,66 @@ class iminuitFit():
       # rebuild covariance matrix during fitting procedure
       self.rebuildCov = True  # flag used in cost function
       self.errdim = 2         # use full covariance matrix in cost function
-      # build static part of covariance Matrix
+
+      # build static (=parameter-independent) part of y-covariance Matrix
       self.nd = len(self.x)
-      if self.ref_toModel:
-        self.staticCov = build_CovarianceMatrix(self.nd,
+      if self.has_rel_yErrors and self.ref_toModel:
+        # only some y-errors are parameter-independent
+        self._staticCov = build_CovarianceMatrix(self.nd,
                        self.ey, eabscor = self.cabsy)
-      else:
-        self.staticCov = build_CovarianceMatrix(self.nd,
-                                                self.ey, erel=self.erely,
-                                                eabscor = self.cabsy, erelcor=self.crely,
+      else: 
+        # all y-errors are parameter-independent
+        self._staticCov = build_CovarianceMatrix(self.nd,
+                                  self.ey, erel=self.erely,
+                                  eabscor = self.cabsy, erelcor=self.crely,
                                                 data=self.y)
+
+      if self.ref_toModel and self.has_rel_yErrors:
+        # build matrix of relative errors
+        self._covy0 = build_CovarianceMatrix(self.nd,
+                                  erel=self.erely,
+                                  erelcor=self.crely,
+                                  data=np.ones(self.nd))
+      else:
+        self._covy0 = None
         
-    def rebuild_Cov(self, mpar):
-      """
-      (Re-)Build the covariance matrix from components
-      """
-      # use pre-built parameter-independent part of Covariance Matrix
-      self.cov = np.array(self.staticCov, copy=True)
-
-      # parameter-dependent y-uncertainties
-      if self.ref_toModel:
-        if self.erely is not None or self.crely is not None:
-          ydat = self.model(self.x, *mpar)       
-          self.cov += build_CovarianceMatrix(self.nd,
-                  erel=self.erely, erelcor=self.crely, data=ydat)
-      # store covariance matrix of y-uncertainties    
-      self.covy = np.array(self.cov, copy=True)
-
-      # add up x-uncertainties (all are parameter-dependent) 
-      if (self.ex is not None and self.ex !=0) or self.erelx is not None:
+      # covariance matrix of x-uncertainties (all are parameter-dependent)
+      if self.has_xErrors:
         self.covx = build_CovarianceMatrix(self.nd,
                               self.ex, self.erelx,
                               self.cabsx, self.crelx,
                               self.x)        
+       #  determine dx for derivative from smallest x-uncertainty
+        self._dx = np.sqrt(min(np.diag(self.covx)))/10.
+      else:
+        self.covx = None
+
+
+    def rebuild_Cov(self, mpar):
+      """
+      (Re-)Build the covariance matrix from components
+      """
+      # start from pre-built parameter-independent part of Covariance Matrix
+      self.cov = np.array(self._staticCov, copy=True)
+
+      # add matrix of parameter-dependent y-uncertainties
+#      if self.ref_toModel and self.has_rel_yErrors:
+      if self._covy0 is not None:
+        ydat = self.model(self.x, *mpar)       
+        self.cov += self._covy0 * np.outer(ydat, ydat)
+      # store covariance matrix of y-uncertainties    
+      self.covy = np.array(self.cov, copy=True)
+
+      # add projected x errors
+      if self.has_xErrors:
        # determine derivatives of model function w.r.t. x,
-       #  distance dx from smallest uncertaintey
-        dx = np.sqrt(min(np.diag(self.covx)))/10.
-        mprime = 0.5/dx*(self.model(self.x+dx,*mpar)-self.model(self.x-dx,*mpar))
+        mprime = 0.5 / self._dx * (
+                 self.model(self.x + self._dx,*mpar) - 
+                 self.model(self.x - self._dx,*mpar) )
         # project on y and add to covariance matrix
         self.cov += np.outer(mprime, mprime) * self.covx
 
- #     print('*!!! rebuild_Cov:')
- #     print('covy:\n',covy)
- #     print('covx=:\n',covx)
- #     print('deriv:}n',mprime)
- #     if covx is not None: print('covx_proj:\n',covx_projected)
- #     sys.exit()
-      
-      # set inverse covariance matrix 
+      # inverse covariance matrix 
       self.iCov = np.matrix(self.cov).I
 
     def get_Cov(self):
@@ -365,6 +377,9 @@ class iminuitFit():
 
     def get_yCov(self):
       return self.covy
+    
+    def get_iCov(self):
+      return self.iCov
       
   # define custom cost function for iminuit
   class LSQwithCov:
