@@ -68,8 +68,8 @@ if __name__ == "__main__": # --------------------------------------
                                      plot_cor=True,
                                      quiet=False,
                                      axis_labels=['x', 'y   \  f(x, *par)'], 
-                                     data_legend = 'data',    
-                                     model_legend = 'model')
+                                     data_legend = 'random data',    
+                                     model_legend = 'exponential model')
 
 # Print results to illustrate how to use output
   print('\n*==* Fit Result:')

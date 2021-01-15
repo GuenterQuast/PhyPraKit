@@ -1476,7 +1476,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
   #   numpy arrays with fit result: parameter values,
   #   negative and positive parameter uncertainties,
   #   correlation matrix and chi2
-  return Fit.result()
+  return Fit.getResult()
 
 def kFit(func, x, y, sx=None, sy=None,
          p0=None, p0e=None,

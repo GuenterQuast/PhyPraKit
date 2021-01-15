@@ -34,6 +34,7 @@
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
 
+import sys
 import numpy as np, matplotlib.pyplot as plt 
 from iminuit import __version__, Minuit
 from inspect import signature, Parameter  
@@ -117,17 +118,33 @@ class iminuitFit():
   """
 
   def __init__(self):
-    self.options()
 
+    # no data or model provided yet
+    self.data = None
+    self.costf = None
+    # no fit done
+    self.migradResult = None
+    self.minosResult = None
+    # default options
+    self.refModel=True
+    self.run_minos = True
+    self.quiet = True
+    
   def options(self,
-              relative_refers_to_model=True,
-              run_minos=True):
+              relative_refers_to_model=None,
+              run_minos=None,
+              quiet=None):
     # define options for fit
-    # - ? rel. errors refer to data or model
-    # - ? run minos
-    self.refModel=relative_refers_to_model
-    self.run_minos = run_minos
-    self.quiet=True
+    #   - rel. errors refer to model else data
+    #   - run minos else don*t run minos 
+    #   - don*t provide printout else verbose printout 
+
+    if relative_refers_to_model is not None:
+      self.refModel = relative_refers_to_model
+    if run_minos is not None:   
+      self.run_minos = run_minos
+    if quiet is not None:
+      self.quiet = quiet
     
   def init_data(self,
                 x, y,             
@@ -182,28 +199,36 @@ class iminuitFit():
         self.minuit.print_level = 0.
 
   def do_fit(self):
-    # perform initial fit
-    result = self.minuit.migrad()  # find minimum of cost function
+
+    if self.data is None:
+      print(' !!! iminuitFit: no data object defined - call init_data()')
+      sys.exit('iminuitFit Error: no data object')
+    if self.costf is None:
+      print(' !!! iminuitFit: no fit object defined - call init_fit()')
+      sys.exit('iminuitFit Error: no fit object')
+    
+    # perform initial fit if everything ok
+    self.migradResult = self.minuit.migrad()  # find minimum of cost function
     # possibly, need to iterate fit
     if self.iterateFit:
       if not self.quiet:
-        print( '*==* mFit iterating ',
+        print( '*==* iminuitFit iterating ',
                'to take into account parameter-dependent uncertainties')
 
       # enable dynamic calculation of covariance matrix
       self.data.set_dynamicCovMat(self.refModel, self.costf.model)
       # fit with dynamic recalculation of covariance matrix
-      result = self.minuit.migrad()
+      self.migradResult = self.minuit.migrad()
 
     # run profile likelihood scan to check for asymmetric errors
     if self.run_minos:
-      minosResult = self.minos_err = self.minuit.minos()
-    else:
-      minosResult = None
+      self.minosResult = self.minuit.minos()
 
-    return result, minosResult
+    self.storeResult()
+    
+    return self.migradResult, self.minosResult
   
-  def result(self):
+  def storeResult(self):
   # report results as numpy arrays
     m=self.minuit
     # extract result parametes !!! this part depends on iminuit version !!!
@@ -222,7 +247,7 @@ class iminuitFit():
       parerrs = np.array(m.errors) # parameter uncertainties
       cov=np.array(m.covariance)
       
-    if self.run_minos:
+    if self.minosResult is not None:
       pmerrs = [] 
     #  print("MINOS errors:")
       if __version__< '2':
@@ -235,22 +260,22 @@ class iminuitFit():
           pmerrs.append([m.merrors[pnam].lower, m.merrors[pnam].upper])
       #  print(f"{3*' '}{pnam}: {m.merrors[pnam].lower:.2g}",
       #                      f"+{m.merrors[pnam].upper:.2g}")      
-      pmerrs=np.array(pmerrs)
+      self.Errors=np.array(pmerrs)
     else:
-      pmerrs = np.array(list(zip(-parerrs, parerrs)))
+      self.Errors = np.array(list(zip(-parerrs, parerrs)))
       
     # remember results
-    self.CovarianceMatrix = np.array(cov, copy=True)
-    self.CorrelationMatrix = cov/np.outer(parerrs, parerrs)
-    self.ParameterErrors = np.array(parerrs, copy=True)
+    self.MigradErrors = np.array(parerrs, copy=True)
     self.ParameterValues = np.array(parvals, copy=True)
     self.ParameterNames = parnames
-    self.MinosErrors = np.array(pmerrs, copy = True)
+    self.CovarianceMatrix = np.array(cov, copy=True)
+    self.CorrelationMatrix = cov/np.outer(parerrs, parerrs)
     self.Chi2 = chi2
     self.NDoF = ndof
 
     #return result arrays
-    return (self.ParameterValues, self.MinosErrors,
+  def getResult(self):
+    return (self.ParameterValues, self.Errors,
             self.CorrelationMatrix, self.Chi2)
 
   class DataUncertainties:
@@ -507,10 +532,10 @@ class iminuitFit():
                 plot_band=True): 
     """
     Plot model function and data 
+    
+    Uses iminuitObject abd cost Fuction of type LSQwithCov
 
     Args: 
-      * iminuitObject
-      * cost Fuction of type LSQwithCov
       * list of str: axis labels
       * str: legend for data
       * str: legend for model 
@@ -524,17 +549,11 @@ class iminuitFit():
     cf = self.costf  # cost function object
 
   # retrieve fit results
-    pvals, pmerrs, cor, chi2 = self.result()
+    pvals, pmerrs, cor, chi2 = self.getResult()
     pcov = self.CovarianceMatrix
     pnams = self.ParameterNames
     ndof = cf.ndof
-    
-    # find out if minos ran
-    if m.merrors:
-       minos_done = True
-    else:
-       minos_done = False
- 
+
   # get data
     x = cf.data.x
     y = cf.data.y
@@ -562,7 +581,7 @@ class iminuitFit():
     plt.plot(xplt, yplt, label=model_legend)
     plt.xlabel(axis_labels[0], size='x-large')
     plt.ylabel(axis_labels[1], size='x-large')
-
+    plt.grid()
    # draw error band around model function
     if plot_band:
       DeltaF = self.getFunctionError(xplt, cf.model, pvals, pcov)
@@ -572,14 +591,13 @@ class iminuitFit():
     # display legend with some fit info
     fit_info = [
     f"$\\chi^2$ / $n_\\mathrm{{dof}}$ = {chi2:.1f} / {ndof}",]
-    if minos_done:
+    if self.minosResult is not None:
       for p, v, e in zip(pnams, pvals, pmerrs):
         fit_info.append(f"{p} = ${v:.3f}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$")
     else:
      for p, v, e in zip(pnams, pvals, perrs):
         fit_info.append(f"{p} = ${v:.3f}\pm{{{e:.2g}}}$")
     plt.legend(title="\n".join(fit_info))      
-
 
     return fig_model
   
