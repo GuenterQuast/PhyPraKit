@@ -203,16 +203,6 @@ class iminuitFit():
 
     return result, minosResult
   
-  def plot(self, **kwargs):
-  # plot model and data
-      fig_model = self.plotModel(self.minuit, self.costf, **kwargs)
-      return fig_model
-
-  def plot_cor(self):
-  # plot profile likelihoods and contours 
-      fig_cor = self.plotContours(self.minuit)
-      return fig_cor
-      
   def result(self):
   # report results as numpy arrays
     m=self.minuit
@@ -231,8 +221,7 @@ class iminuitFit():
       parvals = np.array(m.values) # best-fit values
       parerrs = np.array(m.errors) # parameter uncertainties
       cov=np.array(m.covariance)
-    cor = cov/np.outer(parerrs, parerrs)
-
+      
     if self.run_minos:
       pmerrs = [] 
     #  print("MINOS errors:")
@@ -250,8 +239,19 @@ class iminuitFit():
     else:
       pmerrs = np.array(list(zip(-parerrs, parerrs)))
       
+    # remember results
+    self.CovarianceMatrix = np.array(cov, copy=True)
+    self.CorrelationMatrix = cov/np.outer(parerrs, parerrs)
+    self.ParameterErrors = np.array(parerrs, copy=True)
+    self.ParameterValues = np.array(parvals, copy=True)
+    self.ParameterNames = parnames
+    self.MinosErrors = np.array(pmerrs, copy = True)
+    self.Chi2 = chi2
+    self.NDoF = ndof
+
     #return result arrays
-    return parvals, pmerrs, cor, chi2 
+    return (self.ParameterValues, self.MinosErrors,
+            self.CorrelationMatrix, self.Chi2)
 
   class DataUncertainties:
     """
@@ -349,7 +349,7 @@ class iminuitFit():
         self.covx = build_CovarianceMatrix(self.nd,
                               self.ex, self.erelx,
                               self.cabsx, self.crelx,
-                              self.x)        
+                              self.x)
        #  determine dx for derivative from smallest x-uncertainty
         self._dx = np.sqrt(min(np.diag(self.covx)))/10.
       else:
@@ -461,10 +461,48 @@ class iminuitFit():
   # --- end definition of class LSQwithCov ----
 
   @staticmethod
-  def plotModel(iminuitObject, costFunction,
+  def getFunctionError(x, model, pvals, covp):
+    """ determine error of model at x  
+    
+    Formula: 
+    Delta(x) = sqrt( sum_i,j (df/dp_i(x) df/dp_j(x) Vp_i,j) )
+
+    Args:
+
+      * x: scalar or np aray of x values
+      * model: model function
+      * pvlas: parameter values
+      * covp: covariance matrix of parameters
+
+    Returns:
+
+      * model uncertainty, same length as x
+
+    """
+
+    # calculate derivatives of model w.r.t parameters    
+    #    parameter step size 
+    dp = 0.01 * np.sqrt(np.diag(covp))
+    # derivative df/dp_j at each x_i
+    Delta = np.zeros(len(x))
+    for i in range(len(x)):
+      dfdp = np.zeros(len(pvals))
+      for j in range(len(pvals)): 
+        p_plus = np.array(pvals, copy=True)
+        p_plus[j] = pvals[j] + dp[j]
+        p_minus = np.array(pvals, copy=True)
+        p_minus[j] = pvals[j] - dp[j]
+        dfdp[j] = 0.5 / dp[j] * (
+                      model(x[i], *p_plus) - 
+                      model(x[i], *p_minus) )
+      Delta[i] = np.sum(np.outer(dfdp, dfdp) * covp)
+    return np.sqrt(Delta) 
+  
+  def plotModel(self,
                 axis_labels=['x', 'y = f(x, *par)'], 
                 data_legend = 'data',    
-                model_legend = 'fit'): 
+                model_legend = 'fit',
+                plot_band=True): 
     """
     Plot model function and data 
 
@@ -479,37 +517,22 @@ class iminuitFit():
       * matplotlib figure
     """
     
-  # extract parameter properties
-    m = iminuitObject
-    cf = costFunction
+  # access low-level fit objects
+    m = self.minuit  # minos object
+    cf = self.costf  # cost function object
+
+  # retrieve fit results
+    pvals, pmerrs, cor, chi2 = self.result()
+    pcov = self.CovarianceMatrix
+    pnams = self.ParameterNames
+    ndof = cf.ndof
+    
     # find out if minos ran
     if m.merrors:
        minos_done = True
     else:
        minos_done = False
  
-  # get fit results
-    pmerrs = []    
-    if __version__< '2':
-      pnams = m.values.keys()     # parameter names
-      pvals = np.array(m.values.values()) # best-fit values
-      if minos_done:
-        for pnam in m.merrors.keys():
-          pmerrs.append([m.merrors[pnam][2], m.merrors[pnam][3]])
-      else:
-        perrs=np.array(m.errors.values())
-    else:   # vers. >=2.0 
-      pnams = m.parameters      # parameter names
-      pvals = np.array(m.values) # best-fit values
-      if minos_done:
-        for pnam in m.merrors.keys():
-          pmerrs.append([m.merrors[pnam].lower, m.merrors[pnam].upper])
-      else:
-        perrs=np.array(m.errors)
-    pmerrs=np.array(pmerrs)
-    chi2 = m.fval               # chi2 
-    ndof =costFunction.ndof
-
   # get data
     x = cf.data.x
     y = cf.data.y
@@ -525,17 +548,26 @@ class iminuitFit():
       else:
         ex = np.sqrt(ex)
 
-  # draw data and fitted line
+   # draw data and fitted line
     fig_model = plt.figure(figsize=(7.5, 6.5))
     if ex is not None:
       plt.errorbar(x, y, xerr=ex, yerr=ey, fmt='x', label=data_legend)
     else:
       plt.errorbar(x, y, ey, fmt="x", label='data')
-    xplt=np.linspace(x[0], x[-1], 100)
-    plt.plot(xplt, costFunction.model(xplt, *pvals), label=model_legend)
+    xmin, xmax = plt.xlim()
+    xplt=np.linspace(xmin, xmax, 100)
+    yplt = cf.model(xplt, *pvals)
+    plt.plot(xplt, yplt, label=model_legend)
     plt.xlabel(axis_labels[0], size='x-large')
     plt.ylabel(axis_labels[1], size='x-large')
-   # display legend with some fit info
+
+   # draw error band around model function
+    if plot_band:
+      DeltaF = self.getFunctionError(xplt, cf.model, pvals, pcov)
+      plt.gca().fill_between(xplt, yplt+DeltaF, yplt-DeltaF, alpha=0.1,
+                           color='green')    
+
+    # display legend with some fit info
     fit_info = [
     f"$\\chi^2$ / $n_\\mathrm{{dof}}$ = {chi2:.1f} / {ndof}",]
     if minos_done:
@@ -545,11 +577,12 @@ class iminuitFit():
      for p, v, e in zip(pnams, pvals, perrs):
         fit_info.append(f"{p} = ${v:.3f}\pm{{{e:.2g}}}$")
     plt.legend(title="\n".join(fit_info))      
+
+
     return fig_model
   
 # plot array of profiles and contours
-  @staticmethod
-  def plotContours(iminuitObject):
+  def plotContours(self):
     """
     Plot grid of profile curves and one- and tow-sigma
     contours lines from iminuit object
@@ -574,13 +607,13 @@ class iminuitFit():
      return (1. - np.exp(-dc2 / 2.))
 
 
-    
-    npar = iminuitObject.nfit    # numer of parameters
+    m = self.minuit     
+    npar = m.nfit    # numer of parameters
     if __version__< '2':
-      pnams = iminuitObject.values.keys()  # parameter names
+      pnams = m.values.keys()  # parameter names
     else:
   # vers. >=2.0 
-      pnams = iminuitObject.parameters      # parameter names
+      pnams = m.parameters      # parameter names
 
     fsize=3.5
     cor_fig, axarr = plt.subplots(npar, npar,
@@ -597,13 +630,13 @@ class iminuitFit():
         elif ip == jp:
          # plot profile
           plt.sca(axarr[ip, ip])
-          iminuitObject.draw_mnprofile(pnams[i], subtract_min=True)
+          m.draw_mnprofile(pnams[i], subtract_min=True)
           plt.ylabel('$\Delta\chi^2$')
         else:
           plt.sca(axarr[jp, ip])
           if __version__ <'2':
-            iminuitObject.draw_mncontour(pnams[i], pnams[j])
+            m.draw_mncontour(pnams[i], pnams[j])
           else:
-            iminuitObject.draw_mncontour(pnams[i], pnams[j],
+            m.draw_mncontour(pnams[i], pnams[j],
               cl=(Chi22CL(1.), Chi22CL(4.)) )
     return cor_fig 

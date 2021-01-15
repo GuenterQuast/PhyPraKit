@@ -1456,14 +1456,14 @@ def mFit(fitf, x, y, sx = None, sy = None,
       
   # produce figure with data and model
   if plot:
-    fig = Fit.plot(axis_labels=axis_labels,
+    fig = Fit.plotModel(axis_labels=axis_labels,
                    data_legend=data_legend,
                    model_legend=model_legend)
 
   # figure with visual representation of covariances
   #   prifile likelihood scan and confidence contours
   if plot_cor:
-    fig_cor = Fit.plot_cor()
+    fig_cor = Fit.plotContours()
 
   # show plots on screen
   if plot or plot_cor:
