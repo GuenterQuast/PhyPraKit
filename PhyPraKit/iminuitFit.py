@@ -566,7 +566,7 @@ class iminuitFit():
    # draw error band around model function
     if plot_band:
       DeltaF = self.getFunctionError(xplt, cf.model, pvals, pcov)
-      plt.gca().fill_between(xplt, yplt+DeltaF, yplt-DeltaF, alpha=0.1,
+      plt.fill_between(xplt, yplt+DeltaF, yplt-DeltaF, alpha=0.1,
                            color='green')    
 
     # display legend with some fit info
