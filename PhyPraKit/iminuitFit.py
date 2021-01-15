@@ -3,10 +3,10 @@
   Fitting with `iminiut` (https://iminuit.readthedocs.io/en/stable/)
 
   This class `iminuitFit.py` uses iminuit for fitting a model 
-  to data with indepentent and/or correlated absoute and/or 
+  to data with independent and/or correlated absolute and/or 
   relative uncertainties in the x- and y-directions. 
    
-  A user-defined cost function in iminuit with uncertainties 
+  A user-defined cost function in `iminuit` with uncertainties 
   that depend on model parameters is dynamically updated during 
   the fitting process. Data points with relative errors can thus
   be referred to the model instead of the data. The derivative
@@ -20,16 +20,16 @@
 
   The main features of this package are:
   - definition of a custom cost function 
-  - implement least squares method with correlated errors
-  - correlated x-uncertainties by projection on the y-axis
-  - relative errors with reference to the model values  
-  - evaluation of profile likelihoods, supporting asymetric errors 
+  - implementation of the least squares method with correlated errors
+  - support for correlated x-uncertainties by projection on the y-axis
+  - support of relative errors with reference to the model values  
+  - evaluation of profile likelihoods to determine asymetric uncertainties
   - plotting of profile likeliood and confidence contours
 
   supports iminuit vers. < 2.0 and >= 2.0
 
   A fully functional example is provided by the function `mFit()`
-  in PhyPraKit and the python script `examples/test_mFit.py`
+  in PhyPraKit and the Python script `examples/test_mFit.py`
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
@@ -51,15 +51,15 @@ def build_CovarianceMatrix(nd, e=None, erel=None,
 
   Args:
     * nd: number of data points
-    * e: scalar, array of float, 2d-array of float: 
+    * e: scalar, array of float, or 2d-array of float: 
       independent uncertainties or a full covariance matrix
     * erel: scalar, array of float, 2d-array of float: 
       independent relative uncertainties or a full covariance matrix
-    * eabscor: floats or array of float of list of arrays of float:
+    * eabscor: float or array of float of list of arrays of float:
       absolute correlated uncertainties
-    * erelcor: floats or array of float of list of arrays of float:
+    * erelcor: float or array of float of list of arrays of float:
       relative correlated uncertainties
-    * data: array of float: data, needed only for relative uncertainties
+    * data: array of float: data, needed (only) for relative uncertainties
 
   Returns:
     * np-array of float: covariance matrix 
@@ -78,8 +78,12 @@ def build_CovarianceMatrix(nd, e=None, erel=None,
     
   # 2. add relative errors
   if erel is not None:
-    er_ = np.array(erel) * data  # ensure array of length nd
-    cov += np.diag(er_*er_)      # set diagonal elements of covariance matrix
+    er_ = np.asarray(erel)
+    if er_.ndim == 2: # already got a matrix, take as covariance matrix
+      cov += er_ * np.outer(nd, nd)
+    else:
+      er_ = np.array(erel) * data  # ensure array of length nd
+      cov += np.diag(er_*er_)      # diagonal elements of covariance matrix
         
   # 3. add absolute, correlated error components  
   if eabscor is not None:
@@ -90,8 +94,9 @@ def build_CovarianceMatrix(nd, e=None, erel=None,
     else:            # got a list, add each component
       for c in eabscor:
         c_ = np.array(c)*np.ones(nd)
-        cov += np.outer(c_, c_) 
-   # 4. add relative, correlated error components
+        cov += np.outer(c_, c_)
+        
+  # 4. add relative, correlated error components
   if erelcor is not None:
     ear=np.asarray(erelcor)
     if len(np.shape(ear) ) < 2: # has one entry
@@ -122,7 +127,8 @@ class iminuitFit():
     # - ? run minos
     self.refModel=relative_refers_to_model
     self.run_minos = run_minos
-
+    self.quiet=True
+    
   def init_data(self,
                 x, y,             
                 ex=None, ey=1.,
@@ -131,9 +137,10 @@ class iminuitFit():
                 cabsy=None, crely=None):
 
     # create data object
-    self.data = self.Data_and_Uncertainties(x, y, ex, ey,
-                          erelx, erely, cabsx, crelx, cabsy, crely )
-
+    self.data = self.DataUncertainties(x, y, ex, ey,
+                    erelx, erely, cabsx, crelx, cabsy, crely,
+                    quiet=self.quiet)
+    
     # set flags for steering of fit process in do_fit()
     self.iterateFit = self.data.has_xErrors or(
          self.data.has_rel_yErrors and self.refModel)
@@ -142,7 +149,7 @@ class iminuitFit():
     # set model function
     self.model = model
     # create cost function
-    self.costf = self.LSQwithCov(self.data, self.model)
+    self.costf = self.LSQwithCov(self.data, self.model, quiet=self.quiet)
     if constraints is not None:
       self.costf.addConstraints(constraints)
 
@@ -164,17 +171,24 @@ class iminuitFit():
 
     # create Minuit object
     if __version__ < '2':
-      self.minuit = Minuit(self.costf, **ipardict, errordef=1.)
+      if self.quiet:
+        print_level=0
+      self.minuit = Minuit(self.costf, **ipardict,
+                           errordef=1., print_level=print_level)
     else:
       self.minuit = Minuit(self.costf, **ipardict)  
       self.minuit.errordef = 1.
+      if self.quiet:
+        self.minuit.print_level = 0.
 
   def do_fit(self):
     # perform initial fit
     result = self.minuit.migrad()  # find minimum of cost function
     # possibly, need to iterate fit
     if self.iterateFit:
-      print('*==* mFit iterating to take into account parameter-dependent uncertainties')
+      if not self.quiet:
+        print( '*==* mFit iterating ',
+               'to take into account parameter-dependent uncertainties')
 
       # enable dynamic calculation of covariance matrix
       self.data.set_dynamicCovMat(self.refModel, self.costf.model)
@@ -189,9 +203,9 @@ class iminuitFit():
 
     return result, minosResult
   
-  def plot(self):
+  def plot(self, **kwargs):
   # plot model and data
-      fig_model = self.plotModel(self.minuit, self.costf)
+      fig_model = self.plotModel(self.minuit, self.costf, **kwargs)
       return fig_model
 
   def plot_cor(self):
@@ -239,13 +253,14 @@ class iminuitFit():
     #return result arrays
     return parvals, pmerrs, cor, chi2 
 
-  class Data_and_Uncertainties:
+  class DataUncertainties:
     """
     class to handle data and uncertainties
     """
 
     def __init__(self, x, y, 
-          ex, ey, erelx, erely, cabsx, crelx, cabsy, crely):
+                 ex, ey, erelx, erely, cabsx, crelx, cabsy, crely,
+                 quiet=True):
       self.x = np.asarray(x) # abscissa - "x values"
       self.y = np.asarray(y) # ordinate - "y values"
       self.ex = ex            # independent uncertainties x
@@ -256,10 +271,10 @@ class iminuitFit():
       self.crelx = crelx      # correlated relative uncertainties x
       self.cabsy = cabsy      # correlated absolute uncertainties y
       self.crely = crely      # correlated relative uncertainties y
+      self.quiet = quiet      # no informative printout if True
 
       self.nd = len(x) 
       self.model = None # no model defined yet
-
 
       # set flags for steering of fit process in do_fit()
       if ex is not None or erelx is not None \
@@ -273,7 +288,6 @@ class iminuitFit():
       else:
         self.has_rel_yErrors = False
 
-      
       # build (initial) covariance matrix (ignore x-errors)
       cov_initial = build_CovarianceMatrix(self.nd, ey, erely, cabsy, crely, y)
 
@@ -387,11 +401,13 @@ class iminuitFit():
     custom Least-SQuares cost function with error matrix
     """
   
-    def __init__(self, data, model):
+    def __init__(self, data, model, quiet=True):
       from iminuit.util import describe, make_func_code
 
       self.data = data
-      self.model = model 
+      self.model = model
+      self.quiet = quiet
+      
       # set proper signature of model function for iminuit
       self.pnams = describe(model)[1:]
       self.func_code = make_func_code(self.pnams)
@@ -444,16 +460,21 @@ class iminuitFit():
 
   # --- end definition of class LSQwithCov ----
 
-  # --- helper functions ----
   @staticmethod
-  def plotModel(iminuitObject, costFunction):
+  def plotModel(iminuitObject, costFunction,
+                axis_labels=['x', 'y = f(x, *par)'], 
+                data_legend = 'data',    
+                model_legend = 'fit'): 
     """
     Plot model function and data 
 
     Args: 
       * iminuitObject
       * cost Fuction of type LSQwithCov
- 
+      * list of str: axis labels
+      * str: legend for data
+      * str: legend for model 
+
     Returns:
       * matplotlib figure
     """
@@ -507,13 +528,13 @@ class iminuitFit():
   # draw data and fitted line
     fig_model = plt.figure(figsize=(7.5, 6.5))
     if ex is not None:
-      plt.errorbar(x, y, xerr=ex, yerr=ey, fmt='x', label='data')
+      plt.errorbar(x, y, xerr=ex, yerr=ey, fmt='x', label=data_legend)
     else:
       plt.errorbar(x, y, ey, fmt="x", label='data')
     xplt=np.linspace(x[0], x[-1], 100)
-    plt.plot(xplt, costFunction.model(xplt, *pvals), label="fit")
-    plt.xlabel('x',size='x-large')
-    plt.ylabel('y = f(x, *par)', size='x-large')
+    plt.plot(xplt, costFunction.model(xplt, *pvals), label=model_legend)
+    plt.xlabel(axis_labels[0], size='x-large')
+    plt.ylabel(axis_labels[1], size='x-large')
    # display legend with some fit info
     fit_info = [
     f"$\\chi^2$ / $n_\\mathrm{{dof}}$ = {chi2:.1f} / {ndof}",]
@@ -542,13 +563,13 @@ class iminuitFit():
 
     def CL2Chi2(CL):
       '''
-      Helper function to calculate DeltaChi2 from confidence level CL
+      calculate DeltaChi2 from confidence level CL
       '''
       return -2.*np.log(1.-CL)
 
     def Chi22CL(dc2):
      '''
-     Helper function to calculate confidence level CL from DeltaChi2
+     calculate confidence level CL from DeltaChi2
      '''
      return (1. - np.exp(-dc2 / 2.))
 

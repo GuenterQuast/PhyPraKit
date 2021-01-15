@@ -1385,7 +1385,10 @@ def mFit(fitf, x, y, sx = None, sy = None,
          xabscor = None, xrelcor = None,        
          yabscor = None, yrelcor = None,
          p0 = None, constraints = None, 
-         plot = True, plot_cor = True, quiet = False):
+         plot = True, plot_cor = True, quiet = False,
+         axis_labels=['x', 'y = f(x, *par)'], 
+         data_legend = 'data',    
+         model_legend = 'model'): 
   """
     fit an arbitrary function f(x) to data
     with uncorrelated and correlated absolute and/or relative errors on y 
@@ -1405,6 +1408,10 @@ def mFit(fitf, x, y, sx = None, sy = None,
       * constraints: list or list of lists with [name or id, value, error]
       * plot: show data and model if True
       * plot_cor: show profile liklihoods and conficence contours
+      * quiet: suppress printout
+      * list of str: axis labels
+      * str: legend for data
+      * str: legend for model 
 
     Returns:
       * np-array of float: parameter values
@@ -1414,6 +1421,12 @@ def mFit(fitf, x, y, sx = None, sy = None,
   """
 
   from .iminuitFit import iminuitFit
+
+    # ... check if errors are provided ...
+  if sy is None:
+    sy = np.ones(len(y))
+    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
+  
 
   # set up a fit object
   Fit = iminuitFit()
@@ -1443,7 +1456,9 @@ def mFit(fitf, x, y, sx = None, sy = None,
       
   # produce figure with data and model
   if plot:
-    fig = Fit.plot()
+    fig = Fit.plot(axis_labels=axis_labels,
+                   data_legend=data_legend,
+                   model_legend=model_legend)
 
   # figure with visual representation of covariances
   #   prifile likelihood scan and confidence contours
