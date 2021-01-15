@@ -2,6 +2,13 @@
 """test_mFit.py
    Fitting example with iminiut
 
+   Uses function PhyPraKit.mFit, which in turn uses iminuitFit
+
+   This is a rahter complete example showing 
+   independente and correlated,
+   absolute and relative uncertainties 
+   in x and y direction. 
+   
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 """
@@ -57,6 +64,7 @@ if __name__ == "__main__": # --------------------------------------
 #                                     constraints=['A', 1., 0.03],
 #                                     constraints=[0, 1., 0.03],
                                      plot=True,
+                                     plot_band=True,
                                      plot_cor=True,
                                      quiet=False,
                                      axis_labels=['x', 'y   \  f(x, *par)'], 

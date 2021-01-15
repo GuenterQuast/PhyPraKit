@@ -1385,7 +1385,8 @@ def mFit(fitf, x, y, sx = None, sy = None,
          xabscor = None, xrelcor = None,        
          yabscor = None, yrelcor = None,
          p0 = None, constraints = None, 
-         plot = True, plot_cor = True, quiet = False,
+         plot = True, plot_cor = True,
+         plot_band=True, quiet = False,
          axis_labels=['x', 'y = f(x, *par)'], 
          data_legend = 'data',    
          model_legend = 'model'): 
@@ -1408,6 +1409,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
       * constraints: list or list of lists with [name or id, value, error]
       * plot: show data and model if True
       * plot_cor: show profile liklihoods and conficence contours
+      * plot_band: plot uncertainty band around model function
       * quiet: suppress printout
       * list of str: axis labels
       * str: legend for data
@@ -1458,7 +1460,8 @@ def mFit(fitf, x, y, sx = None, sy = None,
   if plot:
     fig = Fit.plotModel(axis_labels=axis_labels,
                    data_legend=data_legend,
-                   model_legend=model_legend)
+                   model_legend=model_legend,
+                        plot_band=plot_band)
 
   # figure with visual representation of covariances
   #   prifile likelihood scan and confidence contours

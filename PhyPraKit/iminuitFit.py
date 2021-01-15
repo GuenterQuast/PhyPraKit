@@ -480,22 +480,24 @@ class iminuitFit():
 
     """
 
-    # calculate derivatives of model w.r.t parameters    
-    #    parameter step size 
+    # calculate partial derivatives of model w.r.t parameters    
+
+    #   parameter step size 
     dp = 0.01 * np.sqrt(np.diag(covp))
-    # derivative df/dp_j at each x_i
-    Delta = np.zeros(len(x))
+    #   derivative df/dp_j at each x_i
+    dfdp = np.empty( (len(pvals), len(x)) )
+    for j in range(len(pvals)): 
+      p_plus = np.array(pvals, copy=True)
+      p_plus[j] = pvals[j] + dp[j]
+      p_minus = np.array(pvals, copy=True)
+      p_minus[j] = pvals[j] - dp[j]
+      dfdp[j] = 0.5 / dp[j] * (
+                    model(x, *p_plus) - 
+                    model(x, *p_minus) )
+    #   square of uncertainties on function values
+    Delta= np.empty(len(x))
     for i in range(len(x)):
-      dfdp = np.zeros(len(pvals))
-      for j in range(len(pvals)): 
-        p_plus = np.array(pvals, copy=True)
-        p_plus[j] = pvals[j] + dp[j]
-        p_minus = np.array(pvals, copy=True)
-        p_minus[j] = pvals[j] - dp[j]
-        dfdp[j] = 0.5 / dp[j] * (
-                      model(x[i], *p_plus) - 
-                      model(x[i], *p_minus) )
-      Delta[i] = np.sum(np.outer(dfdp, dfdp) * covp)
+      Delta[i] = np.sum(np.outer(dfdp[:,i], dfdp[:,i]) * covp)
     return np.sqrt(Delta) 
   
   def plotModel(self,
