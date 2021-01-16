@@ -1434,7 +1434,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
   Fit = iminuitFit()
 
   # set some options
-  Fit.options(run_minos=True, relative_refers_to_model=True)
+  Fit.setOptions(run_minos=True, relative_refers_to_model=True)
 
   # pass data and uncertainties to fit object
   Fit.init_data(x, y,

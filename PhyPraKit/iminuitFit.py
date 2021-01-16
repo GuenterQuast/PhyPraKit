@@ -110,11 +110,37 @@ def build_CovarianceMatrix(nd, e=None, erel=None,
   # return complete matrix
   return cov
 
-
 class iminuitFit():
   """  
   Fit an arbitrary funtion f(x, *par) to data with
    independent and/or correlated absolute and/or relative untertainties
+    
+   Public methods:
+
+   - init_data():     initialze data and uncertainties
+   - init_fit():      initialize fit (data + model)
+   - setOptions():    set options
+   - do_fit():        perform fit
+   - plotModel():     plot Model function and data
+   - plotContours():  plot profile likelihoods and confidence contours 
+   - getResult():     access to results 
+
+   Pubic data members:
+
+   - ParameterNames:     names of parameters (as specified in model function)
+   - Chi2:               chi2 at best-fit point
+   - NDoF:               number of degrees of freedom
+   - ParameterValues:    parameter values at best-fit point
+   - MigradErrors:       symmetric uncertainties
+   - CovarianceMatrix:   covariance matrix
+   - CorrelationMatrix:  correlation matrix
+   - OneSigInterval:     one-sigma (68% CL) range 
+ 
+   - covx:     covariance matrix of x-values of data points
+   - covy:     covariance matrix of y-values of data points
+   - cov:      combinde covariance matrix of y-values of data points,
+               including pojected covariance matrix of x-uncertainties
+
   """
 
   def __init__(self):
@@ -130,7 +156,7 @@ class iminuitFit():
     self.run_minos = True
     self.quiet = True
     
-  def options(self,
+  def setOptions(self,
               relative_refers_to_model=None,
               run_minos=None,
               quiet=None):
@@ -224,16 +250,16 @@ class iminuitFit():
     if self.run_minos:
       self.minosResult = self.minuit.minos()
 
-    self.storeResult()
+    self._storeResult()
     
     return self.migradResult, self.minosResult
   
-  def storeResult(self):
-  # report results as numpy arrays
+  def _storeResult(self):
+  # collect results as numpy arrays
+  # !!! this part depends on iminuit version !!!
     m=self.minuit
-    # extract result parametes !!! this part depends on iminuit version !!!
-    chi2 = m.fval                                   # chi2 
-    npar = m.nfit                                   # numer of parameters
+    chi2 = m.fval                           # chi2 
+    npar = m.nfit                           # numer of parameters
     ndof = self.costf.ndof                  # degrees of freedom
     if __version__< '2':
       parnames = m.values.keys()            # parameter names
@@ -260,22 +286,30 @@ class iminuitFit():
           pmerrs.append([m.merrors[pnam].lower, m.merrors[pnam].upper])
       #  print(f"{3*' '}{pnam}: {m.merrors[pnam].lower:.2g}",
       #                      f"+{m.merrors[pnam].upper:.2g}")      
-      self.Errors=np.array(pmerrs)
+      self.OneSigInterval=np.array(pmerrs)
     else:
-      self.Errors = np.array(list(zip(-parerrs, parerrs)))
+      self.OneSigInterval = np.array(list(zip(-parerrs, parerrs)))
       
-    # remember results
-    self.MigradErrors = np.array(parerrs, copy=True)
-    self.ParameterValues = np.array(parvals, copy=True)
+    # store results as class members
+    #   parameter names
     self.ParameterNames = parnames
+    #   chi2 at best-fit point
+    self.Chi2 = chi2  
+    #   parameter values at best-fit point
+    self.ParameterValues = np.array(parvals, copy=True)
+    #   number of degrees of freedom
+    self.NDoF = ndof  
+    #   symmetric uncertainties
+    self.MigradErrors = np.array(parerrs, copy=True)
+    #   covariance and correlation matrices
     self.CovarianceMatrix = np.array(cov, copy=True)
     self.CorrelationMatrix = cov/np.outer(parerrs, parerrs)
-    self.Chi2 = chi2
-    self.NDoF = ndof
-
-    #return result arrays
+    #   1-sigma (68% CL) range in 
+    # self.OneSigInterval
+    
   def getResult(self):
-    return (self.ParameterValues, self.Errors,
+    # return most im portant results
+    return (self.ParameterValues, self.OneSigInterval,
             self.CorrelationMatrix, self.Chi2)
 
   class DataUncertainties:
@@ -660,3 +694,168 @@ class iminuitFit():
             m.draw_mncontour(pnams[i], pnams[j],
               cl=(Chi22CL(1.), Chi22CL(4.)) )
     return cor_fig 
+
+if __name__ == "__main__": # --- interface and example
+  def mFit(fitf, x, y, sx = None, sy = None,
+         srelx = None, srely = None, 
+         xabscor = None, xrelcor = None,        
+         yabscor = None, yrelcor = None,
+         p0 = None, constraints = None, 
+         plot = True, plot_cor = True,
+         plot_band=True, quiet = False,
+         axis_labels=['x', 'y = f(x, *par)'], 
+         data_legend = 'data',    
+         model_legend = 'model'): 
+    """
+    fit an arbitrary function f(x) to data
+    with uncorrelated and correlated absolute and/or relative errors on y 
+    with package iminuit
+
+    Args:
+      * fitf: model function to fit, arguments (float:x, float: *args)
+      * x:  np-array, independent data
+      * y:  np-array, dependent data
+      * sx: scalar or 1d or 2d np-array , uncertainties on x data
+      * sy: scalar or 1d or 2d np-array , uncertainties on x data
+      * srelx: scalar or np-array, relative uncertainties x
+      * srely: scalar or np-array, relative uncertainties y
+      * yabscor: scalar or np-array, absolute, correlated error(s) on y
+      * yrelcor: scalar or np-array, relative, correlated error(s) on y
+      * p0: array-like, initial guess of parameters
+      * constraints: list or list of lists with [name or id, value, error]
+      * plot: show data and model if True
+      * plot_cor: show profile liklihoods and conficence contours
+      * plot_band: plot uncertainty band around model function
+      * quiet: suppress printout
+      * list of str: axis labels
+      * str: legend for data
+      * str: legend for model 
+
+    Returns:
+      * np-array of float: parameter values
+      * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
+      * np-array: correlation matrix 
+      * float: chi2  \chi-square of fit a minimum
+    """
+
+    ## from .iminuitFit import iminuitFit
+
+    # ... check if errors are provided ...
+    if sy is None:
+      sy = np.ones(len(y))
+      print('\n!**! No y-errors given',
+            '-> parameter errors from fit are meaningless!\n')
+  
+    # set up a fit object
+    Fit = iminuitFit()
+
+    # set some options
+    Fit.setOptions(run_minos=True, relative_refers_to_model=True)
+ 
+    # pass data and uncertainties to fit object
+    Fit.init_data(x, y,
+                ex = sx, ey = sy,
+                erelx = srelx, erely = srely,
+                cabsx = xabscor, crelx = xrelcor,
+                cabsy = yabscor, crely = yrelcor)
+
+    # pass model fuction, start parameter and possibe constraints
+    Fit.init_fit(fitf, p0=p0, constraints=constraints)
+
+    # perform the fit
+    fitResult = Fit.do_fit()
+    # print fit resule (dictionary from migrad/minos(
+    if not quiet:
+      print("\nFit Result from migrad:")
+      print(fitResult[0])
+      if fitResult[1] is not None:
+        print("\nResult of minos error analysis:")
+        print(fitResult[1])
+      
+    # produce figure with data and model
+    if plot:
+      fig = Fit.plotModel(axis_labels=axis_labels,
+                   data_legend=data_legend,
+                   model_legend=model_legend,
+                        plot_band=plot_band)
+
+    # figure with visual representation of covariances
+    #   prifile likelihood scan and confidence contours
+    if plot_cor:
+      fig_cor = Fit.plotContours()
+
+    # show plots on screen
+    if plot or plot_cor:
+      plt.show()
+
+    # return
+    #   numpy arrays with fit result: parameter values,
+    #   negative and positive parameter uncertainties,
+    #   correlation matrix and chi2
+    return Fit.getResult()
+  
+# -----------------------------------------------------------------
+
+  #
+  # Example of an application of iminuitFit.mFit()
+  #
+  from PhyPraKit import generateXYdata
+
+  # define the model function to fit
+  def model(x, A=1., x0=1.):
+    return A*np.exp(-x/x0)
+  mpardict = {'A':1., 'x0':0.5}  # model parameters
+
+# set error components 
+  sabsy = 0.07
+  srely = 0.05 # 5% of model value
+  cabsy = 0.04
+  crely = 0.03 # 3% of model value
+  sabsx = 0.05
+  srelx = 0.04 # 4%
+  cabsx = 0.03
+  crelx = 0.02 # 2%
+
+# generate pseudo data
+  np.random.seed(314)      # initialize random generator
+  nd=10
+  data_x = np.linspace(0, 1, nd)       # x of data points
+  sigy = np.sqrt(sabsy * sabsy + (srely*model(data_x, **mpardict))**2)
+  sigx = np.sqrt(sabsx * sabsx + (srelx * data_x)**2)
+  xt, yt, data_y = generateXYdata(data_x, model, sigx, sigy,
+                                      xabscor=cabsx,
+                                      xrelcor=crelx,
+                                      yabscor=cabsy,
+                                      yrelcor=crely,
+                                      mpar=mpardict.values() )
+
+# perform fit to data with function mFit using iminuitFit class
+  parvals, parerrs, cor, chi2 = mFit(model, data_x, data_y,
+                                     sx=sabsx,
+                                     sy=sabsy,
+                                     srelx=srelx,
+                                     srely=srely,
+                                     xabscor=cabsx,
+                                     xrelcor=crelx,
+                                     yabscor=cabsy,
+                                     yrelcor=crely,
+                                     p0=(1., 0.5),
+#                                     constraints=['A', 1., 0.03],
+#                                     constraints=[0, 1., 0.03],
+                                     plot=True,
+                                     plot_band=True,
+                                     plot_cor=True,
+                                     quiet=False,
+                                     axis_labels=['x', 'y   \  f(x, *par)'], 
+                                     data_legend = 'random data',    
+                                     model_legend = 'exponential model')
+
+# Print results to illustrate how to use output
+  print('\n*==* Fit Result:')
+  print(f" chi2: {chi2:.3g}")
+  print(f" parameter values:      ", parvals)
+  print(f" neg. parameter errors: ", parerrs[:,0])
+  print(f" pos. parameter errors: ", parerrs[:,1])
+  print(f" correlations : \n", cor)
+  
+  plt.show()

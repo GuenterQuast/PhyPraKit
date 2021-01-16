@@ -13,14 +13,14 @@
 
 """
 
-import numpy as np, matplotlib.pyplot as plt 
+import numpy as np, matplotlib.pyplot as plt
 from PhyPraKit import generateXYdata, mFit
 
 # ------------------------ end of iminuitFit ----------------------
       
 if __name__ == "__main__": # --------------------------------------  
   #
-  # Example of an application of iminuitFit.mFit()
+  # Example of an application of PhyPraKit.mFit()
   #
   # define the model function to fit
   def model(x, A=1., x0=1.):
