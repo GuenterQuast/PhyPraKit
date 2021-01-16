@@ -51,19 +51,22 @@ def build_CovarianceMatrix(nd, e=None, erel=None,
   Covariance Matrix.
 
   Args:
-    * nd: number of data points
-    * e: scalar, array of float, or 2d-array of float: 
-      independent uncertainties or a full covariance matrix
-    * erel: scalar, array of float, 2d-array of float: 
-      independent relative uncertainties or a full covariance matrix
-    * eabscor: float or array of float of list of arrays of float:
-      absolute correlated uncertainties
-    * erelcor: float or array of float of list of arrays of float:
-      relative correlated uncertainties
-    * data: array of float: data, needed (only) for relative uncertainties
+
+  * nd: number of data points
+  * e: scalar, array of float, or 2d-array of float: 
+    independent uncertainties or a full covariance matrix
+  * erel: scalar, array of float, 2d-array of float: 
+    independent relative uncertainties or a full covariance matrix
+  * eabscor: float or array of float of list of arrays of float:
+    absolute correlated uncertainties
+  * erelcor: float or array of float of list of arrays of float:
+    relative correlated uncertainties
+  * data: array of float: data, needed (only) for relative uncertainties
 
   Returns:
-    * np-array of float: covariance matrix 
+
+  * np-array of float: covariance matrix 
+
   """
 
   # 1. independent errors
@@ -111,35 +114,33 @@ def build_CovarianceMatrix(nd, e=None, erel=None,
   return cov
 
 class iminuitFit():
-  """  
-  Fit an arbitrary funtion f(x, *par) to data with
-   independent and/or correlated absolute and/or relative untertainties
-    
-   Public methods:
+  """**Fit an arbitrary funtion f(x, *par) to data**  
+  with independent and/or correlated absolute and/or relative uncertainties
+   
+  Public methods:
 
-   - init_data():     initialze data and uncertainties
-   - init_fit():      initialize fit (data + model)
-   - setOptions():    set options
-   - do_fit():        perform fit
-   - plotModel():     plot Model function and data
-   - plotContours():  plot profile likelihoods and confidence contours 
-   - getResult():     access to results 
-
-   Pubic data members:
-
-   - ParameterNames:     names of parameters (as specified in model function)
-   - Chi2:               chi2 at best-fit point
-   - NDoF:               number of degrees of freedom
-   - ParameterValues:    parameter values at best-fit point
-   - MigradErrors:       symmetric uncertainties
-   - CovarianceMatrix:   covariance matrix
-   - CorrelationMatrix:  correlation matrix
-   - OneSigInterval:     one-sigma (68% CL) range 
+  - init_data():        initialze data and uncertainties
+  - init_fit():         initialize fit: data, model and parameter constraints
+  - setOptions():       set options
+  - do_fit():           perform fit
+  - plotModel():        plot model function and data
+  - plotContours():     plot profile likelihoods and confidence contours 
+  - getResult():        access to results 
  
-   - covx:     covariance matrix of x-values of data points
-   - covy:     covariance matrix of y-values of data points
-   - cov:      combinde covariance matrix of y-values of data points,
-               including pojected covariance matrix of x-uncertainties
+  Public data members:
+
+  - ParameterNames:     names of parameters (as specified in model function)
+  - Chi2:               chi2 at best-fit point
+  - NDoF:               number of degrees of freedom
+  - ParameterValues:    parameter values at best-fit point
+  - MigradErrors:       symmetric uncertainties
+  - CovarianceMatrix:   covariance matrix
+  - CorrelationMatrix:  correlation matrix
+  - OneSigInterval:     one-sigma (68% CL) ranges of parameer values 
+ 
+  - covx:     covariance matrix of x-data
+  - covy:     covariance matrix of y-data 
+  - cov:      combined covariance matrix, including projected x-uncertainties
 
   """
 
@@ -194,7 +195,7 @@ class iminuitFit():
     # create cost function
     self.costf = self.LSQwithCov(self.data, self.model, quiet=self.quiet)
     if constraints is not None:
-      self.costf.addConstraints(constraints)
+      self.costf.setConstraints(constraints)
 
     # inspect parameters of model function to set start values for fit
     sig=signature(self.model)
@@ -242,7 +243,7 @@ class iminuitFit():
                'to take into account parameter-dependent uncertainties')
 
       # enable dynamic calculation of covariance matrix
-      self.data.set_dynamicCovMat(self.refModel, self.costf.model)
+      self.data._set_dynamicCovMat(self.refModel, self.costf.model)
       # fit with dynamic recalculation of covariance matrix
       self.migradResult = self.minuit.migrad()
 
@@ -314,9 +315,24 @@ class iminuitFit():
 
   class DataUncertainties:
     """
-    class to handle data and uncertainties
-    """
+    Handle data and uncertainties
 
+    Args:
+
+    -  x:       abscissa - "x values"
+    -  y:       ordinate - "y values"
+    -  ex:      independent uncertainties x
+    -  ey:      independent uncertainties y
+    -  erelx:   independent relative uncertainties x
+    -  erely:   independent relative uncertainties y
+    -  cabsx:   correlated abolute uncertainties x
+    -  crelx:   correlated relative uncertainties x
+    -  cabsy:   correlated absolute uncertainties y
+    -  crely:   correlated relative uncertainties y
+    -  quiet:   no informative printout if True
+
+    """
+    
     def __init__(self, x, y, 
                  ex, ey, erelx, erely, cabsx, crelx, cabsy, crely,
                  quiet=True):
@@ -354,7 +370,9 @@ class iminuitFit():
       self.initialCov(cov_initial)
       
     def initialCov(self, err):
-      # special init to set up covariance matrix and its inverse
+      """Build initial (static) covariance matrix (for pre-fit)
+      and calculate inverse matrix
+      """
       self.err2 = np.asarray(err)
       self.errdim = self.err2.ndim
       if self.errdim == 2:
@@ -372,7 +390,7 @@ class iminuitFit():
       self.cov = self.covy      
 
       
-    def set_dynamicCovMat(self, ref_toModel = False, model = None):
+    def _set_dynamicCovMat(self, ref_toModel = False, model = None):
       # method to switch on dynamic re-calculation of covariance matrix 
       self.ref_toModel = ref_toModel
       self.model = model
@@ -415,7 +433,7 @@ class iminuitFit():
         self.covx = None
 
 
-    def rebuild_Cov(self, mpar):
+    def _rebuild_Cov(self, mpar):
       """
       (Re-)Build the covariance matrix from components
       """
@@ -442,22 +460,38 @@ class iminuitFit():
       # inverse covariance matrix 
       self.iCov = np.matrix(self.cov).I
 
-    def get_Cov(self):
+    def getCov(self):
+      """return covariance matrix of data
+      """
       return self.cov
   
-    def get_xCov(self):
+    def getxCov(self):
+      """return covariance matrix of x-data
+      """
       return self.covx
 
-    def get_yCov(self):
+    def getyCov(self):
+      """return covariance matrix of y-data
+      """
       return self.covy
     
-    def get_iCov(self):
+    def getiCov(self):
+      """return inverse of covariance matrix, as used in cost function
+      """
       return self.iCov
       
   # define custom cost function for iminuit
   class LSQwithCov:
     """
     custom Least-SQuares cost function with error matrix
+
+    Input:
+
+    - data object of type DataUncertainties
+    - model function f(x, \*par)
+
+    __call__ menthod of this class is called by iminuit
+
     """
   
     def __init__(self, data, model, quiet=True):
@@ -478,9 +512,14 @@ class iminuitFit():
       self.ndof = len(data.y) - self.npar
       self.nconstraints = 0
 
-    def addConstraints(self, constraints):
-      # add parameter constraints
-      #  format: list or list of lists with [name, value, uncertainty]
+    def setConstraints(self, constraints):
+      """Add parameter constraints
+
+      format: list or list of lists of type 
+      [parameter name, value, uncertainty] or
+      [parameter index, value, uncertainty]
+      """
+      
       if isinstance(constraints[1], list):
          self.constraints = constraints
       else:
@@ -488,8 +527,7 @@ class iminuitFit():
       self.nconstraints = len(self.constraints)
       # take account of constraints in degrees of freedom 
       self.ndof = len(self.data.y) - self.npar + self.nconstraints
- 
-         
+          
     def __call__(self, *par):  # accept a variable number of model parameters
       # called iteratively by minuit
 
@@ -506,7 +544,7 @@ class iminuitFit():
 
       # check if Covariance matrix needs rebuilding
       if self.data.rebuildCov:
-        self.data.rebuild_Cov(par)
+        self.data._rebuild_Cov(par)
 
       # add chi2 of data wrt. model    
       resid = self.data.y - self.model(self.data.x, *par)
@@ -528,7 +566,7 @@ class iminuitFit():
 
     Args:
 
-      * x: scalar or np aray of x values
+      * x: scalar or np-array of x values
       * model: model function
       * pvlas: parameter values
       * covp: covariance matrix of parameters
@@ -591,12 +629,12 @@ class iminuitFit():
   # get data
     x = cf.data.x
     y = cf.data.y
-    ey = cf.data.get_yCov()
+    ey = cf.data.getyCov()
     if ey.ndim ==2:
       ey = np.sqrt(np.diag(ey))
     else:
       ey = np.sqrt(ey)
-    ex = cf.data.get_xCov()
+    ex = cf.data.getxCov()
     if ex is not None:
       if ex.ndim ==2:
         ex = np.sqrt(np.diag(ex))
@@ -638,7 +676,7 @@ class iminuitFit():
 # plot array of profiles and contours
   def plotContours(self):
     """
-    Plot grid of profile curves and one- and tow-sigma
+    Plot grid of profile curves and one- and two-sigma
     contours lines from iminuit object
 
     Arg: 
@@ -751,7 +789,7 @@ if __name__ == "__main__": # --- interface and example
 
     # set some options
     Fit.setOptions(run_minos=True, relative_refers_to_model=True)
- 
+
     # pass data and uncertainties to fit object
     Fit.init_data(x, y,
                 ex = sx, ey = sy,

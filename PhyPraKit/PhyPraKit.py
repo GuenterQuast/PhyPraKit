@@ -60,8 +60,8 @@ def A0_readme():
         - linRegressionXY()  linear regression, y=ax+b, with x and y errors  
           ``! deprecated, use `odFit` with linear model instead``
         - kRegression()      linear regression, y=ax+b, with (correlated) 
-         errors on x, and y   
-         ``! deprecated, consider using `k2Fit` with linear model instead``
+          errors on x, and y   
+          ``! deprecated, consider using `k2Fit` with linear model instead``
         - odFit()            fit function with x and y errors (scipy ODR)
         - mFit()             fit with iminuit with correlated x and y errors,
           profile likelihood and contour lines  
@@ -1396,7 +1396,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
     with package iminuit
 
     Args:
-      * fitf: model function to fit, arguments (float:x, float: *args)
+      * fitf: model function to fit, arguments (float:x, float: \*args)
       * x:  np-array, independent data
       * y:  np-array, dependent data
       * sx: scalar or 1d or 2d np-array , uncertainties on x data
