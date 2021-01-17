@@ -1429,12 +1429,14 @@ def mFit(fitf, x, y, sx = None, sy = None,
     sy = np.ones(len(y))
     print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
   
-
   # set up a fit object
   Fit = iminuitFit()
 
   # set some options
-  Fit.setOptions(run_minos=True, relative_refers_to_model=True)
+  Fit.setOptions(run_minos=True,
+                 relative_refers_to_model=True,
+                 use_negLogL=True,
+                 quiet=quiet)
 
   # pass data and uncertainties to fit object
   Fit.init_data(x, y,
@@ -1448,7 +1450,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
 
   # perform the fit
   fitResult = Fit.do_fit()
-  # print fit resule (dictionary from migrad/minos(
+  # print fit result (dictionary from migrad/minos)
   if not quiet:
     print("\nFit Result from migrad:")
     print(fitResult[0])

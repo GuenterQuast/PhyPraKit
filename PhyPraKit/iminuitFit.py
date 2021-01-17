@@ -155,11 +155,13 @@ class iminuitFit():
     # default options
     self.refModel=True
     self.run_minos = True
+    self.use_negLogL = True
     self.quiet = True
     
   def setOptions(self,
               relative_refers_to_model=None,
               run_minos=None,
+              use_negLogL=None,
               quiet=None):
     # define options for fit
     #   - rel. errors refer to model else data
@@ -170,6 +172,8 @@ class iminuitFit():
       self.refModel = relative_refers_to_model
     if run_minos is not None:   
       self.run_minos = run_minos
+    if use_negLogL is not None:   
+      self.use_negLogL = use_negLogL
     if quiet is not None:
       self.quiet = quiet
     
@@ -193,7 +197,9 @@ class iminuitFit():
     # set model function
     self.model = model
     # create cost function
-    self.costf = self.LSQwithCov(self.data, self.model, quiet=self.quiet)
+    self.costf = self.LSQwithCov(self.data, self.model,
+                                 use_negLogL= self.use_negLogL,
+                                 quiet=self.quiet)
     if constraints is not None:
       self.costf.setConstraints(constraints)
 
@@ -217,6 +223,8 @@ class iminuitFit():
     if __version__ < '2':
       if self.quiet:
         print_level=0
+      else:
+        print_level=1
       self.minuit = Minuit(self.costf, **ipardict,
                            errordef=1., print_level=print_level)
     else:
@@ -497,7 +505,7 @@ class iminuitFit():
 
     - data object of type DataUncertainties
     - model function f(x, \*par)
-    - use_neglogL: use full 2*neg Log Likelihood instead of chi2 if True
+    - use_negLogL: use full 2*neg Log Likelihood instead of chi2 if True
 
     __call__ method of this class is called by iminuit
 
@@ -823,7 +831,10 @@ if __name__ == "__main__": # --- interface and example
     Fit = iminuitFit()
 
     # set some options
-    Fit.setOptions(run_minos=True, relative_refers_to_model=True)
+    Fit.setOptions(run_minos=True,
+                   relative_refers_to_model=True,
+                   use_negLogL=True,
+                   quiet=quiet)
 
     # pass data and uncertainties to fit object
     Fit.init_data(x, y,
