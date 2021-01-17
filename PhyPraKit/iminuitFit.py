@@ -334,6 +334,14 @@ class iminuitFit():
     -  crely:   correlated relative uncertainties y
     -  quiet:   no informative printout if True
 
+    Data members:
+  
+      * copy of all input arguments
+      * covx: covariance matrix of x
+      * covy: covariance matrix of y uncertainties
+      * cov: full covariance matrix incl. projected x
+      * iCov: inverse of covariance matrix
+
     """
     
     def __init__(self, x, y, 
@@ -355,17 +363,14 @@ class iminuitFit():
       self.model = None # no model defined yet
 
       # set flags for steering of fit process in do_fit()
-      if ex is not None or erelx is not None \
-        or cabx is not None or crelx is not None:
-        self.has_xErrors= True
-      else:
-        self.has_xErrors= False
-
-      if erely is not None or crely is not None: 
-        self.has_rel_yErrors = True
-      else:
-        self.has_rel_yErrors = False
-
+      self.rebulildCov = None
+      self.has_xErrors = ex is not None or erelx is not None \
+        or cabx is not None or crelx is not None
+      self.has_rel_yErrors = erely is not None or crely is not None
+      self.needs_covariance = \
+        self.cabsx is not None or self.crelx is not None or \
+        self.cabsy is not None or self.crely is not None 
+            
       # build (initial) covariance matrix (ignore x-errors)
       cov_initial = build_CovarianceMatrix(self.nd, ey, erely, cabsy, crely, y)
 
@@ -377,21 +382,20 @@ class iminuitFit():
       and calculate inverse matrix
       """
       self.err2 = np.asarray(err)
-      self.errdim = self.err2.ndim
-      if self.errdim == 2:
-      # got a covariance matrix, need inverse
+      if self.err2.ndim == 2:
+       # got a covariance matrix, need inverse
+        self.needs_Covariance = True
         self.iCov = np.matrix(self.err2).I
       else:
         self.err2 *= self.err2 
         self.iCov = 1./self.err2
-      # do not trigger rebuild of coariance matrix in cost function
+      # do not trigger rebuild of covariance matrix in cost function
       self.rebuildCov = False 
 
       # store matrix components
       self.covy = self.err2
       self.covx = None
       self.cov = self.covy      
-
       
     def _set_dynamicCovMat(self, ref_toModel = False, model = None):
       # method to switch on dynamic re-calculation of covariance matrix 
@@ -399,8 +403,10 @@ class iminuitFit():
       self.model = model
 
       # rebuild covariance matrix during fitting procedure
-      self.rebuildCov = True  # flag used in cost function
-      self.errdim = 2         # use full covariance matrix in cost function
+      self.rebuildCov = True        # flag used in cost function
+      self.needs_Covariance = True  # use matrix in cost function
+          # !!! might achieve speed-up for simple problems
+          #  if also implement version w.o. covariance matrix
 
       # build static (=parameter-independent) part of y-covariance Matrix
       self.nd = len(self.x)
@@ -434,7 +440,6 @@ class iminuitFit():
         self._dx = np.sqrt(min(np.diag(self.covx)))/10.
       else:
         self.covx = None
-
 
     def _rebuild_Cov(self, mpar):
       """
@@ -492,21 +497,29 @@ class iminuitFit():
 
     - data object of type DataUncertainties
     - model function f(x, \*par)
+    - use_neglogL: use full 2*neg Log Likelihood instead of chi2 if True
 
-    __call__ menthod of this class is called by iminuit
+    __call__ method of this class is called by iminuit
+
+    Data members:
+
+    - ndof: degrees of freedom 
+    - nconstraints- number of constraints
+    - chi2: chi2-value (goodness of fit)
+    - use_2neglogL: usage of full 2*neg Log Likelihood
+    - quiet: no printpout if True    
 
     """
   
-    def __init__(self, data, model, quiet=True):
+    def __init__(self, data, model, quiet=True, use_negLogL = False):
       from iminuit.util import describe, make_func_code
 
       self.data = data
       self.model = model
       self.quiet = quiet
-
       # use -2 * log(L) of Gaussian instead of Chi2
       #  (only different from Chi2 for parameter-dependent uncertainties)
-      self.use_negLogL2 = False
+      self.use_2negLogL = use_negLogL
       
       # set proper signature of model function for iminuit
       self.pnams = describe(model)[1:]
@@ -558,17 +571,20 @@ class iminuitFit():
 
       # add chi2 of data wrt. model    
       resid = self.data.y - self.model(self.data.x, *par)
-      if self.data.errdim < 2:
+      if not self.data.needs_Covariance:
         # fast calculation for simple errors
         nlL2 += np.sum(resid * self.data.iCov*resid)
         # identical to classical Chi2
         self.chi2 = nlL2
+        if self.use_2negLogL:
+           # take into account parameter-dependent normalisation term
+          nlL2 += np.log(np.prod(self.data.err2))
       else:
         # with full inverse covariance matrix for correlated errors
         nlL2 += float(np.inner(np.matmul(resid.T, self.data.iCov), resid))
         #  up to here, identical to classical Chi2
         self.chi2 = nlL2
-        if self.use_negLogL2:
+        if self.use_2negLogL:
          # take into account parameter-dependent normalisation term
           nlL2 += np.log(np.linalg.det(self.data.cov))
 
