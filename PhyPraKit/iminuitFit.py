@@ -257,9 +257,9 @@ class iminuitFit():
   
   def _storeResult(self):
   # collect results as numpy arrays
-  # !!! this part depends on iminuit version !!!
+    # !!! this part depends on iminuit version !!!    
     m=self.minuit
-    chi2 = m.fval                           # chi2 
+    minCost = m.fval                        # minimum value of cost function
     npar = m.nfit                           # numer of parameters
     ndof = self.costf.ndof                  # degrees of freedom
     if __version__< '2':
@@ -290,12 +290,15 @@ class iminuitFit():
       self.OneSigInterval=np.array(pmerrs)
     else:
       self.OneSigInterval = np.array(list(zip(-parerrs, parerrs)))
-      
+
+    # call cost function at miminum to update all parameters
+    fval = self.costf(*parvals) 
+  
     # store results as class members
     #   parameter names
     self.ParameterNames = parnames
-    #   chi2 at best-fit point
-    self.Chi2 = chi2  
+    #   chi2 at best-fit point (possibly different from minCost)
+    self.Chi2 = self.costf.chi2  
     #   parameter values at best-fit point
     self.ParameterValues = np.array(parvals, copy=True)
     #   number of degrees of freedom
@@ -500,6 +503,10 @@ class iminuitFit():
       self.data = data
       self.model = model
       self.quiet = quiet
+
+      # use -2 * log(L) of Gaussian instead of Chi2
+      #  (only different from Chi2 for parameter-dependent uncertainties)
+      self.use_negLogL2 = False
       
       # set proper signature of model function for iminuit
       self.pnams = describe(model)[1:]
@@ -528,10 +535,13 @@ class iminuitFit():
       # take account of constraints in degrees of freedom 
       self.ndof = len(self.data.y) - self.npar + self.nconstraints
           
-    def __call__(self, *par):  # accept a variable number of model parameters
+    def __call__(self, *par):  
       # called iteratively by minuit
 
-      dc = 0. 
+      # cost funtion is standard chi2;
+      #   full -2 * log L of a Gaussian distribution optionally
+      
+      nlL2 = 0. # initialize -2*log(L)
       #  first, take into account possible parameter constraints  
       if self.nconstraints:
         for c in self.constraints:
@@ -540,7 +550,7 @@ class iminuitFit():
           else:
             p_id = c[0]
           r = ( par[p_id] - c[1]) / c[2] 
-          dc += r*r
+          nlL2 += r*r
 
       # check if Covariance matrix needs rebuilding
       if self.data.rebuildCov:
@@ -550,11 +560,20 @@ class iminuitFit():
       resid = self.data.y - self.model(self.data.x, *par)
       if self.data.errdim < 2:
         # fast calculation for simple errors
-        return dc + np.sum(resid * self.data.iCov*resid)
+        nlL2 += np.sum(resid * self.data.iCov*resid)
+        # identical to classical Chi2
+        self.chi2 = nlL2
       else:
         # with full inverse covariance matrix for correlated errors
-        return dc + np.inner(np.matmul(resid.T, self.data.iCov), resid)
+        nlL2 += float(np.inner(np.matmul(resid.T, self.data.iCov), resid))
+        #  up to here, identical to classical Chi2
+        self.chi2 = nlL2
+        if self.use_negLogL2:
+         # take into account parameter-dependent normalisation term
+          nlL2 += np.log(np.linalg.det(self.data.cov))
 
+      return nlL2
+    
   # --- end definition of class LSQwithCov ----
 
   @staticmethod
