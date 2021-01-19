@@ -35,7 +35,8 @@
 """
 
 import sys
-import numpy as np, matplotlib.pyplot as plt 
+import numpy as np, matplotlib.pyplot as plt
+from scipy import stats
 from iminuit import __version__, Minuit
 from inspect import signature, Parameter  
 
@@ -198,7 +199,7 @@ class iminuitFit():
     self.model = model
     # create cost function
     self.costf = self.LSQwithCov(self.data, self.model,
-                                 use_negLogL= self.use_negLogL,
+                                 use_neg2logL= self.use_negLogL,
                                  quiet=self.quiet)
     if constraints is not None:
       self.costf.setConstraints(constraints)
@@ -299,7 +300,7 @@ class iminuitFit():
     else:
       self.OneSigInterval = np.array(list(zip(-parerrs, parerrs)))
 
-    # call cost function at miminum to update all parameters
+    # call cost function at miminum to update all results
     fval = self.costf(*parvals) 
   
     # store results as class members
@@ -392,7 +393,7 @@ class iminuitFit():
       self.err2 = np.asarray(err)
       if self.err2.ndim == 2:
        # got a covariance matrix, need inverse
-        self.needs_Covariance = True
+        self.needs_covariance = True
         self.iCov = np.matrix(self.err2).I
       else:
         self.err2 *= self.err2 
@@ -412,14 +413,14 @@ class iminuitFit():
 
       # rebuild covariance matrix during fitting procedure
       self.rebuildCov = True        # flag used in cost function
-      self.needs_Covariance = True  # use matrix in cost function
-          # !!! might achieve speed-up for simple problems
-          #  if also implement version w.o. covariance matrix
+      self.needs_covariance = True  # use matrix in cost function
+          # so far, following is only implmented for full cov.mat.
+          #  !!! can achieve speed-up for simple problems w.o. cov.mat.
 
-      # build static (=parameter-independent) part of y-covariance Matrix
+      # build static (=parameter-independent) part of covariance matrix      
       self.nd = len(self.x)
       if self.has_rel_yErrors and self.ref_toModel:
-        # only some y-errors are parameter-independent
+        # some y-errors are parameter-independent
         self._staticCov = build_CovarianceMatrix(self.nd,
                        self.ey, eabscor = self.cabsy)
       else: 
@@ -428,16 +429,14 @@ class iminuitFit():
                                   self.ey, erel=self.erely,
                                   eabscor = self.cabsy, erelcor=self.crely,
                                                 data=self.y)
-
+      # build matrix of relative errors
       if self.ref_toModel and self.has_rel_yErrors:
-        # build matrix of relative errors
         self._covy0 = build_CovarianceMatrix(self.nd,
                                   erel=self.erely,
                                   erelcor=self.crely,
                                   data=np.ones(self.nd))
       else:
         self._covy0 = None
-        
       # covariance matrix of x-uncertainties (all are parameter-dependent)
       if self.has_xErrors:
         self.covx = build_CovarianceMatrix(self.nd,
@@ -459,19 +458,19 @@ class iminuitFit():
       # add matrix of parameter-dependent y-uncertainties
 #      if self.ref_toModel and self.has_rel_yErrors:
       if self._covy0 is not None:
-        ydat = self.model(self.x, *mpar)       
-        self.cov += self._covy0 * np.outer(ydat, ydat)
+        _ydat = self.model(self.x, *mpar)       
+        self.cov += self._covy0 * np.outer(_ydat, _ydat)
       # store covariance matrix of y-uncertainties    
       self.covy = np.array(self.cov, copy=True)
 
       # add projected x errors
       if self.has_xErrors:
        # determine derivatives of model function w.r.t. x,
-        mprime = 0.5 / self._dx * (
-                 self.model(self.x + self._dx,*mpar) - 
-                 self.model(self.x - self._dx,*mpar) )
+        _mprime = 0.5 / self._dx * (
+                 self.model(self.x + self._dx, *mpar) - 
+                 self.model(self.x - self._dx, *mpar) )
         # project on y and add to covariance matrix
-        self.cov += np.outer(mprime, mprime) * self.covx
+        self.cov += np.outer(_mprime, _mprime) * self.covx
 
       # inverse covariance matrix 
       self.iCov = np.matrix(self.cov).I
@@ -505,7 +504,7 @@ class iminuitFit():
 
     - data object of type DataUncertainties
     - model function f(x, \*par)
-    - use_negLogL: use full 2*neg Log Likelihood instead of chi2 if True
+    - use_neg2logL: use full -2log(L) instead of chi2 if True
 
     __call__ method of this class is called by iminuit
 
@@ -514,12 +513,12 @@ class iminuitFit():
     - ndof: degrees of freedom 
     - nconstraints- number of constraints
     - chi2: chi2-value (goodness of fit)
-    - use_2neglogL: usage of full 2*neg Log Likelihood
+    - use_neg2logL: usage of full 2*neg Log Likelihood
     - quiet: no printpout if True    
 
     """
   
-    def __init__(self, data, model, quiet=True, use_negLogL = False):
+    def __init__(self, data, model, quiet=True, use_neg2logL = False):
       from iminuit.util import describe, make_func_code
 
       self.data = data
@@ -527,7 +526,7 @@ class iminuitFit():
       self.quiet = quiet
       # use -2 * log(L) of Gaussian instead of Chi2
       #  (only different from Chi2 for parameter-dependent uncertainties)
-      self.use_2negLogL = use_negLogL
+      self.use_neg2logL = use_neg2logL
       
       # set proper signature of model function for iminuit
       self.pnams = describe(model)[1:]
@@ -579,12 +578,12 @@ class iminuitFit():
 
       # add chi2 of data wrt. model    
       resid = self.data.y - self.model(self.data.x, *par)
-      if not self.data.needs_Covariance:
+      if not self.data.needs_covariance:
         # fast calculation for simple errors
         nlL2 += np.sum(resid * self.data.iCov*resid)
         # identical to classical Chi2
         self.chi2 = nlL2
-        if self.use_2negLogL:
+        if self.use_neg2logL:
            # take into account parameter-dependent normalisation term
           nlL2 += np.log(np.prod(self.data.err2))
       else:
@@ -592,7 +591,7 @@ class iminuitFit():
         nlL2 += float(np.inner(np.matmul(resid.T, self.data.iCov), resid))
         #  up to here, identical to classical Chi2
         self.chi2 = nlL2
-        if self.use_2negLogL:
+        if self.use_neg2logL:
          # take into account parameter-dependent normalisation term
           nlL2 += np.log(np.linalg.det(self.data.cov))
 
@@ -668,7 +667,8 @@ class iminuitFit():
     pcov = self.CovarianceMatrix
     pnams = self.ParameterNames
     ndof = cf.ndof
-
+    chi2prb = 1.- stats.chi2.cdf(chi2, ndof)
+    
   # get data
     x = cf.data.x
     y = cf.data.y
@@ -705,7 +705,7 @@ class iminuitFit():
 
     # display legend with some fit info
     fit_info = [
-    f"$\\chi^2$ / $n_\\mathrm{{dof}}$ = {chi2:.1f} / {ndof}",]
+     f"$\\chi^2$/$n_\\mathrm{{dof}}$={chi2:.1f}/{ndof}, p={100*chi2prb:.1f}%",]
     if self.minosResult is not None:
       for p, v, e in zip(pnams, pvals, pmerrs):
         fit_info.append(f"{p} = ${v:.3f}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$")
@@ -730,17 +730,16 @@ class iminuitFit():
     """
 
     def CL2Chi2(CL):
-      '''
+      """
       calculate DeltaChi2 from confidence level CL
-      '''
+      """
       return -2.*np.log(1.-CL)
 
     def Chi22CL(dc2):
-     '''
-     calculate confidence level CL from DeltaChi2
-     '''
-     return (1. - np.exp(-dc2 / 2.))
-
+      """
+      calculate confidence level CL from DeltaChi2
+      """
+      return (1. - np.exp(-dc2 / 2.))
 
     m = self.minuit     
     npar = m.nfit    # numer of parameters
@@ -902,7 +901,7 @@ if __name__ == "__main__": # --- interface and example
 
 # generate pseudo data
   np.random.seed(314)      # initialize random generator
-  nd=10
+  nd=15
   data_x = np.linspace(0, 1, nd)       # x of data points
   sigy = np.sqrt(sabsy * sabsy + (srely*model(data_x, **mpardict))**2)
   sigx = np.sqrt(sabsx * sabsx + (srelx * data_x)**2)
