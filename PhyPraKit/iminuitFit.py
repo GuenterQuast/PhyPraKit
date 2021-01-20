@@ -232,7 +232,7 @@ class iminuitFit():
       self.minuit = Minuit(self.costf, **ipardict)  
       self.minuit.errordef = 1.
       if self.quiet:
-        self.minuit.print_level = 0.
+        self.minuit.print_level = 0
 
   def do_fit(self):
 
