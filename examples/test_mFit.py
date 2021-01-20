@@ -39,7 +39,7 @@ if __name__ == "__main__": # --------------------------------------
 
 # generate pseudo data
   np.random.seed(314)      # initialize random generator
-  nd=10
+  nd=15
   data_x = np.linspace(0, 1, nd)       # x of data points
   sigy = np.sqrt(sabsy * sabsy + (srely*model(data_x, **mpardict))**2)
   sigx = np.sqrt(sabsx * sabsx + (srelx * data_x)**2)
