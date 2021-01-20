@@ -26,11 +26,11 @@
   - evaluation of profile likelihoods to determine asymetric uncertainties
   - plotting of profile likeliood and confidence contours
 
-  supports iminuit vers. < 2.0 and >= 2.0
+  supports iminuit vers. < 2 and >= 2
 
   A fully functional example is provided by the function `mFit()`
-  in PhyPraKit and the Python script `examples/test_mFit.py`
-
+  and the executable script below.
+  
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
 
@@ -39,80 +39,6 @@ import numpy as np, matplotlib.pyplot as plt
 from scipy import stats
 from iminuit import __version__, Minuit
 from inspect import signature, Parameter  
-
-def build_CovarianceMatrix(nd, e=None, erel=None,
-                           eabscor=None, erelcor=None, data=None):
-  """
-  Build a covariance matrix from independent and correlated 
-  absolute and/or relative error components
-
-  Correlated absolute and/or relative uncertainties enter in the diagonal 
-  and off-diagonal elements of the covariance matrix. Covariance matrix
-  elements of the individual components are added to form the complete
-  Covariance Matrix.
-
-  Args:
-
-  * nd: number of data points
-  * e: scalar, array of float, or 2d-array of float: 
-    independent uncertainties or a full covariance matrix
-  * erel: scalar, array of float, 2d-array of float: 
-    independent relative uncertainties or a full covariance matrix
-  * eabscor: float or array of float of list of arrays of float:
-    absolute correlated uncertainties
-  * erelcor: float or array of float of list of arrays of float:
-    relative correlated uncertainties
-  * data: array of float: data, needed (only) for relative uncertainties
-
-  Returns:
-
-  * np-array of float: covariance matrix 
-
-  """
-
-  # 1. independent errors
-  if e is not None:
-    e_ = np.asarray(e)
-    if e_.ndim == 2: # already got a matrix, take as covariance matrix
-      cov = e_
-    else:
-      e_ = np.ones(nd)*np.array(e) # ensure array of length nd
-      cov = np.diag(e_*e_) # set diagonal elements of covariance matrix
-  else:
-    cov = np.zeros( (nd, nd) )
-    
-  # 2. add relative errors
-  if erel is not None:
-    er_ = np.asarray(erel)
-    if er_.ndim == 2: # already got a matrix, take as covariance matrix
-      cov += er_ * np.outer(nd, nd)
-    else:
-      er_ = np.array(erel) * data  # ensure array of length nd
-      cov += np.diag(er_*er_)      # diagonal elements of covariance matrix
-        
-  # 3. add absolute, correlated error components  
-  if eabscor is not None:
-    eac=np.asarray(eabscor)
-    if len(np.shape(eac )) < 2: # has one entry
-      c_ = eac * np.ones(nd)
-      cov += np.outer(c_, c_) 
-    else:            # got a list, add each component
-      for c in eabscor:
-        c_ = np.array(c)*np.ones(nd)
-        cov += np.outer(c_, c_)
-        
-  # 4. add relative, correlated error components
-  if erelcor is not None:
-    ear=np.asarray(erelcor)
-    if len(np.shape(ear) ) < 2: # has one entry
-      c_ = ear * data
-      cov += np.outer(c_, c_) 
-    else:            # got a list, add each component
-      for c in erelcor:
-        c_ = np.array(c) * data
-        cov += np.outer(c_, c_) 
-  # return complete matrix
-  return cov
 
 class iminuitFit():
   """**Fit an arbitrary funtion f(x, *par) to data**  
@@ -142,6 +68,12 @@ class iminuitFit():
   - covx:     covariance matrix of x-data
   - covy:     covariance matrix of y-data 
   - cov:      combined covariance matrix, including projected x-uncertainties
+
+  Instances of sub-classes:
+
+  - minuit.\*: methods and members of Minuit object 
+  - data.\*:   methods and members of sub-class DataUncertainties
+  - costf.\*:  methods andmembers of sub-class LSQwithCov
 
   """
 
@@ -327,12 +259,13 @@ class iminuitFit():
 
   class DataUncertainties:
     """
-    Handle data and uncertainties
+    Handle data and uncertainties, 
+    build covariance matrices from components
 
     Args:
 
-    -  x:       abscissa - "x values"
-    -  y:       ordinate - "y values"
+    -  x:       abscissa of data points ("x values")
+    -  y:       ordinate of data points ("y values")
     -  ex:      independent uncertainties x
     -  ey:      independent uncertainties y
     -  erelx:   independent relative uncertainties x
@@ -345,30 +278,141 @@ class iminuitFit():
 
     Data members:
   
-      * copy of all input arguments
-      * covx: covariance matrix of x
-      * covy: covariance matrix of y uncertainties
-      * cov: full covariance matrix incl. projected x
-      * iCov: inverse of covariance matrix
+    * copy of all input arguments
+    * covx: covariance matrix of x
+    * covy: covariance matrix of y uncertainties
+    * cov: full covariance matrix incl. projected x
+    * iCov: inverse of covariance matrix
 
     """
+
+    @staticmethod
+    def _build_CovMat(nd, e=None, erel=None,
+                           eabscor=None, erelcor=None, data=None):
+      """
+      Build a covariance matrix from independent and correlated 
+      absolute and/or relative error components
+
+      Correlated absolute and/or relative uncertainties of input data 
+      are to be specified as numpy-arrays of floats; they enter in the 
+      diagonal and off-diagonal elements of the covariance matrix. 
+      Values of 0. may be specified for data points not affected
+      by a correlated uncertainty. E.g. the array [0., 0., 0.5., 0.5]
+      results in a correlated uncertainty of 0.5 of the 3rd and 4th 
+      data points.
+
+      Covariance matrix elements of the individual components are added 
+      to form the complete Covariance Matrix.
+      
+      Args:
+
+      * nd: number of data points
+      * e: 1d or 2d np-array of float: 
+        independent uncertainties or a full covariance matrix
+      * erel: 1d or 2d np-array of float:
+        independent relative uncertainties or a full covariance matrix
+
+      correlated components of uncertainties
+
+      * eabscor: 1d np-array of floats or list of np-arrays:
+        absolute correlated uncertainties
+      * erelcor: 1d np-array of floats or list of np-arrays:
+        relative correlated uncertainties
+      * data: np-array of float: data, needed (only) for relative uncertainties
+
+      Returns:
+
+      * np-array of float: covariance matrix 
+
+      """
+
+      # 1. independent errors
+      if e is not None:
+        if e.ndim == 2: # already got a matrix, take as covariance matrix
+          cov = np.array(e, copy=True)
+        else:
+          cov = np.diag(e * e) # set diagonal elements of covariance matrix
+      else:
+        cov = np.zeros( (nd, nd) )
     
-    def __init__(self, x, y, 
-                 ex, ey, erelx, erely, cabsx, crelx, cabsy, crely,
+      # 2. add relative errors
+      if erel is not None:
+        if erel.ndim == 2: # got a matrix
+          cov += er * np.outer(data, data)
+        else:
+          er_ = np.array(erel) * data
+          cov += np.diag(er_ * er_)   # diagonal elements of covariance matrix
+        
+      # 3. add absolute, correlated error components  
+      if eabscor is not None:
+        if len(np.shape(eabscor )) < 2: # has one entry
+          cov += np.outer(eabscor, eabscor) 
+        else:            # got a list, add each component
+          for c in eabscor:
+            cov += np.outer(c, c)
+        
+      # 4. add relative, correlated error components
+      if erelcor is not None:
+        if len(np.shape(erelcor) ) < 2: # has one entry
+          c_ = erelcor * data
+          cov += np.outer(c_, c_) 
+        else:            # got a list, add each component
+          for c in erelcor:
+            c_ = np.array(c) * data
+            cov += np.outer(c_, c_) 
+      # return complete matrix
+      return cov
+
+    def __init__(self, x, y, ex, ey,
+                 erelx, erely, cabsx, crelx, cabsy, crely,
                  quiet=True):
-      self.x = np.asarray(x) # abscissa - "x values"
-      self.y = np.asarray(y) # ordinate - "y values"
-      self.ex = ex            # independent uncertainties x
-      self.ey = ey            # independent uncertainties y
-      self.erelx = erelx      # independent relative uncertainties x
-      self.erely = erely      # independent relative uncertainties y
-      self.cabsx = cabsx      # correlated abolute uncertainties x
-      self.crelx = crelx      # correlated relative uncertainties x
-      self.cabsy = cabsy      # correlated absolute uncertainties y
-      self.crely = crely      # correlated relative uncertainties y
+      nd = len(x)
+      # store input data as numpy float arrays, ensure length nd if needed
+      self.x = np.asfarray(x)         # abscissa - "x values"
+      self.y = np.asfarray(y)         # ordinate - "y values"
+      if ex is not None:
+        self.ex = np.asfarray(ex)       # independent uncertainties x
+        if self.ex.ndim == 0:
+          self.ex = self.ex * np.ones(nd)
+      else:
+        self.ex = None
+      if ey is not None:
+        self.ey = np.asfarray(ey)       # independent uncertainties y
+        if self.ey.ndim == 0:
+          self.ey = self.ey * np.ones(nd)
+      else:
+        self.ey = None
+      if erelx is not None:
+        self.erelx = np.asfarray(erelx) # independent relative uncertainties x
+      else:
+        self.erelx = None
+      if erely is not None:
+        self.erely = np.asfarray(erely) # independent relative uncertainties y
+      else:
+        self.erely = None
+      if cabsx is not None:
+        self.cabsx = np.asfarray(cabsx) # correlated abolute uncertainties x
+        if self.cabsx.ndim == 0:
+          self.cabsx = self.cabsx * np.ones(nd)
+      else:
+        self.cabsx = None
+      if crelx is not None:   
+        self.crelx = np.asfarray(crelx) # correlated relative uncertainties x
+      else:
+        self.crelx = None
+      if cabsy is not None:
+        self.cabsy = np.asfarray(cabsy) # correlated absolute uncertainties y
+        if self.cabsy.ndim == 0:
+          self.cabsy = self.cabsy * np.ones(nd)
+      else:
+        self.cabsy = None
+      if crely is not None:
+        self.crely = np.asfarray(crely) # correlated relative uncertainties y
+      else:
+        self.crely = None
       self.quiet = quiet      # no informative printout if True
 
-      self.nd = len(x) 
+      self.nd = nd
       self.model = None # no model defined yet
 
       # set flags for steering of fit process in do_fit()
@@ -380,8 +424,9 @@ class iminuitFit():
         self.cabsx is not None or self.crelx is not None or \
         self.cabsy is not None or self.crely is not None 
             
-      # build (initial) covariance matrix (ignore x-errors)
-      cov_initial = build_CovarianceMatrix(self.nd, ey, erely, cabsy, crely, y)
+      # build (initial) covariance matrix (without x-errors)
+      cov_initial = self._build_CovMat(self.nd,
+                    self.ey, self.erely, self.cabsy, self.crely, self.y)
 
       # initialize uncertainties and eventually covariance matrix
       self.initialCov(cov_initial)
@@ -421,17 +466,17 @@ class iminuitFit():
       self.nd = len(self.x)
       if self.has_rel_yErrors and self.ref_toModel:
         # some y-errors are parameter-independent
-        self._staticCov = build_CovarianceMatrix(self.nd,
+        self._staticCov = self._build_CovMat(self.nd,
                        self.ey, eabscor = self.cabsy)
       else: 
         # all y-errors are parameter-independent
-        self._staticCov = build_CovarianceMatrix(self.nd,
+        self._staticCov = self._build_CovMat(self.nd,
                                   self.ey, erel=self.erely,
                                   eabscor = self.cabsy, erelcor=self.crely,
                                                 data=self.y)
       # build matrix of relative errors
       if self.ref_toModel and self.has_rel_yErrors:
-        self._covy0 = build_CovarianceMatrix(self.nd,
+        self._covy0 = self._build_CovMat(self.nd,
                                   erel=self.erely,
                                   erelcor=self.crely,
                                   data=np.ones(self.nd))
@@ -439,7 +484,7 @@ class iminuitFit():
         self._covy0 = None
       # covariance matrix of x-uncertainties (all are parameter-dependent)
       if self.has_xErrors:
-        self.covx = build_CovarianceMatrix(self.nd,
+        self.covx = self._build_CovMat(self.nd,
                               self.ex, self.erelx,
                               self.cabsx, self.crelx,
                               self.x)
@@ -451,6 +496,7 @@ class iminuitFit():
     def _rebuild_Cov(self, mpar):
       """
       (Re-)Build the covariance matrix from components
+      and caclulate its inverse
       """
       # start from pre-built parameter-independent part of Covariance Matrix
       self.cov = np.array(self._staticCov, copy=True)
@@ -511,11 +557,15 @@ class iminuitFit():
     Data members:
 
     - ndof: degrees of freedom 
-    - nconstraints- number of constraints
+    - nconstraints: number of parameter constraints
     - chi2: chi2-value (goodness of fit)
     - use_neg2logL: usage of full 2*neg Log Likelihood
     - quiet: no printpout if True    
 
+    Methods:
+
+    - model(x, \*par)
+   
     """
   
     def __init__(self, data, model, quiet=True, use_neg2logL = False):
@@ -537,6 +587,7 @@ class iminuitFit():
         self.pnams[i] : i for i in range(0,self.npar)
         } 
       self.ndof = len(data.y) - self.npar
+      self.constraints = []
       self.nconstraints = 0
 
     def setConstraints(self, constraints):
@@ -548,10 +599,12 @@ class iminuitFit():
       """
       
       if isinstance(constraints[1], list):
-         self.constraints = constraints
+         for c in constraints:
+           self.constraints.append(c)
       else:
-         self.constraints = [constraints]
+         self.constraints.append(constraints)
       self.nconstraints = len(self.constraints)
+      print(self.constraints)
       # take account of constraints in degrees of freedom 
       self.ndof = len(self.data.y) - self.npar + self.nconstraints
           
@@ -783,39 +836,49 @@ if __name__ == "__main__": # --- interface and example
          p0 = None, constraints = None, 
          plot = True, plot_cor = True,
          plot_band=True, quiet = False,
-         axis_labels=['x', 'y = f(x, *par)'], 
+         axis_labels=['x', 'y = f(x, *par)'],
          data_legend = 'data',    
          model_legend = 'model'): 
-    """
-    fit an arbitrary function f(x) to data
-    with uncorrelated and correlated absolute and/or relative errors on y 
-    with package iminuit
+    """Fit an arbitrary function fitf(x, \*par) to data points (x, y) 
+    with independent and correlated absolute and/or relative errors 
+    on x- and y- values with package iminuit.
+
+    Correlated absolute and/or relative uncertainties of input data 
+    are specified as numpy-arrays of floats; they enter in the 
+    diagonal and off-diagonal elements of the covariance matrix. 
+    Values of 0. may be specified for data points not affected
+    by a correlated uncertainty. E.g. the array [0., 0., 0.5., 0.5]
+    results in a correlated uncertainty of 0.5 of the 3rd and 4th 
+    data points. Providing lists of such arrays permits the construction
+    of arbitrary covariance matrices from independent and correlated
+    uncertainties of (groups of) data points.
 
     Args:
-      * fitf: model function to fit, arguments (float:x, float: *args)
-      * x:  np-array, independent data
-      * y:  np-array, dependent data
-      * sx: scalar or 1d or 2d np-array , uncertainties on x data
-      * sy: scalar or 1d or 2d np-array , uncertainties on x data
-      * srelx: scalar or np-array, relative uncertainties x
-      * srely: scalar or np-array, relative uncertainties y
-      * yabscor: scalar or np-array, absolute, correlated error(s) on y
-      * yrelcor: scalar or np-array, relative, correlated error(s) on y
-      * p0: array-like, initial guess of parameters
-      * constraints: list or list of lists with [name or id, value, error]
-      * plot: show data and model if True
-      * plot_cor: show profile liklihoods and conficence contours
-      * plot_band: plot uncertainty band around model function
-      * quiet: suppress printout
-      * list of str: axis labels
-      * str: legend for data
-      * str: legend for model 
+    * fitf: model function to fit, arguments (float:x, float: \*args)
+    * x:  np-array, independent data
+    * y:  np-array, dependent data
+    * sx: scalar or 1d or 2d np-array , uncertainties on x data
+    * sy: scalar or 1d or 2d np-array , uncertainties on x data
+    * srelx: scalar or np-array, relative uncertainties x
+    * srely: scalar or np-array, relative uncertainties y
+    * yabscor: scalar or np-array, absolute, correlated error(s) on y
+    * yrelcor: scalar or np-array, relative, correlated error(s) on y
+    * p0: array-like, initial guess of parameters
+    * constraints: list or list of lists with [name or id, value, error]
+    * plot: show data and model if True
+    * plot_cor: show profile liklihoods and conficence contours
+    * plot_band: plot uncertainty band around model function
+    * quiet: suppress printout
+    * list of str: axis labels
+    * str: legend for data
+    * str: legend for model 
 
     Returns:
-      * np-array of float: parameter values
-      * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
-      * np-array: correlation matrix 
-      * float: chi2  \chi-square of fit a minimum
+    * np-array of float: parameter values
+    * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
+    * np-array: correlation matrix 
+    * float: chi2  \chi-square of fit a minimum
+
     """
 
     ## from .iminuitFit import iminuitFit

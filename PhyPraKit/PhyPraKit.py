@@ -1390,36 +1390,46 @@ def mFit(fitf, x, y, sx = None, sy = None,
          axis_labels=['x', 'y = f(x, *par)'], 
          data_legend = 'data',    
          model_legend = 'model'): 
-  """
-    fit an arbitrary function f(x) to data
-    with uncorrelated and correlated absolute and/or relative errors on y 
-    with package iminuit
+  """Fit an arbitrary function fitf(x, \*par) to data points (x, y) 
+  with independent and correlated absolute and/or relative errors 
+  on x- and y- values with package iminuit.
 
-    Args:
-      * fitf: model function to fit, arguments (float:x, float: \*args)
-      * x:  np-array, independent data
-      * y:  np-array, dependent data
-      * sx: scalar or 1d or 2d np-array , uncertainties on x data
-      * sy: scalar or 1d or 2d np-array , uncertainties on x data
-      * srelx: scalar or np-array, relative uncertainties x
-      * srely: scalar or np-array, relative uncertainties y
-      * yabscor: scalar or np-array, absolute, correlated error(s) on y
-      * yrelcor: scalar or np-array, relative, correlated error(s) on y
-      * p0: array-like, initial guess of parameters
-      * constraints: list or list of lists with [name or id, value, error]
-      * plot: show data and model if True
-      * plot_cor: show profile liklihoods and conficence contours
-      * plot_band: plot uncertainty band around model function
-      * quiet: suppress printout
-      * list of str: axis labels
-      * str: legend for data
-      * str: legend for model 
+  Correlated absolute and/or relative uncertainties of input data 
+  are specified as numpy-arrays of floats; they enter in the 
+  diagonal and off-diagonal elements of the covariance matrix. 
+  Values of 0. may be specified for data points not affected
+  by a correlated uncertainty. E.g. the array [0., 0., 0.5., 0.5]
+  results in a correlated uncertainty of 0.5 of the 3rd and 4th 
+  data points. Providing lists of such arrays permits the construction
+  of arbitrary covariance matrices from independent and correlated
+  uncertainties of (groups of) data points.
 
-    Returns:
-      * np-array of float: parameter values
-      * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
-      * np-array: correlation matrix 
-      * float: chi2  \chi-square of fit a minimum
+  Args:
+    * fitf: model function to fit, arguments (float:x, float: \*args)
+    * x:  np-array, independent data
+    * y:  np-array, dependent data
+    * sx: scalar or 1d or 2d np-array , uncertainties on x data
+    * sy: scalar or 1d or 2d np-array , uncertainties on x data
+    * srelx: scalar or np-array, relative uncertainties x
+    * srely: scalar or np-array, relative uncertainties y
+    * yabscor: scalar or np-array, absolute, correlated error(s) on y
+    * yrelcor: scalar or np-array, relative, correlated error(s) on y
+    * p0: array-like, initial guess of parameters
+    * constraints: list or list of lists with [name or id, value, error]
+    * plot: show data and model if True
+    * plot_cor: show profile liklihoods and conficence contours
+    * plot_band: plot uncertainty band around model function
+    * quiet: suppress printout
+    * list of str: axis labels
+    * str: legend for data
+    * str: legend for model 
+
+  Returns:
+    * np-array of float: parameter values
+    * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
+    * np-array: correlation matrix 
+    * float: chi2  \chi-square of fit a minimum
+
   """
 
   from .iminuitFit import iminuitFit
@@ -1625,45 +1635,56 @@ def k2Fit(func, x, y,
     model_expression=None, model_name=None,
     model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
     fit_info=True, asym_parerrs=True, plot_cor=False, quiet=True):
-  """
-    fit function func with absolute and/or relative dorrelated and/or
-    uncorrelated errors on x and y with package `kafe2`
+  """Fit an arbitrary function func(x, \*par) to data points (x, y) 
+  with independent and correlated absolute and/or relative errors 
+  on x- and y- values with package iminuit.
 
-    Args:
-      * func: function to fit
-      * x:  np-array, independent data
-      * y:  np-array, dependent data
+  Correlated absolute and/or relative uncertainties of input data 
+  are specified as numpy-arrays of floats; they enter in the 
+  diagonal and off-diagonal elements of the covariance matrix. 
+  Values of 0. may be specified for data points not affected
+  by a correlated uncertainty. E.g. the array [0., 0., 0.5., 0.5]
+  results in a correlated uncertainty of 0.5 of the 3rd and 4th 
+  data points. Providing lists of such array permits the construction
+  of arbitrary covariance matrices from independent and correlated
+  uncertainties uncertainties of (groups of) data points.
 
-    the following are single floats or arrays of length of x
-      * sx: scalar or np-array, uncertainty(ies) on x      
-      * sy: scalar or np-array, uncertainty(ies) on y
-      * srelx: scalar or np-array, relative uncertainties x
-      * srely: scalar or np-array, relative uncertainties y
-      * xabscor: absolute, correlated error(s) on x
-      * yabscor: absolute, correlated error(s) on y
-      * xrelcor: relative, correlated error(s) on x
-      * yrelcor: relative, correlated error(s) on y
-      * ref_to_model, bool: refer relative errors to model if true,
-        else use measured data
-      * parameter constraints: (name, value, uncertainty)        
-      * p0: array-like, initial guess of parameters
-      * plot: flag to switch off graphical output
-      * axis_labels: list of strings, axis labels x and y
-      * data_legend: legend entry for data points
-      * model_name: latex name for model function
-      * model_expression: latex expression for model function
-      * model_legend: legend entry for model
-      * model_band: legend entry for model uncertainty band
-      * fit_info: controls display of fit results on figure
-      * asym_parerrs: show (asymmetric) errors from profile-likelihood scan
-      * plot_cor: show profile curves and contour lines
-      * quiet: controls text output
+  Args:
+    * func: function to fit
+    * x:  np-array, independent data
+    * y:  np-array, dependent data
 
-    Returns:
-      * np-array of float: parameter values
-      * np-array of float: parameter errors
-      * np-array: cor   correlation matrix 
-      * float: chi2  \chi-square
+  the following are single floats or arrays of length of x
+    * sx: scalar or np-array, uncertainty(ies) on x      
+    * sy: scalar or np-array, uncertainty(ies) on y
+    * srelx: scalar or np-array, relative uncertainties x
+    * srely: scalar or np-array, relative uncertainties y
+    * xabscor: absolute, correlated error(s) on x
+    * yabscor: absolute, correlated error(s) on y
+    * xrelcor: relative, correlated error(s) on x
+    * yrelcor: relative, correlated error(s) on y
+    * ref_to_model, bool: refer relative errors to model if true,
+      else use measured data
+    * parameter constraints: (name, value, uncertainty)        
+    * p0: array-like, initial guess of parameters
+    * plot: flag to switch off graphical output
+    * axis_labels: list of strings, axis labels x and y
+    * data_legend: legend entry for data points
+    * model_name: latex name for model function
+    * model_expression: latex expression for model function
+    * model_legend: legend entry for model
+    * model_band: legend entry for model uncertainty band
+    * fit_info: controls display of fit results on figure
+    * asym_parerrs: show (asymmetric) errors from profile-likelihood scan
+    * plot_cor: show profile curves and contour lines
+    * quiet: controls text output
+
+  Returns:
+    * np-array of float: parameter values
+    * np-array of float: parameter errors
+    * np-array: cor   correlation matrix 
+    * float: chi2  \chi-square
+
   """  
 
   # for fit with kafe2
