@@ -36,7 +36,7 @@
 
 import sys
 import numpy as np, matplotlib.pyplot as plt
-from scipy import stats
+from scipy import stats, linalg
 from iminuit import __version__, Minuit
 from inspect import signature, Parameter  
 
@@ -184,7 +184,7 @@ class iminuitFit():
                'to take into account parameter-dependent uncertainties')
 
       # enable dynamic calculation of covariance matrix
-      self.data._set_dynamicCovMat(self.refModel, self.costf.model)
+      self.data._dynamicCov(self.refModel, self.costf.model)
       # fit with dynamic recalculation of covariance matrix
       self.migradResult = self.minuit.migrad()
 
@@ -429,29 +429,32 @@ class iminuitFit():
                     self.ey, self.erely, self.cabsy, self.crely, self.y)
 
       # initialize uncertainties and eventually covariance matrix
-      self.initialCov(cov_initial)
+      self._initialCov(cov_initial)
       
-    def initialCov(self, err):
-      """Build initial (static) covariance matrix (for pre-fit)
-      and calculate inverse matrix
+    def _initialCov(self, err):
+      """Build initial (static) covariance matrix for y-errors
+      (for pre-fit) and calculate inverse matrix
       """
-      self.err2 = np.asarray(err)
-      if self.err2.ndim == 2:
+      if err.ndim == 2:
        # got a covariance matrix, need inverse
         self.needs_covariance = True
-        self.iCov = np.matrix(self.err2).I
+        self.covy = err
+        self.iCov = linalg.inv(err)
+        self.err2 = np.diagonal(err) # squared diagonal elements
       else:
-        self.err2 *= self.err2 
-        self.iCov = 1./self.err2
-      # do not trigger rebuild of covariance matrix in cost function
+      # got independent uncertainties
+        self.err2 = err * err
+        self.covy = np.outer(err, err)
+        self.iCov = np.diag(1./self.err2)
+      # do not rebuild covariance matrix in cost function
       self.rebuildCov = False 
 
-      # store matrix components
-      self.covy = self.err2
+      # no covariance of x-errors
       self.covx = None
+      # total covariance is that of y-errors
       self.cov = self.covy      
       
-    def _set_dynamicCovMat(self, ref_toModel = False, model = None):
+    def _dynamicCov(self, ref_toModel = False, model = None):
       # method to switch on dynamic re-calculation of covariance matrix 
       self.ref_toModel = ref_toModel
       self.model = model
@@ -489,7 +492,7 @@ class iminuitFit():
                               self.cabsx, self.crelx,
                               self.x)
        #  determine dx for derivative from smallest x-uncertainty
-        self._dx = np.sqrt(min(np.diag(self.covx)))/10.
+        self._dx = np.sqrt(min(np.diagonal(self.covx)))/10.
       else:
         self.covx = None
 
@@ -519,7 +522,7 @@ class iminuitFit():
         self.cov += np.outer(_mprime, _mprime) * self.covx
 
       # inverse covariance matrix 
-      self.iCov = np.matrix(self.cov).I
+      self.iCov = linalg.inv(self.cov)
 
     def getCov(self):
       """return covariance matrix of data
@@ -633,7 +636,7 @@ class iminuitFit():
       resid = self.data.y - self.model(self.data.x, *par)
       if not self.data.needs_covariance:
         # fast calculation for simple errors
-        nlL2 += np.sum(resid * self.data.iCov*resid)
+        nlL2 += np.sum(resid *resid/self.err2)
         # identical to classical Chi2
         self.chi2 = nlL2
         if self.use_neg2logL:
@@ -641,7 +644,7 @@ class iminuitFit():
           nlL2 += np.log(np.prod(self.data.err2))
       else:
         # with full inverse covariance matrix for correlated errors
-        nlL2 += float(np.inner(np.matmul(resid.T, self.data.iCov), resid))
+        nlL2 += float(np.inner(np.matmul(resid, self.data.iCov), resid))
         #  up to here, identical to classical Chi2
         self.chi2 = nlL2
         if self.use_neg2logL:
@@ -675,7 +678,7 @@ class iminuitFit():
     # calculate partial derivatives of model w.r.t parameters    
 
     #   parameter step size 
-    dp = 0.01 * np.sqrt(np.diag(covp))
+    dp = 0.01 * np.sqrt(np.diagonal(covp))
     #   derivative df/dp_j at each x_i
     dfdp = np.empty( (len(pvals), len(x)) )
     for j in range(len(pvals)): 
@@ -727,13 +730,13 @@ class iminuitFit():
     y = cf.data.y
     ey = cf.data.getyCov()
     if ey.ndim ==2:
-      ey = np.sqrt(np.diag(ey))
+      ey = np.sqrt(np.diagonal(ey))
     else:
       ey = np.sqrt(ey)
     ex = cf.data.getxCov()
     if ex is not None:
       if ex.ndim ==2:
-        ex = np.sqrt(np.diag(ex))
+        ex = np.sqrt(np.diagonal(ex))
       else:
         ex = np.sqrt(ex)
 
