@@ -98,7 +98,8 @@ class iminuitFit():
               quiet=None):
     # define options for fit
     #   - rel. errors refer to model else data
-    #   - run minos else don*t run minos 
+    #   - run minos else don*t run minos
+    #   - use full neg2logL
     #   - don*t provide printout else verbose printout 
 
     if relative_refers_to_model is not None:
@@ -176,15 +177,16 @@ class iminuitFit():
       sys.exit('iminuitFit Error: no fit object')
     
     # perform initial fit if everything ok
+    if not self.quiet:
+      print( '*==* iminuitFit starting fit')
     self.migradResult = self.minuit.migrad()  # find minimum of cost function
     # possibly, need to iterate fit
     if self.iterateFit:
       if not self.quiet:
         print( '*==* iminuitFit iterating ',
                'to take into account parameter-dependent uncertainties')
-
       # enable dynamic calculation of covariance matrix
-      self.data._dynamicCov(self.refModel, self.costf.model)
+      self.data._dynamicErrors(self.refModel, self.costf.model)
       # fit with dynamic recalculation of covariance matrix
       self.migradResult = self.minuit.migrad()
 
@@ -286,6 +288,27 @@ class iminuitFit():
 
     """
 
+    @staticmethod
+    def _build_Err2(e=None, erel=None, data=None):
+      """
+      Build squared sum of independent absolute 
+      and/or relative error components
+
+      Args:
+
+      * e: scalar or 1d np-array of float: independent uncertainties 
+      * erel: scalar or 1d np-array of float: independent relative uncertainties 
+      """
+      
+      err2 = 0.
+      if e is not None:
+        err2 = e * e
+      if erel is not None:
+        _er = erel * data
+        err2 += _er * _er
+      return err2
+
+      
     @staticmethod
     def _build_CovMat(nd, e=None, erel=None,
                            eabscor=None, erelcor=None, data=None):
@@ -418,33 +441,36 @@ class iminuitFit():
       # set flags for steering of fit process in do_fit()
       self.rebulildCov = None
       self.has_xErrors = ex is not None or erelx is not None \
-        or cabx is not None or crelx is not None
+        or cabsx is not None or crelx is not None
       self.has_rel_yErrors = erely is not None or crely is not None
       self.needs_covariance = \
         self.cabsx is not None or self.crelx is not None or \
         self.cabsy is not None or self.crely is not None 
-            
+
       # build (initial) covariance matrix (without x-errors)
-      cov_initial = self._build_CovMat(self.nd,
+      if self.needs_covariance:
+        err2 = self._build_CovMat(self.nd,
                     self.ey, self.erely, self.cabsy, self.crely, self.y)
+      else:
+        err2 = self._build_Err2(self.ey, self.erely, self.y)
 
       # initialize uncertainties and eventually covariance matrix
-      self._initialCov(cov_initial)
+      self._initialCov(err2)
       
-    def _initialCov(self, err):
+    def _initialCov(self, err2):
       """Build initial (static) covariance matrix for y-errors
       (for pre-fit) and calculate inverse matrix
       """
-      if err.ndim == 2:
+      if err2.ndim == 2:
        # got a covariance matrix, need inverse
         self.needs_covariance = True
-        self.covy = err
-        self.iCov = linalg.inv(err)
-        self.err2 = np.diagonal(err) # squared diagonal elements
+        self.covy = err2
+        self.iCov = linalg.inv(err2)
+        self.err2 = np.diagonal(err2) # squared diagonal elements
       else:
       # got independent uncertainties
-        self.err2 = err * err
-        self.covy = np.outer(err, err)
+        self.err2 = err2
+        self.covy = np.diag(err2)
         self.iCov = np.diag(1./self.err2)
       # do not rebuild covariance matrix in cost function
       self.rebuildCov = False 
@@ -454,95 +480,145 @@ class iminuitFit():
       # total covariance is that of y-errors
       self.cov = self.covy      
       
-    def _dynamicCov(self, ref_toModel = False, model = None):
+    def _dynamicErrors(self, ref_toModel = False, model = None):
       # method to switch on dynamic re-calculation of covariance matrix 
       self.ref_toModel = ref_toModel
       self.model = model
 
+      self._staticCov = None
+      self._staticErr2 = None
+
       # rebuild covariance matrix during fitting procedure
       self.rebuildCov = True        # flag used in cost function
-      self.needs_covariance = True  # use matrix in cost function
-          # so far, following is only implmented for full cov.mat.
-          #  !!! can achieve speed-up for simple problems w.o. cov.mat.
 
-      # build static (=parameter-independent) part of covariance matrix      
-      self.nd = len(self.x)
-      if self.has_rel_yErrors and self.ref_toModel:
-        # some y-errors are parameter-independent
-        self._staticCov = self._build_CovMat(self.nd,
+      if self.needs_covariance:
+        # build static (=parameter-independent) part of covariance matrix      
+        if self.has_rel_yErrors and self.ref_toModel:
+          # some y-errors are parameter-independent
+          self._staticCov = self._build_CovMat(self.nd,
                        self.ey, eabscor = self.cabsy)
-      else: 
-        # all y-errors are parameter-independent
-        self._staticCov = self._build_CovMat(self.nd,
+        else: 
+          # all y-errors are parameter-independent
+          self._staticCov = self._build_CovMat(self.nd,
                                   self.ey, erel=self.erely,
                                   eabscor = self.cabsy, erelcor=self.crely,
                                                 data=self.y)
-      # build matrix of relative errors
-      if self.ref_toModel and self.has_rel_yErrors:
-        self._covy0 = self._build_CovMat(self.nd,
+        # build matrix of relative errors
+        if self.ref_toModel and self.has_rel_yErrors:
+          self._covy0 = self._build_CovMat(self.nd,
                                   erel=self.erely,
                                   erelcor=self.crely,
                                   data=np.ones(self.nd))
-      else:
-        self._covy0 = None
-      # covariance matrix of x-uncertainties (all are parameter-dependent)
-      if self.has_xErrors:
-        self.covx = self._build_CovMat(self.nd,
+        else:
+          self._covy0 = None
+        # covariance matrix of x-uncertainties (all are parameter-dependent)
+        if self.has_xErrors:
+          self.covx = self._build_CovMat(self.nd,
                               self.ex, self.erelx,
                               self.cabsx, self.crelx,
                               self.x)
-       #  determine dx for derivative from smallest x-uncertainty
-        self._dx = np.sqrt(min(np.diagonal(self.covx)))/10.
-      else:
-        self.covx = None
+         #  determine dx for derivative from smallest x-uncertainty
+          self._dx = np.sqrt(min(np.diagonal(self.covx)))/10.
+        else:
+          self.covx = None
 
+      else: # no covariance needed, use simple maths
+        # build static (=parameter-independent) part of covariance matrix      
+        if self.has_rel_yErrors and self.ref_toModel:
+          # only independent y-errors do not depend on parameters
+          self._staticErr2 = self._build_Err2(self.ey)
+        else: 
+          # all y-errors are parameter-independent
+          self._staticErr2 = self._build_Err2( self.ey, self.erely, self.y)
+          
+        if self.has_xErrors:
+          self.err2x = self._build_Err2(self.ex, self.erelx, self.x)
+         #  determine dx for derivative from smallest x-uncertainty
+          self._dx = np.sqrt(min(self.err2x))/10.
+        else:
+          self.err2x = None
+
+    def _rebuild_Err2(self, mpar):
+      """
+      (Re-)calculate uncertaingies 
+      """
+      if self._staticErr2 is not None:
+        self.err2 = np.array(self._staticErr2, copy=True)
+      else:
+        self.err2 = np.zeros(self.nd)
+      if self.ref_toModel and self.has_rel_yErrors:
+        _er = self.erely * self.model(self.x, *mpar)       
+        self.err2 += _er * _er
+      # remember y-errors  
+      self.err2y = np.array(self.err2, copy=True)
+     # add projected x errors
+      if self.err2x is not None:
+      # determine derivatives of model function w.r.t. x,
+        _mprime = 0.5 / self._dx * (
+               self.model(self.x + self._dx, *mpar) - 
+               self.model(self.x - self._dx, *mpar) )
+      # project on y and add to covariance matrix
+        self.err2 += _mprime * _mprime * self.err2x
+        
     def _rebuild_Cov(self, mpar):
       """
       (Re-)Build the covariance matrix from components
       and caclulate its inverse
       """
-      # start from pre-built parameter-independent part of Covariance Matrix
+     # start from pre-built parameter-independent part of Covariance Matrix
       self.cov = np.array(self._staticCov, copy=True)
 
-      # add matrix of parameter-dependent y-uncertainties
+     # add matrix of parameter-dependent y-uncertainties
 #      if self.ref_toModel and self.has_rel_yErrors:
       if self._covy0 is not None:
         _ydat = self.model(self.x, *mpar)       
         self.cov += self._covy0 * np.outer(_ydat, _ydat)
-      # store covariance matrix of y-uncertainties    
+     # store covariance matrix of y-uncertainties    
       self.covy = np.array(self.cov, copy=True)
 
-      # add projected x errors
+     # add projected x errors
       if self.has_xErrors:
        # determine derivatives of model function w.r.t. x,
         _mprime = 0.5 / self._dx * (
-                 self.model(self.x + self._dx, *mpar) - 
-                 self.model(self.x - self._dx, *mpar) )
-        # project on y and add to covariance matrix
+               self.model(self.x + self._dx, *mpar) - 
+               self.model(self.x - self._dx, *mpar) )
+       # project on y and add to covariance matrix
         self.cov += np.outer(_mprime, _mprime) * self.covx
-
-      # inverse covariance matrix 
+      
+     # inverse covariance matrix 
       self.iCov = linalg.inv(self.cov)
 
     def getCov(self):
       """return covariance matrix of data
       """
-      return self.cov
+      if self.needs_covariance:
+        return self.cov
+      else:
+        return np.diag(self.err2)
   
     def getxCov(self):
       """return covariance matrix of x-data
       """
-      return self.covx
+      if self.needs_covariance:
+        return self.covx
+      else:
+        return np.diag(self.err2x)
 
     def getyCov(self):
       """return covariance matrix of y-data
       """
-      return self.covy
-    
+      if self.needs_covariance:
+        return self.covy
+      else:
+        return np.diag(self.err2y)
+      
     def getiCov(self):
       """return inverse of covariance matrix, as used in cost function
       """
-      return self.iCov
+      if self.needs_covariance:
+        return self.iCov
+      else:
+        return np.diag(1./self.err2)
       
   # define custom cost function for iminuit
   class LSQwithCov:
@@ -628,28 +704,30 @@ class iminuitFit():
           r = ( par[p_id] - c[1]) / c[2] 
           nlL2 += r*r
 
-      # check if Covariance matrix needs rebuilding
-      if self.data.rebuildCov:
-        self.data._rebuild_Cov(par)
-
-      # add chi2 of data wrt. model    
+      # calculate data wrt. model    
       resid = self.data.y - self.model(self.data.x, *par)
-      if not self.data.needs_covariance:
-        # fast calculation for simple errors
-        nlL2 += np.sum(resid *resid/self.err2)
-        # identical to classical Chi2
-        self.chi2 = nlL2
-        if self.use_neg2logL:
-           # take into account parameter-dependent normalisation term
-          nlL2 += np.log(np.prod(self.data.err2))
-      else:
-        # with full inverse covariance matrix for correlated errors
+
+      if self.data.needs_covariance:
+        # check if Covariance matrix needs rebuilding
+        if self.data.rebuildCov:
+          self.data._rebuild_Cov(par)
+       # with full inverse covariance matrix for correlated errors
         nlL2 += float(np.inner(np.matmul(resid, self.data.iCov), resid))
         #  up to here, identical to classical Chi2
         self.chi2 = nlL2
         if self.use_neg2logL:
          # take into account parameter-dependent normalisation term
           nlL2 += np.log(np.linalg.det(self.data.cov))
+      else:  # fast calculation for simple errors
+        # check if errors needs recalculating
+        if self.data.rebuildCov:
+          self.data._rebuild_Err2(par)
+        nlL2 += np.sum(resid * resid / self.data.err2)
+        # identical to classical Chi2
+        self.chi2 = nlL2
+        if self.use_neg2logL:
+           # take into account parameter-dependent normalisation term
+          nlL2 += np.log(np.prod(self.data.err2))
 
       return nlL2
     
