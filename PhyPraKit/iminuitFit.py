@@ -46,13 +46,14 @@ class iminuitFit():
    
   Public methods:
 
-  - init_data():        initialze data and uncertainties
-  - init_fit():         initialize fit: data, model and parameter constraints
-  - setOptions():       set options
-  - do_fit():           perform fit
-  - plotModel():        plot model function and data
-  - plotContours():     plot profile likelihoods and confidence contours 
+  - init_data():         initialze data and uncertainties
+  - init_fit():          initialize fit: data, model and parameter constraints
+  - setOptions():        set options
+  - do_fit():            perform fit
+  - plotModel():         plot model function and data
+  - plotContours():      plot profile likelihoods and confidence contours 
   - getResult():        access to results 
+  - getFunctionError(): uncertainty of model at point(s) x for parameters p 
  
   Public data members:
 
@@ -186,7 +187,7 @@ class iminuitFit():
         print( '*==* iminuitFit iterating ',
                'to take into account parameter-dependent uncertainties')
       # enable dynamic calculation of covariance matrix
-      self.data._dynamicErrors(self.refModel, self.costf.model)
+      self.data._init_dynamicErrors(self.refModel, self.costf.model)
       # fit with dynamic recalculation of covariance matrix
       self.migradResult = self.minuit.migrad()
 
@@ -277,6 +278,13 @@ class iminuitFit():
     -  cabsy:   correlated absolute uncertainties y
     -  crely:   correlated relative uncertainties y
     -  quiet:   no informative printout if True
+
+    Public methods:
+    - get_Cov(): final covariance matrix (incl. proj. x)  
+    - get_xCov(): covariance of x-values
+    - get_yCov(): covariance of y-values
+    - get_iCov(): inverse covariance matrix
+
 
     Data members:
   
@@ -473,14 +481,14 @@ class iminuitFit():
         self.covy = np.diag(err2)
         self.iCov = np.diag(1./self.err2)
       # do not rebuild covariance matrix in cost function
-      self.rebuildCov = False 
+      self.needs_dynamicErrors = False 
 
       # no covariance of x-errors
       self.covx = None
       # total covariance is that of y-errors
       self.cov = self.covy      
       
-    def _dynamicErrors(self, ref_toModel = False, model = None):
+    def _init_dynamicErrors(self, ref_toModel = False, model = None):
       # method to switch on dynamic re-calculation of covariance matrix 
       self.ref_toModel = ref_toModel
       self.model = model
@@ -489,7 +497,7 @@ class iminuitFit():
       self._staticErr2 = None
 
       # rebuild covariance matrix during fitting procedure
-      self.rebuildCov = True        # flag used in cost function
+      self.needs_dynamicErrors = True    # flag for cost function
 
       if self.needs_covariance:
         # build static (=parameter-independent) part of covariance matrix      
@@ -588,7 +596,7 @@ class iminuitFit():
      # inverse covariance matrix 
       self.iCov = linalg.inv(self.cov)
 
-    def getCov(self):
+    def get_Cov(self):
       """return covariance matrix of data
       """
       if self.needs_covariance:
@@ -596,7 +604,7 @@ class iminuitFit():
       else:
         return np.diag(self.err2)
   
-    def getxCov(self):
+    def get_xCov(self):
       """return covariance matrix of x-data
       """
       if self.needs_covariance:
@@ -604,7 +612,7 @@ class iminuitFit():
       else:
         return np.diag(self.err2x)
 
-    def getyCov(self):
+    def get_yCov(self):
       """return covariance matrix of y-data
       """
       if self.needs_covariance:
@@ -612,7 +620,7 @@ class iminuitFit():
       else:
         return np.diag(self.err2y)
       
-    def getiCov(self):
+    def get_iCov(self):
       """return inverse of covariance matrix, as used in cost function
       """
       if self.needs_covariance:
@@ -648,6 +656,7 @@ class iminuitFit():
     """
   
     def __init__(self, data, model, quiet=True, use_neg2logL = False):
+
       from iminuit.util import describe, make_func_code
 
       self.data = data
@@ -704,12 +713,12 @@ class iminuitFit():
           r = ( par[p_id] - c[1]) / c[2] 
           nlL2 += r*r
 
-      # calculate data wrt. model    
+      # calculate resisual of data wrt. model    
       resid = self.data.y - self.model(self.data.x, *par)
 
       if self.data.needs_covariance:
-        # check if Covariance matrix needs rebuilding
-        if self.data.rebuildCov:
+        #  check if matrix needs rebuilding
+        if self.data.needs_dynamicErrors:
           self.data._rebuild_Cov(par)
        # with full inverse covariance matrix for correlated errors
         nlL2 += float(np.inner(np.matmul(resid, self.data.iCov), resid))
@@ -718,12 +727,13 @@ class iminuitFit():
         if self.use_neg2logL:
          # take into account parameter-dependent normalisation term
           nlL2 += np.log(np.linalg.det(self.data.cov))
+
       else:  # fast calculation for simple errors
         # check if errors needs recalculating
-        if self.data.rebuildCov:
+        if self.data.needs_dynamicErrors:
           self.data._rebuild_Err2(par)
         nlL2 += np.sum(resid * resid / self.data.err2)
-        # identical to classical Chi2
+        # this is identical to classical Chi2
         self.chi2 = nlL2
         if self.use_neg2logL:
            # take into account parameter-dependent normalisation term
@@ -806,12 +816,12 @@ class iminuitFit():
   # get data
     x = cf.data.x
     y = cf.data.y
-    ey = cf.data.getyCov()
+    ey = cf.data.get_yCov()
     if ey.ndim ==2:
       ey = np.sqrt(np.diagonal(ey))
     else:
       ey = np.sqrt(ey)
-    ex = cf.data.getxCov()
+    ex = cf.data.get_xCov()
     if ex is not None:
       if ex.ndim ==2:
         ex = np.sqrt(np.diagonal(ex))
@@ -827,7 +837,7 @@ class iminuitFit():
     xmin, xmax = plt.xlim()
     xplt=np.linspace(xmin, xmax, 100)
     yplt = cf.model(xplt, *pvals)
-    plt.plot(xplt, yplt, label=model_legend)
+    plt.plot(xplt, yplt, label=model_legend, linestyle='dashed', alpha=0.7)
     plt.xlabel(axis_labels[0], size='x-large')
     plt.ylabel(axis_labels[1], size='x-large')
     plt.grid()
