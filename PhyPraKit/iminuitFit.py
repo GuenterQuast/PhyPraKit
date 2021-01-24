@@ -37,8 +37,8 @@
 import sys
 import numpy as np, matplotlib.pyplot as plt
 from scipy import stats, linalg
+from inspect import signature
 from iminuit import __version__, Minuit
-from inspect import signature, Parameter  
 
 class iminuitFit():
   """**Fit an arbitrary funtion f(x, *par) to data**  
@@ -75,7 +75,6 @@ class iminuitFit():
   - minuit.\*: methods and members of Minuit object 
   - data.\*:   methods and members of sub-class DataUncertainties
   - costf.\*:  methods andmembers of sub-class LSQwithCov
-
   """
 
   def __init__(self):
@@ -129,7 +128,15 @@ class iminuitFit():
          self.data.has_rel_yErrors and self.refModel)
 
   def init_fit(self, model, p0=None, constraints=None):
-    # set model function
+    """initialize fit object
+
+    Args:
+
+    - model: model function f(x; \*par)
+    - p0: np-array of floats, initial parameter values 
+    - constraints: list or nested list: [parameter name, value, uncertainty] 
+      or [parameter index, value, uncertainty]
+    """
     self.model = model
     # create cost function
     self.costf = self.LSQwithCov(self.data, self.model,
@@ -138,21 +145,11 @@ class iminuitFit():
     if constraints is not None:
       self.costf.setConstraints(constraints)
 
-    # inspect parameters of model function to set start values for fit
-    sig=signature(self.model)
-    parnames=list(sig.parameters.keys())
-    ipardict={}
+    # get parameters of model function to set start values for fit
+    args, model_kwargs = self.get_functionSignature(self.model)
     if p0 is not None:
-      for i, pnam in enumerate(parnames[1:]):
-        ipardict[pnam] = p0[i]
-    else:
-    # try defaults of parameters from argument list
-      for i, pnam in enumerate(parnames[1:]):
-        dv = sig.parameters[pnam].default   
-        if dv is not Parameter.empty:
-          ipardict[pnam] = dv
-        else:
-          ipardict[pnam] = 0.  #  use zero in worst case
+      for i, pnam in enumerate(model_kwargs.keys() ):
+        model_kwargs[pnam] = p0[i]    
 
     # create Minuit object
     if __version__ < '2':
@@ -160,16 +157,17 @@ class iminuitFit():
         print_level=0
       else:
         print_level=1
-      self.minuit = Minuit(self.costf, **ipardict,
+      self.minuit = Minuit(self.costf, **model_kwargs,
                            errordef=1., print_level=print_level)
     else:
-      self.minuit = Minuit(self.costf, **ipardict)  
+      self.minuit = Minuit(self.costf, **model_kwargs)  
       self.minuit.errordef = 1.
       if self.quiet:
         self.minuit.print_level = 0
 
   def do_fit(self):
-
+    """perform fitting sequence
+    """
     if self.data is None:
       print(' !!! iminuitFit: no data object defined - call init_data()')
       sys.exit('iminuitFit Error: no data object')
@@ -179,13 +177,13 @@ class iminuitFit():
     
     # perform initial fit if everything ok
     if not self.quiet:
-      print( '*==* iminuitFit starting fit')
+      print( '*==* iminuitFit starting (pre-)fit')
     self.migradResult = self.minuit.migrad()  # find minimum of cost function
     # possibly, need to iterate fit
     if self.iterateFit:
       if not self.quiet:
-        print( '*==* iminuitFit iterating ',
-               'to take into account parameter-dependent uncertainties')
+        print( '*==* iminuitFit iterating',
+               'to account for parameter-dependent uncertainties')
       # enable dynamic calculation of covariance matrix
       self.data._init_dynamicErrors(self.refModel, self.costf.model)
       # fit with dynamic recalculation of covariance matrix
@@ -193,8 +191,14 @@ class iminuitFit():
 
     # run profile likelihood scan to check for asymmetric errors
     if self.run_minos:
-      self.minosResult = self.minuit.minos()
-
+      if not self.quiet:
+        print( '*==* iminuitFit starting minos scan')
+      try:  
+        self.minosResult = self.minuit.minos()
+      except Exception as e:
+        if not self.quiet:
+          print( '*==* iminuitFit: !!! minos failed \n', e)
+        
     self._storeResult()
     
     return self.migradResult, self.minosResult
@@ -256,7 +260,8 @@ class iminuitFit():
     # self.OneSigInterval
     
   def getResult(self):
-    # return most im portant results
+    """return most im portant results
+    """
     return (self.ParameterValues, self.OneSigInterval,
             self.CorrelationMatrix, self.Chi2)
 
@@ -293,7 +298,6 @@ class iminuitFit():
     * covy: covariance matrix of y uncertainties
     * cov: full covariance matrix incl. projected x
     * iCov: inverse of covariance matrix
-
     """
 
     @staticmethod
@@ -305,8 +309,7 @@ class iminuitFit():
       Args:
 
       * e: scalar or 1d np-array of float: independent uncertainties 
-      * erel: scalar or 1d np-array of float: independent relative uncertainties 
-      """
+      * erel: scalar or 1d np-array of float: independent relative uncertainties      """
       
       err2 = 0.
       if e is not None:
@@ -354,7 +357,6 @@ class iminuitFit():
       Returns:
 
       * np-array of float: covariance matrix 
-
       """
 
       # 1. independent errors
@@ -652,7 +654,6 @@ class iminuitFit():
     Methods:
 
     - model(x, \*par)
-   
     """
   
     def __init__(self, data, model, quiet=True, use_neg2logL = False):
@@ -726,7 +727,7 @@ class iminuitFit():
         self.chi2 = nlL2
         if self.use_neg2logL:
          # take into account parameter-dependent normalisation term
-          nlL2 += np.log(np.linalg.det(self.data.cov))
+          nlL2 += np.log(linalg.det(self.data.cov))
 
       else:  # fast calculation for simple errors
         # check if errors needs recalculating
@@ -760,7 +761,6 @@ class iminuitFit():
     Returns:
 
       * model uncertainty, same length as x
-
     """
 
     # calculate partial derivatives of model w.r.t parameters    
@@ -864,7 +864,7 @@ class iminuitFit():
   def plotContours(self):
     """
     Plot grid of profile curves and one- and two-sigma
-    contours lines from iminuit object
+    contour lines from iminuit object
 
     Arg: 
       * iminuitObject
@@ -884,6 +884,9 @@ class iminuitFit():
       calculate confidence level CL from DeltaChi2
       """
       return (1. - np.exp(-dc2 / 2.))
+
+    if not self.quiet:
+      print( '*==* iminuitFit: scanning contours')
 
     m = self.minuit     
     npar = m.nfit    # numer of parameters
@@ -917,14 +920,29 @@ class iminuitFit():
           else:
             m.draw_mncontour(pnams[i], pnams[j],
               cl=(Chi22CL(1.), Chi22CL(4.)) )
-    return cor_fig 
+    return cor_fig
+  
+  @staticmethod
+  def get_functionSignature(f):
+    # get arguments and keyword arguments passed to a function
+    pars = signature(f).parameters
+    args = []
+    kwargs = {}
+    for p in pars.values():
+      if p.default is p.empty:
+        args.append(p.name)
+      else:
+        kwargs[p.name]=p.default
+    return args, kwargs
 
+  
 if __name__ == "__main__": # --- interface and example
   def mFit(fitf, x, y, sx = None, sy = None,
          srelx = None, srely = None, 
          xabscor = None, xrelcor = None,        
          yabscor = None, yrelcor = None,
-         p0 = None, constraints = None, 
+         p0 = None, constraints = None,
+         use_negLogL=True, 
          plot = True, plot_cor = True,
          plot_band=True, quiet = False,
          axis_labels=['x', 'y = f(x, *par)'],
@@ -955,6 +973,7 @@ if __name__ == "__main__": # --- interface and example
     * yabscor: scalar or np-array, absolute, correlated error(s) on y
     * yrelcor: scalar or np-array, relative, correlated error(s) on y
     * p0: array-like, initial guess of parameters
+    * use_negLogL:  use full -2ln(L)  
     * constraints: list or list of lists with [name or id, value, error]
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
@@ -969,7 +988,6 @@ if __name__ == "__main__": # --- interface and example
     * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
     * np-array: correlation matrix 
     * float: chi2  \chi-square of fit a minimum
-
     """
 
     ## from .iminuitFit import iminuitFit
@@ -986,7 +1004,7 @@ if __name__ == "__main__": # --- interface and example
     # set some options
     Fit.setOptions(run_minos=True,
                    relative_refers_to_model=True,
-                   use_negLogL=True,
+                   use_negLogL=use_negLogL,
                    quiet=quiet)
 
     # pass data and uncertainties to fit object

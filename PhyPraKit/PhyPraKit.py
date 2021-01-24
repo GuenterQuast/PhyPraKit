@@ -1384,7 +1384,8 @@ def mFit(fitf, x, y, sx = None, sy = None,
          srelx = None, srely = None, 
          xabscor = None, xrelcor = None,        
          yabscor = None, yrelcor = None,
-         p0 = None, constraints = None, 
+         p0 = None, constraints = None,
+         use_negLogL=True, 
          plot = True, plot_cor = True,
          plot_band=True, quiet = False,
          axis_labels=['x', 'y = f(x, *par)'], 
@@ -1415,6 +1416,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
     * yabscor: scalar or np-array, absolute, correlated error(s) on y
     * yrelcor: scalar or np-array, relative, correlated error(s) on y
     * p0: array-like, initial guess of parameters
+    * use_negLogL:  use full -2ln(L)  
     * constraints: list or list of lists with [name or id, value, error]
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
@@ -1445,7 +1447,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
   # set some options
   Fit.setOptions(run_minos=True,
                  relative_refers_to_model=True,
-                 use_negLogL=True,
+                 use_negLogL=use_negLogL,
                  quiet=quiet)
 
   # pass data and uncertainties to fit object
