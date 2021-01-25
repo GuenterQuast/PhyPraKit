@@ -2,7 +2,7 @@
   
   Fitting with `iminiut` (https://iminuit.readthedocs.io/en/stable/)
 
-  This class `iminuitFit.py` uses iminuit for fitting a model 
+  This class `mnFit.py` uses iminuit for fitting a model 
   to data with independent and/or correlated absolute and/or 
   relative uncertainties in the x- and y-directions. 
    
@@ -40,7 +40,7 @@ from scipy import stats, linalg
 from inspect import signature
 from iminuit import __version__, Minuit
 
-class iminuitFit():
+class mnFit():
   """**Fit an arbitrary funtion f(x, *par) to data**  
   with independent and/or correlated absolute and/or relative uncertainties
    
@@ -82,9 +82,11 @@ class iminuitFit():
     # no data or model provided yet
     self.data = None
     self.costf = None
-    # no fit done
+    # no fit done yet
     self.migradResult = None
     self.minosResult = None
+    self.migrad_ok = False
+    self.minos_ok = False
     # default options
     self.refModel=True
     self.run_minos = True
@@ -169,35 +171,62 @@ class iminuitFit():
     """perform fitting sequence
     """
     if self.data is None:
-      print(' !!! iminuitFit: no data object defined - call init_data()')
-      sys.exit('iminuitFit Error: no data object')
+      print(' !!! mnFit: no data object defined - call init_data()')
+      sys.exit('mnFit Error: no data object')
     if self.costf is None:
-      print(' !!! iminuitFit: no fit object defined - call init_fit()')
-      sys.exit('iminuitFit Error: no fit object')
+      print(' !!! mnFit: no fit object defined - call init_fit()')
+      sys.exit('mnFit Error: no fit object')
     
-    # perform initial fit if everything ok
+    # summarize options
     if not self.quiet:
-      print( '*==* iminuitFit starting (pre-)fit')
-    self.migradResult = self.minuit.migrad()  # find minimum of cost function
-    # possibly, need to iterate fit
+      print( '*==* mnFit starting (pre-)fit')
+      print( '  Options:')
+      if self.run_minos is not None:
+        print( '     - performing minos profile likelihood scan')
+      if self.refModel is not None:
+        print( '     - relative uncertainties refer to model ')
+      if self.iterateFit and self.use_negLogL is not None:
+        print( '     - using negative log-likelihood')
+      
+    # perform initial fit
+    try:
+      self.migradResult = self.minuit.migrad()  # find minimum of cost function
+      self.migrad_ok = True
+    except Excetion as e:
+      self.migrad_ok = False
+      print('*==* !!! fit with migrad failed')
+      print(e)
+      exit(1)
+
+    # possibly, need to iterate
     if self.iterateFit:
       if not self.quiet:
-        print( '*==* iminuitFit iterating',
+        print( '*==* mnFit iterating',
                'to account for parameter-dependent uncertainties')
       # enable dynamic calculation of covariance matrix
       self.data._init_dynamicErrors(self.refModel, self.costf.model)
+
       # fit with dynamic recalculation of covariance matrix
-      self.migradResult = self.minuit.migrad()
+      try:
+        self.migradResult = self.minuit.migrad()
+        self.migrad_ok = True
+      except Excetion as e:
+        self.migrad_ok = False
+        print('*==* !!! iteration of fit with migrad failed')
+        print(e)
+        exit(1)
 
     # run profile likelihood scan to check for asymmetric errors
     if self.run_minos:
       if not self.quiet:
-        print( '*==* iminuitFit starting minos scan')
+        print( '*==* mnFit starting minos scan')
       try:  
         self.minosResult = self.minuit.minos()
+        self.minos_ok = True
       except Exception as e:
+        self.minos_ok = False
         if not self.quiet:
-          print( '*==* iminuitFit: !!! minos failed \n', e)
+          print( '*==* mnFit: !!! minos failed \n', e)
         
     self._storeResult()
     
@@ -222,7 +251,7 @@ class iminuitFit():
       parerrs = np.array(m.errors) # parameter uncertainties
       cov=np.array(m.covariance)
       
-    if self.minosResult is not None:
+    if self.minosResult is not None and self.minos_ok:
       pmerrs = [] 
     #  print("MINOS errors:")
       if __version__< '2':
@@ -850,7 +879,7 @@ class iminuitFit():
     # display legend with some fit info
     fit_info = [
      f"$\\chi^2$/$n_\\mathrm{{dof}}$={chi2:.1f}/{ndof}, p={100*chi2prb:.1f}%",]
-    if self.minosResult is not None:
+    if self.minosResult is not None and self.minos_ok:
       for p, v, e in zip(pnams, pvals, pmerrs):
         fit_info.append(f"{p} = ${v:.3f}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$")
     else:
@@ -886,7 +915,7 @@ class iminuitFit():
       return (1. - np.exp(-dc2 / 2.))
 
     if not self.quiet:
-      print( '*==* iminuitFit: scanning contours')
+      print( '*==* mnFit: scanning contours')
 
     m = self.minuit     
     npar = m.nfit    # numer of parameters
@@ -990,7 +1019,7 @@ if __name__ == "__main__": # --- interface and example
     * float: chi2  \chi-square of fit a minimum
     """
 
-    ## from .iminuitFit import iminuitFit
+    ## from .iminuitFit import mnFit
 
     # ... check if errors are provided ...
     if sy is None:
@@ -999,7 +1028,7 @@ if __name__ == "__main__": # --- interface and example
             '-> parameter errors from fit are meaningless!\n')
   
     # set up a fit object
-    Fit = iminuitFit()
+    Fit = mnFit()
 
     # set some options
     Fit.setOptions(run_minos=True,
@@ -1057,10 +1086,18 @@ if __name__ == "__main__": # --- interface and example
   from PhyPraKit import generateXYdata
 
   # define the model function to fit
-  def model(x, A=1., x0=1.):
+  def exp_model(x, A=1., x0=1.):
     return A*np.exp(-x/x0)
-  mpardict = {'A':1., 'x0':0.5}  # model parameters
 
+  # another model function
+  def poly2_model(x, a=0.1, b=1., c=1.):
+    return a*x**2 + b*x + c
+
+  # set model to use
+  model=exp_model
+  # get keyowrd-arguments
+  mpardict = mnFit.get_functionSignature(model)[1]
+  
 # set error components 
   sabsy = 0.07
   srely = 0.05 # 5% of model value
@@ -1074,7 +1111,9 @@ if __name__ == "__main__": # --- interface and example
 # generate pseudo data
   np.random.seed(314)      # initialize random generator
   nd=15
-  data_x = np.linspace(0, 1, nd)       # x of data points
+  xmin=0.
+  xmax=3.
+  data_x = np.linspace(xmin, xmax, nd)       # x of data points
   sigy = np.sqrt(sabsy * sabsy + (srely*model(data_x, **mpardict))**2)
   sigx = np.sqrt(sabsx * sabsx + (srelx * data_x)**2)
   xt, yt, data_y = generateXYdata(data_x, model, sigx, sigy,
@@ -1084,7 +1123,7 @@ if __name__ == "__main__": # --- interface and example
                                       yrelcor=crely,
                                       mpar=mpardict.values() )
 
-# perform fit to data with function mFit using iminuitFit class
+# perform fit to data with function mFit using class mnFit
   parvals, parerrs, cor, chi2 = mFit(model, data_x, data_y,
                                      sx=sabsx,
                                      sy=sabsy,
@@ -1094,7 +1133,7 @@ if __name__ == "__main__": # --- interface and example
                                      xrelcor=crelx,
                                      yabscor=cabsy,
                                      yrelcor=crely,
-                                     p0=(1., 0.5),
+##                                   p0=(1., 0.5),
 #                                     constraints=['A', 1., 0.03],
 #                                     constraints=[0, 1., 0.03],
                                      plot=True,
@@ -1103,7 +1142,7 @@ if __name__ == "__main__": # --- interface and example
                                      quiet=False,
                                      axis_labels=['x', 'y   \  f(x, *par)'], 
                                      data_legend = 'random data',    
-                                     model_legend = 'exponential model')
+                                     model_legend = 'model')
 
 # Print results to illustrate how to use output
   print('\n*==* Fit Result:')

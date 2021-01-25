@@ -1434,7 +1434,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
 
   """
 
-  from .iminuitFit import iminuitFit
+  from .iminuitFit import mnFit
 
     # ... check if errors are provided ...
   if sy is None:
@@ -1442,7 +1442,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
     print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
   
   # set up a fit object
-  Fit = iminuitFit()
+  Fit = mnFit()
 
   # set some options
   Fit.setOptions(run_minos=True,
