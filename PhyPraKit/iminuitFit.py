@@ -13,6 +13,12 @@
   of the model function w.r.t. x is used to project the 
   covariance matrix of x-uncertainties on the y-axis. 
 
+  The cost function that is optimized is an extended version of
+  the chi^2 function: for parameter-dependent uncertainties, the
+  logarithm of the detetminant of the covariance matrix is added
+  to the cost function, so that it corresponds to twice the negative
+  log-likelihood of a multivariate Gaussian distribution.
+
   The implementation in this example is minimalistic and
   intended to illustrate the principle of an advanced usage
   of `iminuit`. It is also meant to stimulate own studies with 
@@ -74,7 +80,7 @@ class mnFit():
 
   - minuit.\*: methods and members of Minuit object 
   - data.\*:   methods and members of sub-class DataUncertainties
-  - costf.\*:  methods andmembers of sub-class LSQwithCov
+  - costf.\*:  methods and members of sub-class xLSQ
   """
 
   def __init__(self):
@@ -136,12 +142,12 @@ class mnFit():
 
     - model: model function f(x; \*par)
     - p0: np-array of floats, initial parameter values 
-    - constraints: list or nested list: [parameter name, value, uncertainty] 
+    - constraints: (nested) list(s): [parameter name, value, uncertainty] 
       or [parameter index, value, uncertainty]
     """
     self.model = model
     # create cost function
-    self.costf = self.LSQwithCov(self.data, self.model,
+    self.costf = self.xLSQ(self.data, self.model,
                                  use_neg2logL= self.use_negLogL,
                                  quiet=self.quiet)
     if constraints is not None:
@@ -660,9 +666,19 @@ class mnFit():
         return np.diag(1./self.err2)
       
   # define custom cost function for iminuit
-  class LSQwithCov:
+  class xLSQ:
     """
-    custom Least-SQuares cost function with error matrix
+    Custom e_x_tended Least-SQuares cost function 
+    with dynamically updated covariance matrix
+    and -2log(L) correction term
+
+    For data points (x, y) with model f(x, \*p) 
+    and covariance matrix V(f(x,\*p)
+    the cost function is: 
+
+    .. math:: 
+      -2\ln {\cal L} = \chi^2(y, V^{-1}, f(x, *p) \,) 
+      + \ln(\, \det( V(f(x, *p) ) \,)
 
     Input:
 
@@ -771,7 +787,7 @@ class mnFit():
 
       return nlL2
     
-  # --- end definition of class LSQwithCov ----
+  # --- end definition of class xLSQ ----
 
   @staticmethod
   def getFunctionError(x, model, pvals, covp):
@@ -1003,7 +1019,7 @@ if __name__ == "__main__": # --- interface and example
     * yrelcor: scalar or np-array, relative, correlated error(s) on y
     * p0: array-like, initial guess of parameters
     * use_negLogL:  use full -2ln(L)  
-    * constraints: list or list of lists with [name or id, value, error]
+    * constraints: (nested) list(s) [name or id, value, error]
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
     * plot_band: plot uncertainty band around model function
