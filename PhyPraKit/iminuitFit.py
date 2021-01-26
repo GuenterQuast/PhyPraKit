@@ -49,6 +49,117 @@ from scipy import stats, linalg
 from inspect import signature
 from iminuit import __version__, Minuit
 
+def mFit(fitf, x, y, sx = None, sy = None,
+       srelx = None, srely = None, 
+       xabscor = None, xrelcor = None,        
+       yabscor = None, yrelcor = None,
+       p0 = None, constraints = None,
+       use_negLogL=True, 
+       plot = True, plot_cor = True,
+       plot_band=True, quiet = False,
+       axis_labels=['x', 'y = f(x, *par)'],
+       data_legend = 'data',    
+       model_legend = 'model'):
+  
+  """Fit an arbitrary function fitf(x, \*par) to data points (x, y) 
+  with independent and correlated absolute and/or relative errors 
+  on x- and y- values with class mnFit using the package iminuit.
+
+  Correlated absolute and/or relative uncertainties of input data 
+  are specified as numpy-arrays of floats; they enter in the 
+  diagonal and off-diagonal elements of the covariance matrix. 
+  Values of 0. may be specified for data points not affected
+  by a correlated uncertainty. E.g. the array [0., 0., 0.5., 0.5]
+  results in a correlated uncertainty of 0.5 of the 3rd and 4th 
+  data points. Providing lists of such arrays permits the construction
+  of arbitrary covariance matrices from independent and correlated
+  uncertainties of (groups of) data points.
+
+  Args:
+  * fitf: model function to fit, arguments (float:x, float: \*args)
+  * x:  np-array, independent data
+  * y:  np-array, dependent data
+  * sx: scalar or 1d or 2d np-array , uncertainties on x data
+  * sy: scalar or 1d or 2d np-array , uncertainties on x data
+  * srelx: scalar or np-array, relative uncertainties x
+  * srely: scalar or np-array, relative uncertainties y
+  * yabscor: scalar or np-array, absolute, correlated error(s) on y
+  * yrelcor: scalar or np-array, relative, correlated error(s) on y
+  * p0: array-like, initial guess of parameters
+  * use_negLogL:  use full -2ln(L)  
+  * constraints: (nested) list(s) [name or id, value, error]
+  * plot: show data and model if True
+  * plot_cor: show profile liklihoods and conficence contours
+  * plot_band: plot uncertainty band around model function
+  * quiet: suppress printout
+  * list of str: axis labels
+  * str: legend for data
+  * str: legend for model 
+
+  Returns:
+  * np-array of float: parameter values
+  * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
+  * np-array: correlation matrix 
+  * float: chi2  \chi-square of fit a minimum
+  """
+
+  ## from .iminuitFit import mnFit #! already contained in this file
+
+  # ... check if errors are provided ...
+  if sy is None:
+    sy = np.ones(len(y))
+    print('\n!**! No y-errors given',
+          '-> parameter errors from fit are meaningless!\n')
+  
+  # set up a fit object
+  Fit = mnFit()
+
+  # set some options
+  Fit.setOptions(run_minos=True,
+                 relative_refers_to_model=True,
+                 use_negLogL=use_negLogL,
+                 quiet=quiet)
+
+  # pass data and uncertainties to fit object
+  Fit.init_data(x, y,
+              ex = sx, ey = sy,
+              erelx = srelx, erely = srely,
+              cabsx = xabscor, crelx = xrelcor,
+              cabsy = yabscor, crely = yrelcor)
+   # pass model fuction, start parameter and possibe constraints
+  Fit.init_fit(fitf, p0=p0, constraints=constraints)
+   # perform the fit
+  fitResult = Fit.do_fit()
+  # print fit resule (dictionary from migrad/minos(
+  if not quiet:
+    print("\nFit Result from migrad:")
+    print(fitResult[0])
+    if fitResult[1] is not None:
+      print("\nResult of minos error analysis:")
+      print(fitResult[1])
+    
+  # produce figure with data and model
+  if plot:
+    fig = Fit.plotModel(axis_labels=axis_labels,
+                 data_legend=data_legend,
+                 model_legend=model_legend,
+                      plot_band=plot_band)
+
+  # figure with visual representation of covariances
+  #   prifile likelihood scan and confidence contours
+  if plot_cor:
+    fig_cor = Fit.plotContours()
+   # show plots on screen
+  if plot or plot_cor:
+    plt.show()
+
+  # return
+  #   numpy arrays with fit result: parameter values,
+  #   negative and positive parameter uncertainties,
+  #   correlation matrix
+  #   chi2
+  return Fit.getResult()
+
 class mnFit():
   """**Fit an arbitrary funtion f(x, *par) to data**  
   with independent and/or correlated absolute and/or relative uncertainties
@@ -58,14 +169,19 @@ class mnFit():
    
   Public methods:
 
-  - init_data():         initialze data and uncertainties
-  - init_fit():          initialize fit: data, model and parameter constraints
-  - setOptions():        set options
-  - do_fit():            perform fit
-  - plotModel():         plot model function and data
-  - plotContours():      plot profile likelihoods and confidence contours 
+  - init_data():        initialze data and uncertainties
+  - init_fit():         initialize fit: data, model and parameter constraints
+  - setOptions():       set options
+  - do_fit():           perform fit
+  - plotModel():        plot model function and data
+  - plotContours():     plot profile likelihoods and confidence contours 
   - getResult():        access to results 
-  - getFunctionError(): uncertainty of model at point(s) x for parameters p 
+  - getFunctionError(): uncertainty of model at point(s) x for parameters p
+  - plot_Profile():     plot profile Likelihood for parameter
+  - plot_clContour():   plot confidence level coutour for pair of parameters  
+  - plot_nsigContour(): plot n-sigma coutours for pair of parameters  
+
+ 
  
   Public data members:
 
@@ -297,8 +413,7 @@ class mnFit():
     #   covariance and correlation matrices
     self.CovarianceMatrix = np.array(cov, copy=True)
     self.CorrelationMatrix = cov/np.outer(parerrs, parerrs)
-    #   1-sigma (68% CL) range in 
-    # self.OneSigInterval
+    #   1-sigma (68% CL) range in self.OneSigInterval
     
   def getResult(self):
     """return most im portant results
@@ -1025,120 +1140,6 @@ class mnFit():
   
 if __name__ == "__main__": # --- interface and example
   
-  def mFit(fitf, x, y, sx = None, sy = None,
-         srelx = None, srely = None, 
-         xabscor = None, xrelcor = None,        
-         yabscor = None, yrelcor = None,
-         p0 = None, constraints = None,
-         use_negLogL=True, 
-         plot = True, plot_cor = True,
-         plot_band=True, quiet = False,
-         axis_labels=['x', 'y = f(x, *par)'],
-         data_legend = 'data',    
-         model_legend = 'model'): 
-    """Fit an arbitrary function fitf(x, \*par) to data points (x, y) 
-    with independent and correlated absolute and/or relative errors 
-    on x- and y- values with package iminuit.
-
-    Correlated absolute and/or relative uncertainties of input data 
-    are specified as numpy-arrays of floats; they enter in the 
-    diagonal and off-diagonal elements of the covariance matrix. 
-    Values of 0. may be specified for data points not affected
-    by a correlated uncertainty. E.g. the array [0., 0., 0.5., 0.5]
-    results in a correlated uncertainty of 0.5 of the 3rd and 4th 
-    data points. Providing lists of such arrays permits the construction
-    of arbitrary covariance matrices from independent and correlated
-    uncertainties of (groups of) data points.
-
-    Args:
-    * fitf: model function to fit, arguments (float:x, float: \*args)
-    * x:  np-array, independent data
-    * y:  np-array, dependent data
-    * sx: scalar or 1d or 2d np-array , uncertainties on x data
-    * sy: scalar or 1d or 2d np-array , uncertainties on x data
-    * srelx: scalar or np-array, relative uncertainties x
-    * srely: scalar or np-array, relative uncertainties y
-    * yabscor: scalar or np-array, absolute, correlated error(s) on y
-    * yrelcor: scalar or np-array, relative, correlated error(s) on y
-    * p0: array-like, initial guess of parameters
-    * use_negLogL:  use full -2ln(L)  
-    * constraints: (nested) list(s) [name or id, value, error]
-    * plot: show data and model if True
-    * plot_cor: show profile liklihoods and conficence contours
-    * plot_band: plot uncertainty band around model function
-    * quiet: suppress printout
-    * list of str: axis labels
-    * str: legend for data
-    * str: legend for model 
-
-    Returns:
-    * np-array of float: parameter values
-    * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
-    * np-array: correlation matrix 
-    * float: chi2  \chi-square of fit a minimum
-    """
-
-    ## from .iminuitFit import mnFit
-
-    # ... check if errors are provided ...
-    if sy is None:
-      sy = np.ones(len(y))
-      print('\n!**! No y-errors given',
-            '-> parameter errors from fit are meaningless!\n')
-  
-    # set up a fit object
-    Fit = mnFit()
-
-    # set some options
-    Fit.setOptions(run_minos=True,
-                   relative_refers_to_model=True,
-                   use_negLogL=use_negLogL,
-                   quiet=quiet)
-
-    # pass data and uncertainties to fit object
-    Fit.init_data(x, y,
-                ex = sx, ey = sy,
-                erelx = srelx, erely = srely,
-                cabsx = xabscor, crelx = xrelcor,
-                cabsy = yabscor, crely = yrelcor)
-
-    # pass model fuction, start parameter and possibe constraints
-    Fit.init_fit(fitf, p0=p0, constraints=constraints)
-
-    # perform the fit
-    fitResult = Fit.do_fit()
-    # print fit resule (dictionary from migrad/minos(
-    if not quiet:
-      print("\nFit Result from migrad:")
-      print(fitResult[0])
-      if fitResult[1] is not None:
-        print("\nResult of minos error analysis:")
-        print(fitResult[1])
-      
-    # produce figure with data and model
-    if plot:
-      fig = Fit.plotModel(axis_labels=axis_labels,
-                   data_legend=data_legend,
-                   model_legend=model_legend,
-                        plot_band=plot_band)
-
-    # figure with visual representation of covariances
-    #   prifile likelihood scan and confidence contours
-    if plot_cor:
-      fig_cor = Fit.plotContours()
-
-    # show plots on screen
-    if plot or plot_cor:
-      plt.show()
-
-    # return
-    #   numpy arrays with fit result: parameter values,
-    #   negative and positive parameter uncertainties,
-    #   correlation matrix
-    #   chi2
-    return Fit.getResult()
-  
-# -----------------------------------------------------------------
   #
   # Example of an application of iminuitFit.mFit()
   #

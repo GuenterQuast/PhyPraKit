@@ -4,10 +4,9 @@
 
    Uses function PhyPraKit.mFit, which in turn uses iminuitFit
 
-   This is a rahter complete example showing 
-   independente and correlated,
-   absolute and relative uncertainties 
-   in x and y direction. 
+   This is a rather complete example showing a fit to
+   data with independent and correlated, absolute and 
+   relative uncertainties in the x and y directions. 
    
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
