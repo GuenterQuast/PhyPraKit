@@ -2,9 +2,14 @@
   
   Fitting with `iminiut` (https://iminuit.readthedocs.io/en/stable/)
 
-  This class `mnFit.py` uses iminuit for fitting a model 
+  The code provided here supports iminuit vers. < 2 and >= 2.
+
+  It contains an example function mFit() showing how to control the
+  interface and a script to run an example on simulated data.  
+
+  The class `mnFit.py` uses iminuit for fitting a model 
   to data with independent and/or correlated absolute and/or 
-  relative uncertainties in the x- and y-directions. 
+  relative uncertainties in the x and/or y directions. 
    
   A user-defined cost function in `iminuit` with uncertainties 
   that depend on model parameters is dynamically updated during 
@@ -15,7 +20,7 @@
 
   The cost function that is optimized is an extended version of
   the chi^2 function: for parameter-dependent uncertainties, the
-  logarithm of the detetminant of the covariance matrix is added
+  logarithm of the determinant of the covariance matrix is added
   to the cost function, so that it corresponds to twice the negative
   log-likelihood of a multivariate Gaussian distribution.
 
@@ -32,8 +37,6 @@
   - evaluation of profile likelihoods to determine asymetric uncertainties
   - plotting of profile likeliood and confidence contours
 
-  supports iminuit vers. < 2 and >= 2
-
   A fully functional example is provided by the function `mFit()`
   and the executable script below.
   
@@ -49,6 +52,9 @@ from iminuit import __version__, Minuit
 class mnFit():
   """**Fit an arbitrary funtion f(x, *par) to data**  
   with independent and/or correlated absolute and/or relative uncertainties
+
+  This implementation depends on and heavily uses features of 
+  the minimizer _iminuit_.
    
   Public methods:
 
@@ -967,6 +973,42 @@ class mnFit():
               cl=(Chi22CL(1.), Chi22CL(4.)) )
     return cor_fig
   
+
+  def plot_Profile(self, pnam):
+    """plot profile likelihood of parameter pnam
+    """
+    fig = plt.figure(figsize=(5.5, 5.5))
+    self.minuit.draw_mnprofile(pnam, subtract_min=True)
+    return fig
+
+
+  def plot_clContour(self, pnam1, pnam2, cl):
+    """plot a contour of parameters pnam1 and pnam2
+    with confidence level(s) cl
+    """
+    if __version__ <'2':
+      print("!!! plot_clContour not implemented vor iminuit vers.<2")
+      return
+    else:
+      fig = plt.figure(figsize=(5.5, 5.5))
+      self.minuit.draw_mncontour(pnam1, pnam2, cl=cl)    
+      return fig
+
+
+  def plot_nsigContour(self, pnam1, pnam2, nsig):
+    """plot nsig contours of parameters pnam1 and pnam2
+    """
+    fig = plt.figure(figsize=(5.5, 5.5))
+    if __version__ <'2':
+      self.minuit.draw_mncontour(pnam1, pnam2, nsigma=nsig)
+    else:
+      ns = range(1, nsig+1)
+      dchi2 = np.array(ns)**2
+      cl = (1. - np.exp(-dchi2 / 2.))
+      self.minuit.draw_mncontour(pnam1, pnam2, cl=cl)    
+    return fig
+
+        
   @staticmethod
   def get_functionSignature(f):
     # get arguments and keyword arguments passed to a function
@@ -982,6 +1024,7 @@ class mnFit():
 
   
 if __name__ == "__main__": # --- interface and example
+  
   def mFit(fitf, x, y, sx = None, sy = None,
          srelx = None, srely = None, 
          xabscor = None, xrelcor = None,        
@@ -1091,11 +1134,11 @@ if __name__ == "__main__": # --- interface and example
     # return
     #   numpy arrays with fit result: parameter values,
     #   negative and positive parameter uncertainties,
-    #   correlation matrix and chi2
+    #   correlation matrix
+    #   chi2
     return Fit.getResult()
   
 # -----------------------------------------------------------------
-
   #
   # Example of an application of iminuitFit.mFit()
   #
@@ -1111,7 +1154,7 @@ if __name__ == "__main__": # --- interface and example
 
   # set model to use
   model=exp_model
-  # get keyowrd-arguments
+  # get keyword-arguments
   mpardict = mnFit.get_functionSignature(model)[1]
   
 # set error components 
@@ -1128,7 +1171,7 @@ if __name__ == "__main__": # --- interface and example
   np.random.seed(314)      # initialize random generator
   nd=15
   xmin=0.
-  xmax=3.
+  xmax=2.5
   data_x = np.linspace(xmin, xmax, nd)       # x of data points
   sigy = np.sqrt(sabsy * sabsy + (srely*model(data_x, **mpardict))**2)
   sigx = np.sqrt(sabsx * sabsx + (srelx * data_x)**2)
