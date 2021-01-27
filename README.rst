@@ -19,20 +19,20 @@ Cerated by:
 
 * Guenter Quast <guenter (dot) quast (at) online (dot) de>
 
-
   
 Installation:
 -------------
 
-To use PhyPraKit, it is sufficient to place the file `PhyPraKit.py`
-in the same directory as the python scripts importing it.
+To use PhyPraKit, it is sufficient to place the directory
+`PhyPraKit` (containing the files `__init__.py`, `_version_info.py`,
+`PhyPraKit.py` `and iminuitFit.py`) in the same directory as the
+python scripts importing the PhyPraKit package. 
 
 Installation via `pip` is also supported. The recommendation is
 to use the installation package in the subdirectory `dist` and
 install in user space:
 
    ``pip install --user --no-cache PhyPraKit<vers.>``
-
 
 
 Übersicht:
@@ -43,5 +43,3 @@ PhyPraKit ist eine Sammlung nützlicher Funktionen in der Sprache
 Visualisierung  und  Auswertung von Daten in den physikalischen 
 Praktika. Die Anwendung der verschiedenen Funktionen des Pakets   
 werden jeweils durch Beispiele illustriert.
-			     
-   
