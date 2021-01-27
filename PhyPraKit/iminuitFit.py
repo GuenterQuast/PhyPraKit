@@ -2,15 +2,17 @@
   
   Fitting with `iminiut` (https://iminuit.readthedocs.io/en/stable/)
 
-  The code provided here supports iminuit vers. < 2 and >= 2.
+  Author: Günter Quast, initial version Jan. 2021
 
-  It contains an example function mFit() showing how to control the
-  interface and a script to run an example on simulated data.  
+  The code provided here supports iminuit vers. < 2 and >= 2.
 
   The class `mnFit.py` uses iminuit for fitting a model 
   to data with independent and/or correlated absolute and/or 
   relative uncertainties in the x and/or y directions. 
-   
+  An example function mFit() shows illustrates how to control 
+  the interface, and a short script is provided to run a fit 
+  on simulated data.  
+ 
   A user-defined cost function in `iminuit` with uncertainties 
   that depend on model parameters is dynamically updated during 
   the fitting process. Data points with relative errors can thus
@@ -76,31 +78,31 @@ def mFit(fitf, x, y, sx = None, sy = None,
   uncertainties of (groups of) data points.
 
   Args:
-  * fitf: model function to fit, arguments (float:x, float: \*args)
-  * x:  np-array, independent data
-  * y:  np-array, dependent data
-  * sx: scalar or 1d or 2d np-array , uncertainties on x data
-  * sy: scalar or 1d or 2d np-array , uncertainties on x data
-  * srelx: scalar or np-array, relative uncertainties x
-  * srely: scalar or np-array, relative uncertainties y
-  * yabscor: scalar or np-array, absolute, correlated error(s) on y
-  * yrelcor: scalar or np-array, relative, correlated error(s) on y
-  * p0: array-like, initial guess of parameters
-  * use_negLogL:  use full -2ln(L)  
-  * constraints: (nested) list(s) [name or id, value, error]
-  * plot: show data and model if True
-  * plot_cor: show profile liklihoods and conficence contours
-  * plot_band: plot uncertainty band around model function
-  * quiet: suppress printout
-  * list of str: axis labels
-  * str: legend for data
-  * str: legend for model 
+    * fitf: model function to fit, arguments (float:x, float: \*args)
+    * x:  np-array, independent data
+    * y:  np-array, dependent data
+    * sx: scalar or 1d or 2d np-array , uncertainties on x data
+    * sy: scalar or 1d or 2d np-array , uncertainties on x data
+    * srelx: scalar or np-array, relative uncertainties x
+    * srely: scalar or np-array, relative uncertainties y
+    * yabscor: scalar or np-array, absolute, correlated error(s) on y
+    * yrelcor: scalar or np-array, relative, correlated error(s) on y
+    * p0: array-like, initial guess of parameters
+    * use_negLogL:  use full -2ln(L)  
+    * constraints: (nested) list(s) [name or id, value, error] 
+    * plot: show data and model if True
+    * plot_cor: show profile liklihoods and conficence contours
+    * plot_band: plot uncertainty band around model function
+    * quiet: suppress printout
+    * list of str: axis labels
+    * str: legend for data
+    * str: legend for model 
 
   Returns:
-  * np-array of float: parameter values
-  * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
-  * np-array: correlation matrix 
-  * float: chi2  \chi-square of fit a minimum
+    * np-array of float: parameter values
+    * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
+    * np-array: correlation matrix 
+    * float: chi2  \chi-square of fit a minimum
   """
 
   ## from .iminuitFit import mnFit #! already contained in this file
@@ -261,11 +263,10 @@ class mnFit():
     """initialize fit object
 
     Args:
-
-    - model: model function f(x; \*par)
-    - p0: np-array of floats, initial parameter values 
-    - constraints: (nested) list(s): [parameter name, value, uncertainty] 
-      or [parameter index, value, uncertainty]
+      - model: model function f(x; \*par)
+      - p0: np-array of floats, initial parameter values 
+      - constraints: (nested) list(s): [parameter name, value, uncertainty] 
+        or [parameter index, value, uncertainty]
     """
     self.model = model
     # create cost function
@@ -427,45 +428,43 @@ class mnFit():
     build covariance matrices from components
 
     Args:
-
-    -  x:       abscissa of data points ("x values")
-    -  y:       ordinate of data points ("y values")
-    -  ex:      independent uncertainties x
-    -  ey:      independent uncertainties y
-    -  erelx:   independent relative uncertainties x
-    -  erely:   independent relative uncertainties y
-    -  cabsx:   correlated abolute uncertainties x
-    -  crelx:   correlated relative uncertainties x
-    -  cabsy:   correlated absolute uncertainties y
-    -  crely:   correlated relative uncertainties y
-    -  quiet:   no informative printout if True
+      -  x:       abscissa of data points ("x values")
+      -  y:       ordinate of data points ("y values")
+      -  ex:      independent uncertainties x
+      -  ey:      independent uncertainties y
+      -  erelx:   independent relative uncertainties x
+      -  erely:   independent relative uncertainties y
+      -  cabsx:   correlated abolute uncertainties x
+      -  crelx:   correlated relative uncertainties x
+      -  cabsy:   correlated absolute uncertainties y
+      -  crely:   correlated relative uncertainties y
+      -  quiet:   no informative printout if True
 
     Public methods:
-    - get_Cov(): final covariance matrix (incl. proj. x)  
-    - get_xCov(): covariance of x-values
-    - get_yCov(): covariance of y-values
-    - get_iCov(): inverse covariance matrix
+      - get_Cov(): final covariance matrix (incl. proj. x)  
+      - get_xCov(): covariance of x-values
+      - get_yCov(): covariance of y-values
+      - get_iCov(): inverse covariance matrix
 
-
-    Data members:
-  
-    * copy of all input arguments
-    * covx: covariance matrix of x
-    * covy: covariance matrix of y uncertainties
-    * cov: full covariance matrix incl. projected x
-    * iCov: inverse of covariance matrix
+    Data members:  
+      * copy of all input arguments
+      * covx: covariance matrix of x
+      * covy: covariance matrix of y uncertainties
+      * cov: full covariance matrix incl. projected x
+      * iCov: inverse of covariance matrix
     """
 
     @staticmethod
     def _build_Err2(e=None, erel=None, data=None):
       """
-      Build squared sum of independent absolute 
-      and/or relative error components
+      Build squared sum of independent absolute and/or 
+      relative error components
 
       Args:
-
-      * e: scalar or 1d np-array of float: independent uncertainties 
-      * erel: scalar or 1d np-array of float: independent relative uncertainties      """
+        * e: scalar or 1d np-array of float: independent uncertainties 
+        * erel: scalar or 1d np-array of float: independent relative 
+          uncertainties
+      """
       
       err2 = 0.
       if e is not None:
@@ -495,24 +494,21 @@ class mnFit():
       to form the complete Covariance Matrix.
       
       Args:
-
-      * nd: number of data points
-      * e: 1d or 2d np-array of float: 
-        independent uncertainties or a full covariance matrix
-      * erel: 1d or 2d np-array of float:
-        independent relative uncertainties or a full covariance matrix
+        * nd: number of data points
+        * e: 1d or 2d np-array of float: 
+          independent uncertainties or a full covariance matrix
+        * erel: 1d or 2d np-array of float:
+          independent relative uncertainties or a full covariance matrix
 
       correlated components of uncertainties
-
-      * eabscor: 1d np-array of floats or list of np-arrays:
+        * eabscor: 1d np-array of floats or list of np-arrays:
         absolute correlated uncertainties
-      * erelcor: 1d np-array of floats or list of np-arrays:
+        * erelcor: 1d np-array of floats or list of np-arrays:
         relative correlated uncertainties
-      * data: np-array of float: data, needed (only) for relative uncertainties
+        * data: np-array of float: data, needed (only) for relative uncertainties
 
       Returns:
-
-      * np-array of float: covariance matrix 
+        * np-array of float: covariance matrix 
       """
 
       # 1. independent errors
@@ -789,9 +785,9 @@ class mnFit():
   # define custom cost function for iminuit
   class xLSQ:
     """
-    Custom e_x_tended Least-SQuares cost function 
-    with dynamically updated covariance matrix
-    and -2log(L) correction term
+    Custom e_x_tended Least-SQuares cost function with 
+    dynamically updated covariance matrix and -2log(L) 
+    correction term for parameter-dependent uncertainties
 
     For data points (x, y) with model f(x, \*p) 
     and covariance matrix V(f(x,\*p)
@@ -918,14 +914,12 @@ class mnFit():
     Delta(x) = sqrt( sum_i,j (df/dp_i(x) df/dp_j(x) Vp_i,j) )
 
     Args:
-
       * x: scalar or np-array of x values
       * model: model function
       * pvlas: parameter values
       * covp: covariance matrix of parameters
 
     Returns:
-
       * model uncertainty, same length as x
     """
 
@@ -977,7 +971,7 @@ class mnFit():
     pcov = self.CovarianceMatrix
     pnams = self.ParameterNames
     ndof = cf.ndof
-    chi2prb = 1.- stats.chi2.cdf(chi2, ndof)
+    chi2prb = self.chi2prb(chi2, ndof) 
     
   # get data
     x = cf.data.x
@@ -1039,18 +1033,6 @@ class mnFit():
       * matplotlib figure 
     """
 
-    def CL2Chi2(CL):
-      """
-      calculate DeltaChi2 from confidence level CL
-      """
-      return -2.*np.log(1.-CL)
-
-    def Chi22CL(dc2):
-      """
-      calculate confidence level CL from DeltaChi2
-      """
-      return (1. - np.exp(-dc2 / 2.))
-
     if not self.quiet:
       print( '*==* mnFit: scanning contours')
 
@@ -1085,14 +1067,14 @@ class mnFit():
             m.draw_mncontour(pnams[i], pnams[j])
           else:
             m.draw_mncontour(pnams[i], pnams[j],
-              cl=(Chi22CL(1.), Chi22CL(4.)) )
+              cl=(self.Chi22CL(1.), self.Chi22CL(4.)) )
     return cor_fig
   
 
   def plot_Profile(self, pnam):
     """plot profile likelihood of parameter pnam
     """
-    fig = plt.figure(figsize=(5.5, 5.5))
+    fig = plt.figure(figsize=(5., 5.))
     self.minuit.draw_mnprofile(pnam, subtract_min=True)
     return fig
 
@@ -1105,7 +1087,7 @@ class mnFit():
       print("!!! plot_clContour not implemented vor iminuit vers.<2")
       return
     else:
-      fig = plt.figure(figsize=(5.5, 5.5))
+      fig = plt.figure(figsize=(5., 5.))
       self.minuit.draw_mncontour(pnam1, pnam2, cl=cl)    
       return fig
 
@@ -1113,20 +1095,39 @@ class mnFit():
   def plot_nsigContour(self, pnam1, pnam2, nsig):
     """plot nsig contours of parameters pnam1 and pnam2
     """
-    fig = plt.figure(figsize=(5.5, 5.5))
+    fig = plt.figure(figsize=(5., 5.))
     if __version__ <'2':
       self.minuit.draw_mncontour(pnam1, pnam2, nsigma=nsig)
     else:
       ns = range(1, nsig+1)
       dchi2 = np.array(ns)**2
-      cl = (1. - np.exp(-dchi2 / 2.))
+      cl = self.Chi22CL(dchi2)    
       self.minuit.draw_mncontour(pnam1, pnam2, cl=cl)    
     return fig
 
         
   @staticmethod
+  def chi2prb(chi2,ndof):
+    """Calculate chi2-probability from chi2 and degrees of freedom
+    """
+    return 1.- stats.chi2.cdf(chi2, ndof)
+  
+  @staticmethod
+  def CL2Chi2(CL):
+    """calculate DeltaChi2 from confidence level CL
+    """
+    return -2.*np.log(1.-CL)
+
+  @staticmethod
+  def Chi22CL(dc2):
+    """calculate confidence level CL from DeltaChi2
+    """
+    return (1. - np.exp(-dc2 / 2.))
+
+  @staticmethod
   def get_functionSignature(f):
-    # get arguments and keyword arguments passed to a function
+    """get arguments and keyword arguments passed to a function
+    """
     pars = signature(f).parameters
     args = []
     kwargs = {}
