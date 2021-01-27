@@ -24,7 +24,7 @@ if __name__ == "__main__": # --------------------------------------
   # define the model function to fit
   def model(x, A=1., x0=1.):
     return A*np.exp(-x/x0)
-  mpardict = {'A':1., 'x0':0.5}  # model parameters
+  mpardict = {'A':1., 'x0':1.}  # model parameters
 
 # set error components 
   sabsy = 0.07
@@ -37,9 +37,11 @@ if __name__ == "__main__": # --------------------------------------
   crelx = 0.02 # 2%
 
 # generate pseudo data
-  np.random.seed(314)      # initialize random generator
-  nd=15
-  data_x = np.linspace(0, 1, nd)       # x of data points
+  np.random.seed(314159)  # initialize random generator
+  nd=14
+  xmin = 0.
+  xmax = 2.6
+  data_x = np.linspace(xmin, xmax, nd)       # x of data points
   sigy = np.sqrt(sabsy * sabsy + (srely*model(data_x, **mpardict))**2)
   sigx = np.sqrt(sabsx * sabsx + (srelx * data_x)**2)
   xt, yt, data_y = generateXYdata(data_x, model, sigx, sigy,
@@ -62,6 +64,7 @@ if __name__ == "__main__": # --------------------------------------
                                      p0=(1., 0.5),
 #                                     constraints=['A', 1., 0.03],
 #                                     constraints=[0, 1., 0.03],
+                                     use_negLogL=True,
                                      plot=True,
                                      plot_band=True,
                                      plot_cor=True,

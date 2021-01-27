@@ -1144,8 +1144,6 @@ if __name__ == "__main__": # --- interface and example
   #
   # Example of an application of iminuitFit.mFit()
   #
-  from PhyPraKit import generateXYdata
-
   # define the model function to fit
   def exp_model(x, A=1., x0=1.):
     return A*np.exp(-x/x0)
@@ -1154,38 +1152,29 @@ if __name__ == "__main__": # --- interface and example
   def poly2_model(x, a=0.1, b=1., c=1.):
     return a*x**2 + b*x + c
 
-  # set model to use
-  model=exp_model
+  # set model to use in fit
+  fitmodel=exp_model  # also try poy2_model
   # get keyword-arguments
-  mpardict = mnFit.get_functionSignature(model)[1]
+  mpardict = mnFit.get_functionSignature(fitmodel)[1]
   
-# set error components 
-  sabsy = 0.07
+#data ...
+  data_x = [0.0, 0.2, 0.4, 0.6, 0.8, 1., 1.2,
+          1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6]
+  data_y = [1.149, 0.712, 0.803, 0.464, 0.398, 0.354, 0.148,
+            0.328, 0.181, 0.140, 0.065, 0.005,-0.005, 0.116]
+# ... and uncertaities  
+  sabsy = 0.07 # independent y
   srely = 0.05 # 5% of model value
-  cabsy = 0.04
-  crely = 0.03 # 3% of model value
-  sabsx = 0.05
-  srelx = 0.04 # 4%
-  cabsx = 0.03
-  crelx = 0.02 # 2%
+  cabsy = 0.04 # correlated
+  crely = 0.03 # 3% of model value correlated
+  sabsx = 0.05 # independent x
+  srelx = 0.04 # 4% of x
+  cabsx = 0.03 # correlated x
+  crelx = 0.02 # 2% of x correlated
 
-# generate pseudo data
-  np.random.seed(314)      # initialize random generator
-  nd=15
-  xmin=0.
-  xmax=2.5
-  data_x = np.linspace(xmin, xmax, nd)       # x of data points
-  sigy = np.sqrt(sabsy * sabsy + (srely*model(data_x, **mpardict))**2)
-  sigx = np.sqrt(sabsx * sabsx + (srelx * data_x)**2)
-  xt, yt, data_y = generateXYdata(data_x, model, sigx, sigy,
-                                      xabscor=cabsx,
-                                      xrelcor=crelx,
-                                      yabscor=cabsy,
-                                      yrelcor=crely,
-                                      mpar=mpardict.values() )
 
 # perform fit to data with function mFit using class mnFit
-  parvals, parerrs, cor, chi2 = mFit(model, data_x, data_y,
+  parvals, parerrs, cor, chi2 = mFit(fitmodel, data_x, data_y,
                                      sx=sabsx,
                                      sy=sabsy,
                                      srelx=srelx,
@@ -1194,9 +1183,10 @@ if __name__ == "__main__": # --- interface and example
                                      xrelcor=crelx,
                                      yabscor=cabsy,
                                      yrelcor=crely,
-##                                   p0=(1., 0.5),
+##                                   p0=(1., 0.5),     
 #                                     constraints=['A', 1., 0.03],
 #                                     constraints=[0, 1., 0.03],
+                                     use_negLogL=True,
                                      plot=True,
                                      plot_band=True,
                                      plot_cor=True,
