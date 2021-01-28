@@ -1,30 +1,26 @@
 """package iminuitFit.py
   
-  Fitting with `iminiut` (https://iminuit.readthedocs.io/en/stable/)
+  Fitting with `iminiut`[https://iminuit.readthedocs.io/en/stable/]
 
   Author: Günter Quast, initial version Jan. 2021
 
   The code provided here supports iminuit vers. < 2 and >= 2.
 
-  The class `mnFit.py` uses iminuit for fitting a model 
-  to data with independent and/or correlated absolute and/or 
+  The class `mnFit.py` uses the package `iminuit` for fitting 
+  a parameter-dependent model  f(x, \*par) to data points (x, y)
+  with independent and/or correlated absolute and/or 
   relative uncertainties in the x and/or y directions. 
-  An example function mFit() shows illustrates how to control 
-  the interface, and a short script is provided to run a fit 
-  on simulated data.  
+  An example function mFit() illustrates how to control the 
+  interface of `mnFit`, and a short script is provided to 
+  perform a fit on sample data.  
  
-  A user-defined cost function in `iminuit` with uncertainties 
-  that depend on model parameters is dynamically updated during 
-  the fitting process. Data points with relative errors can thus
-  be referred to the model instead of the data. The derivative
-  of the model function w.r.t. x is used to project the 
-  covariance matrix of x-uncertainties on the y-axis. 
-
-  The cost function that is optimized is an extended version of
-  the chi^2 function: for parameter-dependent uncertainties, the
-  logarithm of the determinant of the covariance matrix is added
-  to the cost function, so that it corresponds to twice the negative
-  log-likelihood of a multivariate Gaussian distribution.
+  Method:
+    A user-defined cost function in `iminuit` with uncertainties 
+    that depend on model parameters is dynamically updated during 
+    the fitting process. Data points with relative errors can thus
+    be referred to the model instead of the data. The derivative
+    of the model function w.r.t. x is used to project the 
+    covariance matrix of x-uncertainties on the y-axis. 
 
   The implementation in this example is minimalistic and
   intended to illustrate the principle of an advanced usage
@@ -32,15 +28,22 @@
   special, user-defined cost functions.
 
   The main features of this package are:
-  - definition of a custom cost function 
-  - implementation of the least squares method with correlated errors
-  - support for correlated x-uncertainties by projection on the y-axis
-  - support of relative errors with reference to the model values  
-  - evaluation of profile likelihoods to determine asymetric uncertainties
-  - plotting of profile likeliood and confidence contours
+    - definition of a custom cost function 
+    - implementation of the least squares method with correlated errors
+    - support for correlated x-uncertainties by projection on the y-axis
+    - support of relative errors with reference to the model values  
+    - evaluation of profile likelihoods to determine asymetric uncertainties
+    - plotting of profile likeliood and confidence contours
 
-  A fully functional example is provided by the function `mFit()`
-  and the executable script below.
+  The **cost function** that is optimized is a least-squares one, or an 
+  extended version if parameter-dependent uncertainties are present. In 
+  the latter case,  the logarithm of the determinant of the covariance 
+  matrix is added to the least-squares cost function, so that it corresponds 
+  to twice the negative log-likelihood of a multivariate Gaussian distribution.
+
+  A fully functional example is provided by the function `mFit()` and
+  the executable script below, which contains sample data, executes the
+  fitting procecure and collects the results. 
   
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
@@ -68,14 +71,16 @@ def mFit(fitf, x, y, sx = None, sy = None,
   on x- and y- values with class mnFit using the package iminuit.
 
   Correlated absolute and/or relative uncertainties of input data 
-  are specified as numpy-arrays of floats; they enter in the 
-  diagonal and off-diagonal elements of the covariance matrix. 
-  Values of 0. may be specified for data points not affected
-  by a correlated uncertainty. E.g. the array [0., 0., 0.5., 0.5]
-  results in a correlated uncertainty of 0.5 of the 3rd and 4th 
-  data points. Providing lists of such arrays permits the construction
-  of arbitrary covariance matrices from independent and correlated
-  uncertainties of (groups of) data points.
+  are specified as numpy-arrays of floats. The concept of independent
+  or common uncertainties of (groups) of data points is used construct
+  the full covariance matrix from different uncertainty components.
+  Indepenent uncertainties enter only in the diagonal while correlated 
+  ones contribute to diagonal and off-diagonal elements of the covariance 
+  matrix. Values of 0. may be specified for data points not affected by a 
+  certrain type of uncertainty. E.g. the array [0., 0., 0.5., 0.5] specifies
+  uncertainties only affecting the 3rd and 4th data points. Providing lists 
+  of such arrays permits the construction of arbitrary covariance matrices 
+  from independent and correlated uncertainties of (groups of) data points.
 
   Args:
     * fitf: model function to fit, arguments (float:x, float: \*args)
@@ -228,12 +233,14 @@ class mnFit():
               run_minos=None,
               use_negLogL=None,
               quiet=None):
-    # define options for fit
-    #   - rel. errors refer to model else data
-    #   - run minos else don*t run minos
-    #   - use full neg2logL
-    #   - don*t provide printout else verbose printout 
+    """Define mnFit options
 
+       Args:
+        - rel. errors refer to model else data
+        - run minos else don*t run minos
+        - use full neg2logL
+        - don*t provide printout else verbose printout 
+    """
     if relative_refers_to_model is not None:
       self.refModel = relative_refers_to_model
     if run_minos is not None:   
@@ -249,8 +256,23 @@ class mnFit():
                 erelx=None, erely=None,
                 cabsx=None, crelx=None,
                 cabsy=None, crely=None):
+    """initialize data object
 
-    # create data object
+    Args:
+      -  x:       abscissa of data points ("x values")
+      -  y:       ordinate of data points ("y values")
+      -  ex:      independent uncertainties x
+      -  ey:      independent uncertainties y
+      -  erelx:   independent relative uncertainties x
+      -  erely:   independent relative uncertainties y
+      -  cabsx:   correlated abolute uncertainties x
+      -  crelx:   correlated relative uncertainties x
+      -  cabsy:   correlated absolute uncertainties y
+      -  crely:   correlated relative uncertainties y
+      -  quiet:   no informative printout if True
+    """
+    
+    # create data object and pass all input arguments
     self.data = self.DataUncertainties(x, y, ex, ey,
                     erelx, erely, cabsx, crelx, cabsy, crely,
                     quiet=self.quiet)
@@ -297,7 +319,7 @@ class mnFit():
         self.minuit.print_level = 0
 
   def do_fit(self):
-    """perform fitting sequence
+    """perform all necessary steps of fitting sequence
     """
     if self.data is None:
       print(' !!! mnFit: no data object defined - call init_data()')
@@ -321,7 +343,7 @@ class mnFit():
     try:
       self.migradResult = self.minuit.migrad()  # find minimum of cost function
       self.migrad_ok = True
-    except Excetion as e:
+    except Exception as e:
       self.migrad_ok = False
       print('*==* !!! fit with migrad failed')
       print(e)
@@ -339,7 +361,7 @@ class mnFit():
       try:
         self.migradResult = self.minuit.migrad()
         self.migrad_ok = True
-      except Excetion as e:
+      except Exception as e:
         self.migrad_ok = False
         print('*==* !!! iteration of fit with migrad failed')
         print(e)
@@ -417,7 +439,7 @@ class mnFit():
     #   1-sigma (68% CL) range in self.OneSigInterval
     
   def getResult(self):
-    """return most im portant results
+    """return most im portant results as numpy arrays
     """
     return (self.ParameterValues, self.OneSigInterval,
             self.CorrelationMatrix, self.Chi2)
@@ -453,7 +475,82 @@ class mnFit():
       * cov: full covariance matrix incl. projected x
       * iCov: inverse of covariance matrix
     """
+    def __init__(self, x, y, ex, ey,
+                 erelx, erely, cabsx, crelx, cabsy, crely,
+                 quiet=True):
+      nd = len(x)
+      # store input data as numpy float arrays, ensure length nd if needed
+      self.x = np.asfarray(x)         # abscissa - "x values"
+      self.y = np.asfarray(y)         # ordinate - "y values"
+      if ex is not None:
+        self.ex = np.asfarray(ex)       # independent uncertainties x
+        if self.ex.ndim == 0:
+          self.ex = self.ex * np.ones(nd)
+      else:
+        self.ex = None
+      if ey is not None:
+        self.ey = np.asfarray(ey)       # independent uncertainties y
+        if self.ey.ndim == 0:
+          self.ey = self.ey * np.ones(nd)
+      else:
+        self.ey = None
+      if erelx is not None:
+        self.erelx = np.asfarray(erelx) # independent relative uncertainties x
+      else:
+        self.erelx = None
+      if erely is not None:
+        self.erely = np.asfarray(erely) # independent relative uncertainties y
+      else:
+        self.erely = None
+      if cabsx is not None:
+        self.cabsx = np.asfarray(cabsx) # correlated abolute uncertainties x
+        if self.cabsx.ndim == 0:
+          self.cabsx = self.cabsx * np.ones(nd)
+      else:
+        self.cabsx = None
+      if crelx is not None:   
+        self.crelx = np.asfarray(crelx) # correlated relative uncertainties x
+      else:
+        self.crelx = None
+      if cabsy is not None:
+        self.cabsy = np.asfarray(cabsy) # correlated absolute uncertainties y
+        if self.cabsy.ndim == 0:
+          self.cabsy = self.cabsy * np.ones(nd)
+      else:
+        self.cabsy = None
+      if crely is not None:
+        self.crely = np.asfarray(crely) # correlated relative uncertainties y
+      else:
+        self.crely = None
+      self.quiet = quiet      # no informative printout if True
 
+      self.nd = nd
+      self.model = None # no model defined yet
+
+      # set flags for steering of fit process in do_fit()
+      self.rebulildCov = None
+      self.has_xErrors = ex is not None or erelx is not None \
+        or cabsx is not None or crelx is not None
+      self.has_rel_yErrors = erely is not None or crely is not None
+      self.needs_covariance = \
+        self.cabsx is not None or self.crelx is not None or \
+        self.cabsy is not None or self.crely is not None 
+
+      # build (initial) covariance matrix (without x-errors)
+      if self.needs_covariance:
+        err2 = self._build_CovMat(self.nd,
+                    self.ey, self.erely, self.cabsy, self.crely, self.y)
+      else:
+        err2 = self._build_Err2(self.ey, self.erely, self.y)
+
+      # initialize uncertainties and covariance matrix,
+      self._initialCov(err2)
+      # sets: 
+      #   self.covx: covariance matrix of x
+      #   self.covy: covariance matrix of y uncertainties
+      #   self.cov: full covariance matrix incl. projected x
+      #   self.iCov: inverse of covariance matrix
+      
     @staticmethod
     def _build_Err2(e=None, erel=None, data=None):
       """
@@ -548,77 +645,6 @@ class mnFit():
       # return complete matrix
       return cov
 
-    def __init__(self, x, y, ex, ey,
-                 erelx, erely, cabsx, crelx, cabsy, crely,
-                 quiet=True):
-      nd = len(x)
-      # store input data as numpy float arrays, ensure length nd if needed
-      self.x = np.asfarray(x)         # abscissa - "x values"
-      self.y = np.asfarray(y)         # ordinate - "y values"
-      if ex is not None:
-        self.ex = np.asfarray(ex)       # independent uncertainties x
-        if self.ex.ndim == 0:
-          self.ex = self.ex * np.ones(nd)
-      else:
-        self.ex = None
-      if ey is not None:
-        self.ey = np.asfarray(ey)       # independent uncertainties y
-        if self.ey.ndim == 0:
-          self.ey = self.ey * np.ones(nd)
-      else:
-        self.ey = None
-      if erelx is not None:
-        self.erelx = np.asfarray(erelx) # independent relative uncertainties x
-      else:
-        self.erelx = None
-      if erely is not None:
-        self.erely = np.asfarray(erely) # independent relative uncertainties y
-      else:
-        self.erely = None
-      if cabsx is not None:
-        self.cabsx = np.asfarray(cabsx) # correlated abolute uncertainties x
-        if self.cabsx.ndim == 0:
-          self.cabsx = self.cabsx * np.ones(nd)
-      else:
-        self.cabsx = None
-      if crelx is not None:   
-        self.crelx = np.asfarray(crelx) # correlated relative uncertainties x
-      else:
-        self.crelx = None
-      if cabsy is not None:
-        self.cabsy = np.asfarray(cabsy) # correlated absolute uncertainties y
-        if self.cabsy.ndim == 0:
-          self.cabsy = self.cabsy * np.ones(nd)
-      else:
-        self.cabsy = None
-      if crely is not None:
-        self.crely = np.asfarray(crely) # correlated relative uncertainties y
-      else:
-        self.crely = None
-      self.quiet = quiet      # no informative printout if True
-
-      self.nd = nd
-      self.model = None # no model defined yet
-
-      # set flags for steering of fit process in do_fit()
-      self.rebulildCov = None
-      self.has_xErrors = ex is not None or erelx is not None \
-        or cabsx is not None or crelx is not None
-      self.has_rel_yErrors = erely is not None or crely is not None
-      self.needs_covariance = \
-        self.cabsx is not None or self.crelx is not None or \
-        self.cabsy is not None or self.crely is not None 
-
-      # build (initial) covariance matrix (without x-errors)
-      if self.needs_covariance:
-        err2 = self._build_CovMat(self.nd,
-                    self.ey, self.erely, self.cabsy, self.crely, self.y)
-      else:
-        err2 = self._build_Err2(self.ey, self.erely, self.y)
-
-      # initialize uncertainties and eventually covariance matrix
-      self._initialCov(err2)
-      
     def _initialCov(self, err2):
       """Build initial (static) covariance matrix for y-errors
       (for pre-fit) and calculate inverse matrix
