@@ -1147,10 +1147,10 @@ def linRegression(x, y, sy=None):
       * float: chi2  \chi-square
   """
 
+  estimate_sigma=sy is None
   # set y-errors to 1. if not given
-  if sy is None:
+  if estimate_sigma:
     sy=np.ones(len(y))
-    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
 
   # calculate auxilary quantities
   S1  = sum(1./sy**2)
@@ -1168,6 +1168,11 @@ def linRegression(x, y, sy=None):
   cov   = -Sx/D
   cor  = cov/(sa*sb)
   chi2  = sum(((y-(a*x+b))/sy)**2)
+
+  # approximate y-errors from chi2 with n-2 degrees of freedom if not given
+  if estimate_sigma:
+    sigma_estimated=np.sqrt(chi2/(len(y) - 2))
+    return linRegression(x, y, np.repeat(sigma_estimated, len(y)))
 
   return a, b, sa, sb, cor, chi2
 
