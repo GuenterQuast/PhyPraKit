@@ -1771,7 +1771,8 @@ def k2Fit(func, x, y,
   par = np.array(fit.parameter_values) 
   pare = np.array(fit.parameter_errors)
   cor = np.array(fit.parameter_cor_mat)
-  chi2 = fit.cost_function_value
+#  chi2 = fit.cost_function_value
+  chi2 = fit.goodness_of_fit
 
   if not quiet: fit.report(asymmetric_parameter_errors=True)
   

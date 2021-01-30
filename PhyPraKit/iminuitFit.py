@@ -1,6 +1,6 @@
 """package iminuitFit.py
   
-  Fitting with `iminiut`[https://iminuit.readthedocs.io/en/stable/]
+  Fitting with `iminiut` [https://iminuit.readthedocs.io/en/stable/]
 
   Author: Günter Quast, initial version Jan. 2021
 
@@ -50,7 +50,8 @@
 
 import sys
 import numpy as np, matplotlib.pyplot as plt
-from scipy import stats, linalg
+from scipy import stats
+from numpy import linalg
 from inspect import signature
 from iminuit import __version__, Minuit
 
@@ -67,14 +68,15 @@ def mFit(fitf, x, y, sx = None, sy = None,
        model_legend = 'model'):
   
   """Fit an arbitrary function fitf(x, \*par) to data points (x, y) 
-  with independent and correlated absolute and/or relative errors 
-  on x- and y- values with class mnFit using the package iminuit.
+  with independent and/or correlated absolute and/or relative errors 
+  on x- and/or y- values with class mnFit using the package iminuit.
 
   Correlated absolute and/or relative uncertainties of input data 
-  are specified as numpy-arrays of floats. The concept of independent
-  or common uncertainties of (groups) of data points is used construct
-  the full covariance matrix from different uncertainty components.
-  Indepenent uncertainties enter only in the diagonal while correlated 
+  are specified as floats (if all uncertainties are equal) or as 
+  numpy-arrays of floats. The concept of independent or common 
+  uncertainties of (groups) of data points is used construct the 
+  full covariance matrix from different uncertainty components.
+  Indepenent uncertainties enter only in the diagonal, while correlated 
   ones contribute to diagonal and off-diagonal elements of the covariance 
   matrix. Values of 0. may be specified for data points not affected by a 
   certrain type of uncertainty. E.g. the array [0., 0., 0.5., 0.5] specifies
@@ -172,23 +174,21 @@ class mnFit():
   with independent and/or correlated absolute and/or relative uncertainties
 
   This implementation depends on and heavily uses features of 
-  the minimizer _iminuit_.
+  the minimizer **iminuit**.
    
   Public methods:
 
   - init_data():        initialze data and uncertainties
   - init_fit():         initialize fit: data, model and parameter constraints
-  - setOptions():       set options
+  - setOptions():       set options for mnFit
   - do_fit():           perform fit
   - plotModel():        plot model function and data
   - plotContours():     plot profile likelihoods and confidence contours 
-  - getResult():        access to results 
+  - getResult():        access to final fit results 
   - getFunctionError(): uncertainty of model at point(s) x for parameters p
   - plot_Profile():     plot profile Likelihood for parameter
   - plot_clContour():   plot confidence level coutour for pair of parameters  
   - plot_nsigContour(): plot n-sigma coutours for pair of parameters  
-
- 
  
   Public data members:
 
