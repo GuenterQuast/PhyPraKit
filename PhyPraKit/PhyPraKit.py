@@ -1634,7 +1634,7 @@ def k2Fit(func, x, y,
     xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
     ref_to_model=False, constraints= None, p0=None,
     plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
-    model_expression=None, model_name=None,
+    model_expression=None, model_name=None, 
     model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
     fit_info=True, asym_parerrs=True, plot_cor=False, quiet=True):
   """Fit an arbitrary function func(x, \*par) to data points (x, y) 
