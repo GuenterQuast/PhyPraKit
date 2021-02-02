@@ -824,6 +824,35 @@ class mnFit():
       -2\ln {\cal L} = \chi^2(y, V^{-1}, f(x, *p) \,) 
       + \ln(\, \det( V(f(x, *p) ) \,)
 
+    For uncertainties depending on the model parameters, a more
+    efficient approach is used to calculate the likelihood, which
+    uses the Cholesky decompostion of the covariance matrix into a
+    product of a triangular matrix and its transposed
+
+    .. math::
+       V = L L^T,
+
+    thus avoiding the costy calculation of the inverse matrix.
+    
+    .. math::
+      \chi^2 = {r}\cdot (V^{-1}{r}) ~~with~~ r = y - f(x,*p)
+
+    is obtained by solving the linear equation  
+
+   .. math::
+      V X = r, ~i.e.~ X=V^{-1} r ~and~ \chi^2= r \cdot X   
+
+   with the effecient linear-equation solver *scipy.linalg.cho_solve(L,x)*
+   for Cholesky-decomposed matrices.
+
+   The determinant is efficiently calculated by taking the product 
+   of the diagonal elements of the matrix L,
+
+    .. math::
+      \det(V) = 2 \, \prod L_{i,i}
+    
+
+ 
     Input:
 
     - data object of type DataUncertainties
@@ -871,7 +900,7 @@ class mnFit():
     def setConstraints(self, constraints):
       """Add parameter constraints
 
-      format: list or list of lists of type 
+      format: nested list(s) of type 
       [parameter name, value, uncertainty] or
       [parameter index, value, uncertainty]
       """
@@ -910,8 +939,8 @@ class mnFit():
         #  check if matrix needs rebuilding
         if not self.data.needs_dynamicErrors:
          # static covariance, use its inverse
-          # identical to classical Chi2
           nlL2 += float(np.inner(np.matmul(_r, self.data.iCov), _r))
+          # identical to classical Chi2
           self.chi2 = nlL2
           
         else: # dynamically rebuild covariance matrix
