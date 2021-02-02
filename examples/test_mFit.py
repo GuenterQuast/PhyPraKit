@@ -52,26 +52,28 @@ if __name__ == "__main__": # --------------------------------------
                                       mpar=mpardict.values() )
 
 # perform fit to data with function mFit using iminuitFit class
-  parvals, parerrs, cor, chi2 = mFit(model, data_x, data_y,
-                                     sx=sabsx,
-                                     sy=sabsy,
-                                     srelx=srelx,
-                                     srely=srely,
-                                     xabscor=cabsx,
-                                     xrelcor=crelx,
-                                     yabscor=cabsy,
-                                     yrelcor=crely,
-                                     p0=(1., 0.5),
-#                                     constraints=['A', 1., 0.03],
-#                                     constraints=[0, 1., 0.03],
-                                     use_negLogL=True,
-                                     plot=True,
-                                     plot_band=True,
-                                     plot_cor=True,
-                                     quiet=False,
-                                     axis_labels=['x', 'y   \  f(x, *par)'], 
-                                     data_legend = 'random data',    
-                                     model_legend = 'exponential model')
+  parvals, parerrs, cor, chi2 = mFit(model,
+      data_x, data_y,      # data x and y coordinates
+      sx=sabsx,            # indep x
+      sy=sabsy,            # indel y
+      srelx=srelx,         # indep. rel. x
+      srely=srely,         # indep. rel. y
+      xabscor=cabsx,       # correlated x
+      xrelcor=crelx,       # correlated rel. x
+      yabscor=cabsy,       # correlated y
+      yrelcor=crely,       # correlated rel. y
+      ref_to_model=True,   # reference of rel. uncert. to model
+      p0=(1., 0.5),        # initial guess for parameter values 
+#       constraints=['A', 1., 0.03], # constraints within errors
+      use_negLogL=True,    # full -2log(L) if parameter dep. uncertainties
+      plot=True,           # plot data and model
+      plot_band=True,      # plot model confidence-band
+      plot_cor=True,       # plot profiles likelihood and contours
+      quiet=False,         # suppress informative printout
+      axis_labels=['x', 'y   \  f(x, *par)'], 
+      data_legend = 'random data',    
+      model_legend = 'exponential model'
+  )
 
 # Print results to illustrate how to use output
   print('\n*==* Fit Result:')

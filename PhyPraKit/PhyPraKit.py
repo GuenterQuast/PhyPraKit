@@ -1384,6 +1384,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
          srelx = None, srely = None, 
          xabscor = None, xrelcor = None,        
          yabscor = None, yrelcor = None,
+         ref_to_model = True, 
          p0 = None, constraints = None,
          use_negLogL=True, 
          plot = True, plot_cor = True,
@@ -1415,6 +1416,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
     * srely: scalar or np-array, relative uncertainties y
     * yabscor: scalar or np-array, absolute, correlated error(s) on y
     * yrelcor: scalar or np-array, relative, correlated error(s) on y
+
     * p0: array-like, initial guess of parameters
     * use_negLogL:  use full -2ln(L)  
     * constraints: list or list of lists with [name or id, value, error]
@@ -1446,7 +1448,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
 
   # set some options
   Fit.setOptions(run_minos=True,
-                 relative_refers_to_model=True,
+                 relative_refers_to_model=ref_to_model,
                  use_negLogL=use_negLogL,
                  quiet=quiet)
 
@@ -1632,7 +1634,7 @@ def kFit(func, x, y, sx=None, sy=None,
 def k2Fit(func, x, y,
     sx=None, sy=None, srelx=None, srely=None, 
     xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
-    ref_to_model=False, constraints= None, p0=None,
+    ref_to_model=True, constraints= None, p0=None,
     plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
     model_expression=None, model_name=None, 
     model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
