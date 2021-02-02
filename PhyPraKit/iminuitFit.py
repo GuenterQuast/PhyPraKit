@@ -1,6 +1,6 @@
 """package iminuitFit.py
   
-  Fitting with `iminiut` [https://iminuit.readthedocs.io/en/stable/]
+  Fitting with `iminiut` [https://iminuit.readthedocs.ios/en/stable/]
 
   Author: Günter Quast, initial version Jan. 2021
 
@@ -50,8 +50,7 @@
 
 import sys
 import numpy as np, matplotlib.pyplot as plt
-from scipy import stats
-from numpy import linalg
+from scipy import stats, linalg
 from inspect import signature
 from iminuit import __version__, Minuit
 
@@ -675,6 +674,7 @@ class mnFit():
 
       self._staticCov = None
       self._staticErr2 = None
+      self.iCov = None
 
       # rebuild covariance matrix during fitting procedure
       self.needs_dynamicErrors = True    # flag for cost function
@@ -773,8 +773,9 @@ class mnFit():
        # project on y and add to covariance matrix
         self.cov += np.outer(_mprime, _mprime) * self.covx
       
-     # inverse covariance matrix 
-      self.iCov = linalg.inv(self.cov)
+     # inverse covariance matrix
+     ## GQ no longer use inverse of cov. mat. 
+     ## self.iCov = linalg.inv(self.cov)
 
     def get_Cov(self):
       """return covariance matrix of data
@@ -888,10 +889,10 @@ class mnFit():
     def __call__(self, *par):  
       # called iteratively by minuit
 
-      # cost funtion is standard chi2;
-      #   full -2 * log L of a Gaussian distribution optionally
-      
-      nlL2 = 0. # initialize -2*log(L)
+      # cost funtion is extended chi2:
+      #   add normalsation term if uncertainties depend on model 
+
+      nlL2 = 0. # initialize -2*ln(L)
       #  first, take into account possible parameter constraints  
       if self.nconstraints:
         for c in self.constraints:
@@ -902,31 +903,41 @@ class mnFit():
           r = ( par[p_id] - c[1]) / c[2] 
           nlL2 += r*r
 
-      # calculate resisual of data wrt. model    
-      resid = self.data.y - self.model(self.data.x, *par)
+      # calculate residual of data wrt. model    
+      _r = self.data.y - self.model(self.data.x, *par)
 
       if self.data.needs_covariance:
         #  check if matrix needs rebuilding
-        if self.data.needs_dynamicErrors:
+        if not self.data.needs_dynamicErrors:
+         # static covariance, use its inverse
+          # identical to classical Chi2
+          nlL2 += float(np.inner(np.matmul(_r, self.data.iCov), _r))
+          self.chi2 = nlL2
+          
+        else: # dynamically rebuild covariance matrix
           self.data._rebuild_Cov(par)
-       # with full inverse covariance matrix for correlated errors
-        nlL2 += float(np.inner(np.matmul(resid, self.data.iCov), resid))
-        #  up to here, identical to classical Chi2
-        self.chi2 = nlL2
-        if self.use_neg2logL:
-         # take into account parameter-dependent normalisation term
-          nlL2 += np.log(linalg.det(self.data.cov))
+          # use Cholesky decompositon to compute chi2 = _r.T (V^-1) _r 
+          L, is_lower = linalg.cho_factor(self.data.cov)
+          nlL2 += np.inner(_r, linalg.cho_solve((L, is_lower), _r) )
+          # up to here, identical to classical Chi2
+          self.chi2 = nlL2                  
+        # take into account parameter-dependent normalisation term
+          if self.use_neg2logL:
+         #  fast calculation of determinant det(V) from Cholesky factor 
+            nlL2 += 2.*np.sum(np.log(np.diagonal(L) ) )
 
       else:  # fast calculation for simple errors
         # check if errors needs recalculating
         if self.data.needs_dynamicErrors:
           self.data._rebuild_Err2(par)
-        nlL2 += np.sum(resid * resid / self.data.err2)
+
+        nlL2 += np.sum(_r * _r / self.data.err2)
         # this is identical to classical Chi2
         self.chi2 = nlL2
-        if self.use_neg2logL:
-           # take into account parameter-dependent normalisation term
-          nlL2 += np.log(np.prod(self.data.err2))
+        
+        # add parameter-dependent normalisation term if needed and wanted
+        if self.data.needs_dynamicErrors and self.use_neg2logL:
+          nlL2 += np.sum(np.log(self.data.err2))
 
       return nlL2
     
@@ -1036,12 +1047,30 @@ class mnFit():
     # display legend with some fit info
     fit_info = [
      f"$\\chi^2$/$n_\\mathrm{{dof}}$={chi2:.1f}/{ndof}, p={100*chi2prb:.1f}%",]
+
     if self.minosResult is not None and self.minos_ok:
       for p, v, e in zip(pnams, pvals, pmerrs):
-        fit_info.append(f"{p} = ${v:.3f}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$")
+        _e = (-e[0]+e[1])/2
+        if _e > abs(v):
+          n_digits=2
+        else:
+          n_digits=3+int(np.log10(abs(v)/_e))
+        fmt = '.'+str(n_digits)+'g'               
+        txt="{p} = ${v:" + fmt + "}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$"
+        ftxt = eval(f'f"""{txt}"""')
+        fit_info.append(ftxt)
+    #    fit_info.append(f"{p} = ${v:.3g}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$")
     else:
-     for p, v, e in zip(pnams, pvals, perrs):
-        fit_info.append(f"{p} = ${v:.3f}\pm{{{e:.2g}}}$")
+      for p, v, e in zip(pnams, pvals, perrs):
+        if e > abs(v):
+          n_digits=2
+        else:
+          n_digits=3+int(np.log10(abs(v)/e))
+        fmt = '.'+str(n_digits)+'g'
+        txt="{p} = ${v:" + fmt + "}\pm{{{e:.2g}}}$"
+        ftxt = eval(f'f"""{txt}"""')
+        fit_info.append(ftxt)
+        # fit_info.append(f"{p} = ${v:.3g}\pm{{{e:.2g}}}$")
     plt.legend(title="\n".join(fit_info))      
 
     return fig_model
