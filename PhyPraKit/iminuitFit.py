@@ -161,7 +161,8 @@ def mFit(fitf, x, y, sx = None, sy = None,
   #   prifile likelihood scan and confidence contours
   if plot_cor:
     fig_cor = Fit.plotContours()
-   # show plots on screen
+
+  # show plots on screen
   if plot or plot_cor:
     plt.show()
 
@@ -480,7 +481,10 @@ class mnFit():
     def __init__(self, x, y, ex, ey,
                  erelx, erely, cabsx, crelx, cabsy, crely,
                  quiet=True):
-      nd = len(x)
+
+      self.needs_covariance = False # assume simple case w.o. cov.mat.
+
+      nd = len(x)      
       # store input data as numpy float arrays, ensure length nd if needed
       self.x = np.asfarray(x)         # abscissa - "x values"
       self.y = np.asfarray(y)         # ordinate - "y values"
@@ -488,12 +492,16 @@ class mnFit():
         self.ex = np.asfarray(ex)       # independent uncertainties x
         if self.ex.ndim == 0:
           self.ex = self.ex * np.ones(nd)
+        elif self.ex.ndim == 2:
+          self.needs_covariance=True
       else:
         self.ex = None
       if ey is not None:
         self.ey = np.asfarray(ey)       # independent uncertainties y
         if self.ey.ndim == 0:
           self.ey = self.ey * np.ones(nd)
+        elif self.ey.ndim == 2:
+          self.needs_covariance=True
       else:
         self.ey = None
       if erelx is not None:
@@ -534,9 +542,10 @@ class mnFit():
       self.has_xErrors = ex is not None or erelx is not None \
         or cabsx is not None or crelx is not None
       self.has_rel_yErrors = erely is not None or crely is not None
-      self.needs_covariance = \
+      self.needs_covariance = self.needs_covariance or \
         self.cabsx is not None or self.crelx is not None or \
         self.cabsy is not None or self.crely is not None 
+
 
       # build (initial) covariance matrix (without x-errors)
       if self.needs_covariance:
@@ -660,6 +669,7 @@ class mnFit():
       else:
       # got independent uncertainties
         self.err2 = err2
+        self.err2y = err2
         self.covy = np.diag(err2)
         self.iCov = np.diag(1./self.err2)
       # do not rebuild covariance matrix in cost function
@@ -667,6 +677,7 @@ class mnFit():
 
       # no covariance of x-errors
       self.covx = None
+      self.err2x = None
       # total covariance is that of y-errors
       self.cov = self.covy      
       
@@ -786,7 +797,10 @@ class mnFit():
       if self.needs_covariance:
         return self.cov
       else:
-        return np.diag(self.err2)
+        if self.err2 is None:
+          return None
+        else:
+          return np.diag(self.err2)
   
     def get_xCov(self):
       """return covariance matrix of x-data
@@ -794,7 +808,10 @@ class mnFit():
       if self.needs_covariance:
         return self.covx
       else:
-        return np.diag(self.err2x)
+        if self.err2x is None:
+          return None
+        else:
+          return np.diag(self.err2x)
 
     def get_yCov(self):
       """return covariance matrix of y-data
@@ -802,7 +819,10 @@ class mnFit():
       if self.needs_covariance:
         return self.covy
       else:
-        return np.diag(self.err2y)
+        if self.err2y is None:
+          return None
+        else:
+          return np.diag(self.err2y)
       
     def get_iCov(self):
       """return inverse of covariance matrix, as used in cost function
@@ -1287,4 +1307,3 @@ if __name__ == "__main__": # --- interface and example
   print(" pos. parameter errors: ", parerrs[:,1])
   print(" correlations : \n", cor)
   
-  plt.show()
