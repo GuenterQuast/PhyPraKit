@@ -65,7 +65,8 @@ install in user space:
 ----------
 
 **PhyPraKit** ist eine Sammlung nützlicher Funktionen in der Sprache 
-`python (vers. 2.7 oder >=3.4)` zum Aufnehmen, zur Bearbeitung, 
+`Python (>=3.6, die meisten Module laufen auch noch mit der inzwischen
+veralteten Verson 2.7)` zum Aufnehmen, zur Bearbeitung, 
 Visualisierung und Auswertung von Daten in den physikalischen 
 Praktika. Die Anwendung der verschiedenen Funktionen des Pakets   
 werden jeweils durch Beispiele illustriert.

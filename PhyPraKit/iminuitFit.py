@@ -2,9 +2,13 @@
   
   Fitting with `iminiut` [https://iminuit.readthedocs.ios/en/stable/]
 
-  Author: Günter Quast, initial version Jan. 2021
+  Author: Guenter Quast, initial version Jan. 2021
 
-  The code provided here supports iminuit vers. < 2 and >= 2.
+  Requirements: 
+   - Python >= 3.6
+   - supports iminuit vers. < 2 and >= 2.
+   - scipy > 1.5.0
+   - matplotlib > 3
 
   The class `mnFit.py` uses the package `iminuit` for fitting 
   a parameter-dependent model  f(x, \*par) to data points (x, y)
@@ -232,6 +236,7 @@ class mnFit():
               run_minos=None,
               use_negLogL=None,
               quiet=None):
+
     """Define mnFit options
 
        Args:
@@ -255,6 +260,7 @@ class mnFit():
                 erelx=None, erely=None,
                 cabsx=None, crelx=None,
                 cabsy=None, crely=None):
+
     """initialize data object
 
     Args:
@@ -309,8 +315,9 @@ class mnFit():
         print_level=0
       else:
         print_level=1
-      self.minuit = Minuit(self.costf, **model_kwargs,
-                           errordef=1., print_level=print_level)
+      self.minuit = Minuit(self.costf, 
+                           errordef=1., print_level=print_level,
+                           **model_kwargs )
     else:
       self.minuit = Minuit(self.costf, **model_kwargs)  
       self.minuit.errordef = 1.
@@ -407,13 +414,9 @@ class mnFit():
       if __version__< '2':
         for pnam in m.merrors.keys():
           pmerrs.append([m.merrors[pnam][2], m.merrors[pnam][3]])
-     #    print(f"{3*' '}{pnam}: {m.merrors[pnam][2]:.2g}",
-     #                       f"+{m.merrors[pnam][3]:.2g}")
       else:
         for pnam in m.merrors.keys():
           pmerrs.append([m.merrors[pnam].lower, m.merrors[pnam].upper])
-      #  print(f"{3*' '}{pnam}: {m.merrors[pnam].lower:.2g}",
-      #                      f"+{m.merrors[pnam].upper:.2g}")      
       self.OneSigInterval=np.array(pmerrs)
     else:
       self.OneSigInterval = np.array(list(zip(-parerrs, parerrs)))
@@ -1075,7 +1078,8 @@ class mnFit():
 
     # display legend with some fit info
     fit_info = [
-     f"$\\chi^2$/$n_\\mathrm{{dof}}$={chi2:.1f}/{ndof}, p={100*chi2prb:.1f}%",]
+      "$\\chi^2$/$n_\\mathrm{{dof}}$={:.1f}/{}".format(chi2,ndof) + \
+       "  p={:.1f}%".format(100*chi2prb)]
 
     if self.minosResult is not None and self.minos_ok:
       for p, v, e in zip(pnams, pvals, pmerrs):
@@ -1085,10 +1089,8 @@ class mnFit():
         else:
           n_digits=3+int(np.log10(abs(v)/_e))
         fmt = '.'+str(n_digits)+'g'               
-        txt="{p} = ${v:" + fmt + "}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$"
-        ftxt = eval(f'f"""{txt}"""')
-        fit_info.append(ftxt)
-    #    fit_info.append(f"{p} = ${v:.3g}^{{+{e[1]:.2g}}}_{{{e[0]:.2g}}}$")
+        txt="{} = ${:" + fmt + "}^{{+{:.2g}}}_{{{:.2g}}}$"
+        fit_info.append(txt.format(p, v, e[1], e[0]))
     else:
       for p, v, e in zip(pnams, pvals, perrs):
         if e > abs(v):
@@ -1096,10 +1098,8 @@ class mnFit():
         else:
           n_digits=3+int(np.log10(abs(v)/e))
         fmt = '.'+str(n_digits)+'g'
-        txt="{p} = ${v:" + fmt + "}\pm{{{e:.2g}}}$"
-        ftxt = eval(f'f"""{txt}"""')
-        fit_info.append(ftxt)
-        # fit_info.append(f"{p} = ${v:.3g}\pm{{{e:.2g}}}$")
+        txt="{} = ${:" + fmt + "}\pm{{{:.2g}}}$"
+        fit_info.append(ftxt.format(p, v, e))
     plt.legend(title="\n".join(fit_info))      
 
     return fig_model
@@ -1281,10 +1281,10 @@ if __name__ == "__main__": # --- interface and example
 
 # Print results to illustrate how to use output
   print('\n*==* Fit Result:')
-  print(f" chi2: {chi2:.3g}")
-  print(f" parameter values:      ", parvals)
-  print(f" neg. parameter errors: ", parerrs[:,0])
-  print(f" pos. parameter errors: ", parerrs[:,1])
-  print(f" correlations : \n", cor)
+  print(" chi2: {:.3g}".format(chi2))
+  print(" parameter values:      ", parvals)
+  print(" neg. parameter errors: ", parerrs[:,0])
+  print(" pos. parameter errors: ", parerrs[:,1])
+  print(" correlations : \n", cor)
   
   plt.show()

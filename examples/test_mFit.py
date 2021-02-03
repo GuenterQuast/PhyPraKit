@@ -77,10 +77,10 @@ if __name__ == "__main__": # --------------------------------------
 
 # Print results to illustrate how to use output
   print('\n*==* Fit Result:')
-  print(f" chi2: {chi2:.3g}")
-  print(f" parameter values:      ", parvals)
-  print(f" neg. parameter errors: ", parerrs[:,0])
-  print(f" pos. parameter errors: ", parerrs[:,1])
-  print(f" correlations : \n", cor)
+  print(" chi2: {:.3g}".format(chi2))
+  print(" parameter values:      ", parvals)
+  print(" neg. parameter errors: ", parerrs[:,0])
+  print(" pos. parameter errors: ", parerrs[:,1])
+  print(" correlations : \n", cor)
   
   plt.show()
