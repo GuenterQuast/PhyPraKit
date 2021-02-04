@@ -1107,7 +1107,7 @@ class mnFit():
         if _e > abs(v):
           n_digits=2
         else:
-          n_digits=3+int(np.log10(abs(v)/_e))
+          n_digits=1+int(np.ceil(np.log10(abs(v)/_e)))
         fmt = '.'+str(n_digits)+'g'               
         txt="{} = ${:" + fmt + "}^{{+{:.2g}}}_{{{:.2g}}}$"
         fit_info.append(txt.format(p, v, e[1], e[0]))
@@ -1116,7 +1116,7 @@ class mnFit():
         if e > abs(v):
           n_digits=2
         else:
-          n_digits=3+int(np.log10(abs(v)/e))
+          n_digits=1+np.int(ceil(np.log10(abs(v)/e)))
         fmt = '.'+str(n_digits)+'g'
         txt="{} = ${:" + fmt + "}\pm{{{:.2g}}}$"
         fit_info.append(ftxt.format(p, v, e))
