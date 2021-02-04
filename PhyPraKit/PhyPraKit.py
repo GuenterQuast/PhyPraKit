@@ -1387,7 +1387,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
          ref_to_model = True, 
          p0 = None, constraints = None,
          use_negLogL=True, 
-         plot = True, plot_cor = True,
+         plot = True, plot_cor = False,
          plot_band=True, quiet = False,
          axis_labels=['x', 'y = f(x, *par)'], 
          data_legend = 'data',    
@@ -1639,6 +1639,7 @@ def k2Fit(func, x, y,
     model_expression=None, model_name=None, 
     model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
     fit_info=True, asym_parerrs=True, plot_cor=False, quiet=True):
+
   """Fit an arbitrary function func(x, \*par) to data points (x, y) 
   with independent and correlated absolute and/or relative errors 
   on x- and y- values with package iminuit.
@@ -1658,11 +1659,17 @@ def k2Fit(func, x, y,
     * x:  np-array, independent data
     * y:  np-array, dependent data
 
-  the following are single floats or arrays of length of x
+  single floats, arrays of length of x or
+  a covariance matrix
     * sx: scalar or np-array, uncertainty(ies) on x      
     * sy: scalar or np-array, uncertainty(ies) on y
+
+  single floats or arrays of length of x
     * srelx: scalar or np-array, relative uncertainties x
     * srely: scalar or np-array, relative uncertainties y
+
+  single float or array of length of x or a list of such objects,
+  used to construct a covariance matrix from components
     * xabscor: absolute, correlated error(s) on x
     * yabscor: absolute, correlated error(s) on y
     * xrelcor: relative, correlated error(s) on x
@@ -1701,13 +1708,23 @@ def k2Fit(func, x, y,
   if sy is None:
     sy=np.ones(len(y))
     print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
-  dat.add_error(axis='y', err_val=sy)
+  sy=np.asarray(sy)
+  if sy.ndim == 2:
+    dat.add_matrix_error(axis='y', err_matrix=sy, matrix_type='covariance')
+  else:
+    dat.add_error(axis='y', err_val=sy)
+  
   if sx is not None:
-    dat.add_error(axis='x', err_val=sx)
+    sx=np.asarray(sx)
+    if sx.ndim == 2:
+      dat.add_matrix_error(axis='x', err_matrix=sx, matrix_type='covariance')
+    else:
+      dat.add_error(axis='x', err_val=sx)
+
   if srelx is not None: 
     dat.add_error(axis='x', err_val=srelx, relative=True)
 
-# construct covariance matrix
+# construct covariance matrix from componets
   if xabscor is not None:
     if len(np.shape(np.array(xabscor))) <2:
       dat.add_error(axis='x', err_val=xabscor, correlation=1.)
