@@ -65,7 +65,8 @@ install in user space:
 ----------
 
 **PhyPraKit** ist eine Sammlung nützlicher Funktionen in der Sprache 
-`python (vers. 2.7 oder >=3.4)` zum Aufnehmen, zur Bearbeitung, 
+`Python (>=3.6, die meisten Module laufen auch noch mit der inzwischen
+veralteten Verson 2.7)` zum Aufnehmen, zur Bearbeitung, 
 Visualisierung und Auswertung von Daten in den physikalischen 
 Praktika. Die Anwendung der verschiedenen Funktionen des Pakets   
 werden jeweils durch Beispiele illustriert.
@@ -196,10 +197,9 @@ oder::
           ``! deprecated, use `kFit` or `k2Fit` with linear model instead``
 	    
         - odFit()            fit function with x and y errors (scipy ODR)
-        - mFit()             fit with iminuit with correlated y errors,
-	  profile likelihood and contour lines  
-        - kFit()             fit function with (correlated) errors on x and y (kafe)
-        - k2Fit()            fit function with (correlated) errors on x and y (kafe2)
+        - mFit()             (lightweight) fit with iminuit, (correlated) uncertainties on x and y
+        - kFit()             fit a function to data with (correlated) errors on x and y (kafe)
+        - k2Fit()            fit a function to data with (correlated) errors on x and y (kafe2)
 
       6. simulated data with MC-method:
     

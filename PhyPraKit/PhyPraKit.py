@@ -1659,36 +1659,40 @@ def k2Fit(func, x, y,
     * x:  np-array, independent data
     * y:  np-array, dependent data
 
-  single floats, arrays of length of x or
-  a covariance matrix
-    * sx: scalar or np-array, uncertainty(ies) on x      
-    * sy: scalar or np-array, uncertainty(ies) on y
+    components of uncertainty (optional, use None if not relevant)
 
-  single floats or arrays of length of x
-    * srelx: scalar or np-array, relative uncertainties x
-    * srely: scalar or np-array, relative uncertainties y
+    single float, array of length of x, or a covariance matrix
+      * sx: scalar, 1d or 2d np-array, uncertainty(ies) on x      
+      * sy: scalar, 1d or 2d np-array, uncertainty(ies) on y
 
-  single float or array of length of x or a list of such objects,
-  used to construct a covariance matrix from components
-    * xabscor: absolute, correlated error(s) on x
-    * yabscor: absolute, correlated error(s) on y
-    * xrelcor: relative, correlated error(s) on x
-    * yrelcor: relative, correlated error(s) on y
-    * ref_to_model, bool: refer relative errors to model if true,
-      else use measured data
-    * parameter constraints: (name, value, uncertainty)        
-    * p0: array-like, initial guess of parameters
-    * plot: flag to switch off graphical output
-    * axis_labels: list of strings, axis labels x and y
-    * data_legend: legend entry for data points
-    * model_name: latex name for model function
-    * model_expression: latex expression for model function
-    * model_legend: legend entry for model
-    * model_band: legend entry for model uncertainty band
-    * fit_info: controls display of fit results on figure
-    * asym_parerrs: show (asymmetric) errors from profile-likelihood scan
-    * plot_cor: show profile curves and contour lines
-    * quiet: controls text output
+    single float or array of length of x
+      * srelx: scalar or 1d np-array, relative uncertainties x
+      * srely: scalar or 1d np-array, relative uncertainties y
+
+    single float or array of length of x, or a list of such objects, 
+      used to construct a covariance matrix from components
+
+      * xabscor: scalar or 1d np-array, absolute, correlated error(s) on x
+      * yabscor: scalar or 1d np-array, absolute, correlated error(s) on y
+      * xrelcor: scalar or 1d np-array, relative, correlated error(s) on x
+      * yrelcor: scalor or 1d np-array, relative, correlated error(s) on y
+
+    options
+      * ref_to_model, bool: refer relative errors to model if true,
+        else use measured data
+      * parameter constraints: (name, value, uncertainty)
+      * p0: array-like, initial guess of parameters
+      * plot: flag to switch off graphical output
+      * axis_labels: list of strings, axis labels x and y
+      * data_legend: legend entry for data points
+      * model_name: latex name for model function
+      * model_expression: latex expression for model function
+      * model_legend: legend entry for model
+      * model_band: legend entry for model uncertainty band
+      * fit_info: controls display of fit results on figure
+      * asym_parerrs: show (asymmetric) errors from profile-likelihood scan
+      * plot_cor: show profile curves and contour lines
+      * quiet: controls text output
 
   Returns:
     * np-array of float: parameter values
