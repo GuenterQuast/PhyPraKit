@@ -197,10 +197,9 @@ oder::
           ``! deprecated, use `kFit` or `k2Fit` with linear model instead``
 	    
         - odFit()            fit function with x and y errors (scipy ODR)
-        - mFit()             fit with iminuit with correlated y errors,
-	  profile likelihood and contour lines  
-        - kFit()             fit function with (correlated) errors on x and y (kafe)
-        - k2Fit()            fit function with (correlated) errors on x and y (kafe2)
+        - mFit()             (lightweight) fit with iminuit, (correlated) uncertainties on x and y
+        - kFit()             fit a function to data with (correlated) errors on x and y (kafe)
+        - k2Fit()            fit a function to data with (correlated) errors on x and y (kafe2)
 
       6. simulated data with MC-method:
     
