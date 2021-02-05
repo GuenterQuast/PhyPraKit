@@ -423,6 +423,7 @@ class mnFit():
       self.OneSigInterval = np.array(list(zip(-parerrs, parerrs)))
 
     # call cost function at miminum to update all results
+    self.data.store_covmat=True # store y covariance 
     fval = self.costf(*parvals) 
   
     # store results as class members
@@ -692,7 +693,8 @@ class mnFit():
 
       # rebuild covariance matrix during fitting procedure
       self.needs_dynamicErrors = True    # flag for cost function
-
+      self.store_covmat = False # flag for _rebuild_Cov: no storage of ycov 
+      
       if self.needs_covariance:
         # build static (=parameter-independent) part of covariance matrix      
         if self.has_rel_yErrors and self.ref_toModel:
@@ -776,7 +778,8 @@ class mnFit():
         _ydat = self.model(self.x, *mpar)       
         self.cov += self._covy0 * np.outer(_ydat, _ydat)
      # store covariance matrix of y-uncertainties    
-      self.covy = np.array(self.cov, copy=True)
+      if self.store_covmat:
+        self.covy = np.array(self.cov, copy=True)
 
      # add projected x errors
       if self.has_xErrors:
@@ -785,11 +788,7 @@ class mnFit():
                self.model(self.x + self._dx, *mpar) - 
                self.model(self.x - self._dx, *mpar) )
        # project on y and add to covariance matrix
-        self.cov += np.outer(_mprime, _mprime) * self.covx
-      
-     # inverse covariance matrix
-     ## GQ no longer use inverse of cov. mat. 
-     ## self.iCov = linalg.inv(self.cov)
+        self.cov += np.outer(_mprime, _mprime) * self.covx      
 
     def get_Cov(self):
       """return covariance matrix of data
@@ -969,7 +968,7 @@ class mnFit():
         else: # dynamically rebuild covariance matrix
           self.data._rebuild_Cov(par)
           # use Cholesky decompositon to compute chi2 = _r.T (V^-1) _r 
-          L, is_lower = linalg.cho_factor(self.data.cov)
+          L, is_lower = linalg.cho_factor(self.data.cov, check_finite=False)
           nlL2 += np.inner(_r, linalg.cho_solve((L, is_lower), _r) )
           # up to here, identical to classical Chi2
           self.chi2 = nlL2                  
