@@ -562,6 +562,8 @@ class mnFit():
       #   self.covy: covariance matrix of y uncertainties
       #   self.cov: full covariance matrix incl. projected x
       #   self.iCov: inverse of covariance matrix
+      #   self.err2: array of squared uncertainties
+      #   self.iErr2: 1./self.err2
       
     @staticmethod
     def _build_Err2(e=None, erel=None, data=None):
@@ -671,6 +673,7 @@ class mnFit():
       # got independent uncertainties
         self.err2 = err2
         self.err2y = err2
+        self.iErr2 = 1./err2
         self.covy = np.diag(err2)
         self.iCov = np.diag(1./self.err2)
       # do not rebuild covariance matrix in cost function
@@ -690,6 +693,7 @@ class mnFit():
       self._staticCov = None
       self._staticErr2 = None
       self.iCov = None
+      self.iErr2 = None
 
       # rebuild covariance matrix during fitting procedure
       self.needs_dynamicErrors = True    # flag for cost function
@@ -777,18 +781,20 @@ class mnFit():
       if self._covy0 is not None:
         _ydat = self.model(self.x, *mpar)       
         self.cov += self._covy0 * np.outer(_ydat, _ydat)
-     # store covariance matrix of y-uncertainties    
-      if self.store_covmat:
-        self.covy = np.array(self.cov, copy=True)
-
      # add projected x errors
       if self.has_xErrors:
+        # store covariance matrix of y-uncertainties    
+        if self.store_covmat:
+          self.covy = np.array(self.cov, copy=True)
+
        # determine derivatives of model function w.r.t. x,
         _mprime = 0.5 / self._dx * (
                self.model(self.x + self._dx, *mpar) - 
                self.model(self.x - self._dx, *mpar) )
        # project on y and add to covariance matrix
         self.cov += np.outer(_mprime, _mprime) * self.covx      
+      else: # no x-errors, y-covmat = covmat
+        self.covy = self.cov    
 
     def get_Cov(self):
       """return covariance matrix of data
@@ -981,8 +987,10 @@ class mnFit():
         # check if errors needs recalculating
         if self.data.needs_dynamicErrors:
           self.data._rebuild_Err2(par)
+          nlL2 += np.sum(_r * _r / self.data.err2)
+        else:
+          nlL2 += np.sum(_r * _r * self.data.iErr2)
 
-        nlL2 += np.sum(_r * _r / self.data.err2)
         # this is identical to classical Chi2
         self.chi2 = nlL2
         
@@ -1107,8 +1115,8 @@ class mnFit():
           n_digits=2
         else:
           n_digits=1+int(np.ceil(np.log10(abs(v)/_e)))
-        fmt = '.'+str(n_digits)+'g'               
-        txt="{} = ${:" + fmt + "}^{{+{:.2g}}}_{{{:.2g}}}$"
+        fmt = '#.'+str(n_digits)+'g'               
+        txt="{} = ${:" + fmt + "}^{{+{:#.2g}}}_{{{:#.2g}}}$"
         fit_info.append(txt.format(p, v, e[1], e[0]))
     else:
       for p, v, e in zip(pnams, pvals, perrs):
@@ -1116,8 +1124,8 @@ class mnFit():
           n_digits=2
         else:
           n_digits=1+np.int(ceil(np.log10(abs(v)/e)))
-        fmt = '.'+str(n_digits)+'g'
-        txt="{} = ${:" + fmt + "}\pm{{{:.2g}}}$"
+        fmt = '#.'+str(n_digits)+'g'
+        txt="{} = ${:" + fmt + "}\pm{{{:#.2g}}}$"
         fit_info.append(ftxt.format(p, v, e))
     plt.legend(title="\n".join(fit_info))      
 
