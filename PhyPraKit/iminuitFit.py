@@ -1110,21 +1110,12 @@ class mnFit():
 
     if self.minosResult is not None and self.minos_ok:
       for p, v, e in zip(pnams, pvals, pmerrs):
-        _e = (-e[0]+e[1])/2
-        if _e > abs(v):
-          n_digits=2
-        else:
-          n_digits=1+int(np.ceil(np.log10(abs(v)/_e)))
-        fmt = '#.'+str(n_digits)+'g'               
+        fmt = self.round_to_error(v, min(abs(e[0]), abs(e[1])) )
         txt="{} = ${:" + fmt + "}^{{+{:#.2g}}}_{{{:#.2g}}}$"
         fit_info.append(txt.format(p, v, e[1], e[0]))
     else:
       for p, v, e in zip(pnams, pvals, perrs):
-        if e > abs(v):
-          n_digits=2
-        else:
-          n_digits=1+np.int(ceil(np.log10(abs(v)/e)))
-        fmt = '#.'+str(n_digits)+'g'
+        fmt = self.round_to_error(v, e)
         txt="{} = ${:" + fmt + "}\pm{{{:#.2g}}}$"
         fit_info.append(ftxt.format(p, v, e))
     plt.legend(title="\n".join(fit_info))      
@@ -1216,7 +1207,17 @@ class mnFit():
       self.minuit.draw_mncontour(pnam1, pnam2, cl=cl)    
     return fig
 
-        
+  @staticmethod
+  def round_to_error(val, err, nd0=2):
+    """round flat v to same number of sigfinicant digits as uncertainty e
+    """
+    v = abs(val)
+    if err > v:
+      nd = nd0
+    else:
+      nd = nd0 - 1 + int(np.ceil(np.log10(v/err) ) )
+    return '#.'+str(nd)+'g'               
+
   @staticmethod
   def chi2prb(chi2,ndof):
     """Calculate chi2-probability from chi2 and degrees of freedom
