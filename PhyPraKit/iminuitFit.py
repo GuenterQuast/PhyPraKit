@@ -1215,23 +1215,16 @@ class mnFit():
       * string: g-format for vule 
     """
 
-    v = abs(val)
-    e = abs(err)
+    v = abs(val) 
+    e = abs(err) 
+    v+= e * 1e-7 # fix step at integer values of v
     
-    if err > v:
+    if e > v:
       nd = nd0
     else: 
-      nd = int(np.ceil(np.log10(v / e ) ) )
-      # scale error and value to same fractional part
-      sf = 10 ** -np.ceil(np.log10(e))
-      e_scal = sf * e
-      v_scal = sf * v
-      v_scal -= int(v_scal)
-      if e_scal >= v_scal:
-        nd += nd0 
-      else: # need one digit less if scaled error < scaled value
-        nd += nd0 - 1  
-    return '#.'+str(nd)+'g'               
+      nd = int( np.ceil(np.log10(v) - np.ceil(np.log10(e)) ) ) + nd0
+      
+    return '#.'+str(nd) + 'g'               
 
   @staticmethod
   def chi2prb(chi2,ndof):
