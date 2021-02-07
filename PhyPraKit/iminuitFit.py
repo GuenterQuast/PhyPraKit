@@ -1209,13 +1209,28 @@ class mnFit():
 
   @staticmethod
   def round_to_error(val, err, nd0=2):
-    """round flat v to same number of sigfinicant digits as uncertainty e
+    """round float val to same number of sigfinicant digits as uncertainty err
+  
+    Returns:
+      * string: g-format for vule 
     """
+
     v = abs(val)
+    e = abs(err)
+    
     if err > v:
       nd = nd0
-    else:
-      nd = nd0 - 1 + int(np.ceil(np.log10(v/err) ) )
+    else: 
+      nd = int(np.ceil(np.log10(v / e ) ) )
+      # scale error and value to same fractional part
+      sf = 10 ** -np.ceil(np.log10(e))
+      e_scal = sf * e
+      v_scal = sf * v
+      v_scal -= int(v_scal)
+      if e_scal >= v_scal:
+        nd += nd0 
+      else: # need one digit less if scaled error < scaled value
+        nd += nd0 - 1  
     return '#.'+str(nd)+'g'               
 
   @staticmethod
