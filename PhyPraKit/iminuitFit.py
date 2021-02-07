@@ -1217,12 +1217,11 @@ class mnFit():
 
     v = abs(val) 
     e = abs(err) 
-    v+= e * 1e-7 # fix step at integer values of v
     
     if e > v:
       nd = nd0
     else: 
-      nd = int( np.ceil(np.log10(v) - np.ceil(np.log10(e)) ) ) + nd0
+      nd = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nd0
       
     return '#.'+str(nd) + 'g'               
 
