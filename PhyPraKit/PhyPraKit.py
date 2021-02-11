@@ -9,69 +9,70 @@ def A0_readme():
 
   contains the following functions:
 
-      1. Data input:
+    1. Data input:
 
-        - readColumnData() read data and meta-data from text file
-        - readCSV()        read data in csv-format from file with header
-        - readtxt()        read data in "txt"-format from file with header
-        - readPicoScope()  read data from PicoScope
-        - readCassy()      read CASSY output file in .txt format   
-        - labxParser()     read CASSY output file, .labx format   
-        - writeCSV()       write data in csv-format (opt. with header)
-        - writeTexTable()  write data in LaTeX table format
+      - readColumnData() read data and meta-data from text file
+      - readCSV()        read data in csv-format from file with header
+      - readtxt()        read data in "txt"-format from file with header
+      - readPicoScope()  read data from PicoScope
+      - readCassy()      read CASSY output file in .txt format   
+      - labxParser()     read CASSY output file, .labx format   
+      - writeCSV()       write data in csv-format (opt. with header)
+      - writeTexTable()  write data in LaTeX table format
+      - round_to_error() round to same number of sigfinicant digits as uncertainty
 
-      2. signal processing:
+    2. signal processing:
 
-        - offsetFilter()      subtract an offset in array a
-        - meanFilter()        apply sliding average to smoothen data
-        - resample()          average over n samples
-        - simplePeakfinder()  find peaks and dips in an array,  
-          recommend to use ``convolutionPeakfinder``
-        - convolutionPeakfinder() find maxima (peaks) in an array
-        - convolutionEdgefinder() find maxima of slope (rising) edges in an array
-        - Fourier_fft()       fast Fourier transformation of an array
-        - FourierSpectrum()   Fourier transformation of an array   
-          ``(slow, preferably use fft version)``
-        - autocorrelate()     autocorrelation function
+      - offsetFilter()      subtract an offset in array a
+      - meanFilter()        apply sliding average to smoothen data
+      - resample()          average over n samples
+      - simplePeakfinder()  find peaks and dips in an array,  
+        recommend to use ``convolutionPeakfinder``
+      - convolutionPeakfinder() find maxima (peaks) in an array
+      - convolutionEdgefinder() find maxima of slope (rising) edges in an array
+      - Fourier_fft()       fast Fourier transformation of an array
+      - FourierSpectrum()   Fourier transformation of an array   
+        ``(slow, preferably use fft version)``
+      - autocorrelate()     autocorrelation function
 
-      3. statistics:
+    3. statistics:
 
-        - wmean()                  weighted mean
-        - BuildCovarianceMatrix()  build coraviance matrix
-        - Cov2Cor                  covariance matrix to correlation matrix
-        - Cor2Cov                  correlations + errors to covariance matrix 
-        - chi2prob                 caclulate chi^2 probability 
+      - wmean()                  weighted mean
+      - BuildCovarianceMatrix()  build coraviance matrix
+      - Cov2Cor                  covariance matrix to correlation matrix
+      - Cor2Cov                  correlations + errors to covariance matrix 
+      - chi2prob                 caclulate chi^2 probability 
 
-      4. histograms tools:
+    4. histograms tools:
 
-        - barstat()   statistical information (mean, sigma, erroron mean) from bar chart
-        - nhist()    histogram plot based on np.historgram() and plt.bar()    
-          ``better use matplotlib.pyplot.hist() instead``  
-        - histstat() statistical information from 1d-histogram
-        - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()  
-          ``better use matplotlib.pyplot.hist2d() instead``  
-        - hist2dstat() statistical information from 1d-histogram
-        - profile2d()  "profile plot" for 2d data
-        - chi2p_indep2d() chi2 test on independence of data
+      - barstat()   statistical information (mean, sigma, erroron mean) from bar chart
+      - nhist()    histogram plot based on np.historgram() and plt.bar()    
+        ``better use matplotlib.pyplot.hist() instead``  
+      - histstat() statistical information from 1d-histogram
+      - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()  
+        ``better use matplotlib.pyplot.hist2d() instead``  
+      - hist2dstat() statistical information from 1d-histogram
+      - profile2d()  "profile plot" for 2d data
+      - chi2p_indep2d() chi2 test on independence of data
 
-      5. linear regression and function fitting:
+    5. linear regression and function fitting:
 
-        - linRegression()    linear regression, y=ax+b, with analytical formula
-        - linRegressionXY()  linear regression, y=ax+b, with x and y errors  
-          ``! deprecated, use `odFit` with linear model instead``
-        - kRegression()      linear regression, y=ax+b, with (correlated) 
-          errors on x, and y   
-          ``! deprecated, consider using `k2Fit` with linear model instead``
-        - odFit()            fit function with x and y errors (scipy ODR)
-        - mFit()             fit with iminuit with correlated x and y errors,
-          profile likelihood and contour lines  
-        - kFit()             fit function with (correlated) errors on x and y (kafe)
-        - k2Fit()            fit function with (correlated) errors on x and y (kafe2)
+      - linRegression()    linear regression, y=ax+b, with analytical formula
+      - linRegressionXY()  linear regression, y=ax+b, with x and y errors  
+        ``! deprecated, use `odFit` with linear model instead``
+      - kRegression()      linear regression, y=ax+b, with (correlated) 
+        errors on x, and y   
+        ``! deprecated, consider using `k2Fit` with linear model instead``
+      - odFit()            fit function with x and y errors (scipy ODR)
+      - mFit()             fit with iminuit with correlated x and y errors,
+        profile likelihood and contour lines  
+      - kFit()             fit function with (correlated) errors on x and y (kafe)
+      - k2Fit()            fit function with (correlated) errors on x and y (kafe2)
 
-      6. simulated data with MC-method:
+    6. simulated data with MC-method:
 
-        - smearData()          add random deviations to input data
-        - generateXYdata()     generate simulated data 
+      - smearData()          add random deviations to input data
+      - generateXYdata()     generate simulated data 
 
   """
   # print the above docstring if called
@@ -528,6 +529,25 @@ def writeTexTable(file, ldata, cnames=[], caption='', fmt='%.10g'):
   # write to file
   return writeCSV(file, ldata, fmt=fmt, delim=delim, nline=nline,
                   header=head, footer=foot, comments='')
+
+
+def round_to_error(val, err, nd0=2):
+  """round float *val* to same number of sigfinicant digits as uncertainty *err*
+  
+  Returns:
+     * string: g-format for printout of *val* 
+  """
+
+  v = abs(val) 
+  e = round(abs(err), nd0)
+    
+  if e > v:
+    nd = nd0
+  else: 
+    nd = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nd0
+    
+  return '#.'+str(nd) + 'g'               
+
 
 ## ------- section 2: statistics  -----------------------
 

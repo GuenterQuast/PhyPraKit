@@ -1209,14 +1209,14 @@ class mnFit():
 
   @staticmethod
   def round_to_error(val, err, nd0=2):
-    """round float val to same number of sigfinicant digits as uncertainty err
+    """round float *val* to same number of sigfinicant digits as uncertainty *err*
   
     Returns:
-      * string: g-format for vule 
+      * string: g-format for printout of *val* 
     """
 
     v = abs(val) 
-    e = abs(err) 
+    e = round(abs(err), nd0)
     
     if e > v:
       nd = nd0
