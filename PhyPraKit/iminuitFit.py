@@ -1215,8 +1215,10 @@ class mnFit():
       * string: g-format for printout of *val* 
     """
 
-    v = abs(val) 
-    e = round(abs(err), nd0)
+    v = abs(val)
+    # round uncertainty to nd0 significant digits
+    etxt = "{: ." + str(nd0) + "g}"
+    e = float(etxt.format(abs(err)))
     
     if e > v:
       nd = nd0

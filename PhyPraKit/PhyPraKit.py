@@ -539,8 +539,10 @@ def round_to_error(val, err, nd0=2):
   """
 
   v = abs(val) 
-  e = round(abs(err), nd0)
-    
+  # round uncertainty to nd0 significant digits
+  etxt = "{: ." + str(nd0) + "g}"
+  e = float(etxt.format(abs(err)))
+   
   if e > v:
     nd = nd0
   else: 
