@@ -531,24 +531,36 @@ def writeTexTable(file, ldata, cnames=[], caption='', fmt='%.10g'):
                   header=head, footer=foot, comments='')
 
 
-def round_to_error(val, err, nd0=2):
-  """round float *val* to same number of sigfinicant digits as uncertainty *err*
-  
+def round_to_error(val, err, nsd_e=2):
+  """round float *val* to corresponding number of sigfinicant digits  
+  as uncertainty *err*
+
+  Arguments:
+    * val, float: value
+    * err, float: uncertainty of value
+    * nsd_e, int: number of significant digits of err
+ 
   Returns:
-     * string: g-format for printout of *val* 
+    * int:   number of significant digits for v
+    * float: val rounded to precision of err
+    * float: err rounded to precision nsd_e
   """
 
-  v = abs(val) 
+  v = abs(val)
   # round uncertainty to nd0 significant digits
-  etxt = "{: ." + str(nd0) + "g}"
-  e = float(etxt.format(abs(err)))
-   
-  if e > v:
-    nd = nd0
-  else: 
-    nd = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nd0
+  e = float("{:{p}g}".format(abs(err), p=nsd_e))
     
-  return '#.'+str(nd) + 'g'               
+  if e > v:
+    nsd = nsd_e
+  else: 
+    # determine # of siginifcant digits vor v
+    _nd = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
+    # take into account possible rounding of v ...
+    v = float("{:{p}g}".format(v, p=_nd))
+    # ... and determine final # of sig. digits
+    nsd_v = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
+      
+  return nsd_v, v, e               
 
 
 ## ------- section 2: statistics  -----------------------

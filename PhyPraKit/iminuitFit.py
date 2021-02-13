@@ -1104,20 +1104,21 @@ class mnFit():
                            color='green')    
 
     # display legend with some fit info
+    pe = 2   # number of significant digits of uncertainty
     fit_info = [
       "$\\chi^2$/$n_\\mathrm{{dof}}$={:.1f}/{}".format(chi2,ndof) + \
        "  p={:.1f}%".format(100*chi2prb)]
 
     if self.minosResult is not None and self.minos_ok:
-      for p, v, e in zip(pnams, pvals, pmerrs):
-        fmt = self.round_to_error(v, min(abs(e[0]), abs(e[1])) )
-        txt="{} = ${:" + fmt + "}^{{+{:#.2g}}}_{{{:#.2g}}}$"
-        fit_info.append(txt.format(p, v, e[1], e[0]))
+      for pn, v, e in zip(pnams, pvals, pmerrs):
+        nd, _v, _e = self.round_to_error(v, min(abs(e[0]), abs(e[1])), nsd_e=pe )
+        txt="{} = ${:#.{pv}g}^{{+{:#.{pe}g}}}_{{{:#.{pe}g}}}$"
+        fit_info.append(txt.format(pn, _v, e[1], e[0], pv=nd, pe=pe))
     else:
-      for p, v, e in zip(pnams, pvals, perrs):
-        fmt = self.round_to_error(v, e)
-        txt="{} = ${:" + fmt + "}\pm{{{:#.2g}}}$"
-        fit_info.append(ftxt.format(p, v, e))
+      for pn, v, e in zip(pnams, pvals, pmerrs):
+        nd, _v, _e = self.round_to_error(v, e[1], nsd_e=pe)
+        txt="{} = ${:#.{pv}g}\pm{:#.{pe}g}$"
+        fit_info.append(txt.format(pn, _v, _e, pv=nd, pe=pe))
     plt.legend(title="\n".join(fit_info))      
 
     return fig_model
@@ -1208,24 +1209,31 @@ class mnFit():
     return fig
 
   @staticmethod
-  def round_to_error(val, err, nd0=2):
+  def round_to_error(val, err, nsd_e=2):
     """round float *val* to same number of sigfinicant digits as uncertainty *err*
   
     Returns:
-      * string: g-format for printout of *val* 
+      * int:   number of significant digits for v
+      * float: val rounded to precision of err
+      * float: err rounded to precision nsd_e
+
     """
 
     v = abs(val)
     # round uncertainty to nd0 significant digits
-    etxt = "{: ." + str(nd0) + "g}"
-    e = float(etxt.format(abs(err)))
+    e = float("{:{p}g}".format(abs(err), p=nsd_e))
     
     if e > v:
-      nd = nd0
+      nsd = nsd_e
     else: 
-      nd = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nd0
+      # determine # of siginifcant digits vor v
+      _nd = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
+      # take into account possible rounding of v ...
+      v = float("{:{p}g}".format(v, p=_nd))
+      # ... and determine final # of sig. digits
+      nsd_v = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
       
-    return '#.'+str(nd) + 'g'               
+    return nsd_v, v, e               
 
   @staticmethod
   def chi2prb(chi2,ndof):
