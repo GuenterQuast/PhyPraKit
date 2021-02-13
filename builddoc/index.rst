@@ -262,10 +262,11 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     "künstliche Daten" zur Veranschaulichung oder zum Test von Methoden
     zur Datenauswertung erzeugen kann. 
   * `toyMC_Fit.py` führt eine große Anzahl Anpassungen an simulierte
-    Daten durch. Durch Vergleich der wahren Werte mit den aus er
-    Anpassung bestimmten Werte lassen sich Verzerrungen der Parameterschätzungen
-    oder die Form der Verteilung der Chi2-Wahrscheinlichkeit überprüfen, die
-    im Idealfall eine Rechteckverteilung im Intervall [0,1] sein sollte. 
+    Daten durch. Durch Vergleich der wahren Werte mit den aus der
+    Anpassung bestimmten Werten lassen sich Verzerrungen der
+    Parameterschätzungen oder die Form der Verteilung der
+    Chi2-Wahrscheinlichkeit überprüfen, die im Idealfall eine
+    Rechteckverteilung im Intervall [0,1] sein sollte. 
 
   Die folgenden *python*-Skripte sind etwas komplexer und illustrieren 
   typische Anwendungsfälle der Module in `PhyPraKit`:
