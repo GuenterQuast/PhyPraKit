@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-'''kfitf.py
+"""kfitf.py  
    Perform a fit with the kafe package driven by input file  
    usage: kfitf.py [-h] [-n] [-s] [-c] [--noinfo] [-f FORMAT] filename
 
@@ -15,7 +15,7 @@
      --noband             suppress 1-sigma band around function
      --format FMT         graphics output format, default FMT = pdf
 
-'''
+"""
 
 ## Author:      G. Quast   Oct. 2016, adapted from erlier version
 ##

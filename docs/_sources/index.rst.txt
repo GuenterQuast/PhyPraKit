@@ -89,7 +89,7 @@ Indices and tables
 ============================================
 
 In allen Praktika zur Physik werden Methoden zur Aufnahme, 
-Bearbeitung, Darstelllung und Auswertung von Messdaten benötigt. 
+Bearbeitung, Darstellung und Auswertung von Messdaten benötigt. 
 Die Script- und Programmiersprache `python` mit den Zusatzpaketen 
 `numpy` und `matplotlib` ist ein universelles Werkzeug, um die 
 Wiederholbarkeit von Datenauswertungen und die Reprodzierbarkeit 
@@ -152,7 +152,8 @@ oder::
         - labxParser()     read CASSY output file, .labx format   
         - writeCSV()       write data in csv-format (opt. with header)
         - writeTexTable()  write data in LaTeX table format
-    
+        - round_to_error() round to same number of sigfinicant digits as uncertainty
+
       2. signal processing:
     
         - offsetFilter()      subtract an offset in an input array
@@ -205,7 +206,6 @@ oder::
     
         - smearData()          add random deviations to input data
         - generateXYdata()     generate simulated data 
-
 
 
 Die folgenden **Beispiele** illustrieren die Anwendung:
@@ -261,6 +261,11 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
   * `test_generateXYata.py` zeigt, wie man mit Hilfe von Zufallszahlen 
     "künstliche Daten" zur Veranschaulichung oder zum Test von Methoden
     zur Datenauswertung erzeugen kann. 
+  * `toyMC_Fit.py` führt eine große Anzahl Anpassungen an simulierte
+    Daten durch. Durch Vergleich der wahren Werte mit den aus er
+    Anpassung bestimmten Werte lassen sich Verzerrungen der Parameterschätzungen
+    oder die Form der Verteilung der Chi2-Wahrscheinlichkeit überprüfen, die
+    im Idealfall eine Rechteckverteilung im Intervall [0,1] sein sollte. 
 
   Die folgenden *python*-Skripte sind etwas komplexer und illustrieren 
   typische Anwendungsfälle der Module in `PhyPraKit`:
@@ -344,6 +349,8 @@ Module Documentation
 ..  automodule:: test_k2Fit
 
 ..  automodule:: test_generateData
+
+..  automodule:: toyMC_Fit
 
 ..  automodule:: kfitf
 

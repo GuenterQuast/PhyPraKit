@@ -39,7 +39,7 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p><cite>Version</cite> 2021-02-04</p>
+<div><p><cite>Version</cite> 2021-02-13</p>
 </div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
@@ -91,7 +91,7 @@ werden jeweils durch Beispiele illustriert.</p>
 <div class="section" id="darstellung-und-auswertung-von-messdaten">
 <h1><strong>Darstellung und Auswertung von Messdaten</strong><a class="headerlink" href="#darstellung-und-auswertung-von-messdaten" title="Permalink to this headline">¶</a></h1>
 <p>In allen Praktika zur Physik werden Methoden zur Aufnahme,
-Bearbeitung, Darstelllung und Auswertung von Messdaten benötigt.
+Bearbeitung, Darstellung und Auswertung von Messdaten benötigt.
 Die Script- und Programmiersprache <cite>python</cite> mit den Zusatzpaketen
 <cite>numpy</cite> und <cite>matplotlib</cite> ist ein universelles Werkzeug, um die
 Wiederholbarkeit von Datenauswertungen und die Reprodzierbarkeit
@@ -152,6 +152,7 @@ zum import in eigene Beispiele mittels:</p>
 <li><p>labxParser()     read CASSY output file, .labx format</p></li>
 <li><p>writeCSV()       write data in csv-format (opt. with header)</p></li>
 <li><p>writeTexTable()  write data in LaTeX table format</p></li>
+<li><p>round_to_error() round to same number of sigfinicant digits as uncertainty</p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="2">
@@ -285,6 +286,11 @@ in ein oder zwei Dimensionen.</p></li>
 <li><p><cite>test_generateXYata.py</cite> zeigt, wie man mit Hilfe von Zufallszahlen
 “künstliche Daten” zur Veranschaulichung oder zum Test von Methoden
 zur Datenauswertung erzeugen kann.</p></li>
+<li><p><cite>toyMC_Fit.py</cite> führt eine große Anzahl Anpassungen an simulierte
+Daten durch. Durch Vergleich der wahren Werte mit den aus er
+Anpassung bestimmten Werte lassen sich Verzerrungen der Parameterschätzungen
+oder die Form der Verteilung der Chi2-Wahrscheinlichkeit überprüfen, die
+im Idealfall eine Rechteckverteilung im Intervall [0,1] sein sollte.</p></li>
 </ul>
 <p>Die folgenden <em>python</em>-Skripte sind etwas komplexer und illustrieren
 typische Anwendungsfälle der Module in <cite>PhyPraKit</cite>:</p>
@@ -353,6 +359,7 @@ in Physics Lab Courses, recommended for “Physikalisches Praktikum am KIT”</p
 <li><p>labxParser()     read CASSY output file, .labx format</p></li>
 <li><p>writeCSV()       write data in csv-format (opt. with header)</p></li>
 <li><p>writeTexTable()  write data in LaTeX table format</p></li>
+<li><p>round_to_error() round to same number of sigfinicant digits as uncertainty</p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="2">
@@ -1280,6 +1287,27 @@ to from the new value at index <cite>i</cite></p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="PhyPraKit.round_to_error">
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">round_to_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em>, <em class="sig-param"><span class="n">err</span></em>, <em class="sig-param"><span class="n">nsd_e</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.round_to_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>round float <em>val</em> to corresponding number of sigfinicant digits  
+as uncertainty <em>err</em></p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><ul class="simple">
+<li><p>val, float: value</p></li>
+<li><p>err, float: uncertainty of value</p></li>
+<li><p>nsd_e, int: number of significant digits of err</p></li>
+</ul>
+</dd>
+<dt>Returns:</dt><dd><ul class="simple">
+<li><p>int:   number of significant digits for v</p></li>
+<li><p>float: val rounded to precision of err</p></li>
+<li><p>float: err rounded to precision nsd_e</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="PhyPraKit.simplePeakfinder">
 <code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">simplePeakfinder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">th</span><span class="o">=</span><span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.simplePeakfinder" title="Permalink to this definition">¶</a></dt>
 <dd><dl>
@@ -1749,6 +1777,20 @@ with confidence level(s) cl</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="PhyPraKit.iminuitFit.mnFit.round_to_error">
+<em class="property">static </em><code class="sig-name descname">round_to_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em>, <em class="sig-param"><span class="n">err</span></em>, <em class="sig-param"><span class="n">nsd_e</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.iminuitFit.mnFit.round_to_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>round float <em>val</em> to same number of sigfinicant digits as uncertainty <em>err</em></p>
+<dl class="simple">
+<dt>Returns:</dt><dd><ul class="simple">
+<li><p>int:   number of significant digits for v</p></li>
+<li><p>float: val rounded to precision of err</p></li>
+<li><p>float: err rounded to precision nsd_e</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="PhyPraKit.iminuitFit.mnFit.setOptions">
 <code class="sig-name descname">setOptions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">relative_refers_to_model</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_minos</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_negLogL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.iminuitFit.mnFit.setOptions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define mnFit options</p>
@@ -1918,7 +1960,15 @@ function. In the last step, these true y-values are smeared
 by adding random deviations to obtain a sample of measured values</p>
 </dd>
 </dl>
-<span class="target" id="module-kfitf"></span><p>kfitf.py
+<span class="target" id="module-toyMC_Fit"></span><dl>
+<dt>toyMC_Fit.py</dt><dd><p>run a large number of fits on toyMC data
+to check for biases and chi2-probability distribution</p>
+<p>This rather complete example uses eight different kinds of uncertainties, 
+namely independent and correlated, absolute and relative ones  
+in the x and y directions.</p>
+</dd>
+</dl>
+<span class="target" id="module-kfitf"></span><p>kfitf.py  
 Perform a fit with the kafe package driven by input file  
 usage: kfitf.py [-h] [-n] [-s] [-c] [–noinfo] [-f FORMAT] filename</p>
 <dl>
