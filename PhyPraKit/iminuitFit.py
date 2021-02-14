@@ -941,7 +941,6 @@ class mnFit():
       else:
          self.constraints.append(constraints)
       self.nconstraints = len(self.constraints)
-      print(self.constraints)
       # take account of constraints in degrees of freedom 
       self.ndof = len(self.data.y) - self.npar + self.nconstraints
           

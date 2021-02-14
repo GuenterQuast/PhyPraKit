@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Beispiel_Hysterese.py 
-
+"""Beispiel_Hysterese.py 
    Auswertung der Daten aus einer mit PicoScope erstellten Datei
    im txt-Format am Beispiel des Hystereseversuchs
 
@@ -16,7 +15,7 @@
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
-'''
+"""
 
 from __future__ import print_function  # for python2.7 compatibility
 

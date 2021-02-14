@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Beispiel_Drehpendel.py  
-
+"""Beispiel_Drehpendel.py  
    Auswertung der Daten aus einer im CASSY labx-Format gespeicherten Datei
    am Beispiel des Drehpendels
 
@@ -26,7 +25,7 @@
      
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
-'''
+"""
 
 from __future__ import print_function  # for python2.7 compatibility
 

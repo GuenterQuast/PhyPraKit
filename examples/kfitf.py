@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """kfitf.py  
    Perform a fit with the kafe package driven by input file  
+
    usage: kfitf.py [-h] [-n] [-s] [-c] [--noinfo] [-f FORMAT] filename
 
    positional arguments:
@@ -14,7 +15,7 @@
      --noinfo             suppress fit info on plot
      --noband             suppress 1-sigma band around function
      --format FMT         graphics output format, default FMT = pdf
-
+.. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
 
 ## Author:      G. Quast   Oct. 2016, adapted from erlier version

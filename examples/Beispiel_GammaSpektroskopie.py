@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Beispiel_GammaSpektroskopie.py 
-
+"""Beispiel_GammaSpektroskopie.py 
    Darstellung der Daten aus einer im CASSY labx-Format gespeicherten Datei
    am Beispiel der Gamma-Spektroskopie
 
@@ -8,7 +7,7 @@
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
-'''
+"""
 
 from __future__ import print_function  # for python2.7 compatibility
 

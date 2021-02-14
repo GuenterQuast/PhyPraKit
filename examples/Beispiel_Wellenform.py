@@ -1,5 +1,4 @@
-'''Beispiel_Wellenform.py 
-
+"""Beispiel_Wellenform.py 
    Einlesen von Daten aus dem mit PicoScope erstellten Dateien
    am Beispiel der akustischen Anregung eines Stabes
 
@@ -9,7 +8,7 @@
   
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
-'''
+"""
 
 from __future__ import print_function  # for python2.7 compatibility
 

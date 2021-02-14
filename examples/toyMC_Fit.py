@@ -135,12 +135,15 @@ if __name__ == "__main__": # --------------------------------------
       for i in range(npar):
         d[i].append(parvals[i]-list(mpardict.values())[i])
       c2prb.append(chi2prb)
-        
+
+      if plot: plt.show()
+    
     except Exception as e:
       nfail +=1
       print('!!! fit failed ', nfail)
       print(e)
-# - end loop over MC experiments    
+
+  # - end loop over MC experiments    
 
   for i in range(npar):
     d[i] = np.array(d[i])
