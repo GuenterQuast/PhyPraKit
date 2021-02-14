@@ -276,6 +276,21 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     einer einzigen Datei angegeben werden. Beispiele finden sich
     in den Dateien mit der Endung `.fit`. 
 
+  * `Beispiel_Diodenkennlinie.py` demonstriert die Analyse einer
+    Strom-Spannungskennlinie am Beispiel von (künstlichen) Daten,
+    an die die Shockley-Gleichung angepasst wird. Typisch für
+    solche Messungen über einen weiten Bereich von Stromstärken
+    ist die Änderung des Messbereichs und damit der Anzeigegenauigkeit
+    des verwendeten Messgeräts. Im steil ansteigenden Teil der
+    Strom-Spannungskennlinie ist es außerdem wichtig, auch die Unsicherheit
+    der auf der x-Achse aufgetragen Spannungsmessungen zu berücksichtigen.
+    Eine weitere Komponente der Unsicherheit ergibt sich aus der
+    Kalibrationsgenauigkeit des Messgeräts, die als relative,
+    korrelierte Unsicherheit aller Messwerte berücksichtig weden
+    muss. Das Beispiel zeigt, wie man in diesem Fall die Kovarianzmatrix
+    aus Einzelunsicherheiten aufbaut. Die Funktionen *k2Fit()* und
+    *mfit()* bieten dazu komfortable und einfache Möglichkeiten. 
+    
   * `Beispiel_Drehpendel.py` demonstriert die Analyse von am Drehpendel
     mit CASSY aufgenommenen Daten. Enthalten sind einfache Funktionen zum
     Filtern und Bearbeiten der Daten, zur Suche nach Extrema und Anpassung 
@@ -354,6 +369,8 @@ Module Documentation
 ..  automodule:: toyMC_Fit
 
 ..  automodule:: kfitf
+
+..  automodule:: Beispiel_Diodenkennlinie
 
 ..  automodule:: Beispiel_Drehpendel
 

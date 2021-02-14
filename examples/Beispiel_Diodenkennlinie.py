@@ -51,7 +51,7 @@ if __name__ == "__main__": # --------------------------------------
     - float I: Strom (mA)
     """
 
-    return 1e-6 * I_s * np.exp( (U/(U0)) - 1.)   
+    return 1e-6 * I_s * np.exp( (U/U0) - 1.)   
 
 # --- settings for general fit
 #
@@ -135,7 +135,7 @@ if __name__ == "__main__": # --------------------------------------
   print(" pos. parameter errors: ", parerrs[:,1])
   print(" correlations : \n", cor)
 
-# show all plots  
+# set final options for plots and show on screen  
   plt.figure(num=1)   # activate first figure ...
   plt.ylim(-1., 180.) # and set y-limit
   plt.show()          # show all figures
