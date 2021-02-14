@@ -62,9 +62,11 @@ def mFit(fitf, x, y, sx = None, sy = None,
        srelx = None, srely = None, 
        xabscor = None, xrelcor = None,        
        yabscor = None, yrelcor = None,
+       ref_to_model = True, 
        p0 = None, constraints = None,
        use_negLogL=True, 
        plot = True, plot_cor = True,
+       showplots = False, 
        plot_band=True, quiet = False,
        axis_labels=['x', 'y = f(x, *par)'],
        data_legend = 'data',    
@@ -128,7 +130,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
 
   # set some options
   Fit.setOptions(run_minos=True,
-                 relative_refers_to_model=True,
+                 relative_refers_to_model=ref_to_model,
                  use_negLogL=use_negLogL,
                  quiet=quiet)
 
@@ -163,7 +165,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
     fig_cor = Fit.plotContours()
 
   # show plots on screen
-  if plot or plot_cor:
+  if showplots and (plot or plot_cor):
     plt.show()
 
   # return
@@ -1111,7 +1113,8 @@ class mnFit():
 
     if self.minosResult is not None and self.minos_ok:
       for pn, v, e in zip(pnams, pvals, pmerrs):
-        nd, _v, _e = self.round_to_error(v, min(abs(e[0]), abs(e[1])), nsd_e=pe )
+        nd, _v, _e = self.round_to_error(v, min(abs(e[0]), abs(e[1])),
+                                         nsd_e=pe )
         txt="{} = ${:#.{pv}g}^{{+{:#.{pe}g}}}_{{{:#.{pe}g}}}$"
         fit_info.append(txt.format(pn, _v, e[1], e[0], pv=nd, pe=pe))
     else:
@@ -1224,7 +1227,7 @@ class mnFit():
     e = float("{:{p}g}".format(abs(err), p=nsd_e))
     
     if e > v:
-      nsd = nsd_e
+      nsd_v = nsd_e
     else: 
       # determine # of siginifcant digits vor v
       _nd = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
@@ -1233,7 +1236,7 @@ class mnFit():
       # ... and determine final # of sig. digits
       nsd_v = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
       
-    return nsd_v, v, e               
+    return nsd_v, np.sign(val)*v, e               
 
   @staticmethod
   def chi2prb(chi2,ndof):

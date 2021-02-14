@@ -15,8 +15,6 @@
 import numpy as np, matplotlib.pyplot as plt
 from PhyPraKit import generateXYdata, mFit
 
-# ------------------------ end of iminuitFit ----------------------
-      
 if __name__ == "__main__": # --------------------------------------  
   #
   # Example of an application of PhyPraKit.mFit()

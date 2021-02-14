@@ -1422,6 +1422,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
          p0 = None, constraints = None,
          use_negLogL=True, 
          plot = True, plot_cor = False,
+         showplots = False,
          plot_band=True, quiet = False,
          axis_labels=['x', 'y = f(x, *par)'], 
          data_legend = 'data',    
@@ -1519,7 +1520,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
     fig_cor = Fit.plotContours()
 
   # show plots on screen
-  if plot or plot_cor:
+  if showplots and (plot or plot_cor):
     plt.show()
 
   # return
