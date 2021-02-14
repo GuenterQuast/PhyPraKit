@@ -1087,7 +1087,7 @@ class mnFit():
         ex = np.sqrt(ex)
 
    # draw data and fitted line
-    fig_model = plt.figure(figsize=(7.5, 6.5))
+    fig_model = plt.figure(num='Data and Model', figsize=(7.5, 6.5))
     if ex is not None:
       plt.errorbar(x, y, xerr=ex, yerr=ey, fmt='x', label=data_legend)
     else:
@@ -1152,7 +1152,8 @@ class mnFit():
 
     fsize=3.5
     cor_fig, axarr = plt.subplots(npar, npar,
-                                figsize=(fsize*npar, fsize*npar))
+                                  num='Profiles and Contours',
+                                  figsize=(fsize*npar, fsize*npar))
     ip = -1
     for i in range(0, npar):
       ip += 1
@@ -1180,7 +1181,8 @@ class mnFit():
   def plot_Profile(self, pnam):
     """plot profile likelihood of parameter pnam
     """
-    fig = plt.figure(figsize=(5., 5.))
+    fig = plt.figure(num='Likelihood profile ' + pnam,
+                     figsize=(5., 5.))
     self.minuit.draw_mnprofile(pnam, subtract_min=True)
     return fig
 
@@ -1193,7 +1195,8 @@ class mnFit():
       print("!!! plot_clContour not implemented vor iminuit vers.<2")
       return
     else:
-      fig = plt.figure(figsize=(5., 5.))
+      fig = plt.figure(num='Contour(s) ' + pnam1 + ' vs. ' + pnam2,
+                       figsize=(5., 5.))
       self.minuit.draw_mncontour(pnam1, pnam2, cl=cl)    
       return fig
 
@@ -1201,7 +1204,8 @@ class mnFit():
   def plot_nsigContour(self, pnam1, pnam2, nsig):
     """plot nsig contours of parameters pnam1 and pnam2
     """
-    fig = plt.figure(figsize=(5., 5.))
+    fig = plt.figure(num='Contour(s) ' + pnam1 + ' vs. ' + pnam2,
+      figsize=(5., 5.))
     if __version__ <'2':
       self.minuit.draw_mncontour(pnam1, pnam2, nsigma=nsig)
     else:
