@@ -39,7 +39,7 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p><cite>Version</cite> 2021-02-13</p>
+<div><p><cite>Version</cite> 2021-02-15</p>
 </div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
@@ -287,10 +287,11 @@ in ein oder zwei Dimensionen.</p></li>
 “künstliche Daten” zur Veranschaulichung oder zum Test von Methoden
 zur Datenauswertung erzeugen kann.</p></li>
 <li><p><cite>toyMC_Fit.py</cite> führt eine große Anzahl Anpassungen an simulierte
-Daten durch. Durch Vergleich der wahren Werte mit den aus er
-Anpassung bestimmten Werte lassen sich Verzerrungen der Parameterschätzungen
-oder die Form der Verteilung der Chi2-Wahrscheinlichkeit überprüfen, die
-im Idealfall eine Rechteckverteilung im Intervall [0,1] sein sollte.</p></li>
+Daten durch. Durch Vergleich der wahren Werte mit den aus der
+Anpassung bestimmten Werten lassen sich Verzerrungen der
+Parameterschätzungen oder die Form der Verteilung der
+Chi2-Wahrscheinlichkeit überprüfen, die im Idealfall eine
+Rechteckverteilung im Intervall [0,1] sein sollte.</p></li>
 </ul>
 <p>Die folgenden <em>python</em>-Skripte sind etwas komplexer und illustrieren
 typische Anwendungsfälle der Module in <cite>PhyPraKit</cite>:</p>
@@ -299,6 +300,20 @@ typische Anwendungsfälle der Module in <cite>PhyPraKit</cite>:</p>
 Anpassungen ausführen kann, bei denen Daten und Fit-Funktion in
 einer einzigen Datei angegeben werden. Beispiele finden sich
 in den Dateien mit der Endung <cite>.fit</cite>.</p></li>
+<li><p><cite>Beispiel_Diodenkennlinie.py</cite> demonstriert die Analyse einer
+Strom-Spannungskennlinie am Beispiel von (künstlichen) Daten,
+an die die Shockley-Gleichung angepasst wird. Typisch für
+solche Messungen über einen weiten Bereich von Stromstärken
+ist die Änderung des Messbereichs und damit der Anzeigegenauigkeit
+des verwendeten Messgeräts. Im steil ansteigenden Teil der
+Strom-Spannungskennlinie ist es außerdem wichtig, auch die Unsicherheit
+der auf der x-Achse aufgetragen Spannungsmessungen zu berücksichtigen.
+Eine weitere Komponente der Unsicherheit ergibt sich aus der
+Kalibrationsgenauigkeit des Messgeräts, die als relative,
+korrelierte Unsicherheit aller Messwerte berücksichtig weden
+muss. Das Beispiel zeigt, wie man in diesem Fall die Kovarianzmatrix
+aus Einzelunsicherheiten aufbaut. Die Funktionen <em>k2Fit()</em> und
+<em>mfit()</em> bieten dazu komfortable und einfache Möglichkeiten.</p></li>
 <li><p><cite>Beispiel_Drehpendel.py</cite> demonstriert die Analyse von am Drehpendel
 mit CASSY aufgenommenen Daten. Enthalten sind einfache Funktionen zum
 Filtern und Bearbeiten der Daten, zur Suche nach Extrema und Anpassung
@@ -763,7 +778,7 @@ of a histogram with bin-contents <cite>binc</cite> and bin-edges <cite>bine</cit
 
 <dl class="py function">
 <dt id="PhyPraKit.k2Fit">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">k2Fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srelx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srely</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ref_to_model</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x-data', 'y-data']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_expression</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em>, <em class="sig-param"><span class="n">model_band</span><span class="o">=</span><span class="default_value">'$\\pm 1 \\sigma$'</span></em>, <em class="sig-param"><span class="n">fit_info</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">asym_parerrs</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.k2Fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">k2Fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srelx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srely</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ref_to_model</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x-data', 'y-data']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_expression</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em>, <em class="sig-param"><span class="n">model_band</span><span class="o">=</span><span class="default_value">'$\\pm 1 \\sigma$'</span></em>, <em class="sig-param"><span class="n">fit_info</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">asym_parerrs</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.k2Fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit an arbitrary function func(x, *par) to data points (x, y) 
 with independent and correlated absolute and/or relative errors 
 on x- and y- values with package iminuit.</p>
@@ -817,6 +832,7 @@ else use measured data</p></li>
 <li><p>fit_info: controls display of fit results on figure</p></li>
 <li><p>asym_parerrs: show (asymmetric) errors from profile-likelihood scan</p></li>
 <li><p>plot_cor: show profile curves and contour lines</p></li>
+<li><p>showplots: show plots on screen, default = True</p></li>
 <li><p>quiet: controls text output</p></li>
 </ul>
 </dd>
@@ -991,7 +1007,7 @@ uses numerical “orthogonal distance regression” from package scipy.odr</p>
 
 <dl class="py function">
 <dt id="PhyPraKit.mFit">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">mFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srelx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srely</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ref_to_model</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_negLogL</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'y = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.mFit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">mFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srelx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srely</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ref_to_model</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_negLogL</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'y = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.mFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit an arbitrary function fitf(x, *par) to data points (x, y) 
 with independent and correlated absolute and/or relative errors 
 on x- and y- values with package iminuit.</p>
@@ -1021,6 +1037,7 @@ uncertainties of (groups of) data points.</p>
 <li><p>plot: show data and model if True</p></li>
 <li><p>plot_cor: show profile liklihoods and conficence contours</p></li>
 <li><p>plot_band: plot uncertainty band around model function</p></li>
+<li><p>showplots: show plots on screen, default = False</p></li>
 <li><p>quiet: suppress printout</p></li>
 <li><p>list of str: axis labels</p></li>
 <li><p>str: legend for data</p></li>
@@ -1475,7 +1492,7 @@ fitting procecure and collects the results.</p>
 </div></blockquote>
 <dl class="py function">
 <dt id="PhyPraKit.iminuitFit.mFit">
-<code class="sig-prename descclassname">PhyPraKit.iminuitFit.</code><code class="sig-name descname">mFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srelx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srely</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_negLogL</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'y = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.iminuitFit.mFit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.iminuitFit.</code><code class="sig-name descname">mFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srelx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srely</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ref_to_model</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_negLogL</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'y = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.iminuitFit.mFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit an arbitrary function fitf(x, *par) to data points (x, y) 
 with independent and/or correlated absolute and/or relative errors 
 on x- and/or y- values with class mnFit using the package iminuit.</p>
@@ -1968,9 +1985,9 @@ namely independent and correlated, absolute and relative ones
 in the x and y directions.</p>
 </dd>
 </dl>
-<span class="target" id="module-kfitf"></span><p>kfitf.py  
-Perform a fit with the kafe package driven by input file  
-usage: kfitf.py [-h] [-n] [-s] [-c] [–noinfo] [-f FORMAT] filename</p>
+<span class="target" id="module-kfitf"></span><dl>
+<dt>kfitf.py  </dt><dd><p>Perform a fit with the kafe package driven by input file</p>
+<p>usage: kfitf.py [-h] [-n] [-s] [-c] [–noinfo] [-f FORMAT] filename</p>
 <dl>
 <dt>positional arguments:</dt><dd><p>filename                       name of fit input file</p>
 </dd>
@@ -1999,9 +2016,20 @@ usage: kfitf.py [-h] [-n] [-s] [-c] [–noinfo] [-f FORMAT] filename</p>
 </dl>
 </dd>
 </dl>
-<span class="target" id="module-Beispiel_Drehpendel"></span><p>Beispiel_Drehpendel.py</p>
-<blockquote>
-<div><p>Auswertung der Daten aus einer im CASSY labx-Format gespeicherten Datei
+</dd>
+</dl>
+<span class="target" id="module-Beispiel_Diodenkennlinie"></span><dl class="simple">
+<dt>Kennlinie.py</dt><dd><p>Messung einer Strom-Spannungskennlinie
+und Anpassung der Schockley-Gleichung.</p>
+<ul class="simple">
+<li><p>Konstruktion der Kovarianzmatrix für ein reales Messinstrument</p></li>
+<li><p>Generierung der (simulierten) Daten</p></li>
+<li><p>Ausführen der Anpassung mit <em>mFit</em> aus dem Paket <em>iminuitFit</em></p></li>
+</ul>
+</dd>
+</dl>
+<span class="target" id="module-Beispiel_Drehpendel"></span><dl class="simple">
+<dt>Beispiel_Drehpendel.py  </dt><dd><p>Auswertung der Daten aus einer im CASSY labx-Format gespeicherten Datei
 am Beispiel des Drehpendels</p>
 <ul class="simple">
 <li><p>Einlesen der Daten im .labx-Format</p></li>
@@ -2017,10 +2045,10 @@ am Beispiel des Drehpendels</p>
 <li><p>Phasenraum-Darstellung (aufgezeichnete Wellenfunktion
 gegen deren Ableitung nach der Zeit)</p></li>
 </ul>
-</div></blockquote>
-<span class="target" id="module-Beispiel_Hysterese"></span><p>Beispiel_Hysterese.py</p>
-<blockquote>
-<div><p>Auswertung der Daten aus einer mit PicoScope erstellten Datei
+</dd>
+</dl>
+<span class="target" id="module-Beispiel_Hysterese"></span><dl class="simple">
+<dt>Beispiel_Hysterese.py </dt><dd><p>Auswertung der Daten aus einer mit PicoScope erstellten Datei
 im txt-Format am Beispiel des Hystereseversuchs</p>
 <ul class="simple">
 <li><p>Einlesen der Daten aus PicoScope-Datei vom Typ .txt oder .csv</p></li>
@@ -2029,24 +2057,25 @@ im txt-Format am Beispiel des Hystereseversuchs</p>
 <li><p>Interpolation durch kubische Splines</p></li>
 <li><p>Integration der Spline-Funktionen</p></li>
 </ul>
-</div></blockquote>
-<span class="target" id="module-Beispiel_Wellenform"></span><p>Beispiel_Wellenform.py</p>
-<blockquote>
-<div><p>Einlesen von Daten aus dem mit PicoScope erstellten Dateien
+</dd>
+</dl>
+<span class="target" id="module-Beispiel_Wellenform"></span><dl class="simple">
+<dt>Beispiel_Wellenform.py </dt><dd><p>Einlesen von Daten aus dem mit PicoScope erstellten Dateien
 am Beispiel der akustischen Anregung eines Stabes</p>
 <ul class="simple">
 <li><p>Fourier-Analyse des Signals</p></li>
 <li><p>Bestimmung der Resonanzfrequenz mittels Autokorrelation</p></li>
 </ul>
-</div></blockquote>
-<span class="target" id="module-Beispiel_GammaSpektroskopie"></span><p>Beispiel_GammaSpektroskopie.py</p>
-<blockquote>
-<div><p>Darstellung der Daten aus einer im CASSY labx-Format gespeicherten Datei
+</dd>
+</dl>
+<span class="target" id="module-Beispiel_GammaSpektroskopie"></span><dl class="simple">
+<dt>Beispiel_GammaSpektroskopie.py </dt><dd><p>Darstellung der Daten aus einer im CASSY labx-Format gespeicherten Datei
 am Beispiel der Gamma-Spektroskopie</p>
 <ul class="simple">
 <li><p>Einlesen der Daten im .labx-Format</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </div>
 
 
