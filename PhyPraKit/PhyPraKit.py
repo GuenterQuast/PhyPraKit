@@ -551,7 +551,7 @@ def round_to_error(val, err, nsd_e=2):
   e = float("{:{p}g}".format(abs(err), p=nsd_e))
     
   if e > v:
-    nsd = nsd_e
+    nsd_v = nsd_e
   else: 
     # determine # of siginifcant digits vor v
     _nd = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
@@ -560,7 +560,7 @@ def round_to_error(val, err, nsd_e=2):
     # ... and determine final # of sig. digits
     nsd_v = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
       
-  return nsd_v, v, e               
+  return nsd_v, np.sign(val)*v, e
 
 
 ## ------- section 2: statistics  -----------------------
