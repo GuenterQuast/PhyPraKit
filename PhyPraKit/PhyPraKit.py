@@ -1422,8 +1422,8 @@ def mFit(fitf, x, y, sx = None, sy = None,
          p0 = None, constraints = None,
          use_negLogL=True, 
          plot = True, plot_cor = False,
-         showplots = False,
-         plot_band=True, quiet = False,
+         plot_band=True,
+         showplots = False, quiet = False,
          axis_labels=['x', 'y = f(x, *par)'], 
          data_legend = 'data',    
          model_legend = 'model'): 
@@ -1458,6 +1458,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
     * plot_band: plot uncertainty band around model function
+    * showplots: show plots on screen, default = False
     * quiet: suppress printout
     * list of str: axis labels
     * str: legend for data
@@ -1673,7 +1674,8 @@ def k2Fit(func, x, y,
     plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
     model_expression=None, model_name=None, 
     model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
-    fit_info=True, asym_parerrs=True, plot_cor=False, quiet=True):
+    fit_info=True, asym_parerrs=True, plot_cor=False,
+    showplots=True, quiet=True):
 
   """Fit an arbitrary function func(x, \*par) to data points (x, y) 
   with independent and correlated absolute and/or relative errors 
@@ -1727,6 +1729,7 @@ def k2Fit(func, x, y,
       * fit_info: controls display of fit results on figure
       * asym_parerrs: show (asymmetric) errors from profile-likelihood scan
       * plot_cor: show profile curves and contour lines
+      * showplots: show plots on screen, default = True
       * quiet: controls text output
 
   Returns:
@@ -1851,7 +1854,8 @@ def k2Fit(func, x, y,
     if plot_cor:
       cpf = ContoursProfiler(fit)
       cpf.plot_profiles_contours_matrix() # plot profile likelihood and contours
-    plt.show()    
+
+    if showplots: plt.show()    
       
   return par, pare, cor, chi2
 
