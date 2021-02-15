@@ -80,7 +80,7 @@ if __name__ == "__main__": # --------------------------------------
 #  theFit = k2Fit    
   theFit = mFit    
 
-  # initialize arrays for statistical analysis in looo
+  # initialize arrays for statistical analysis in loop
   d = [[] for i in range(npar)]
   c2prb = []  
   nfail = 0

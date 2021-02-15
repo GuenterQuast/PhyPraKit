@@ -135,7 +135,7 @@ if __name__ == "__main__": # --------------------------------------
   print(" pos. parameter errors: ", parerrs[:,1])
   print(" correlations : \n", cor)
 
-# set final options for plots and show on screen  
+# set final options for plots and show them on screen  
   plt.figure(num=1)   # activate first figure ...
   plt.ylim(-1., 180.) # and set y-limit
   plt.show()          # show all figures
