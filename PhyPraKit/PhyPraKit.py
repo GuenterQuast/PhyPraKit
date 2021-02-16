@@ -1863,28 +1863,47 @@ def k2Fit(func, x, y,
 ## ------- section 6: simulated data -------------------------
 
 def smearData(d, s, srel=None, abscor=None, relcor=None):
-  ''' Generate measurement data from "true" input d by
-      adding random deviations according to the uncertainties 
+  """Generate measurement data from "true" input 
+  by adding random deviations according to the uncertainties 
 
-    Args:
-      * d:  np-array, (true) input data
-    the following are single floats or arrays of length of array d
-      * s: gaussian uncertainty(ies) (absolute)
-      * srel: gaussian uncertainties (relative)
-    the following are common (correlated) systematic uncertainties
-      * abscor: absolute, correlated uncertainty
-      * relcor: relative, correlated uncertainty
-    Returns:
-      * np-array of floats: dm, smeared (=measured) data    
-  '''
+  Args:
+    * d:  np-array, (true) input data
+    
+  the following are single floats or arrays of length of array d
+    * s: gaussian uncertainty(ies) (absolute)
+    * srel: gaussian uncertainties (relative)
+
+  the following are common (correlated) systematic uncertainties
+    * abscor: 1d np-array of floats or list of np-arrays:
+      absolute correlated uncertainties
+    * relcor: 1d np-array of floats or list of np-arrays:
+      relative correlated uncertainties
+
+  Returns:
+    * np-array of floats: dm, smeared (=measured) data    
+  """
 
   dm = d + s*np.random.randn(len(d)) # add independent (statistical) deviations
-  if(srel): 
-    dm += d*srel*np.random.randn(len(d)) # add relative  deviations
-  if(abscor): 
-    dm += abscor*np.random.randn(1) # add common absolute deviation
-  if(relcor): 
-    dm += d*relcor*np.random.randn(1) # add common relative  deviation
+
+  if(srel is not None): 
+    dm += d * srel * np.random.randn(len(d)) # add relative  deviations
+
+  if(abscor is not None):
+    ac = np.asarray(abscor)
+    if len(np.shape(ac)) < 2 : 
+      dm += ac * np.random.randn(1) # add common absolute deviation
+    else:  # got several components
+      for _ac in ac:   # add all common absolute deviations
+        dm += _ac * np.random.randn(1) 
+        
+  if(relcor is not None): 
+    rc = np.asarray(relcor)
+    if len(np.shape(rc)) < 2 : 
+      dm += d * rc * np.random.randn(1) # add common relative  deviation
+    else: # got several components
+      for _rc in rc:      # add all common relative  deviations
+        dm += d * _rc * np.random.randn(1) 
+
   return dm
 
 def generateXYdata(xdata, model, sx, sy, mpar=None,

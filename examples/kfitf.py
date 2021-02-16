@@ -15,6 +15,7 @@
      --noinfo             suppress fit info on plot
      --noband             suppress 1-sigma band around function
      --format FMT         graphics output format, default FMT = pdf
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
 
