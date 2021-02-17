@@ -85,7 +85,7 @@ if __name__ == "__main__": # --------------------------------------
 # - initialize random generator
   np.random.seed(31415)  # initialize random generator
 # - set range and x-data
-  xmin =   0.4
+  xmin =   0.25
   xmax1 =  0.55
   xmax2 =  0.67
   data_x = np.concatenate( (np.linspace(xmin, xmax1, nd//4, endpoint=False),
