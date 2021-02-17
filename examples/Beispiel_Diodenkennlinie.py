@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
 """Kennlinie.py
    Messung einer Strom-Spannungskennlinie und Anpassung der Schockley-Gleichung. 
-
    - Konstruktion der Kovarianzmatrix für ein reales Messinstrument
      mit Anzeigeunsicherheiten und korrelierten, realtiven Kalibratsionsunsicherheiten
      für die Strom- und Spannungsmessung
@@ -123,7 +122,7 @@ if __name__ == "__main__": # --------------------------------------
       use_negLogL=True,    # full -2log(L) if parameter dep. uncertainties
       plot=True,           # plot data and model
       plot_band=True,      # plot model confidence-band
-      plot_cor=False,       # plot profiles likelihood and contours
+      plot_cor=False,      # plot profiles likelihood and contours
       showplots = False,   # plt.show() in user code                       
       quiet=False,         # suppress informative printout
       axis_labels=['U (V)', '$I_D$ (mA)   \  Shockley-Gl.'], 

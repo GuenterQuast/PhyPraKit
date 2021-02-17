@@ -1153,29 +1153,36 @@ class mnFit():
     cor_fig, axarr = plt.subplots(npar, npar,
                                   num='Profiles and Contours',
                                   figsize=(fsize*npar, fsize*npar))
-    ip = -1
-    for i in range(0, npar):
-      ip += 1
-      jp = -1
-      for j in range(0, npar):
-        jp += 1
-        if ip > jp:
-         # empty space
-          axarr[jp, ip].axis('off')
-        elif ip == jp:
-         # plot profile
-          plt.sca(axarr[ip, ip])
-          m.draw_mnprofile(pnams[i], subtract_min=True)
-          plt.ylabel('$\Delta\chi^2$')
-        else:
-          plt.sca(axarr[jp, ip])
-          if __version__ <'2':
-            m.draw_mncontour(pnams[i], pnams[j])
+# protect the following, may fail
+    try:
+      ip = -1
+      for i in range(0, npar):
+        ip += 1
+        jp = -1
+        for j in range(0, npar):
+          jp += 1
+          if ip > jp:
+           # empty space
+            axarr[jp, ip].axis('off')
+          elif ip == jp:
+           # plot profile
+            plt.sca(axarr[ip, ip])
+            m.draw_mnprofile(pnams[i], subtract_min=True)
+            plt.ylabel('$\Delta\chi^2$')
           else:
-            m.draw_mncontour(pnams[i], pnams[j],
-              cl=(self.Chi22CL(1.), self.Chi22CL(4.)) )
-    return cor_fig
-  
+            plt.sca(axarr[jp, ip])
+            if __version__ <'2':
+              m.draw_mncontour(pnams[i], pnams[j])
+            else:
+              m.draw_mncontour(pnams[i], pnams[j],
+                cl=(self.Chi22CL(1.), self.Chi22CL(4.)) )
+      return cor_fig
+
+    except Exception as e:
+      print('*==* !!! profile and contour scan failed')
+      print(e)
+      return None
+
 
   def plot_Profile(self, pnam):
     """plot profile likelihood of parameter pnam
