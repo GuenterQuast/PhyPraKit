@@ -1,10 +1,13 @@
 #! /usr/bin/env python3
-"""Kennlinie.py
+"""Beispeil_Diodenkennlinie.py
    Messung einer Strom-Spannungskennlinie und Anpassung der Schockley-Gleichung. 
-   - Konstruktion der Kovarianzmatrix für ein reales Messinstrument
-     mit Anzeigeunsicherheiten und korrelierten, realtiven Kalibratsionsunsicherheiten
+
+   - Konstruktion der Kovarianzmatrix für ein reales Messinstrument mit Signalrauschen,
+     Anzeigeunsicherheiten und korrelierten, realtiven Kalibratsionsunsicherheiten
      für die Strom- und Spannungsmessung
+
    - Generierung von (simulierten) Daten gemäß Shockley-Gleichung
+
    - Ausführen der Anpassung mit *mFit* aus dem Paket *PhyPraKit.iminuitFit*
    
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
@@ -18,7 +21,7 @@ from PhyPraKit.iminuitFit import mFit
 def Shockley(U, I_s = 0.15, U0 = 0.03):
   """Diodenkennlinie
 
-   Args:
+  Args:
  
   - U: Spannung (V)
   - I_s: Sperrstrom (nA)

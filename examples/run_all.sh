@@ -37,6 +37,7 @@ python3 test_generateData.py
 python3 test_Histogram.py
 
 # more complex examples
+python3 Beispiel_Diodenkennlinie.py
 python3 Beispiel_Drehpendel.py
 python3 Beispiel_GammaSpektroskopie.py
 python3 Beispiel_Hysterese.py
