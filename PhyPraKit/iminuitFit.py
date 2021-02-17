@@ -1087,10 +1087,11 @@ class mnFit():
 
    # draw data and fitted line
     fig_model = plt.figure(num='Data and Model', figsize=(7.5, 6.5))
+    plt.plot(x, y, marker='x', linestyle='', color='grey', alpha=0.5)
     if ex is not None:
-      plt.errorbar(x, y, xerr=ex, yerr=ey, fmt='x', label=data_legend)
+      plt.errorbar(x, y, xerr=ex, yerr=ey, fmt='.', label=data_legend)
     else:
-      plt.errorbar(x, y, ey, fmt="x", label='data')
+      plt.errorbar(x, y, ey, fmt=".", label=data_legend)
     xmin, xmax = plt.xlim()
     xplt=np.linspace(xmin, xmax, 100)
     yplt = cf.model(xplt, *pvals)

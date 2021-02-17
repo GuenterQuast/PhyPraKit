@@ -18,20 +18,17 @@ from PhyPraKit import generateXYdata
 from PhyPraKit.iminuitFit import mFit
 
 # define the model function to fit
-def Shockley(U, I_s = 0.15, U0 = 0.03):
-  """Diodenkennlinie
+def Shockley(U, I_s = 0.5, U0 = 0.03):
+  """Parametrisierung einer Diodenkennlinie
 
   Args:
- 
-  - U: Spannung (V)
-  - I_s: Sperrstrom (nA)
-  - U0: Temperaturspannung (V) * Emissionskoeffizient
+    - U: Spannung (V)
+    - I_s: Sperrstrom (nA)
+    - U0: Temperaturspannung (V) * Emissionskoeffizient
     
   Returns:
-
-  - float I: Strom (mA)
+    - float I: Strom (mA)
   """
-
   return 1e-6 * I_s * np.exp( (U/U0) - 1.)
 
 
@@ -50,56 +47,53 @@ if __name__ == "__main__": # --------------------------------------
   nd = 20 
   
 # Komponenten der Messunsicherheit
-# - Genauigkeit Spannungsmessung: 2000 Counts, +/-(1,5% + 3 digits)
-# - Genauigkeit Strommessung: 2000 Counts, +/-(2% + 4 digits) 
-
-# Rauschanteil (aus Fluktuationen der letzen Stelle)
-# - delta U = 0.005 V
+# - Genauigkeit Spannungsmessung: 4000 Counts, +/-(1.0% + 4 digits)
+#    - Messbereich 2V
+  crel_U = 0.010
+  Udigits = 4
+  Urange = 2
+  Ucounts = 4000
+# - Genauigkeit Strommessung: 2000 Counts, +/-(1.5% + 3 digits) 
+#    - Messbereiche 200µA, 20mA und 200mA 
+  crel_I = 0.015
+  Idigits = 3
+  Icounts = 2000
+  Irange1 = 0.2
+  Irange2 = 20
+  Irange3 = 200
+# - Rauschanteil (aus Fluktuationen der letzen Stelle)
+#   - delta U = 0.005 V
   deltaU = 0.005
-# - delta I = 0.025 mA
+#   - delta I = 0.025 mA
   deltaI = 0.025
 
-# Anzeigegenauigkeit der Spannung (V),  Messbereich 2V DC
-  u_digits_U = 3
-  range = 2
-  counts = 2000
-  sx = u_digits_U * range / counts
+# Anzeigegenauigkeit der Spannung (V)  
+  sx = Udigits * Urange / Ucounts
   sabsx = np.sqrt(deltaU**2 + sx**2)
-
-# Anzeigegenauigkeit des Stroms (mA), Messbereiche 200µA, 20mA und 200mA 
-  u_digits_I = 4
-  range1 = 0.2
-  range2 = 20
-  range3 = 200
-  sy = np.asarray(   nd//4 * [u_digits_I * range1 / counts] + \
-                      2*nd//4 * [u_digits_I * range2 / counts] + \
-                        nd//4 * [u_digits_I * range3 / counts])  
-  sabsy = np.sqrt( deltaI**2 + sy**2)
-
-# Kalibartionsunsicherheit der Geräte
-  crely = 0.015  # korrelierte, relative Messunsicherheit
-  crelx = 0.020
+# korrelierte Kalibrationsunsicherheit  
+  crelx = crel_U
   
-# keine unabhängigen, relativen Unsicherheiten
-  srely = 0.          
-  srelx = 0.  
+# Anzeigegenauigkeit des Stroms (mA), 3 Messbereiche
+  sy = np.asarray(   nd//4 * [Idigits * Irange1 / Icounts] + \
+                      2*nd//4 * [Idigits * Irange2 / Icounts] + \
+                        nd//4 * [Idigits * Irange3 / Icounts])  
+  sabsy = np.sqrt(deltaI**2 + sy**2)
+# korrelierte Kalibrationsunsicherheit  
+  crely = crel_I 
   
 # generate pseudo-data
 # - initialize random generator
-  np.random.seed(3141)  # initialize random generator
+  np.random.seed(31415)  # initialize random generator
 # - set range and x-data
-  xmin =   0.25
-  xmax1 =  0.5
+  xmin =   0.4
+  xmax1 =  0.55
   xmax2 =  0.67
   data_x = np.concatenate( (np.linspace(xmin, xmax1, nd//4, endpoint=False),
                   np.linspace(xmax1, xmax2, 3*nd//4)) ) # x of data points
 # -  set true model values  
-  mpardict = { 'I_s' : 0.5, 'U0' : 0.033 }
-# - calculate total independent uncertainty from absolute and relative components 
-  sigy = np.sqrt(sabsy * sabsy + (srely*model(data_x, **mpardict))**2)
-  sigx = np.sqrt(sabsx * sabsx + (srelx * data_x)**2)
+  mpardict = { 'I_s' : 0.25, 'U0' : 0.033 }
 # - generate the data    
-  xt, yt, data_y = generateXYdata(data_x, model, sigx, sigy,
+  xt, yt, data_y = generateXYdata(data_x, model, sabsx, sabsy,
                                       xabscor = 0.,
                                       xrelcor = crelx,
                                       yabscor = 0.,
@@ -141,7 +135,7 @@ if __name__ == "__main__": # --------------------------------------
 
 # set final options for plots and show them on screen  
   plt.figure(num=1)    # activate first figure ...
-  plt.ylim(-1., 150.)  # and set y-limit
+  plt.ylim(-1., 65.)  # and set y-limit
 #  plt.ylim(1.e-4, 150.)  # and set y-limit
 #  plt.yscale('log')    # try log
   # plt.xlim(0.05, 0.68) # and set y-limit
