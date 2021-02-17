@@ -55,7 +55,7 @@ if __name__ == "__main__": # --------------------------------------
 
 # Rauschanteil (aus Fluktuationen der letzen Stelle)
 # - delta U = 0.005 V
-  deltaU = 0.006
+  deltaU = 0.005
 # - delta I = 0.025 mA
   deltaI = 0.025
 
@@ -64,10 +64,8 @@ if __name__ == "__main__": # --------------------------------------
   range = 2
   counts = 2000
   sx = u_digits_U * range / counts
-  sabsx = np.sqrt(deltaU**2 + sx **2)
+  sabsx = np.sqrt(deltaU**2 + sx**2)
 
-  print(sabsx)
-  
 # Anzeigegenauigkeit des Stroms (mA), Messbereiche 200µA, 20mA und 200mA 
   u_digits_I = 4
   range1 = 0.2
@@ -90,13 +88,13 @@ if __name__ == "__main__": # --------------------------------------
 # - initialize random generator
   np.random.seed(3141)  # initialize random generator
 # - set range and x-data
-  xmin =   0.1
+  xmin =   0.25
   xmax1 =  0.5
   xmax2 =  0.67
   data_x = np.concatenate( (np.linspace(xmin, xmax1, nd//4, endpoint=False),
                   np.linspace(xmax1, xmax2, 3*nd//4)) ) # x of data points
 # -  set true model values  
-  mpardict = { 'I_s' : 0.15, 'U0' : 0.031 }
+  mpardict = { 'I_s' : 0.5, 'U0' : 0.033 }
 # - calculate total independent uncertainty from absolute and relative components 
   sigy = np.sqrt(sabsy * sabsy + (srely*model(data_x, **mpardict))**2)
   sigx = np.sqrt(sabsx * sabsx + (srelx * data_x)**2)
@@ -144,5 +142,7 @@ if __name__ == "__main__": # --------------------------------------
 # set final options for plots and show them on screen  
   plt.figure(num=1)    # activate first figure ...
   plt.ylim(-1., 150.)  # and set y-limit
+#  plt.ylim(1.e-4, 150.)  # and set y-limit
+#  plt.yscale('log')    # try log
   # plt.xlim(0.05, 0.68) # and set y-limit
   plt.show()           # show all figures
