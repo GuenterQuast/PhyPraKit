@@ -1720,7 +1720,7 @@ def k2Fit(func, x, y,
         else use measured data
       * p0: array-like, initial guess of parameters
       * parameter constraints: (name, value, uncertainty)
-      * limits: (nested) list(s) [name or id, min, max] 
+      * limits: (nested) list(s) (name, min, max) 
 
     output options
       * plot: flag to switch off graphical output
