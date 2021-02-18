@@ -284,7 +284,7 @@ class mnFit():
     """
     
     # create data object and pass all input arguments
-    self.data = self.DataUncertainties(x, y, ex, ey,
+    self.data = self.DataUncertainties(self, x, y, ex, ey,
                     erelx, erely, cabsx, crelx, cabsy, crely,
                     quiet=self.quiet)
     
