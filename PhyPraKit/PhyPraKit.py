@@ -1669,14 +1669,14 @@ def kFit(func, x, y, sx=None, sy=None,
   return par, pare, cor, chi2
 
 def k2Fit(func, x, y,
-    sx=None, sy=None, srelx=None, srely=None, 
-    xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
-    ref_to_model=True, constraints= None, p0=None,
-    plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
-    model_expression=None, model_name=None, 
-    model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
-    fit_info=True, asym_parerrs=True, plot_cor=False,
-    showplots=True, quiet=True):
+      sx=None, sy=None, srelx=None, srely=None, 
+      xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
+      ref_to_model=True, constraints= None, p0=None, limits=None,
+      plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
+      model_expression=None, model_name=None, 
+      model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
+      fit_info=True, asym_parerrs=True, plot_cor=False,
+      showplots=True, quiet=True):
 
   """Fit an arbitrary function func(x, \*par) to data points (x, y) 
   with independent and correlated absolute and/or relative errors 
@@ -1715,11 +1715,14 @@ def k2Fit(func, x, y,
       * xrelcor: scalar or 1d np-array, relative, correlated error(s) on x
       * yrelcor: scalor or 1d np-array, relative, correlated error(s) on y
 
-    options
+    fit options
       * ref_to_model, bool: refer relative errors to model if true,
         else use measured data
-      * parameter constraints: (name, value, uncertainty)
       * p0: array-like, initial guess of parameters
+      * parameter constraints: (name, value, uncertainty)
+      * limits: (nested) list(s) [name or id, min, max] 
+
+    output options
       * plot: flag to switch off graphical output
       * axis_labels: list of strings, axis labels x and y
       * data_legend: legend entry for data points
@@ -1825,7 +1828,14 @@ def k2Fit(func, x, y,
       constraints = (constraints,)
     for c in constraints:
       fit.add_parameter_constraint(*c)
-      
+
+  if limits is not None:
+    if isinstance(limits[1], list):
+      for l in limits:
+        fit.limit_parameter(l[0], l[1], l[2])          
+    else: 
+      fit.limit_parameter(limits[0], limits[1], limits[2])          
+    
   fit.do_fit()                        
 
 # harvest results
