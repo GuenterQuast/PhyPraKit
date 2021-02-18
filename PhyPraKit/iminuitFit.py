@@ -63,7 +63,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
        xabscor = None, xrelcor = None,        
        yabscor = None, yrelcor = None,
        ref_to_model = True, 
-       p0 = None, constraints = None,
+       p0 = None, constraints = None, limits=None,
        use_negLogL=True, 
        plot = True, plot_cor = True,
        showplots = False, 
@@ -102,6 +102,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
     * p0: array-like, initial guess of parameters
     * use_negLogL:  use full -2ln(L)  
     * constraints: (nested) list(s) [name or id, value, error] 
+    * limits: (nested) list(s) [name or id, min, max] 
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
     * plot_band: plot uncertainty band around model function
@@ -141,7 +142,9 @@ def mFit(fitf, x, y, sx = None, sy = None,
               cabsx = xabscor, crelx = xrelcor,
               cabsy = yabscor, crely = yrelcor)
    # pass model fuction, start parameter and possibe constraints
-  Fit.init_fit(fitf, p0=p0, constraints=constraints)
+  Fit.init_fit(fitf, p0=p0,
+               constraints=constraints,
+               limits=limits)
    # perform the fit
   fitResult = Fit.do_fit()
   # print fit resule (dictionary from migrad/minos(
@@ -289,7 +292,9 @@ class mnFit():
     self.iterateFit = self.data.has_xErrors or(
          self.data.has_rel_yErrors and self.refModel)
 
-  def init_fit(self, model, p0=None, constraints=None):
+  def init_fit(self, model, p0=None,
+               constraints=None,
+               limits=None):
     """initialize fit object
 
     Args:
@@ -297,6 +302,8 @@ class mnFit():
       - p0: np-array of floats, initial parameter values 
       - constraints: (nested) list(s): [parameter name, value, uncertainty] 
         or [parameter index, value, uncertainty]
+      - limits: (nested) list(s): [parameter name, min, max] 
+        or [parameter index, min, max]
     """
     self.model = model
     # create cost function
@@ -327,6 +334,37 @@ class mnFit():
       if self.quiet:
         self.minuit.print_level = 0
 
+    if limits is not None:
+      self.setLimits(limits)
+
+      
+  def setLimits(self, limits):
+    """Add parameter limits
+
+    format: nested list(s) of type 
+    [parameter name, min, max] or
+    [parameter index, min, max]
+    """
+
+    # get parameter names (from cost function)
+    self.limits=[ [None, None]] * len(self.costf.pnams)
+    if isinstance(limits[1], list):
+      for l in limits:
+        if type(l[0])==type(' '):
+          p_id = self.costf.pnam2id[l[0]]
+        else:
+          p_id = l[0]
+        self.limits[p_id] = [l[1], l[2]]          
+    else:
+      if type(limits[0])==type(' '):
+        p_id = self.costf.pnam2id[limits[0]]
+      else:
+        p_id = limits[0]
+      self.limits[p_id]=[limits[1], limits[2]]
+
+    self.minuit.limits = self.limits       
+            
+      
   def do_fit(self):
     """perform all necessary steps of fitting sequence
     """
@@ -880,9 +918,8 @@ class mnFit():
 
     .. math::
       \det(V) = 2 \, \prod L_{i,i}
-    
 
- 
+    
     Input:
 
     - data object of type DataUncertainties
@@ -943,7 +980,7 @@ class mnFit():
       self.nconstraints = len(self.constraints)
       # take account of constraints in degrees of freedom 
       self.ndof = len(self.data.y) - self.npar + self.nconstraints
-          
+
     def __call__(self, *par):  
       # called iteratively by minuit
 
@@ -1060,7 +1097,7 @@ class mnFit():
     """
     
   # access low-level fit objects
-    m = self.minuit  # minos object
+    m = self.minuit  # minuit object
     cf = self.costf  # cost function object
 
   # retrieve fit results

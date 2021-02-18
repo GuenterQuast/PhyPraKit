@@ -1419,7 +1419,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
          xabscor = None, xrelcor = None,        
          yabscor = None, yrelcor = None,
          ref_to_model = True, 
-         p0 = None, constraints = None,
+         p0 = None, constraints = None, limits=None,
          use_negLogL=True, 
          plot = True, plot_cor = False,
          plot_band=True,
@@ -1454,7 +1454,8 @@ def mFit(fitf, x, y, sx = None, sy = None,
 
     * p0: array-like, initial guess of parameters
     * use_negLogL:  use full -2ln(L)  
-    * constraints: list or list of lists with [name or id, value, error]
+    * constraints: (nested) list(s) [name or id, value, error]
+    * limits: (nested) list(s) [name or id, min, max] 
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
     * plot_band: plot uncertainty band around model function
@@ -1496,7 +1497,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
                 cabsy = yabscor, crely = yrelcor)
 
   # pass model fuction, start parameter and possibe constraints
-  Fit.init_fit(fitf, p0=p0, constraints=constraints)
+  Fit.init_fit(fitf, p0=p0, constraints=constraints, limits=limits)
 
   # perform the fit
   fitResult = Fit.do_fit()
@@ -1843,9 +1844,9 @@ def k2Fit(func, x, y,
     kplot.customize('data', 'marker', ['o'])
     kplot.customize('data', 'markersize', [6])
     kplot.customize('data', 'color', ['darkblue'])
-    kplot.customize('model_line', 'color', ['darkred'])
+    kplot.customize('model_line', 'color', ['darkorange'])
     kplot.customize('model_line', 'linestyle', ['--'])
-    kplot.customize('model_error_band', 'color', ['red'])
+    kplot.customize('model_error_band', 'color', ['green'])
     # set user options
     kplot.customize('model_error_band', 'label', [model_band])
     kplot.customize('model_error_band', 'alpha', [0.1])     
