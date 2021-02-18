@@ -307,7 +307,7 @@ class mnFit():
     """
     self.model = model
     # create cost function
-    self.costf = self.xLSQ(self.data, self.model,
+    self.costf = self.xLSQ(self, self.data, self.model,
                                  use_neg2logL= self.use_negLogL,
                                  quiet=self.quiet)
     if constraints is not None:
@@ -315,9 +315,13 @@ class mnFit():
 
     # get parameters of model function to set start values for fit
     args, model_kwargs = self.get_functionSignature(self.model)
+    self.pnams = list.copy(list(model_kwargs.keys()))
     if p0 is not None:
-      for i, pnam in enumerate(model_kwargs.keys() ):
+      for i, pnam in enumerate(self.pnams):
         model_kwargs[pnam] = p0[i]    
+
+    if limits is not None:
+      self.setLimits(limits)
 
     # create Minuit object
     if __version__ < '2':
@@ -325,6 +329,10 @@ class mnFit():
         print_level=0
       else:
         print_level=1
+      if limits is not None:
+        for i, pnam in enumerate(self.pnams):
+          model_kwargs['limit_' + pnam] = self.limits[i]
+          
       self.minuit = Minuit(self.costf, 
                            errordef=1., print_level=print_level,
                            **model_kwargs )
@@ -333,13 +341,13 @@ class mnFit():
       self.minuit.errordef = 1.
       if self.quiet:
         self.minuit.print_level = 0
+      if limits is not None:
+        self.minuit.limits = self.limits       
 
-    if limits is not None:
-      self.setLimits(limits)
 
       
   def setLimits(self, limits):
-    """Add parameter limits
+    """store parameter limits
 
     format: nested list(s) of type 
     [parameter name, min, max] or
@@ -362,7 +370,6 @@ class mnFit():
         p_id = limits[0]
       self.limits[p_id]=[limits[1], limits[2]]
 
-    self.minuit.limits = self.limits       
             
       
   def do_fit(self):
@@ -494,17 +501,18 @@ class mnFit():
     build covariance matrices from components
 
     Args:
-      -  x:       abscissa of data points ("x values")
-      -  y:       ordinate of data points ("y values")
-      -  ex:      independent uncertainties x
-      -  ey:      independent uncertainties y
-      -  erelx:   independent relative uncertainties x
-      -  erely:   independent relative uncertainties y
-      -  cabsx:   correlated abolute uncertainties x
-      -  crelx:   correlated relative uncertainties x
-      -  cabsy:   correlated absolute uncertainties y
-      -  crely:   correlated relative uncertainties y
-      -  quiet:   no informative printout if True
+      - outer:   pointer to instance of calling object
+      - x:       abscissa of data points ("x values")
+      - y:       ordinate of data points ("y values")
+      - ex:      independent uncertainties x
+      - ey:      independent uncertainties y
+      - erelx:   independent relative uncertainties x
+      - erely:   independent relative uncertainties y
+      - cabsx:   correlated abolute uncertainties x
+      - crelx:   correlated relative uncertainties x
+      - cabsy:   correlated absolute uncertainties y
+      - crely:   correlated relative uncertainties y
+      - quiet:   no informative printout if True
 
     Public methods:
       - get_Cov(): final covariance matrix (incl. proj. x)  
@@ -519,7 +527,8 @@ class mnFit():
       * cov: full covariance matrix incl. projected x
       * iCov: inverse of covariance matrix
     """
-    def __init__(self, x, y, ex, ey,
+    def __init__(self, outer,
+                 x, y, ex, ey,
                  erelx, erely, cabsx, crelx, cabsy, crely,
                  quiet=True):
 
@@ -918,12 +927,12 @@ class mnFit():
 
     .. math::
       \det(V) = 2 \, \prod L_{i,i}
-
     
     Input:
 
-    - data object of type DataUncertainties
-    - model function f(x, \*par)
+    - outer: pointer to instance of calling class
+    - data: data object of type DataUncertainties
+    - model: model function f(x, \*par)
     - use_neg2logL: use full -2log(L) instead of chi2 if True
 
     __call__ method of this class is called by iminuit
@@ -941,7 +950,9 @@ class mnFit():
     - model(x, \*par)
     """
   
-    def __init__(self, data, model, quiet=True, use_neg2logL = False):
+    def __init__(self, outer, 
+                 data, model,
+                 use_neg2logL=False, quiet=True):
 
       from iminuit.util import describe, make_func_code
 
