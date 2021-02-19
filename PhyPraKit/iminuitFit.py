@@ -343,8 +343,6 @@ class mnFit():
         self.minuit.print_level = 0
       if limits is not None:
         self.minuit.limits = self.limits       
-
-
       
   def setLimits(self, limits):
     """store parameter limits
