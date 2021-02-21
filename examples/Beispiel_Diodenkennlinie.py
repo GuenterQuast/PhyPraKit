@@ -2,27 +2,27 @@
 """Beispiel_Diodenkennlinie.py
    Messung einer Strom-Spannungskennlinie und Anpassung der Schockley-Gleichung. 
 
-   - Konstruktion der Kovarianzmatrix für reale Messinstrumente mit Signalrauschen,
-     Anzeigeunsicherheiten und korrelierten, realtiven Kalibratsionsunsicherheiten
-     für die Strom- und Spannungsmessung
+   - Konstruktion der Kovarianzmatrix für reale Messinstrumente mit 
+     Signalrauschen, Anzeigeunsicherheiten und korrelierten, realtiven 
+     Kalibratsionsunsicherheiten für die Strom- und Spannungsmessung.
 
-   - Ausführen der Anpassung der Shockley-Gleichung mit *mFit* aus dem 
-     Paket *PhyPraKit.iminuitFit*. Wichtig: die Modellfunktion ist nicht 
+   - Ausführen der Anpassung der Shockley-Gleichung mit *k2Fit* oder *mFit* 
+     aus dem Paket *PhyPraKit*. Wichtig: die Modellfunktion ist nicht 
      nach oben beschränkt, sondern divergiert sehr schnell. Daher muss der 
-     verwendete numerische Optimierer Parameterlimits unterstützen
+     verwendete numerische Optimierer Parameterlimits unterstützen.
    
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
 
 import numpy as np, matplotlib.pyplot as plt
-from PhyPraKit.iminuitFit import mFit
+from PhyPraKit import mFit, k2Fit
 
 # define the model function to fit
 def Shockley(U, I_s = 0.5, U0 = 0.03):
   """Parametrisierung einer Diodenkennlinie
 
-  U/U0 sollte während der Anpassung auf einen Wert <150 
-  beschränkt werden, um Überscheitungen des  mit 64 Bit 
+  U0 sollte während der Anpassung auf einen solchen Wert beschränkt 
+  werden, dass U/U0<150 bleibt, um Überscheitungen des  mit 64 Bit 
   Genauigkeit darstellbaren Zahlenraums zu verhindern
 
   Args:
@@ -39,12 +39,11 @@ def Shockley(U, I_s = 0.5, U0 = 0.03):
 if __name__ == "__main__": # --------------------------------------  
 
 #
-# Anpassung einer Diodenkennlinie (Beispiel für PhyPraKit.mFit())
+# Anpassung der Shockley-Gleichung an eine Diodenkennlinie 
 #
+  
 
-# --- settings for general fit
-#
-# Schockleygleichung als Fitfunktion
+# Schockleygleichung als Fitfunktion setzen
   model = Shockley 
 
 # Messdaten:
@@ -52,7 +51,7 @@ if __name__ == "__main__": # --------------------------------------
   data_x = [0.450, 0.470, 0.490, 0.510, 0.530, 
       0.550, 0.560, 0.570, 0.580, 0.590, 0.600, 0.610, 0.620, 0.630,
             0.640, 0.645, 0.650, 0.655, 0.660, 0.665 ]
-# - Strommessungen: 4 im Bereich 200µA, 11 mit 20mA und  5 mit 200mA
+# - Strommessungen: 2 im Bereich 200µA, 12 mit 20mA und  6 mit 200mA
   data_y = [0.056, 0.198, 0.284, 0.404, 0.739, 1.739, 1.962,
             2.849, 3.265, 5.706, 6.474, 7.866, 11.44, 18.98,
             23.35, 27.96, 38.61, 46.73, 49.78, 57.75]
@@ -92,8 +91,9 @@ if __name__ == "__main__": # --------------------------------------
 # - korrelierte Kalibrationsunsicherheit  
   crely = crel_I
       
-# Anpassung auführen (mit mFit aus Paket iminuitFit)
-  parvals, parerrs, cor, chi2 = mFit(model,
+# Anpassung ausführen (mit Fit-Funktionen aus Paket PhyPraKit)
+  thisFit = mFit    # Alternativen: mFit oder k2fit
+  parvals, parerrs, cor, chi2 = thisFit(model,
  # - data and uncertainties
       data_x, data_y,      # data x and y coordinates
       sx=sabsx,            # indep x
@@ -103,11 +103,9 @@ if __name__ == "__main__": # --------------------------------------
       ref_to_model=True,   # reference of rel. uncert. to model
  # - fit control
       p0=(0.2, 0.05),   # initial guess for parameter values 
-      limits=['U0', 0.005, None], # constraints within errors
-      use_negLogL=True,    # full -2log(L) if parameter dep. uncertainties
+      limits=('U0', 0.005, None), # parameter limits
 # - output options
       plot=True,           # plot data and model
-      plot_band=True,      # plot model confidence-band
       plot_cor=False,      # plot profiles likelihood and contours
       showplots = False,   # plt.show() in user code                       
       quiet=False,         # suppress informative printout
@@ -119,10 +117,9 @@ if __name__ == "__main__": # --------------------------------------
 # Ausgabe der Ergebnisse in Textform:
   print('\n*==* Fit Result:')
   print(" chi2: {:.3g}".format(chi2))
-  print(" parameter values:      ", parvals)
-  print(" neg. parameter errors: ", parerrs[:,0])
-  print(" pos. parameter errors: ", parerrs[:,1])
-  print(" correlations : \n", cor)
+  print(" parameter values:      ", parvals )
+  print(" parameter uncertainties\: ", parerrs )
+  print(" correlations : \n", cor )
 
 # Anpassung der Optionen für grafische Darstellung
   plt.figure(num=1)    # activate first figure ...
