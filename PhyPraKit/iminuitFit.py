@@ -1155,7 +1155,7 @@ class mnFit():
     pe = 2   # number of significant digits of uncertainty
     fit_info = [
       "$\\chi^2$/$n_\\mathrm{{dof}}$={:.1f}/{}".format(chi2,ndof) + \
-       "  p={:.1f}%".format(100*chi2prb)]
+       ", p={:.1f}%".format(100*chi2prb)]
 
     if self.minosResult is not None and self.minos_ok:
       for pn, v, e in zip(pnams, pvals, pmerrs):
