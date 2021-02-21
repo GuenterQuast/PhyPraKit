@@ -22,9 +22,9 @@ python3 test_Fourier.py
 
 # regression and fititing
 python3 test_linRegression.py
-python3 test_kRegression.py
+# python3 test_kRegression.py # needs iminuit vers. < 2
 python3 test_odFit.py
-python3 test_kFit.py
+## python3 test_kFit.py  # needs iminuit vers. < 2
 python3 test_mFit.py
 ## test_mFit2.py
 python3 test_simplek2Fit.py
