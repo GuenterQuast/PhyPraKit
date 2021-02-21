@@ -289,7 +289,9 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     korrelierte Unsicherheit aller Messwerte berücksichtig weden
     muss. Das Beispiel zeigt, wie man in diesem Fall die Kovarianzmatrix
     aus Einzelunsicherheiten aufbaut. Die Funktionen *k2Fit()* und
-    *mfit()* bieten dazu komfortable und einfache Möglichkeiten. 
+    *mfit()* bieten dazu komfortable und leicht zu verwendende
+    Interfaces, deren Anwendung zur Umsetzung des komplexen Fehlermodells
+    in diesem Beispiel gezeigt wird. 
     
   * `Beispiel_Drehpendel.py` demonstriert die Analyse von am Drehpendel
     mit CASSY aufgenommenen Daten. Enthalten sind einfache Funktionen zum
