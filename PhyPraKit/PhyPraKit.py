@@ -1671,7 +1671,7 @@ def kFit(func, x, y, sx=None, sy=None,
 def k2Fit(func, x, y,
       sx=None, sy=None, srelx=None, srely=None, 
       xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
-      ref_to_model=True, constraints= None, p0=None, limits=None,
+      ref_to_model=True, constraints=None, p0=None, limits=None,
       plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
       model_expression=None, model_name=None, 
       model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
@@ -1747,10 +1747,13 @@ def k2Fit(func, x, y,
   # for fit with kafe2
   from kafe2 import XYContainer, Fit, Plot, ContoursProfiler
 
-  # create a data set ...
+  # create a data container
   dat = XYContainer(x, y)
-  # ... and add all error sources  
+  # - provide text for labelling ...      
+  dat.label = data_legend
+  dat.axis_labels = axis_labels
 
+  # - add all error sources  
   if sy is None:
     sy=np.ones(len(y))
     print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
@@ -1770,7 +1773,7 @@ def k2Fit(func, x, y,
   if srelx is not None: 
     dat.add_error(axis='x', err_val=srelx, relative=True)
 
-# construct covariance matrix from componets
+# correlated componets to construct covariance matrix
   if xabscor is not None:
     if len(np.shape(np.array(xabscor))) <2:
       dat.add_error(axis='x', err_val=xabscor, correlation=1.)
@@ -1785,18 +1788,20 @@ def k2Fit(func, x, y,
         dat.add_error(axis='y', err_val=c, correlation=1.)
   if xrelcor is not None:
     if len(np.shape(np.array(xrelcor))) < 2:
-      dat.add_error(axis='x', err_val=xrelcor, correlation=1.,
-                    relative=True)
+      dat.add_error(axis='x', err_val=xrelcor, correlation=1., relative=True)
     else:
       for c in xrelcor:
-        dat.add_error(axis='x', err_val=c, correlation=1.,
-                      relative=True)
+        dat.add_error(axis='x', err_val=c, correlation=1., relative=True)
         
   # set up fit object
   fit = Fit(dat, func)
+  # text for labelling       
+  fit.assign_model_function_latex_name(model_name)
+  fit.assign_model_function_latex_expression(model_expression)
+  fit.model_label = model_legend
   
-  # add possibly specified relative errors with reference to model
-  #   - needs methods of fit object 
+  # finally, add relative errors with reference to model
+  #   - do this here, because this needs methods of fit object 
   if ref_to_model == True:
     ref='model'
   else:
@@ -1813,13 +1818,6 @@ def k2Fit(func, x, y,
        fit.add_error(axis='y', err_val=c, correlation=1.,
                      relative=True, reference=ref)
 
-  # provide text for labelling       
-  dat.label = data_legend
-  dat.axis_labels = axis_labels
-  fit.assign_model_function_latex_name(model_name)
-  fit.assign_model_function_latex_expression(model_expression)
-  fit.model_label = model_legend
-
   # initialize and run fit
   if p0 is not None: fit.set_all_parameter_values(p0)
 
@@ -1835,7 +1833,7 @@ def k2Fit(func, x, y,
         fit.limit_parameter(l[0], l[1], l[2])          
     else: 
       fit.limit_parameter(limits[0], limits[1], limits[2])          
-    
+
   fit.do_fit()                        
 
 # harvest results
