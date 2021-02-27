@@ -1675,7 +1675,7 @@ def k2Fit(func, x, y,
       plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
       model_expression=None, model_name=None, 
       model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
-      fit_info=True, asym_parerrs=True, plot_cor=False,
+      fit_info=True, plot_band=True, asym_parerrs=True, plot_cor=False,
       showplots=True, quiet=True):
 
   """Fit an arbitrary function func(x, \*par) to data points (x, y) 
@@ -1731,6 +1731,7 @@ def k2Fit(func, x, y,
       * model_legend: legend entry for model
       * model_band: legend entry for model uncertainty band
       * fit_info: controls display of fit results on figure
+      * plot_band: suppress model uncertainty-band if False
       * asym_parerrs: show (asymmetric) errors from profile-likelihood scan
       * plot_cor: show profile curves and contour lines
       * showplots: show plots on screen, default = True
@@ -1847,6 +1848,7 @@ def k2Fit(func, x, y,
   if not quiet: fit.report(asymmetric_parameter_errors=True)
   
   if plot:
+   # plot data, uncertainties, model line and model uncertainties
     kplot=Plot(fit)
     # set some 'nice' options
     kplot.customize('data', 'marker', ['o'])
@@ -1854,10 +1856,14 @@ def k2Fit(func, x, y,
     kplot.customize('data', 'color', ['darkblue'])
     kplot.customize('model_line', 'color', ['darkorange'])
     kplot.customize('model_line', 'linestyle', ['--'])
-    kplot.customize('model_error_band', 'color', ['green'])
-    # set user options
-    kplot.customize('model_error_band', 'label', [model_band])
-    kplot.customize('model_error_band', 'alpha', [0.1])     
+    if not plot_band:
+      kplot._get_plot_adapters()[0].PLOT_SUBPLOT_TYPES.pop("model_error_band")
+    else:
+      kplot.customize('model_error_band', 'color', ['green'])
+      kplot.customize('model_error_band', 'label', [model_band])
+      kplot.customize('model_error_band', 'alpha', [0.1])     
+
+    # plot with defined options
     kplot.plot(fit_info=fit_info, asymmetric_parameter_errors=True)
 
     if plot_cor:
