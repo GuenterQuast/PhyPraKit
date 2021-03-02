@@ -38,7 +38,8 @@ setup(
     #long_description='todo: add long description',  # open('README.txt').read()
     long_description=open('README.rst').read(),
     setup_requires=[\
-        "NumPy >= 1.7.1",
-        "SciPy >= 0.12.0",
-        "matplotlib >= 1.5.0",]
+        "NumPy >= 1.19.1",
+        "SciPy >= 1.5.1",
+        "matplotlib >= 3.3.0",
+        "iminuit < 2", ]
 )

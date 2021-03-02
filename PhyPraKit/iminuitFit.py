@@ -66,7 +66,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
        p0 = None, constraints = None, limits=None,
        use_negLogL=True, 
        plot = True, plot_cor = True,
-       showplots = False, 
+       showplots = True, 
        plot_band=True, quiet = False,
        axis_labels=['x', 'y = f(x, *par)'],
        data_legend = 'data',    
@@ -123,8 +123,8 @@ def mFit(fitf, x, y, sx = None, sy = None,
   # ... check if errors are provided ...
   if sy is None:
     sy = np.ones(len(y))
-    print('\n!**! No y-errors given',
-          '-> parameter errors from fit are meaningless!\n')
+    print('\n!**! No y-errors given, all assumed to be 1.0\n',
+          '-> consider scaling of parameter errors with sqrt(chi^2/Ndf)\n')
   
   # set up a fit object
   Fit = mnFit()

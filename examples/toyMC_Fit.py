@@ -118,6 +118,7 @@ if __name__ == "__main__": # --------------------------------------
       plot=plot,           # plot data and model
 #      plot_band=True,      # plot model confidence-band
       plot_cor=False,      # plot profiles likelihood and contours
+      showplots=False,     # call plt.show() in user code if False
       quiet=True,          # suppress informative printout
       axis_labels=['x', 'y   \  f(x, *par)'], 
       data_legend = 'random data',    

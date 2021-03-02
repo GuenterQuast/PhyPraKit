@@ -81,4 +81,3 @@ if __name__ == "__main__": # --------------------------------------
   print(" pos. parameter errors: ", parerrs[:,1])
   print(" correlations : \n", cor)
   
-  plt.show()

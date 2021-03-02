@@ -1423,7 +1423,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
          use_negLogL=True, 
          plot = True, plot_cor = False,
          plot_band=True,
-         showplots = False, quiet = False,
+         showplots = True, quiet = False,
          axis_labels=['x', 'y = f(x, *par)'], 
          data_legend = 'data',    
          model_legend = 'model'): 
@@ -1478,8 +1478,9 @@ def mFit(fitf, x, y, sx = None, sy = None,
     # ... check if errors are provided ...
   if sy is None:
     sy = np.ones(len(y))
-    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
-  
+    print('\n!**! No y-errors given, all assumed to be 1.0\n',
+          '-> consider scaling of parameter errors with sqrt(chi^2/Ndf)\n')
+
   # set up a fit object
   Fit = mnFit()
 
@@ -1757,7 +1758,9 @@ def k2Fit(func, x, y,
   # - add all error sources  
   if sy is None:
     sy=np.ones(len(y))
-    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
+    print('\n!**! No y-errors given, all assumed to be 1.0\n',
+          '-> consider scaling of parameter errors with sqrt(chi^2/Ndf)\n')
+
   sy=np.asarray(sy)
   if sy.ndim == 2:
     dat.add_matrix_error(axis='y', err_matrix=sy, matrix_type='covariance')
