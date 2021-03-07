@@ -37,11 +37,13 @@ def A0_readme():
 
     3. statistics:
 
-      - wmean()                  weighted mean
-      - BuildCovarianceMatrix()  build coraviance matrix
-      - Cov2Cor                  covariance matrix to correlation matrix
-      - Cor2Cov                  correlations + errors to covariance matrix 
-      - chi2prob                 caclulate chi^2 probability 
+      - wmean                  calculate weighted mean
+      - BuildCovarianceMatrix  build coraviance matrix from individual uncertainties
+      - Cov2Cor                convert covariance matrix to correlation matrix
+      - Cor2Cov                convert correlation matrix + errors to covariance matrix 
+      - chi2prob               caclulate chi^2 probability 
+      - propagatedError        determine propageted uncertainty, with covariance
+      - getModelError          determine uncertainty of parameter-depenent model function  
 
     4. histograms tools:
 
@@ -666,6 +668,71 @@ def chi2prob(chi2, ndf):
 
   return 1.- stats.chi2.cdf(chi2, ndf)
 
+# -------------------------------------------------------
+
+def propagatedError(function, pvals, pcov):
+  """ determine propageted uncertainty (with covariance matrix)
+ 
+  Formula: 
+  Delta = sqrt( sum_i,j (df/dp_i df/dp_j Vp_i,j) )
+
+  Args:
+    * function: function of parameters pvals, 
+      a 1-d array is also allowed, eg. function(*p) = f(x, *p)
+    * pvals: parameter values
+    * pcov: covariance matrix of parameters
+
+  Returns:
+    * uncertainty Delta( function(*par) )
+  """
+
+  # first, calculate partial derivatives of model w.r.t parameters    
+  #   set fractional step size 1% of parameter uncertainty
+  stepsize = 0.01  
+  dp = stepsize * np.sqrt(np.diagonal(pcov))
+  #   derivative df/dp_j
+  dfdp = []
+  for j in range(len(pvals)): 
+    p_plus = np.array(pvals, copy=True)
+    p_plus[j] = pvals[j] + dp[j]
+    p_minus = np.array(pvals, copy=True)
+    p_minus[j] = pvals[j] - dp[j]
+    dfdp.append( 0.5 / dp[j] * (
+                  function(*p_plus) - function(*p_minus) )
+                 )
+  # then, calculate square of uncertainty on function value
+  dfdp = np.array(dfdp)
+  if len(np.shape(dfdp)) == 1:  
+    Delta2 = np.sum(np.outer(dfdp, dfdp) * pcov)
+  elif len(np.shape(dfdp)) == 2:   # function may have returned an array
+    Delta2 = np.empty(len(dfdp[0]))
+    for i in range(len(dfdp[0])):
+      Delta2[i] = np.sum(np.outer(dfdp[:,i], dfdp[:,i]) * pcov)
+  else:
+    print("!!! PhyPraKit.propagededErrors(): cannot handle arrays dim > 1")
+    return None
+  return np.sqrt(Delta2) 
+
+def getModelError(x, model, pvals, pcov):
+  """ determine uncertainty of model at x from parameter uncertainties  
+    
+  Formula: 
+    Delta(x) = sqrt( sum_i,j (df/dp_i(x) df/dp_j(x) Vp_i,j) )
+
+  Args:
+    * x: scalar or 1d-array of x values
+    * model: model function
+    * pvals: parameter values
+    * covp: covariance matrix of parameters
+
+    Returns:
+    * model uncertainty/ies, same length as x
+  """
+  
+  def fun(*pvals):
+    return model(x, *pvals)
+
+  return propagatedError(fun, pvals, pcov)
 
 ## ------- section 3: signal processing -----------------
 
