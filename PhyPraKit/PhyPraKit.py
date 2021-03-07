@@ -678,12 +678,12 @@ def propagatedError(function, pvals, pcov):
 
   Args:
     * function: function of parameters pvals, 
-      a 1-d array is also allowed, eg. function(*p) = f(x, *p)
+      a 1-d array is also allowed, eg. function(\*p) = f(x, \*p)
     * pvals: parameter values
     * pcov: covariance matrix of parameters
 
   Returns:
-    * uncertainty Delta( function(*par) )
+    * uncertainty Delta( function(\*par) )
   """
 
   # first, calculate partial derivatives of model w.r.t parameters    
