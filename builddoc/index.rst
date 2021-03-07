@@ -170,11 +170,13 @@ oder::
     
       3. statistics:
     
-        - wmean()                  weighted mean
-        - BuildCovarianceMatrix()  build coraviance matrix
-        - Cov2Cor()                covariance matrix to correlation matrix
-        - Cor2Cov()                correlations + errors to covariance matrix 
-        - chi2prob()               caclulate chi^2 probability 
+        - wmean                  calculate weighted mean
+        - BuildCovarianceMatrix  build coraviance matrix from individual uncertainties
+        - Cov2Cor                convert covariance matrix to correlation matrix
+        - Cor2Cov                convert correlation matrix + errors to covariance matrix 
+        - chi2prob               caclulate chi^2 probability 
+        - propagatedError        determine propageted uncertainty, with covariance
+        - getModelError          determine uncertainty of parameter-depenent model function  	  
     
       4. histograms tools:
     
@@ -192,11 +194,9 @@ oder::
 
         - linRegression()    linear regression, y=ax+b, with analytical formula
         - linRegressionXY()  linear regression, y=ax+b, with x and y errors   
-          ``! deprecated, use `odFit` with linear model instead``
-	    
-        - kRegression()      linear regression, y=ax+b, with (correlated) errors on x and y   
-          ``! deprecated, use `kFit` or `k2Fit` with linear model instead``
-	    
+          ``! deprecated, use `odFit` with linear model instead``  
+	- kRegression()      linear regression, y=ax+b, with (correlated) errors on x and y   
+          ``! deprecated, use `kFit` or `k2Fit` with linear model instead``  	    
         - odFit()            fit function with x and y errors (scipy ODR)
         - mFit()             (lightweight) fit with iminuit, (correlated) uncertainties on x and y
         - kFit()             fit a function to data with (correlated) errors on x and y (kafe)
