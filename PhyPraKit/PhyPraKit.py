@@ -680,36 +680,45 @@ def propagatedError(function, pvals, pcov):
     * function: function of parameters pvals, 
       a 1-d array is also allowed, eg. function(\*p) = f(x, \*p)
     * pvals: parameter values
-    * pcov: covariance matrix of parameters
+    * pcov: covariance matrix (or uncertainties) of parameters
 
   Returns:
     * uncertainty Delta( function(\*par) )
   """
 
+  # check if pcov is a matrix; if not, uncertainties and construct matrix
+  cov = np.asarray(pcov)
+  if len(np.shape(cov)) == 1 :
+    cov = np.diag(cov * cov)
+    
   # first, calculate partial derivatives of model w.r.t parameters    
   #   set fractional step size 1% of parameter uncertainty
   stepsize = 0.01  
-  dp = stepsize * np.sqrt(np.diagonal(pcov))
+  dp = stepsize * np.sqrt(np.diagonal(cov))
   #   derivative df/dp_j
   dfdp = []
+  p_plus = np.array(pvals, copy=True)
+  p_minus = np.array(pvals, copy=True)
   for j in range(len(pvals)): 
-    p_plus = np.array(pvals, copy=True)
     p_plus[j] = pvals[j] + dp[j]
-    p_minus = np.array(pvals, copy=True)
     p_minus[j] = pvals[j] - dp[j]
     dfdp.append( 0.5 / dp[j] * (
                   function(*p_plus) - function(*p_minus) )
                  )
-  # then, calculate square of uncertainty on function value
+    p_plus[j] = pvals[j] 
+    p_minus[j] = pvals[j]
   dfdp = np.array(dfdp)
-  if len(np.shape(dfdp)) == 1:  
-    Delta2 = np.sum(np.outer(dfdp, dfdp) * pcov)
-  elif len(np.shape(dfdp)) == 2:   # function may have returned an array
-    Delta2 = np.empty(len(dfdp[0]))
-    for i in range(len(dfdp[0])):
-      Delta2[i] = np.sum(np.outer(dfdp[:,i], dfdp[:,i]) * pcov)
+  
+  # then, calculate square of uncertainty on function value
+  if len(np.shape(dfdp)) == 1:  # model returned a scalar
+    Delta2 = np.sum(np.outer(dfdp, dfdp) * cov)
+  elif len(np.shape(dfdp)) == 2:   # function returns array
+    dim = len(dfdp[0])
+    Delta2 = np.empty(dim)
+    for i in range(dim):
+      Delta2[i] = np.sum(np.outer(dfdp[:,i], dfdp[:,i]) * cov)
   else:
-    print("!!! PhyPraKit.propagededErrors(): cannot handle arrays dim > 1")
+    print("!!! PhyPraKit.propagatedErrors(): cannot handle >1d arrays")
     return None
   return np.sqrt(Delta2) 
 

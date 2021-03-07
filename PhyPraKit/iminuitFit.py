@@ -1072,14 +1072,16 @@ class mnFit():
     dp = 0.01 * np.sqrt(np.diagonal(covp))
     #   derivative df/dp_j at each x_i
     dfdp = np.empty( (len(pvals), len(x)) )
+    p_plus = np.array(pvals, copy=True)
+    p_minus = np.array(pvals, copy=True)
     for j in range(len(pvals)): 
-      p_plus = np.array(pvals, copy=True)
       p_plus[j] = pvals[j] + dp[j]
-      p_minus = np.array(pvals, copy=True)
       p_minus[j] = pvals[j] - dp[j]
       dfdp[j] = 0.5 / dp[j] * (
                     model(x, *p_plus) - 
                     model(x, *p_minus) )
+      p_plus[j] = pvals[j]
+      p_minus[j] = pvals[j]
     #   square of uncertainties on function values
     Delta= np.empty(len(x))
     for i in range(len(x)):

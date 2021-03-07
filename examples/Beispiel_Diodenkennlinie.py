@@ -118,7 +118,8 @@ if __name__ == "__main__": # --------------------------------------
   print('\n*==* Fit Result:')
   print(" chi2: {:.3g}".format(chi2))
   print(" parameter values:      ", parvals )
-  print(" parameter uncertainties\: ", parerrs )
+  print(" parameter uncertainties: ", parerrs )
+  np.set_printoptions(precision=3)
   print(" correlations : \n", cor )
 
 # Anpassung der Optionen für grafische Darstellung
