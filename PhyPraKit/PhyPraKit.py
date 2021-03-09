@@ -26,13 +26,13 @@ def A0_readme():
       - offsetFilter()      subtract an offset in array a
       - meanFilter()        apply sliding average to smoothen data
       - resample()          average over n samples
-      - simplePeakfinder()  find peaks and dips in an array,  
-        recommend to use ``convolutionPeakfinder``
+      - simplePeakfinder()  find peaks and dips in an array,    
+        `(recommend to use convolutionPeakfinder)`
       - convolutionPeakfinder() find maxima (peaks) in an array
       - convolutionEdgefinder() find maxima of slope (rising) edges in an array
       - Fourier_fft()       fast Fourier transformation of an array
       - FourierSpectrum()   Fourier transformation of an array   
-        ``(slow, preferably use fft version)``
+        `(slow, preferably use fft version)`
       - autocorrelate()     autocorrelation function
 
     3. statistics:
@@ -49,11 +49,11 @@ def A0_readme():
 
       - barstat()   statistical information (mean, sigma, erroron mean) from bar chart
       - nhist()    histogram plot based on np.historgram() and plt.bar()    
-        ``better use matplotlib.pyplot.hist() instead``  
+        `better use matplotlib.pyplot.hist()`  
       - histstat() statistical information from 1d-histogram
       - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()  
-        ``better use matplotlib.pyplot.hist2d() instead``  
-      - hist2dstat() statistical information from 1d-histogram
+        `(better use matplotlib.pyplot.hist2d)`  
+      - hist2dstat() statistical information from 2d-histogram
       - profile2d()  "profile plot" for 2d data
       - chi2p_indep2d() chi2 test on independence of data
 
