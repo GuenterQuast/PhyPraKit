@@ -235,7 +235,8 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     Fourier-Transfomation eines periodischen Signals, das in 
     der PicoScope-Ausgabedatei `Wellenform.csv` enthalten ist.
   * `test_propagatedError.py` illustriert die Anwendung von numerisch
-    berechneter Fehlerfortpflanzung
+    berechneter Fehlerfortpflanzung und korrekter Rundung von Größen
+    mit Unsicherheit
   * `test_linRegression.py` ist eine einfachere Version mit
     `python`-Bordmitteln zur Anpassung einer Geraden an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung. 

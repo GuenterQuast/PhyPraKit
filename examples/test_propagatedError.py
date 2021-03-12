@@ -5,34 +5,34 @@
    
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
-import PhyPraKit as ppk
+from PhyPraKit import propagatedError, ustring
+import numpy as np
+
+# -example Code illustrating usage propagated Error and round_toError -----
+if __name__ == "__main__":
 
 # Funktion von Messgrößen
-def func(a, b):
-    return a + b
+  def func(a, b):
+    return np.sqrt(a**2 + b**2)
 
 # Eingabewerte
-a=1. ; sa=0.5
-b=1. ; sb=0.5
+  a=1.12 ; sa=0.5
+  b=0.95 ; sb=0.5
 
 # Berechnung der Unsicherheit auf func(a,b)
-Delta_f = ppk.propagatedError(func, (a, b), (sa, sb) )
-
-# format specifier for v+/-e with pv and pe significant digigs
-nd_e = 2 # set number of significant digits for uncertainty
-fmttxt="{:#.{pv}g}+/-{:#.{pe}g}"
-#    determine number of significant digits for a, b and f
-nd_a, _va, _sa = ppk.round_to_error(a, sa, nd_e)
-nd_b, _vb, _sb = ppk.round_to_error(b, sb, nd_e)
-nd_f, _vf, _sf = ppk.round_to_error(func(a,b), Delta_f, nd_e)
-#    format output with proper number of significant digits ...
-txt_a = fmttxt.format(_va, _sa, pv=nd_a, pe=nd_e)
-txt_b = fmttxt.format(_vb, _sb, pv=nd_b, pe=nd_e)
-txt_f = fmttxt.format(_vf, _sf, pv=nd_f, pe=nd_e)
-#    ... print
-print(txt_a, ',', txt_b,' : ', txt_f)
+  Delta_f = propagatedError(func, (a, b), (sa, sb) )
 
 ## simple output
-##print('func(', a, '+/-', sa, ',', b, '+/-', sb, ') : ',
-##       func(a,b), '+/-', Delta_f)
+  print('\n',
+        '*==* Numerical error propagation:\n',
+        '    simple output:')
+  print('      func(', a, '+/-', sa, ',', b, '+/-', sb, ') : ',
+         func(a,b), '+/-', Delta_f)
+
+  # output with percisions rounded to precision of uncertainty
+  print('     correctly formatted output: ')
+  print('      func(', ustring(a, sa), ',', ustring(b, sb),') = ',
+               ustring(func(a,b), Delta_f)
+       )
+
 

@@ -47,7 +47,7 @@ def A0_readme():
 
     4. histograms tools:
 
-      - barstat()   statistical information (mean, sigma, erroron mean) from bar chart
+      - barstat()   statistical information (mean, sigma, error_on_mean) from bar chart
       - nhist()    histogram plot based on np.historgram() and plt.bar()    
         `better use matplotlib.pyplot.hist()`  
       - histstat() statistical information from 1d-histogram
@@ -563,6 +563,26 @@ def round_to_error(val, err, nsd_e=2):
     nsd_v = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
       
   return nsd_v, np.sign(val)*v, e
+
+def ustring(v, e, pe=2):
+  """v +/- e as formatted string 
+     with number of significant digits corresponding to 
+     precision pe of uncertainty 
+
+    Args:
+      * v: value
+      * e: uncertrainty
+      * pe: precision (=number of significant digits) of uncertainty
+
+    Returns:
+      * string: <v> +/- <e> with appropriate number of digits
+  """
+
+  # format string for printout (releys on #.g format)
+  fmttxt="{:#.{pv}g}+/-{:#.{pe}g}"
+  # get number of significant digits of v and rounded values 
+  nd, _v, _s = round_to_error(v, e, pe)
+  return fmttxt.format(_v, _s, pv=nd, pe=pe)
 
 
 ## ------- section 2: statistics  -----------------------
