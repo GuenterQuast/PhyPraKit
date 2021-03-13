@@ -30,9 +30,9 @@ setup(
     # Specify the Python versions you support here. In particular, ensure
     # that you indicate whether you support Python 2, Python 3 or both.
     'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
     ],
-    url='http://www.ekp.kit.edu/~quast/',
+    url='http://www.etp.kit.edu/~quast/',
     license='GNU Public Licence',
     description='Tools for data visualisation and analysis in Physics Lab Courses',
     #long_description='todo: add long description',  # open('README.txt').read()
