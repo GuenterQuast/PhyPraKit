@@ -67,10 +67,12 @@ def A0_readme():
         errors on x, and y   
         ``! deprecated, consider using `k2Fit` with linear model instead``
       - odFit()            fit function with x and y errors (scipy ODR)
-      - mFit()             fit with iminuit with correlated x and y errors,
-        profile likelihood and contour lines  
-      - kFit()             fit function with (correlated) errors on x and y (kafe)
-      - k2Fit()            fit function with (correlated) errors on x and y (kafe2)
+      - mFit()             fit with with correlated x and y errors,
+        profile likelihood and contour lines (module phyFit) 
+      - kFit()             fit function with (correlated) errors on x and y 
+        (with package kafe, deprecated)
+      - k2Fit()            fit function with (correlated) errors on x and y 
+        (with package kafe2)
 
     6. simulated data with MC-method:
 

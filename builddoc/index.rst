@@ -122,7 +122,20 @@ Datenauswertung und Modellanpassung sowie Werkzeuge zur Erzeugung
 simulierter Daten. 
 Dabei wurde absichtlich Wert auf eine einfache, die Prinzipien 
 unterstreichende Codierung gelegt und nicht der möglichst effizienten 
-bzw. allgemeinensten Implementierung der Vorzug gegeben. 
+bzw. allgemeinensten Implementierung der Vorzug gegeben.
+
+Das Modul *phyFit* bietet mit der Klasse *mnFit* eine schlanke
+Implementierung zur Anpassung von Modellfunktionen an Daten,
+die mit unkorrelierten und/oder korrelierten absoluten
+und/oder relativen Unsicherheiten in Ordinaten- und/oder
+Abszissenrichtung behaftet sind.
+*phyFit* nutzt dazu den Minimierer und statistische Funktionen
+des am CERN entwickelten und gepflegten Pakets *Minuit*, für das
+es ein *Python* - Interface *iminuit* gibt. 
+Abgesehen vom Komfort entspricht die Funktionalität der der
+Pakete *kafe* ( veraltet) oder *kafe2*. Für solche in der Praxis
+häufig auftretende komplexe Formen von Unsicherheiten gibt es
+kaum andere, einfach zu verwendende Programmpakete.
 
 
 Dokumentation der Beispiele
@@ -200,13 +213,14 @@ oder::
 	- kRegression()      lineare Regression, y=ax+b, mit (korrelierten) x-
 	  und y-Unsicherheiten   
           ``! veraltet, `k2Fit` mit linearem Modell verwenden``  	    
-        - odFit()            Funktionsanpassung with x- und y-Unsicherheiten (scipy ODR)
-        - mFit()             Funktionsanpassung mit with iminuit,
-	  (korrelierte) x- und y-Unsicherheiten 
+        - odFit()            Funktionsanpassung mit x- und y-Unsicherheiten
+	  (scipy ODR)
+        - mFit()             Funktionsanpassung mit (korrelierten) x- und
+	  y-Unsicherheiten mit *phyFit*
         - kFit()             Funktionsanpassung mit (korrelierten) x- und
-	  y-Unsicherheiten mit kafe, ``! veraltet, `k2Fit` verwenden`` 
+	  y-Unsicherheiten mit dem Pakte *kafe*, ``! veraltet, `k2Fit` verwenden`` 
         - k2Fit()            Funktionsanpassung mit (korrelierten) x- und
-	  y-Unsicherheiten mit kafe2
+	  y-Unsicherheiten mit dem Paket *kafe2*
 
       6. Erzeugung simulierter Daten mit MC-Methode:
     
