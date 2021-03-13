@@ -1,6 +1,6 @@
-"""package iminuitFit.py
+"""package phyFit.py
   
-  Fitting with `iminiut` [https://iminuit.readthedocs.ios/en/stable/]
+  Physics Fitting with `iminiut` [https://iminuit.readthedocs.ios/en/stable/]
 
   Author: Guenter Quast, initial version Jan. 2021
 
@@ -118,7 +118,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
     * float: chi2  \chi-square of fit a minimum
   """
 
-  ## from .iminuitFit import mnFit #! already contained in this file
+  ## from .phyFit import mnFit #! already contained in this file
 
   # ... check if errors are provided ...
   if sy is None:
@@ -1333,7 +1333,7 @@ class mnFit():
 if __name__ == "__main__": # --- interface and example
   
   #
-  # Example of an application of iminuitFit.mFit()
+  # Example of an application of phyFit.mFit()
   #
   # define the model function to fit
   def exp_model(x, A=1., x0=1.):

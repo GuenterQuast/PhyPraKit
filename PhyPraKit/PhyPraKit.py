@@ -20,6 +20,7 @@ def A0_readme():
       - writeCSV()       write data in csv-format (opt. with header)
       - writeTexTable()  write data in LaTeX table format
       - round_to_error() round to same number of sigfinicant digits as uncertainty
+      - ustring()        return rounded value +/- uncertainty as formatted string 
 
     2. signal processing:
 
@@ -1524,8 +1525,8 @@ def mFit(fitf, x, y, sx = None, sy = None,
          data_legend = 'data',    
          model_legend = 'model'): 
   """Fit an arbitrary function fitf(x, \*par) to data points (x, y) 
-  with independent and correlated absolute and/or relative errors 
-  on x- and y- values with package iminuit.
+  with independent and correlated absolute and/or relative errors on 
+  x- and y- values with class mnFit from package phyFit (uses iminuit).
 
   Correlated absolute and/or relative uncertainties of input data 
   are specified as numpy-arrays of floats; they enter in the 
@@ -1569,7 +1570,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
 
   """
 
-  from .iminuitFit import mnFit
+  from .phyFit import mnFit
 
     # ... check if errors are provided ...
   if sy is None:

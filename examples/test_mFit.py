@@ -2,7 +2,7 @@
 """test_mFit.py
    Fitting example with iminiut
 
-   Uses function PhyPraKit.mFit, which in turn uses iminuitFit
+   Uses function PhyPraKit.mFit, which in turn uses mnFit from phyFit
 
    This is a rather complete example showing a fit to
    data with independent and correlated, absolute and 
@@ -49,7 +49,7 @@ if __name__ == "__main__": # --------------------------------------
                                       yrelcor=crely,
                                       mpar=mpardict.values() )
 
-# perform fit to data with function mFit using iminuitFit class
+# perform fit to data with function mFit using mnFit class from phyFit
   parvals, parerrs, cor, chi2 = mFit(model,
       data_x, data_y,      # data x and y coordinates
       sx=sabsx,            # indep x

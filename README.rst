@@ -25,7 +25,7 @@ Installation:
 
 To use PhyPraKit, it is sufficient to place the directory
 `PhyPraKit` (containing the files `__init__.py`, `_version_info.py`,
-`PhyPraKit.py` `and iminuitFit.py`) in the same directory as the
+`PhyPraKit.py` `and phyFit.py`) in the same directory as the
 python scripts importing the PhyPraKit package. 
 
 Installation via `pip` is also supported. The recommendation is

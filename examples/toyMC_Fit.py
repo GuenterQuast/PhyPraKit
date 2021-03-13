@@ -55,7 +55,7 @@ if __name__ == "__main__": # --------------------------------------
   sabsy = 0.07 # 0.07 
   sabsx = 0.05 # 0.05
   
- # the following are only supported by kafe2 and iminuitFit
+ # the following are only supported by kafe2 and phyFit
   # indepentent relative uncertainties
   srely = 0.03 # 5% of model value
   srelx = 0.04 # 4%

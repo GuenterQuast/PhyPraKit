@@ -138,74 +138,80 @@ oder::
      from PhyPraKit import ... 
 
 
+**PhyPraKit** enthält folgende **Funktionen**:
 
-**`PhyPraKit.py`** enthält folgende Funktionen:
+      1. Daten-Ein und -Ausgabe
+    
+        - readColumnData() Daten und Meta-Daten aus Textdatei lesen
+        - readCSV()        Daten im csv-Format aus Datei mit Header lesen
+        - readtxt()        Daten im Text-Format aus Datei mit Header lesen
+        - readPicoScope()  mit PicoScope exportierte Daten einlesen 
+        - readCassy()      mit CASSY im .txt-Format exportierte Dateien einlesen
+        - labxParser()     mit CASSY im .labx-Format exportierte Dateien einlesen
+        - writeCSV()       Daten csv-Format schreiben (optional mit Header)
+        - writeTexTable()  Daten als LaTeX-Tabelle exportieren
+        - round_to_error() Runden von Daten mit Präzision wie Unsicherheit
+        - ustring()        korrekt gerundete Werte v +/- u als Text 
 
+      2. Signalprozessierung:
+    
+        - offsetFilter()      Abziehen eines off-sets 
+        - meanFilter()        gleitender Mittelwert zur Glättung
+        - resample()          Mitteln über n Datenwerte
+        - simplePeakfinder()  Auffinden von Maxima (Peaks) und Minima 
+          (`Empfehlung: convolutionPeakfinder nutzen`)
+        - convolutionPeakfinder() Finden von  Maxima 
+        - convolutionEdgefinder() Finden von Kanten
+        - Fourier_fft()       schnelle Fourier-Transformation (FFT)
+        - FourierSpectrum()   Fourier-Transformation
+          `(langsam, vorzugsweise FFT-Version nutzen)`
+        - autocorrelate()     Autokorrelation eines Signals
+    
+      3. Statistik:
+    
+        - wmean()                  Berechnen des gewichteten Mittelwerts
+        - BuildCovarianceMatrix()  Koravianzmatrix aus Einzelunsicherheiten
+        - Cov2Cor()                Konversion Kovarianzmatrix -> Korrelationsmatrix
+        - Cor2Cov()                Konversion Korrelationsmatrix +
+	  Unsicherheiten -> Kovarianzmatrix
+        - chi2prob()               Berechnung der chi^2-Wahrscheinlichkeit 
+        - propagatedError()        Numerische Fehlerfortpflanzung
+        - getModelError()          Numerische Fehlefortpflanzung für 
+	  parameterabhängige Funktionswerte 
+    
+      4. Histogramm:
+    
+        - barstat()   statistisch Information aus Histogramm (Mittelwert,
+	  Standardabweichung, Unsicherheit des Mittelwerts)
+        - nhist()    Histogramm-Grafik mit np.historgram() und plt.bar()  
+          `(besser matplotlib.pyplot.hist() nutzen)`
+        - histstat() statistische Information aus 1d-Histogram
+        - nhist2d()  2d-Histogramm mit np.histrogram2d, plt.colormesh()  
+          `(besser matplotlib.pyplot.hist2d() nutzen)`  
+        - hist2dstat() statistische Information aus 2d-histogram
+        - profile2d()  "profile plot" für 2d-Streudiagramm
+        - chi2p_indep2d() chi^2-Test auf Unabhängigkeit zweier Variabler
+    
+      5. Lineare Regression und Anpassen von Fuktionen:
 
-      1. Data input:
-    
-        - readColumnData() read data and meta-data from text file
-        - readCSV()        read data in csv-format from file with header
-        - readtxt()        read data in "txt"-format from file with header
-        - readPicoScope()  read data from PicoScope
-        - readCassy()      read CASSY output file in .txt format   
-        - labxParser()     read CASSY output file, .labx format   
-        - writeCSV()       write data in csv-format (opt. with header)
-        - writeTexTable()  write data in LaTeX table format
-        - round_to_error() round to same number of sigfinicant digits as uncertainty
+        - linRegression()    lineare Regression, y=ax+b, mit analytische Formel
+        - linRegressionXY()  lineare Regression, y=ax+b, mit x- und y-Unsicherheiten   
+          ``! veraltet, `odFit` mit linearem Model verwenden``  
+	- kRegression()      lineare Regression, y=ax+b, mit (korrelierten) x-
+	  und y-Unsicherheiten   
+          ``! veraltet, `k2Fit` mit linearem Modell verwenden``  	    
+        - odFit()            Funktionsanpassung with x- und y-Unsicherheiten (scipy ODR)
+        - mFit()             Funktionsanpassung mit with iminuit,
+	  (korrelierte) x- und y-Unsicherheiten 
+        - kFit()             Funktionsanpassung mit (korrelierten) x- und
+	  y-Unsicherheiten mit kafe, ``! veraltet, `k2Fit` verwenden`` 
+        - k2Fit()            Funktionsanpassung mit (korrelierten) x- und
+	  y-Unsicherheiten mit kafe2
 
-      2. signal processing:
+      6. Erzeugung simulierter Daten mit MC-Methode:
     
-        - offsetFilter()      subtract an offset in an input array
-        - meanFilter()        apply sliding average to smoothen data
-        - resample()          average over n samples
-        - simplePeakfinder()  find peaks and dips in an array 
-          recommend to use `convolutionPeakfinder`
-        - convolutionPeakfinder() find maxima (peaks) in an array
-        - convolutionEdgefinder() find maxima of slope (rising) edges in an array
-        - Fourier_fft()       fast Fourier transformation of an array
-        - FourierSpectrum()   Fourier transformation of an array 
-          `(slow, preferably use fft version)`
-        - autocorrelate()     autocorrelation function
-    
-      3. statistics:
-    
-        - wmean()                  weighted mean
-        - BuildCovarianceMatrix()  build coraviance matrix
-        - Cov2Cor()                covariance matrix to correlation matrix
-        - Cor2Cov()                correlations + errors to covariance matrix 
-        - chi2prob()               caclulate chi^2 probability 
-    
-      4. histograms tools:
-    
-        - barstat()   statistical information (mean, sigma, erroron mean) from bar chart
-        - nhist()    histogram plot based on np.historgram() and plt.bar()  
-          ``use matplotlib.pyplot.hist() instead``
-        - histstat() statistical information from 1d-histogram
-        - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()  
-          ``use matplotlib.pyplot.hist2d() instead``  
-        - hist2dstat() statistical information from 1d-histogram
-        - profile2d()  "profile plot" for 2d data
-        - chi2p_indep2d() chi2 test on independence of data
-    
-      5. linear regression and function fitting:
-
-        - linRegression()    linear regression, y=ax+b, with analytical formula
-        - linRegressionXY()  linear regression, y=ax+b, with x and y errors   
-          ``! deprecated, use `odFit` with linear model instead``
-	    
-        - kRegression()      linear regression, y=ax+b, with (correlated) errors on x and y   
-          ``! deprecated, use `kFit` or `k2Fit` with linear model instead``
-	    
-        - odFit()            fit function with x and y errors (scipy ODR)
-        - mFit()             (lightweight) fit with iminuit, (correlated) uncertainties on x and y
-        - kFit()             fit a function to data with (correlated) errors on x and y (kafe)
-        - k2Fit()            fit a function to data with (correlated) errors on x and y (kafe2)
-
-      6. simulated data with MC-method:
-    
-        - smearData()          add random deviations to input data
-        - generateXYdata()     generate simulated data 
+        - smearData()          Addieren von zufälligen Unsicherheiten auf Eingabedaten
+        - generateXYdata()     Erzeugen simulierter Datenpunkte (x+Delta_x, y+Delta_y)
 
 
 Die folgenden **Beispiele** illustrieren die Anwendung:
@@ -214,9 +220,9 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     Einlesen von Spalten aus Textdateien; die zugehörigen 
     *Metadaten* können ebenfalls an das Script übergeben 
     werden und stehen so bei der Auswertung zur Verfügung.
-  * `test_readtxt.py` liest Ausgabedateien im allgemeinem `.txt`-Format
-     - Entfernen aller ASCII-Sonderzeichen außer dem Spalten-Trenner
-     - Ersetzen des deutschen Dezimalkommas durch Dezimalpunkt
+  * `test_readtxt.py` liest Ausgabedateien im allgemeinem `.txt`-Format; 
+    ASCII-Sonderzeichen außer dem Spalten-Trenner werden ersetzt,
+    ebenso wie das deutsche Dezimalkomma durch den Dezimalpunkt
   * `test_readPicoScope.py` liest Ausgabedateien von USB-Oszillographen 
     der Marke PicoScope im Format `.csv` oder `.txt`.
   * `test_labxParser.py` liest Ausgabedateien von Leybold
@@ -229,6 +235,9 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
   * `test_Fourier.py` illustriert die Durchführung einer 
     Fourier-Transfomation eines periodischen Signals, das in 
     der PicoScope-Ausgabedatei `Wellenform.csv` enthalten ist.
+  * `test_propagatedError.py` illustriert die Anwendung von numerisch
+    berechneter Fehlerfortpflanzung und korrekter Rundung von Größen
+    mit Unsicherheit
   * `test_linRegression.py` ist eine einfachere Version mit
     `python`-Bordmitteln zur Anpassung einer Geraden an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung. 
@@ -289,7 +298,9 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     korrelierte Unsicherheit aller Messwerte berücksichtig weden
     muss. Das Beispiel zeigt, wie man in diesem Fall die Kovarianzmatrix
     aus Einzelunsicherheiten aufbaut. Die Funktionen *k2Fit()* und
-    *mfit()* bieten dazu komfortable und einfache Möglichkeiten. 
+    *mfit()* bieten dazu komfortable und leicht zu verwendende
+    Interfaces, deren Anwendung zur Umsetzung des komplexen Fehlermodells
+    in diesem Beispiel gezeigt wird. 
     
   * `Beispiel_Drehpendel.py` demonstriert die Analyse von am Drehpendel
     mit CASSY aufgenommenen Daten. Enthalten sind einfache Funktionen zum
@@ -316,17 +327,6 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     des CASSY-Systems im `.labx` -Format gespeicherten Dateien ein
     (Beispieldatei `GammaSpektra.labx`).
 
-Die übrigen `python`-Scripte im Verzeichnis wurden zur Erstellung
-der in der einführenden Vorlesung gezeigten Grafiken verwendet.
-
-Für die **Erstellung von Protokollen** mit Tabellen, Grafiken und Formeln
-bietet sich das Textsatz-System `LaTeX` an. 
-Die Datei `Protokollvorlage.zip`
-enthält eine sehr einfach gehaltene Vorlage, die für eigene Protokolle
-verwendet werden kann. Eine sehr viel umfangreichere Einführung sowie
-ein ausführliches Beispiel bietet die Fachschaft Physik unter dem
-Link https://fachschaft.physik.kit.edu/drupal/content/latex-vorlagen
-
 
 Module Documentation 
 ====================
@@ -335,10 +335,10 @@ Module Documentation
      :imported-members:
      :members:
 
-..  automodule:: PhyPraKit.iminuitFit
+..  automodule:: PhyPraKit.phyFit
      :members:
 	
-..  automodule:: test_readColumnData  
+..  automodule:: test_readColumnData 
 
 ..  automodule:: test_readtxt
 
@@ -353,6 +353,8 @@ Module Documentation
 ..  automodule:: test_AutoCorrelation
 
 ..  automodule:: test_Fourier
+
+..  automodule:: test_propagatedError  
 
 ..  automodule:: test_kRegression
 

@@ -7,8 +7,8 @@ v1.0.2    Feb 2019  improved documentation and minor extensions
 v1.0.3    Aug 2019  added LaTeX example "ProtokollVorlage"
 v1.1.0    Mar 2020  support for kafe2 and additions to statistics analysis
 v1.1.1    Nov 2020  changed to GNU GPL
-v1.1.3rc1 Jan 2021  added package iminuitFit and a fit example
+v1.1.3rc1 Jan 2021  added dedicated fitting package and and example (iminuitFit)
           Mar 2021  added example for toy MC
 	  Mar 2021  added propagatedError() for numerical error propagation
+v1.1.3rc2 Mar 2021  iminuitFit renamed to phyFit
 v1.1.3    Apr 2021  release for summer semester 21
-	

@@ -151,6 +151,7 @@ oder::
         - writeCSV()       Daten csv-Format schreiben (optional mit Header)
         - writeTexTable()  Daten als LaTeX-Tabelle exportieren
         - round_to_error() Runden von Daten mit Präzision wie Unsicherheit
+        - ustring()        korrekt gerundete Werte v +/- u als Text 
 
       2. Signalprozessierung:
     
@@ -334,7 +335,7 @@ Module Documentation
      :imported-members:
      :members:
 
-..  automodule:: PhyPraKit.iminuitFit
+..  automodule:: PhyPraKit.phyFit
      :members:
 	
 ..  automodule:: test_readColumnData 

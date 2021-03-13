@@ -27,6 +27,6 @@ import matplotlib.pyplot
 # Import main components
 from .PhyPraKit import *
 
-_version_suffix = 'rc1'  # for suffixes such as 'rc' or 'beta' or 'alpha'
+_version_suffix = 'rc2'  # for suffixes such as 'rc' or 'beta' or 'alpha'
 __version__ = _version_info._get_version_string()
 __version__ += _version_suffix
