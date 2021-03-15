@@ -41,5 +41,6 @@ setup(
         "NumPy >= 1.19.1",
         "SciPy >= 1.5.1",
         "matplotlib >= 3.3.0",
-        "iminuit < 2", ]
+        "iminuit < 2",
+        "kafe2 >=2.3.0-pre2",]
 )
