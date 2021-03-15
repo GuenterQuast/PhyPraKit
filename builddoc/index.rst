@@ -129,13 +129,17 @@ Implementierung zur Anpassung von Modellfunktionen an Daten,
 die mit unkorrelierten und/oder korrelierten absoluten
 und/oder relativen Unsicherheiten in Ordinaten- und/oder
 Abszissenrichtung behaftet sind.
-*phyFit* nutzt dazu den Minimierer und statistische Funktionen
-des am CERN entwickelten und gepflegten Pakets *Minuit*, für das
-es ein *Python* - Interface *iminuit* gibt. 
-Abgesehen vom Komfort entspricht die Funktionalität der der
-Pakete *kafe* ( veraltet) oder *kafe2*. Für solche in der Praxis
-häufig auftretende komplexe Formen von Unsicherheiten gibt es
-kaum andere, einfach zu verwendende Programmpakete.
+
+Abgesehen vom Komfort entspricht die Funktionalität von *phyFit* der
+des Pakets *kafe2* (oder der mittlerweile veralteten Vorängerversion
+*kafe*), für das *PhyPraKit* ebenfalls ein vereinfachtes Interface
+(*k2Fit*) enthält. Für die in der Physik häufig auftretenden komplexen
+Formen von Unsicherheiten gibt es kaum andere, einfach zu verwendende
+Programmpakete. Außerdem spielen in der Physik Modellanpassungen mit
+Tests der Modellhypothese eine große Rolle. Andere Pakte sind meist
+als Voreinstellung auf die simple Parametrisierung von Messdaten
+ausgelegt, und deshalb werden die Parameterunsicherheiten so skaliert,
+dass die gewählte Parametrisierung die Daten gut repräsentiert. 
 
 
 Dokumentation der Beispiele
