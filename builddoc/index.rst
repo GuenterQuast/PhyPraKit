@@ -167,9 +167,12 @@ oder::
         - labxParser()     mit CASSY im .labx-Format exportierte Dateien einlesen
         - writeCSV()       Daten csv-Format schreiben (optional mit Header)
         - writeTexTable()  Daten als LaTeX-Tabelle exportieren
-        - round_to_error() Runden von Daten mit Präzision wie Unsicherheit
-        - ustring()        korrekt gerundete Werte v +/- u als Text 
+        - round_to_error() Runden von Daten mit Präzision wie Unsicherheit 
+        - ustring()        korrekt gerundete Werte v +/- u als Text;   
+          alternativ: der Datentyp *ufloat(v, u)* im Paket *uncertainties*
+	  untertützt die korrekte Ausgabe von Werten *v* mit Unsicherheiten *u*. 
 
+	  
       2. Signalprozessierung:
     
         - offsetFilter()      Abziehen eines off-sets 
@@ -192,7 +195,10 @@ oder::
         - Cor2Cov()                Konversion Korrelationsmatrix +
 	  Unsicherheiten -> Kovarianzmatrix
         - chi2prob()               Berechnung der chi^2-Wahrscheinlichkeit 
-        - propagatedError()        Numerische Fehlerfortpflanzung
+        - propagatedError()        Numerische Fehlerfortpflanzung;  
+          Hinweis: der Datentyp *ufloat(v, u)* im Paket *uncertainties*
+	  untertützt Funktionen von Werten *v* mit Unsicherheiten *u* und
+	  die korrekte Fehlerfortpflanzung  
         - getModelError()          Numerische Fehlefortpflanzung für 
 	  parameterabhängige Funktionswerte 
     

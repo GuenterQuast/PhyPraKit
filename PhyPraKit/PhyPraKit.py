@@ -20,7 +20,9 @@ def A0_readme():
       - writeCSV()       write data in csv-format (opt. with header)
       - writeTexTable()  write data in LaTeX table format
       - round_to_error() round to same number of sigfinicant digits as uncertainty
-      - ustring()        return rounded value +/- uncertainty as formatted string 
+      - ustring()        return rounded value +/- uncertainty as formatted string;   
+        alternative: the data type *ufloat(v,u)* of packge *uncertainties* comfortably 
+        supports printing of values *v* with uncertainties *u*.
 
     2. signal processing:
 
@@ -43,7 +45,9 @@ def A0_readme():
       - Cov2Cor                convert covariance matrix to correlation matrix
       - Cor2Cov                convert correlation matrix + errors to covariance matrix 
       - chi2prob               caclulate chi^2 probability 
-      - propagatedError        determine propageted uncertainty, with covariance
+      - propagatedError        determine propageted uncertainty, with covariance;  
+        hint: the data type *ufloat(v,u)* of packge *uncertainties* comfortably supports 
+        functions of values *v* with uncertainties *u* with correct error propagation
       - getModelError          determine uncertainty of parameter-depenent model function  
 
     4. histograms tools:
