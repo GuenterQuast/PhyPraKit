@@ -15,6 +15,9 @@ python3 test_readPicoScope.py
 python3 test_readCassy.py
 python3 test_labxParser.py
 
+# statistics
+python3 test_propagatedError.py
+
 # signal processing
 python3 test_AutoCorrelation.py
 python3 test_convolutionFilter.py
