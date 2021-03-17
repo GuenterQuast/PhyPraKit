@@ -1,14 +1,25 @@
 import PhyPraKit  # from this directory
-import sys
-
+import pathlib
 from setuptools import setup
+
+# The directory containing this file
+HERE = pathlib.Path(__file__).parent
+
+# The text of the README file
+README = (HERE / "README.md").read_text()
+
 
 setup(
     name='PhyPraKit',
+    packages=['PhyPraKit'],
     version=PhyPraKit.__version__,
+#
     author='Guenter Quast',
     author_email='Guenter.Quast@online.de',
-    packages=['PhyPraKit'],
+    url='http://www.etp.kit.edu/~quast/',
+    license='GNU Public Licence',
+    description='Tools for data visualisation and analysis in Physics Lab Courses',
+    long_description=README,
     scripts=[],
     classifiers=[
     'Development Status :: 5 - stable',
@@ -17,10 +28,6 @@ setup(
     'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3.6',
     ],
-    url='http://www.etp.kit.edu/~quast/',
-    license='GNU Public Licence',
-    description='Tools for data visualisation and analysis in Physics Lab Courses',
-    long_description=open('README.rst').read(),
     setup_requires=[\
         "NumPy >= 1.19",
         "SciPy >= 1.5",
