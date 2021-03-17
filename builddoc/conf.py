@@ -20,7 +20,6 @@ import os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.insert(0, os.path.abspath('../examples/'))
-sys.path.insert(0, os.path.abspath('../PhyPraKit/'))
 
 # -- General configuration ------------------------------------------------
 
@@ -33,6 +32,10 @@ sys.path.insert(0, os.path.abspath('../PhyPraKit/'))
 extensions = [
     'sphinx.ext.autodoc',
 ]
+
+# do not attempt to load modules possibly not available
+autodoc_mock_imports = ['numpy', 'matplotlib', 'scipy', 'iminuit', 'kafe',
+                        'kafe2', 'inspect'] 
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -230,7 +233,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'phyprakit', u'PhyPraKit Documentation',
+    ('index', 'PhyPraKit', u'PhyPraKit Documentation',
      [u'Günter Quast'], 1)
 ]
 
