@@ -41,5 +41,5 @@ install in user space:
 PhyPraKit ist eine Sammlung nützlicher Funktionen in der Sprache 
 `python (vers. 2.7 oder >=3.6)` zum Aufnehmen, zur Bearbeitung, 
 Visualisierung  und  Auswertung von Daten in den physikalischen 
-Praktika. Die Anwendung der verschiedenen Funktionen des Pakets   
+Praktika. Die Anwendung der verschiedenen Funktionen des Pakets
 werden jeweils durch Beispiele illustriert.
