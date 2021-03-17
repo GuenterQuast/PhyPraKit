@@ -2,21 +2,6 @@ import PhyPraKit  # from this directory
 import sys
 
 from setuptools import setup
-from setuptools.command.test import test as TestCommand
-
-# class for running unit tests
-# from: https://pytest.org/latest/goodpractices.html
-class PyTest(TestCommand):
-    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
-
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        self.pytest_args = []
-
-    def run_tests(self):
-        import pytest
-        errcode = pytest.main(self.pytest_args)
-        sys.exit(errcode)
 
 setup(
     name='PhyPraKit',
@@ -35,12 +20,11 @@ setup(
     url='http://www.etp.kit.edu/~quast/',
     license='GNU Public Licence',
     description='Tools for data visualisation and analysis in Physics Lab Courses',
-    #long_description='todo: add long description',  # open('README.txt').read()
     long_description=open('README.rst').read(),
     setup_requires=[\
-        "NumPy >= 1.19.1",
-        "SciPy >= 1.5.1",
-        "matplotlib >= 3.3.0",
+        "NumPy >= 1.19",
+        "SciPy >= 1.5",
+        "matplotlib >= 3",
         "iminuit < 2",
         "kafe2 >=2.3.0-pre2",]
 )
