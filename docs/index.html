@@ -39,7 +39,7 @@
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div><p><cite>Version</cite> 2021-03-13</p>
+<div><p><cite>Version</cite> 2021-03-19</p>
 </div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
@@ -60,15 +60,24 @@ in particular the desctiption of the examples.</p>
 <p>To use PhyPraKit, it is sufficient to place the the direcotory
 <cite>PhyPraKit</cite> and all the files in it in the same directory as the
 python scripts importing it.</p>
-<p>Installation via <cite>pip</cite> is also supported. The recommendation is
-to use the installation package in the subdirectory <cite>dist</cite> and
-install in user space:</p>
+<p>Installation via <cite>pip</cite> is also supported. After Downloading, execute:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">.</span></code></p>
+<p>in the main directory of the <em>PhyPraKit</em> package (where <em>setup.py</em>
+is located) to install in user space.</p>
+<p>The installation <em>whl</em>-package in the subdirectory <cite>dist</cite> may also be used:</p>
 <blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">--no-cache</span> <span class="pre">PhyPraKit&lt;vers.&gt;</span></code></p>
+<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">--no-cache</span> <span class="pre">PhyPraKit&lt;version&gt;.whl</span></code></p>
 </div></blockquote>
+<p>Installation via the PyPi Python Package Index is also available, simply
+execute:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">PhyPraKit</span></code></p>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
 </div>
-<div class="section" id="ubersicht">
-<h3>Übersicht:<a class="headerlink" href="#ubersicht" title="Permalink to this headline">¶</a></h3>
+<p><strong>German Description:</strong></p>
 <p><strong>PhyPraKit</strong> ist eine Sammlung nützlicher Funktionen in der Sprache
 <cite>Python (&gt;=3.6, die meisten Module laufen auch noch mit der inzwischen
 veralteten Verson 2.7)</cite> zum Aufnehmen, zur Bearbeitung,
@@ -80,43 +89,41 @@ werden jeweils durch Beispiele illustriert.</p>
 </div>
 </div>
 </div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
+<div class="section" id="visualisation-and-analysis-of-measurement-data">
+<h1><strong>Visualisation and Analysis of Measurement Data</strong><a class="headerlink" href="#visualisation-and-analysis-of-measurement-data" title="Permalink to this headline">¶</a></h1>
+<p>Methods for recording, processing, visualization and analysis of
+measurement data are required in all laboratory courses in Physics.</p>
+<p>This collection of tools in the package <cite>PhyPraKit</cite> contains
+functions for reading data from various sources, for data
+visualization, signal processing and statistical data analyis and
+model fitting as well as tools for generation of simulated data.
+Emphasis was put on simple implementations, illustrating the
+principles of the underlining coding.</p>
+<p>The class <em>mFit</em> in the module <em>phyFit</em> offers a light-weight
+implementation for fitting model functions to data with uncorrelated
+and/or correlated absolute and/or relative uncertainties in ordinate
+and/or abscissa directions. For such complex forms of uncertainties,
+there are hardly any are easy-to-use program packages. Most of the
+existing applications use presets aiming at providing a parametrization
+of measurement data, whereby the validity of the parametrization is
+assumed and the the parameter uncertainties are scaled so that the
+data is well described. <em>PhyPraKit</em> offers adapted interfaces to the
+fit modules in the package <em>scipy</em> (<em>optimize.curve_fit</em> and <em>ODR</em>)
+to perform fits with a test of the validity of the hypothesis.
+<em>PhyPraKit</em> also contains a simplified interface to the very
+function-rich fitting package <em>kafe2</em> (or the outdated previous
+version <em>kafe</em>).</p>
+<div class="line-block">
+<div class="line"><br /></div>
 </div>
-<div class="section" id="darstellung-und-auswertung-von-messdaten">
-<h1><strong>Darstellung und Auswertung von Messdaten</strong><a class="headerlink" href="#darstellung-und-auswertung-von-messdaten" title="Permalink to this headline">¶</a></h1>
-<p>In allen Praktika zur Physik werden Methoden zur Aufnahme,
-Bearbeitung, Darstellung und Auswertung von Messdaten benötigt.
-Die Script- und Programmiersprache <cite>python</cite> mit den Zusatzpaketen
-<cite>numpy</cite> und <cite>matplotlib</cite> ist ein universelles Werkzeug, um die
-Wiederholbarkeit von Datenauswertungen und die Reprodzierbarkeit
-der Ergebnisse zu gewährleiseten.</p>
-<p>In der Veranstaltung “Computergestützte Datenauswertung”
-(<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA">http://www.ekp.kit.edu/~quast/CgDA</a>), die im Studienplan
-für den Bachelorstudiengang Physik am KIT seit dem Sommersemester
-2016 angeboten wird, werden Methoden und Software zur
-grafischen Darstellung von Daten, deren Auswertung und
-Modellierung eingeführt. Die Installation der empfohlenen
-Software ist unter dem foltenden Link beschrieben:</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <blockquote>
-<div><ul class="simple">
-<li><p>Dokumentation in html:
-<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html</a></p></li>
-<li><p>Dokumentation in pdf:
-<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf</a></p></li>
-</ul>
+<div><p><strong>German: Darstellung und Auswertung von Messdaten</strong></p>
 </div></blockquote>
-<p>Speziell für das “Praktikum zur klassischen Physik” finden sich eine
-kurze Einführung
-(<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf">http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf</a>)
-sowie die hier dokumentierten einfachen Beispiele als Startpunkt für
-eigene Auswertungen
-(<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/">http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/</a>).</p>
+<p>In allen Praktika zur Physik werden Methoden zur Aufnahme,
+Bearbeitung, Darstellung und Auswertung von Messdaten benötigt.</p>
 <p>Die vorliegende Sammlung im Paket <cite>PhyPraKit</cite> enthält
 Funktionen zum Einlesen von Daten aus diversen Quellen, zur
 Datenvisualisierung, Signalbearbeitung und zur statistischen
@@ -125,6 +132,33 @@ simulierter Daten.
 Dabei wurde absichtlich Wert auf eine einfache, die Prinzipien
 unterstreichende Codierung gelegt und nicht der möglichst effizienten
 bzw. allgemeinensten Implementierung der Vorzug gegeben.</p>
+<p>Das Modul <em>phyFit</em> bietet mit der Klasse <em>mnFit</em> eine schlanke
+Implementierung zur Anpassung von Modellfunktionen an Daten,
+die mit unkorrelierten und/oder korrelierten absoluten
+und/oder relativen Unsicherheiten in Ordinaten- und/oder
+Abszissenrichtung behaftet sind.
+Für solche in der Physik häufig auftretenden komplexen Formen von
+Unsicherheiten gibt es kaum andere, einfach zu verwendende
+Programmpakete. Andere Pakte sind meist als Voreinstellung auf
+die Parametrisierung von Messdaten ausgelegt, wobei die
+Parameterunsicherheiten unter Annahme der Gültigkeit der
+Parametrisierung so skaliert werden, dass die Daten gut
+repräsentiert werden. <em>PhyPraKit</em> bietet entsprechend angepasste
+Interfaces zu den Fitmodulen im Paket <em>scipy</em>
+(<em>optimize.curve_fit</em> und <em>ODR</em>), um Anpassungen mit Test der Gültigkeit
+der Modellhypothese durchzuführen. <em>PhyPraKit</em> enthält ebenfalls ein
+vereinfachtes Interface zum sehr funtkionsreichen Anpassungspaket
+<em>kafe2</em> (oder zur mittlerweile veralteten Vorängerversion <em>kafe</em>).</p>
+<p>In der Vorlesung “Computergestützte Datenauswertung” an der Fakultät
+für Physik am Karlsruher Institut für Physik
+(<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA">http://www.ekp.kit.edu/~quast/CgDA</a>)
+werden die in <em>PhyPraKit</em> verwendeten Methoden eingeführt und beschrieben.
+Hinweise zur Installation der empfohlenen Software finden sich unter den Links
+<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html</a> und
+<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf</a></p>
+<p>Speziell für das “Praktikum zur klassischen Physik” am KIT gibt es
+eine  kurze Einführung in die statistischen Methoden und Werkzeuge
+(<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf">http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf</a>).</p>
 </div>
 <div class="section" id="dokumentation-der-beispiele">
 <h1>Dokumentation der Beispiele<a class="headerlink" href="#dokumentation-der-beispiele" title="Permalink to this headline">¶</a></h1>
@@ -153,7 +187,9 @@ zum import in eigene Beispiele mittels:</p>
 <li><p>writeCSV()       Daten csv-Format schreiben (optional mit Header)</p></li>
 <li><p>writeTexTable()  Daten als LaTeX-Tabelle exportieren</p></li>
 <li><p>round_to_error() Runden von Daten mit Präzision wie Unsicherheit</p></li>
-<li><p>ustring()        korrekt gerundete Werte v +/- u als Text</p></li>
+<li><p>ustring()        korrekt gerundete Werte v +/- u als Text;
+alternativ: der Datentyp <em>ufloat(v, u)</em> im Paket <em>uncertainties</em>
+untertützt die korrekte Ausgabe von Werten <em>v</em> mit Unsicherheiten <em>u</em>.</p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="2">
@@ -185,7 +221,10 @@ zum import in eigene Beispiele mittels:</p>
 <li><p>Cor2Cov()                Konversion Korrelationsmatrix +
 Unsicherheiten -&gt; Kovarianzmatrix</p></li>
 <li><p>chi2prob()               Berechnung der chi^2-Wahrscheinlichkeit</p></li>
-<li><p>propagatedError()        Numerische Fehlerfortpflanzung</p></li>
+<li><p>propagatedError()        Numerische Fehlerfortpflanzung;
+Hinweis: der Datentyp <em>ufloat(v, u)</em> im Paket <em>uncertainties</em>
+untertützt Funktionen von Werten <em>v</em> mit Unsicherheiten <em>u</em> und
+die korrekte Fehlerfortpflanzung</p></li>
 <li><p>getModelError()          Numerische Fehlefortpflanzung für
 parameterabhängige Funktionswerte</p></li>
 </ul>
@@ -218,13 +257,14 @@ Standardabweichung, Unsicherheit des Mittelwerts)</p></li>
 <li><p>kRegression()      lineare Regression, y=ax+b, mit (korrelierten) x-
 und y-Unsicherheiten
 <code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">veraltet,</span> <span class="pre">`k2Fit`</span> <span class="pre">mit</span> <span class="pre">linearem</span> <span class="pre">Modell</span> <span class="pre">verwenden</span></code></p></li>
-<li><p>odFit()            Funktionsanpassung with x- und y-Unsicherheiten (scipy ODR)</p></li>
-<li><p>mFit()             Funktionsanpassung mit with iminuit,
-(korrelierte) x- und y-Unsicherheiten</p></li>
+<li><p>odFit()            Funktionsanpassung mit x- und y-Unsicherheiten
+(scipy ODR)</p></li>
+<li><p>mFit()             Funktionsanpassung mit (korrelierten) x- und
+y-Unsicherheiten mit <em>phyFit</em></p></li>
 <li><p>kFit()             Funktionsanpassung mit (korrelierten) x- und
-y-Unsicherheiten mit kafe, <code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">veraltet,</span> <span class="pre">`k2Fit`</span> <span class="pre">verwenden</span></code></p></li>
+y-Unsicherheiten mit dem Pakte <em>kafe</em>, <code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">veraltet,</span> <span class="pre">`k2Fit`</span> <span class="pre">verwenden</span></code></p></li>
 <li><p>k2Fit()            Funktionsanpassung mit (korrelierten) x- und
-y-Unsicherheiten mit kafe2</p></li>
+y-Unsicherheiten mit dem Paket <em>kafe2</em></p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="6">
@@ -376,7 +416,9 @@ in Physics Lab Courses, recommended for “Physikalisches Praktikum am KIT”</p
 <li><p>writeCSV()       write data in csv-format (opt. with header)</p></li>
 <li><p>writeTexTable()  write data in LaTeX table format</p></li>
 <li><p>round_to_error() round to same number of sigfinicant digits as uncertainty</p></li>
-<li><p>ustring()        return rounded value +/- uncertainty as formatted string</p></li>
+<li><p>ustring()        return rounded value +/- uncertainty as formatted string;   
+alternative: the data type <em>ufloat(v,u)</em> of packge <em>uncertainties</em> comfortably 
+supports printing of values <em>v</em> with uncertainties <em>u</em>.</p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="2">
@@ -407,7 +449,9 @@ in Physics Lab Courses, recommended for “Physikalisches Praktikum am KIT”</p
 <li><p>Cov2Cor                convert covariance matrix to correlation matrix</p></li>
 <li><p>Cor2Cov                convert correlation matrix + errors to covariance matrix</p></li>
 <li><p>chi2prob               caclulate chi^2 probability</p></li>
-<li><p>propagatedError        determine propageted uncertainty, with covariance</p></li>
+<li><p>propagatedError        determine propageted uncertainty, with covariance;  
+hint: the data type <em>ufloat(v,u)</em> of packge <em>uncertainties</em> comfortably supports 
+functions of values <em>v</em> with uncertainties <em>u</em> with correct error propagation</p></li>
 <li><p>getModelError          determine uncertainty of parameter-depenent model function</p></li>
 </ul>
 </div></blockquote>
@@ -439,10 +483,12 @@ in Physics Lab Courses, recommended for “Physikalisches Praktikum am KIT”</p
 errors on x, and y   
 <code class="docutils literal notranslate"><span class="pre">!</span> <span class="pre">deprecated,</span> <span class="pre">consider</span> <span class="pre">using</span> <span class="pre">`k2Fit`</span> <span class="pre">with</span> <span class="pre">linear</span> <span class="pre">model</span> <span class="pre">instead</span></code></p></li>
 <li><p>odFit()            fit function with x and y errors (scipy ODR)</p></li>
-<li><p>mFit()             fit with iminuit with correlated x and y errors,
-profile likelihood and contour lines</p></li>
-<li><p>kFit()             fit function with (correlated) errors on x and y (kafe)</p></li>
-<li><p>k2Fit()            fit function with (correlated) errors on x and y (kafe2)</p></li>
+<li><p>mFit()             fit with with correlated x and y errors,
+profile likelihood and contour lines (module phyFit)</p></li>
+<li><p>kFit()             fit function with (correlated) errors on x and y 
+(with package kafe, deprecated)</p></li>
+<li><p>k2Fit()            fit function with (correlated) errors on x and y 
+(with package kafe2)</p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="6">
@@ -2185,13 +2231,11 @@ am Beispiel der Gamma-Spektroskopie</p>
 <li><a class="reference internal" href="#"><strong>PhyPraKit Documentation</strong></a><ul>
 <li><a class="reference internal" href="#about">About</a><ul>
 <li><a class="reference internal" href="#installation">Installation:</a></li>
-<li><a class="reference internal" href="#ubersicht">Übersicht:</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-<li><a class="reference internal" href="#darstellung-und-auswertung-von-messdaten"><strong>Darstellung und Auswertung von Messdaten</strong></a></li>
+<li><a class="reference internal" href="#visualisation-and-analysis-of-measurement-data"><strong>Visualisation and Analysis of Measurement Data</strong></a></li>
 <li><a class="reference internal" href="#dokumentation-der-beispiele">Dokumentation der Beispiele</a></li>
 <li><a class="reference internal" href="#module-PhyPraKit">Module Documentation</a></li>
 </ul>

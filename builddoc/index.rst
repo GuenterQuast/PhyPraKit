@@ -54,15 +54,26 @@ To use PhyPraKit, it is sufficient to place the the direcotory
 `PhyPraKit` and all the files in it in the same directory as the
 python scripts importing it.
 
-Installation via `pip` is also supported. The recommendation is
-to use the installation package in the subdirectory `dist` and
-install in user space:
+Installation via `pip` is also supported. After Downloading, execute: 
 
-   ``pip install --user --no-cache PhyPraKit<vers.>``
+``pip install --user .`` 
 
+in the main directory of the *PhyPraKit* package (where *setup.py*
+is located) to install in user space.  
 
-Übersicht:
-----------
+The installation *whl*-package in the subdirectory `dist` may also be used:
+
+   ``pip install --user --no-cache PhyPraKit<version>.whl``
+
+Installation via the PyPi Python Package Index is also available, simply
+execute:
+   
+   ``pip install --user PhyPraKit``
+
+|
+|
+   
+**German Description:**
 
 **PhyPraKit** ist eine Sammlung nützlicher Funktionen in der Sprache 
 `Python (>=3.6, die meisten Module laufen auch noch mit der inzwischen
@@ -78,42 +89,42 @@ werden jeweils durch Beispiele illustriert.
 .. |date| date:: 
 
 
-Indices and tables
-==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+**Visualisation and Analysis of Measurement Data**
+==================================================
+Methods for recording, processing, visualization and analysis of
+measurement data are required in all laboratory courses in Physics.
 
-**Darstellung und Auswertung von Messdaten**
-============================================
+This collection of tools in the package `PhyPraKit` contains
+functions for reading data from various sources, for data
+visualization, signal processing and statistical data analyis and
+model fitting as well as tools for generation of simulated data.
+Emphasis was put on simple implementations, illustrating the
+principles of the underlining coding.
+
+The class *mFit* in the module *phyFit* offers a light-weight
+implementation for fitting model functions to data with uncorrelated
+and/or correlated absolute and/or relative uncertainties in ordinate
+and/or abscissa directions. For such complex forms of uncertainties,
+there are hardly any are easy-to-use program packages. Most of the
+existing applications use presets aiming at providing a parametrization 
+of measurement data, whereby the validity of the parametrization is
+assumed and the the parameter uncertainties are scaled so that the
+data is well described. *PhyPraKit* offers adapted interfaces to the
+fit modules in the package *scipy* (*optimize.curve_fit* and *ODR*)
+to perform fits with a test of the validity of the hypothesis.
+*PhyPraKit* also contains a simplified interface to the very
+function-rich fitting package *kafe2* (or the outdated previous
+version *kafe*). 
+
+|
+
+|
+
+  **German: Darstellung und Auswertung von Messdaten**
 
 In allen Praktika zur Physik werden Methoden zur Aufnahme, 
-Bearbeitung, Darstellung und Auswertung von Messdaten benötigt. 
-Die Script- und Programmiersprache `python` mit den Zusatzpaketen 
-`numpy` und `matplotlib` ist ein universelles Werkzeug, um die 
-Wiederholbarkeit von Datenauswertungen und die Reprodzierbarkeit 
-der Ergebnisse zu gewährleiseten.
-
-In der Veranstaltung "Computergestützte Datenauswertung" 
-(http://www.ekp.kit.edu/~quast/CgDA), die im Studienplan
-für den Bachelorstudiengang Physik am KIT seit dem Sommersemester
-2016 angeboten wird, werden Methoden und Software zur 
-grafischen Darstellung von Daten, deren Auswertung und
-Modellierung eingeführt. Die Installation der empfohlenen
-Software ist unter dem foltenden Link beschrieben:
-
-      * Dokumentation in html: 
-        http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html
-      * Dokumentation in pdf:  
-        http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf     
-
-Speziell für das "Praktikum zur klassischen Physik" finden sich eine 
-kurze Einführung  
-(http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf) 
-sowie die hier dokumentierten einfachen Beispiele als Startpunkt für 
-eigene Auswertungen 
-(http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/).
+Bearbeitung, Darstellung und Auswertung von Messdaten benötigt.
 
 Die vorliegende Sammlung im Paket `PhyPraKit` enthält 
 Funktionen zum Einlesen von Daten aus diversen Quellen, zur 
@@ -129,17 +140,31 @@ Implementierung zur Anpassung von Modellfunktionen an Daten,
 die mit unkorrelierten und/oder korrelierten absoluten
 und/oder relativen Unsicherheiten in Ordinaten- und/oder
 Abszissenrichtung behaftet sind.
+Für solche in der Physik häufig auftretenden komplexen Formen von
+Unsicherheiten gibt es kaum andere, einfach zu verwendende
+Programmpakete. Andere Pakte sind meist als Voreinstellung auf
+die Parametrisierung von Messdaten ausgelegt, wobei die
+Parameterunsicherheiten unter Annahme der Gültigkeit der
+Parametrisierung so skaliert werden, dass die Daten gut
+repräsentiert werden. *PhyPraKit* bietet entsprechend angepasste
+Interfaces zu den Fitmodulen im Paket *scipy*
+(*optimize.curve_fit* und *ODR*), um Anpassungen mit Test der Gültigkeit
+der Modellhypothese durchzuführen. *PhyPraKit* enthält ebenfalls ein
+vereinfachtes Interface zum sehr funtkionsreichen Anpassungspaket
+*kafe2* (oder zur mittlerweile veralteten Vorängerversion *kafe*).
 
-Abgesehen vom Komfort entspricht die Funktionalität von *phyFit* der
-des Pakets *kafe2* (oder der mittlerweile veralteten Vorängerversion
-*kafe*), für das *PhyPraKit* ebenfalls ein vereinfachtes Interface
-(*k2Fit*) enthält. Für die in der Physik häufig auftretenden komplexen
-Formen von Unsicherheiten gibt es kaum andere, einfach zu verwendende
-Programmpakete. Außerdem spielen in der Physik Modellanpassungen mit
-Tests der Modellhypothese eine große Rolle. Andere Pakte sind meist
-als Voreinstellung auf die simple Parametrisierung von Messdaten
-ausgelegt, und deshalb werden die Parameterunsicherheiten so skaliert,
-dass die gewählte Parametrisierung die Daten gut repräsentiert. 
+In der Vorlesung "Computergestützte Datenauswertung" an der Fakultät
+für Physik am Karlsruher Institut für Physik 
+(http://www.ekp.kit.edu/~quast/CgDA)
+werden die in *PhyPraKit* verwendeten Methoden eingeführt und beschrieben.
+Hinweise zur Installation der empfohlenen Software finden sich unter den Links
+http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html und 
+http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf     
+
+Speziell für das "Praktikum zur klassischen Physik" am KIT gibt es 
+eine  kurze Einführung in die statistischen Methoden und Werkzeuge
+(http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf). 
+
 
 
 Dokumentation der Beispiele
