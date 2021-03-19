@@ -3,7 +3,7 @@
 from __future__ import print_function  # for python2.7 compatibility
 def A0_readme():
   # name chosen to make sure sphinx puts this docstring at the top
-  """Package PhyPrakit
+  """Package PhyPraKit
 
   **PhyPraKit**  for Data Handling, Visualisation and Analysis
 
@@ -1963,7 +1963,7 @@ def k2Fit(func, x, y,
     kplot.customize('model_line', 'color', ['darkorange'])
     kplot.customize('model_line', 'linestyle', ['--'])
     if not plot_band:
-      kplot._get_plot_adapters()[0].PLOT_SUBPLOT_TYPES.pop("model_error_band")
+      kplot.customize('model_error_band', 'hide', [True])
     else:
       kplot.customize('model_error_band', 'color', ['green'])
       kplot.customize('model_error_band', 'label', [model_band])
