@@ -61,7 +61,8 @@ Installation via `pip` is also supported. After Downloading, execute:
 in the main directory of the *PhyPraKit* package (where *setup.py*
 is located) to install in user space.  
 
-The installation *whl*-package in the subdirectory `dist` may also be used:
+The installation via the *whl*-package provided
+in the subdirectory `dist` may also be used:
 
    ``pip install --user --no-cache PhyPraKit<version>.whl``
 

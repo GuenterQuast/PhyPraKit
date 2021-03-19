@@ -23,16 +23,27 @@ Cerated by:
 Installation:
 -------------
 
-To use PhyPraKit, it is sufficient to place the directory
-`PhyPraKit` (containing the files `__init__.py`, `_version_info.py`,
-`PhyPraKit.py` and `phyFit.py`) in the same directory as the
-python scripts importing the PhyPraKit package. 
+To use PhyPraKit, it is sufficient to place the the direcotory
+`PhyPraKit` and all the files in it in the same directory as the
+python scripts importing it.
 
-Installation via `pip` is supported. The recommendation is
-to use the installation package in the subdirectory `dist/` and
-install in user space:
+Installation via `pip` is also supported. After Downloading, execute: 
 
-   ``pip install --user --no-cache PhyPraKit<vers.>``
+``pip install --user .`` 
+
+in the main directory of the *PhyPraKit* package (where *setup.py*
+is located) to install in user space.  
+
+The installation using the *whl*-package provided in the subdirectory
+`dist` may also be used:
+
+   ``pip install --user --no-cache PhyPraKit<version>.whl``
+
+Installation via the PyPi Python Package Index is also available, simply
+execute:
+   
+   ``pip install --user PhyPraKit``
+
 
 
 Übersicht:
