@@ -8,12 +8,12 @@ About
 =====
 
 PhyPraKit is a collection of python modules `(supporting pyhton 2.7
-(dprecated) and python >=3.6)` for data visialisation and analysis
-in experimental laboratory cources in physics, developed at the
+(dprecated) and python >=3.6)` for data visualisation and analysis
+in experimental laboratory courses in physics, developed at the
 faculty of physics at Karlsruhe Institute of Technology (KIT).
 As the modules are intended primarily for use by undertraduate
 students in Karlsruhe, the documentation is partly in German
-language, in particular the desctiption of the the examples.
+language, in particular the description of the examples.
 
 Cerated by: 
 
@@ -27,7 +27,7 @@ To use PhyPraKit, it is sufficient to place the the direcotory
 `PhyPraKit` and all the files in it in the same directory as the
 python scripts importing it.
 
-Installation via `pip` is also supported. After Downloading, execute: 
+Installation via `pip` is also supported. After downloading, execute: 
 
 ``pip install --user .`` 
 
