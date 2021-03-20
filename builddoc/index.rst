@@ -1,11 +1,11 @@
 .. PhyPraKit documentation master file, created by
-   sphinx-quickstart on Sat Oct 15 18:03:17 2016. You
+   sphinx-quick-start on Sat Oct 15 18:03:17 2016. You
    can adapt this file completely to your liking, but it
    should at least contain the root `toctree` directive.
 
 .. meta:
-   :description lang=en: PhyPraKit - a collection of pyhton modules
-   for data visualisation and analysis in experimental laboratory
+   :description lang=en: PhyPraKit - a collection of python modules
+   for data visualization and analysis in experimental laboratory
    courses in Physics, developed at the faculty of physics at
    Karlsruhe Institute of Technology (KIT)
    :description lang=de: PhyPraKit - eine Sammlung von Funktionen in der 
@@ -29,14 +29,14 @@ About
 =====
 
 **PhyPraKit** is a collection of python modules
-for data visualisation and analysis in experimental laboratory
+for data visualization and analysis in experimental laboratory
 courses in physics, in use at the faculty of physics at
 Karlsruhe Institute of Technology (KIT). As the modules are
-intended primarily for use by undertraduate students in
+intended primarily for use by undergraduate students in
 Germany, the documentation is partly in German language,
 in particular the description of the examples.
 
-Cerated by: 
+Created by: 
 
 * Guenter Quast <guenter (dot) quast (at) online (dot) de>
 
@@ -50,7 +50,7 @@ A pdf version of this documentation is available here: PhyPraKit.pdf_.
 Installation:
 -------------
 
-To use PhyPraKit, it is sufficient to place the the direcotory
+To use PhyPraKit, it is sufficient to place the the directory
 `PhyPraKit` and all the files in it in the same directory as the
 python scripts importing it.
 
@@ -91,14 +91,14 @@ werden jeweils durch Beispiele illustriert.
 
 
 
-**Visualisation and Analysis of Measurement Data**
+**Visualization and Analysis of Measurement Data**
 ==================================================
 Methods for recording, processing, visualization and analysis of
 measurement data are required in all laboratory courses in Physics.
 
 This collection of tools in the package `PhyPraKit` contains
 functions for reading data from various sources, for data
-visualization, signal processing and statistical data analyis and
+visualization, signal processing and statistical data analysis and
 model fitting as well as tools for generation of simulated data.
 Emphasis was put on simple implementations, illustrating the
 principles of the underlining coding.
@@ -134,7 +134,7 @@ Datenauswertung und Modellanpassung sowie Werkzeuge zur Erzeugung
 simulierter Daten. 
 Dabei wurde absichtlich Wert auf eine einfache, die Prinzipien 
 unterstreichende Codierung gelegt und nicht der möglichst effizienten 
-bzw. allgemeinensten Implementierung der Vorzug gegeben.
+bzw. allgemeinsten Implementierung der Vorzug gegeben.
 
 Das Modul *phyFit* bietet mit der Klasse *mnFit* eine schlanke
 Implementierung zur Anpassung von Modellfunktionen an Daten,
@@ -151,8 +151,8 @@ repräsentiert werden. *PhyPraKit* bietet entsprechend angepasste
 Interfaces zu den Fitmodulen im Paket *scipy*
 (*optimize.curve_fit* und *ODR*), um Anpassungen mit Test der Gültigkeit
 der Modellhypothese durchzuführen. *PhyPraKit* enthält ebenfalls ein
-vereinfachtes Interface zum sehr funtkionsreichen Anpassungspaket
-*kafe2* (oder zur mittlerweile veralteten Vorängerversion *kafe*).
+vereinfachtes Interface zum sehr funktionsreichen Anpassungspaket
+*kafe2* (oder zur mittlerweile veralteten Vorgängerversion *kafe*).
 
 In der Vorlesung "Computergestützte Datenauswertung" an der Fakultät
 für Physik am Karlsruher Institut für Physik 
@@ -196,7 +196,7 @@ oder::
         - round_to_error() Runden von Daten mit Präzision wie Unsicherheit 
         - ustring()        korrekt gerundete Werte v +/- u als Text;   
           alternativ: der Datentyp *ufloat(v, u)* im Paket *uncertainties*
-	  untertützt die korrekte Ausgabe von Werten *v* mit Unsicherheiten *u*. 
+	  unterstützt die korrekte Ausgabe von Werten *v* mit Unsicherheiten *u*. 
 
 	  
       2. Signalprozessierung:
@@ -216,16 +216,16 @@ oder::
       3. Statistik:
     
         - wmean()                  Berechnen des gewichteten Mittelwerts
-        - BuildCovarianceMatrix()  Koravianzmatrix aus Einzelunsicherheiten
+        - BuildCovarianceMatrix()  Kovarianzmatrix aus Einzelunsicherheiten
         - Cov2Cor()                Konversion Kovarianzmatrix -> Korrelationsmatrix
         - Cor2Cov()                Konversion Korrelationsmatrix +
 	  Unsicherheiten -> Kovarianzmatrix
         - chi2prob()               Berechnung der chi^2-Wahrscheinlichkeit 
         - propagatedError()        Numerische Fehlerfortpflanzung;  
           Hinweis: der Datentyp *ufloat(v, u)* im Paket *uncertainties*
-	  untertützt Funktionen von Werten *v* mit Unsicherheiten *u* und
+	  unterstützt Funktionen von Werten *v* mit Unsicherheiten *u* und
 	  die korrekte Fehlerfortpflanzung  
-        - getModelError()          Numerische Fehlefortpflanzung für 
+        - getModelError()          Numerische Fehlfortpflanzung für 
 	  parameterabhängige Funktionswerte 
     
       4. Histogramm:
@@ -241,7 +241,7 @@ oder::
         - profile2d()  "profile plot" für 2d-Streudiagramm
         - chi2p_indep2d() chi^2-Test auf Unabhängigkeit zweier Variabler
     
-      5. Lineare Regression und Anpassen von Fuktionen:
+      5. Lineare Regression und Anpassen von Funktionen:
 
         - linRegression()    lineare Regression, y=ax+b, mit analytische Formel
         - linRegressionXY()  lineare Regression, y=ax+b, mit x- und y-Unsicherheiten   
@@ -277,7 +277,7 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     der Marke PicoScope im Format `.csv` oder `.txt`.
   * `test_labxParser.py` liest Ausgabedateien von Leybold
     CASSY im `.labx`-Format. Die Kopfzeilen und Daten von Messreihen 
-    werden als Listen in *python* zur Verfügung gestellt. 
+    werden als Listen in *Python* zur Verfügung gestellt. 
   * `test_convolutionFilter.py` liest die Datei `Wellenform.csv` und 
     bestimmt Maxima und fallende Flanken des Signals 
   * `test_AutoCorrelation.py` liest die Datei `AudioData.csv` und führt 
@@ -296,7 +296,7 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit
     allen Messpunkten gemeinsamen (d. h. korrelierten) relativen oder
     absoluten systematischen Fehlern. Dazu wird das Paket imunit
-    verwendet, das den am CERN entwicklten Minimierer MINUIT nutzt.
+    verwendet, das den am CERN entwickelten Minimierer MINUIT nutzt.
     Da die Kostenfunktion frei definiert und auch während der Anpassung
     dynamisch aktualisiert werden kann, ist die Implementierung von
     Parameter-abhängigen Unsicherheiten möglich. Ferner unterstützt
@@ -345,7 +345,7 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     der auf der x-Achse aufgetragen Spannungsmessungen zu berücksichtigen.
     Eine weitere Komponente der Unsicherheit ergibt sich aus der
     Kalibrationsgenauigkeit des Messgeräts, die als relative,
-    korrelierte Unsicherheit aller Messwerte berücksichtig weden
+    korrelierte Unsicherheit aller Messwerte berücksichtigt werden
     muss. Das Beispiel zeigt, wie man in diesem Fall die Kovarianzmatrix
     aus Einzelunsicherheiten aufbaut. Die Funktionen *k2Fit()* und
     *mfit()* bieten dazu komfortable und leicht zu verwendende
