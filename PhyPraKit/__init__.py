@@ -18,12 +18,6 @@
 # Import version info
 from . import _version_info
 
-# Import matplotlib and set backend
-import numpy
-import scipy
-import matplotlib
-import matplotlib.pyplot
-
 # Import main components
 from .PhyPraKit import *
 
