@@ -15,7 +15,7 @@ As the modules are intended primarily for use by undergraduate
 students in Karlsruhe, the documentation is partly in German
 language, in particular the description of the examples.
 
-Aerated by: 
+Created by: 
 
 * Guenter Quast <guenter (dot) quast (at) online (dot) de>
 
