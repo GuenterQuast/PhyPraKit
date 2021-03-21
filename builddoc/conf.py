@@ -52,8 +52,7 @@ master_doc = 'index'
 # General information about the project.
 project = u'PhyPraKit'
 copyright = u'2016, Günter Quast'
-## from PhyPraKit import __version__ as _release #! not on readthedocs.org
-_release='1.1.3rc2'
+from PhyPraKit import __version__ as _release #! not on readthedocs.org
 _version = _release.split('.')[0] + '.' + _release.split('.')[1]
 
 # The version info for the project you're documenting, acts as replacement for
