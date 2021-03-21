@@ -19,14 +19,17 @@
    Günter Quast <g.quast@kit.edu>
 
 
+===========================
 **PhyPraKit Documentation**
 ===========================
 
-                                    `Version` |date|
 
-=====
 About
 =====
+
+     Version |release|, Date |date|
+
+|
 
 **PhyPraKit** is a collection of python modules
 for data visualization and analysis in experimental laboratory
@@ -72,15 +75,16 @@ execute:
    ``pip install --user PhyPraKit``
 
 |
+
 |
-   
+
 **German Description:**
 
 **PhyPraKit** ist eine Sammlung nützlicher Funktionen in der Sprache 
 `Python (>=3.6, die meisten Module laufen auch noch mit der inzwischen
 veralteten Verson 2.7)` zum Aufnehmen, zur Bearbeitung, 
-Visualisierung und Auswertung von Daten in den physikalischen 
-Praktika. Die Anwendung der verschiedenen Funktionen des Pakets   
+Visualisierung und Auswertung von Daten in Praktika zur Physik.
+Die Anwendung der verschiedenen Funktionen des Pakets   
 werden jeweils durch Beispiele illustriert.
 			     
 
