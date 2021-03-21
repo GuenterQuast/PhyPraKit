@@ -69,7 +69,7 @@ in the subdirectory `dist` may also be used:
 
    ``pip install --user --no-cache PhyPraKit<version>.whl``
 
-Installation via the PyPi Python Package Index is also available, simply
+Installation via the PyPI Python Package Index is also available, simply
 execute:
    
    ``pip install --user PhyPraKit``
