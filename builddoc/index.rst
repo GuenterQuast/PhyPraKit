@@ -160,15 +160,15 @@ vereinfachtes Interface zum sehr funktionsreichen Anpassungspaket
 
 In der Vorlesung "Computergestützte Datenauswertung" an der Fakultät
 für Physik am Karlsruher Institut für Physik 
-(http://www.ekp.kit.edu/~quast/CgDA)
+(http://www.etp.kit.edu/~quast/CgDA)
 werden die in *PhyPraKit* verwendeten Methoden eingeführt und beschrieben.
 Hinweise zur Installation der empfohlenen Software finden sich unter den Links
-http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html und 
-http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf     
+http://www.etp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html und 
+http://www.etp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf     
 
 Speziell für das "Praktikum zur klassischen Physik" am KIT gibt es 
 eine  kurze Einführung in die statistischen Methoden und Werkzeuge
-(http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf). 
+(http://www.etp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf). 
 
 
 
