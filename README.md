@@ -44,6 +44,7 @@ execute:
    
    ``pip install --user PhyPraKit``
 
+[Documentaion on "Read the Docs"](https://readthedocs.org/projects/phyprakit/)
 
 
 Übersicht:
@@ -54,3 +55,5 @@ PhyPraKit ist eine Sammlung nützlicher Funktionen in der Sprache
 Visualisierung  und  Auswertung von Daten in den physikalischen 
 Praktika. Die Anwendung der verschiedenen Funktionen des Pakets
 werden jeweils durch Beispiele illustriert.
+
+[Dokumentation auf "Read the Docs"](https://readthedocs.org/projects/phyprakit/)
