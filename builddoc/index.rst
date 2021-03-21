@@ -337,7 +337,8 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
   * `kfitf.py` ist ein Kommandozeilen-Werkzeug, mit dem man komfortabel
     Anpassungen ausführen kann, bei denen Daten und Fit-Funktion in
     einer einzigen Datei angegeben werden. Beispiele finden sich
-    in den Dateien mit der Endung `.fit`. 
+    in den Dateien mit der Endung `.fit`.
+    Mittlerweile veraltet, Ersatz `kafe2go` aus dem Paket `kafe2`!
 
   * `Beispiel_Diodenkennlinie.py` demonstriert die Analyse einer
     Strom-Spannungskennlinie am Beispiel von (künstlichen) Daten,
