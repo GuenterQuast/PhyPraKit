@@ -557,17 +557,15 @@ def round_to_error(val, err, nsd_e=2):
 
   v = abs(val)
   # round uncertainty to nd0 significant digits
-  e = float("{:{p}g}".format(abs(err), p=nsd_e))
+  e = float("{:.{p}g}".format(abs(err), p=nsd_e))
     
-  if e > v:
-    nsd_v = nsd_e
-  else: 
-    # determine # of siginifcant digits vor v
-    _nd = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
-    # take into account possible rounding of v ...
-    v = float("{:{p}g}".format(v, p=_nd))
-    # ... and determine final # of sig. digits
-    nsd_v = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
+  # determine # of siginifcant digits vor v
+  _nd = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
+  # take into account possible rounding of v ...
+  v = float("{:.{p}g}".format(v, p=_nd))
+  # ... and determine final # of sig. digits
+  nsd_v = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
+  v = float("{:.{p}g}".format(v, p=nsd_v))
       
   return nsd_v, np.sign(val)*v, e
 
