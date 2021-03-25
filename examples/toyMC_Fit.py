@@ -183,11 +183,12 @@ if __name__ == "__main__": # --------------------------------------
         axarr[jp, ip].axis('off')      # set empty space
         if jp==0 and ip==1:          
           ax=axarr[jp, ip]
-          ax.text(0.1, 0.6,                
-                '$\\Delta$ =  fitted - true \n \n' +
-                '$\\mu$ = mean \n' +
-                '$\\sigma$ = standard deviation \n' +
-                '$\\sigma_\\mu$ = error on mean',
+          ax.text(0.1, 0.45,                
+                '$\\Delta$: fitted - true \n \n' +
+                '$\\mu$: mean \n' +
+                '$\\sigma$: standard deviation \n' +
+                '$\\sigma_\\mu$: error on mean \n \n' +
+                '$\\rho$: correlation coefficient',
                 transform=ax.transAxes)
       elif ip == jp:
         ax=axarr[jp, ip]
