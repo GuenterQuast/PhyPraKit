@@ -34,6 +34,8 @@ python3 test_k2Fit.py
 
 # toy data
 python3 test_generateData.py
+# multiple fits with toy data
+python3 toyMC_Fit.py 100
 
 # histogramming
 python3 test_Histogram.py

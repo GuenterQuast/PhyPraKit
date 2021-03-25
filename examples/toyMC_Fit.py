@@ -26,9 +26,9 @@ def get_signature(f):
   return args, kwargs
 
 # --- end helper functions ----
-
+import sys
 import numpy as np, matplotlib.pyplot as plt
-from PhyPraKit import generateXYdata, mFit, k2Fit
+from PhyPraKit import generateXYdata, mFit,k2Fit,histstat, hist2dstat,round_to_error
 
 from scipy import stats
 
@@ -36,7 +36,8 @@ if __name__ == "__main__": # --------------------------------------
   #
   # Example of fitting with PhyPraKit functions mFit, k2Fit and odFit
   #
-
+  # Fits are run in a loop and 1d and 2d distribution of results plotted.
+  
   # define the model function to fit
   def exp_model(x, A=1., x0=1.):
     return A*np.exp(-x/x0)
@@ -46,7 +47,10 @@ if __name__ == "__main__": # --------------------------------------
     return a*x**2 + b*x + c
 
   #set parameter of toy MC
-  Nexp = 1000
+  if len(sys.argv)==2:
+    Nexp=int(sys.argv[1])
+  else:
+    Nexp = 1000
   model = poly2_model
 #  model = exp_model
   
@@ -72,6 +76,7 @@ if __name__ == "__main__": # --------------------------------------
   data_x = np.linspace(xmin, xmax, nd)       # x of data points
   mpardict = get_signature(model)[1] # keyword arguments of model
   npar=len(mpardict)
+  parnams = list(mpardict.keys())
   sigy = np.sqrt(sabsy * sabsy + (srely*model(data_x, **mpardict))**2)
   sigx = np.sqrt(sabsx * sabsx + (srelx * data_x)**2)
 
@@ -137,28 +142,77 @@ if __name__ == "__main__": # --------------------------------------
         d[i].append(parvals[i]-list(mpardict.values())[i])
       c2prb.append(chi2prb)
 
-      if plot: plt.show()
-    
+      if plot:
+        plt.suptitle('one fit')
+        ## plt.show() # blocks at this stage until figure deleted
+     
     except Exception as e:
       nfail +=1
       print('!!! fit failed ', nfail)
       print(e)
 
-  # - end loop over MC experiments    
+  # - end loop over MC experiments, plot output
 
+  # analyze results
+  # - convert to 
   for i in range(npar):
     d[i] = np.array(d[i])
-    c2prb = np.array(c2prb)
-  
+  c2prb = np.array(c2prb)
+
   # print deviation of parameters from their true values
   print('\n\n*====* ', Nexp - nfail, ' successful fits done:')
   for i in range(npar):
     print('   delta par',i,' ', d[i].mean()) 
     print('        +/-     ', d[i].std()/np.sqrt(Nexp)) 
 
+# plot results as array of sub-figures
+  fig, axarr = plt.subplots(npar, npar, figsize=(3. * npar, 3.1 * npar))
+  fig.suptitle("Biases and Correlations", size='xx-large')
+  fig.tight_layout()
+  fig.subplots_adjust(top=0.92, bottom=0.1, left=0.1, right=0.975,
+                        wspace=0.33, hspace=0.3)  
+  nb1= int(min(50, Nexp/10))
+  nb2= int(min(50, Nexp/10))
+  ip = -1
+  for i in range(0, npar):
+    ip += 1
+    jp = -1
+    for j in range(0, npar):
+      jp += 1
+      if ip > jp:
+        axarr[jp, ip].axis('off')      # set empty space
+      elif ip == jp:
+        ax=axarr[jp, ip]
+        bc, be, _ = ax.hist(d[ip], nb1) # plot 1d-histogram
+        ax.set_xlabel('$\Delta$'+parnams[ip])
+        ax.locator_params(nbins=5) # number of axis labels
+        m, s, sm = histstat(bc, be, False)  # calculate statistics
+        ax.axvline(m, color='orange', linestyle='--')
+        nsd, _m, _sm = round_to_error(m, sm)
+        ax.text(0.66, 0.85,                
+                '$\\mu=${:#.{p}g}\n'.format(_m, p=nsd) +
+                '$\\sigma=${:#.2g}\n'.format(s) +
+                '$\\sigma_\\mu=${:#.2g}'.format(sm),
+         transform=ax.transAxes,
+         backgroundcolor='white')
+      else:
+         # 2d-plot to visualize correlations
+        ax=axarr[jp, ip]
+        H, xe, ye, _ = ax.hist2d(d[jp], d[ip], nb2, cmap='Blues')
+        ax.set_xlabel('$\Delta$'+parnams[jp])
+        ax.set_ylabel('$\Delta$'+parnams[ip], labelpad=-2)
+        ax.locator_params(nbins=5) # number of axis labels
+        mx, my, vx, vy, cov, cor = hist2dstat(H,xe,ye,False)
+        ax.text(0.33, 0.85, '$\\rho$=%.2f' %cor,
+                    transform=ax.transAxes,
+                    backgroundcolor='white')
+  
   # analyse chi2 probability
+  figc2prb = plt.figure(figsize=(7.5, 5.))
+  ax = figc2prb.add_subplot(1,1,1)
   nbins= int(min(50, Nexp/20))
-  binc, bine, _ = plt.hist(c2prb, bins=nbins, ec="grey")
+  binc, bine, _ = ax.hist(c2prb, bins=nbins, ec="grey")
+  # - check compatibility with flat distribution
   mean = (Nexp-nfail)/nbins
   chi2flat= np.sum( (binc - mean)**2 / mean )
   prb = 1.- stats.chi2.cdf(chi2flat, nbins)
