@@ -169,7 +169,7 @@ if __name__ == "__main__": # --------------------------------------
   fig, axarr = plt.subplots(npar, npar, figsize=(3. * npar, 3.1 * npar))
   fig.suptitle("Biases and Correlations", size='xx-large')
   fig.tight_layout()
-  fig.subplots_adjust(top=0.92, bottom=0.1, left=0.1, right=0.975,
+  fig.subplots_adjust(top=0.92, bottom=0.1, left=0.1, right=0.95,
                         wspace=0.33, hspace=0.3)  
   nb1= int(min(50, Nexp/10))
   nb2= int(min(50, Nexp/10))
@@ -181,6 +181,14 @@ if __name__ == "__main__": # --------------------------------------
       jp += 1
       if ip > jp:
         axarr[jp, ip].axis('off')      # set empty space
+        if jp==0 and ip==1:          
+          ax=axarr[jp, ip]
+          ax.text(0.1, 0.6,                
+                '$\\Delta$ =  fitted - true \n \n' +
+                '$\\mu$ = mean \n' +
+                '$\\sigma$ = standard deviation \n' +
+                '$\\sigma_\\mu$ = error on mean',
+                transform=ax.transAxes)
       elif ip == jp:
         ax=axarr[jp, ip]
         bc, be, _ = ax.hist(d[ip], nb1) # plot 1d-histogram
@@ -189,7 +197,7 @@ if __name__ == "__main__": # --------------------------------------
         m, s, sm = histstat(bc, be, False)  # calculate statistics
         ax.axvline(m, color='orange', linestyle='--')
         nsd, _m, _sm = round_to_error(m, sm)
-        ax.text(0.66, 0.85,                
+        ax.text(0.75, 0.85,                
                 '$\\mu=${:#.{p}g}\n'.format(_m, p=nsd) +
                 '$\\sigma=${:#.2g}\n'.format(s) +
                 '$\\sigma_\\mu=${:#.2g}'.format(sm),
