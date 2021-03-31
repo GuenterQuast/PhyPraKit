@@ -38,64 +38,69 @@
             
   <div class="section" id="phyprakit-documentation">
 <h1><strong>PhyPraKit Documentation</strong><a class="headerlink" href="#phyprakit-documentation" title="Permalink to this headline">¶</a></h1>
-<blockquote>
-<div><p><cite>Version</cite> 2021-03-19</p>
-</div></blockquote>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Version 1.1.3, Date 2021-03-31</p>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p><strong>PhyPraKit</strong> is a collection of python modules
-for data visialisation and analysis in experimental laboratory
-cources in physics, in use at the faculty of physics at
+for data visualization and analysis in experimental laboratory
+courses in physics, in use at the faculty of physics at
 Karlsruhe Institute of Technology (KIT). As the modules are
-intended primarily for use by undertraduate students in
+intended primarily for use by undergraduate students in
 Germany, the documentation is partly in German language,
-in particular the desctiption of the examples.</p>
-<p>Cerated by:</p>
+in particular the description of the examples.</p>
+<p>Created by:</p>
 <ul class="simple">
 <li><p>Guenter Quast &lt;guenter (dot) quast (at) online (dot) de&gt;</p></li>
 </ul>
 <p>A pdf version of this documentation is available here: <a class="reference external" href="PhyPraKit.pdf">PhyPraKit.pdf</a>.</p>
 <div class="section" id="installation">
 <h3>Installation:<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
-<p>To use PhyPraKit, it is sufficient to place the the direcotory
+<p>To use PhyPraKit, it is sufficient to place the the directory
 <cite>PhyPraKit</cite> and all the files in it in the same directory as the
 python scripts importing it.</p>
-<p>Installation via <cite>pip</cite> is also supported. After Downloading, execute:</p>
+<p>Installation via <cite>pip</cite> is also supported. After downloading, execute:</p>
 <p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">.</span></code></p>
 <p>in the main directory of the <em>PhyPraKit</em> package (where <em>setup.py</em>
 is located) to install in user space.</p>
-<p>The installation <em>whl</em>-package in the subdirectory <cite>dist</cite> may also be used:</p>
+<p>The installation via the <em>whl</em>-package provided
+in the subdirectory <cite>dist</cite> may also be used:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">--no-cache</span> <span class="pre">PhyPraKit&lt;version&gt;.whl</span></code></p>
 </div></blockquote>
-<p>Installation via the PyPi Python Package Index is also available, simply
+<p>Installation via the PyPI Python Package Index is also available, simply
 execute:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">PhyPraKit</span></code></p>
 </div></blockquote>
 <div class="line-block">
 <div class="line"><br /></div>
+</div>
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p><strong>German Description:</strong></p>
 <p><strong>PhyPraKit</strong> ist eine Sammlung nützlicher Funktionen in der Sprache
 <cite>Python (&gt;=3.6, die meisten Module laufen auch noch mit der inzwischen
 veralteten Verson 2.7)</cite> zum Aufnehmen, zur Bearbeitung,
-Visualisierung und Auswertung von Daten in den physikalischen
-Praktika. Die Anwendung der verschiedenen Funktionen des Pakets
+Visualisierung und Auswertung von Daten in Praktika zur Physik.
+Die Anwendung der verschiedenen Funktionen des Pakets
 werden jeweils durch Beispiele illustriert.</p>
 <div class="toctree-wrapper compound">
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="visualisation-and-analysis-of-measurement-data">
-<h1><strong>Visualisation and Analysis of Measurement Data</strong><a class="headerlink" href="#visualisation-and-analysis-of-measurement-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="visualization-and-analysis-of-measurement-data">
+<h2><strong>Visualization and Analysis of Measurement Data</strong><a class="headerlink" href="#visualization-and-analysis-of-measurement-data" title="Permalink to this headline">¶</a></h2>
 <p>Methods for recording, processing, visualization and analysis of
 measurement data are required in all laboratory courses in Physics.</p>
 <p>This collection of tools in the package <cite>PhyPraKit</cite> contains
 functions for reading data from various sources, for data
-visualization, signal processing and statistical data analyis and
+visualization, signal processing and statistical data analysis and
 model fitting as well as tools for generation of simulated data.
 Emphasis was put on simple implementations, illustrating the
 principles of the underlining coding.</p>
@@ -131,7 +136,7 @@ Datenauswertung und Modellanpassung sowie Werkzeuge zur Erzeugung
 simulierter Daten.
 Dabei wurde absichtlich Wert auf eine einfache, die Prinzipien
 unterstreichende Codierung gelegt und nicht der möglichst effizienten
-bzw. allgemeinensten Implementierung der Vorzug gegeben.</p>
+bzw. allgemeinsten Implementierung der Vorzug gegeben.</p>
 <p>Das Modul <em>phyFit</em> bietet mit der Klasse <em>mnFit</em> eine schlanke
 Implementierung zur Anpassung von Modellfunktionen an Daten,
 die mit unkorrelierten und/oder korrelierten absoluten
@@ -147,21 +152,21 @@ repräsentiert werden. <em>PhyPraKit</em> bietet entsprechend angepasste
 Interfaces zu den Fitmodulen im Paket <em>scipy</em>
 (<em>optimize.curve_fit</em> und <em>ODR</em>), um Anpassungen mit Test der Gültigkeit
 der Modellhypothese durchzuführen. <em>PhyPraKit</em> enthält ebenfalls ein
-vereinfachtes Interface zum sehr funtkionsreichen Anpassungspaket
-<em>kafe2</em> (oder zur mittlerweile veralteten Vorängerversion <em>kafe</em>).</p>
+vereinfachtes Interface zum sehr funktionsreichen Anpassungspaket
+<em>kafe2</em> (oder zur mittlerweile veralteten Vorgängerversion <em>kafe</em>).</p>
 <p>In der Vorlesung “Computergestützte Datenauswertung” an der Fakultät
 für Physik am Karlsruher Institut für Physik
-(<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA">http://www.ekp.kit.edu/~quast/CgDA</a>)
+(<a class="reference external" href="http://www.etp.kit.edu/~quast/CgDA">http://www.etp.kit.edu/~quast/CgDA</a>)
 werden die in <em>PhyPraKit</em> verwendeten Methoden eingeführt und beschrieben.
 Hinweise zur Installation der empfohlenen Software finden sich unter den Links
-<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html</a> und
-<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf">http://www.ekp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf</a></p>
+<a class="reference external" href="http://www.etp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html">http://www.etp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html</a> und
+<a class="reference external" href="http://www.etp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf">http://www.etp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf</a></p>
 <p>Speziell für das “Praktikum zur klassischen Physik” am KIT gibt es
 eine  kurze Einführung in die statistischen Methoden und Werkzeuge
-(<a class="reference external" href="http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf">http://www.ekp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf</a>).</p>
+(<a class="reference external" href="http://www.etp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf">http://www.etp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf</a>).</p>
 </div>
 <div class="section" id="dokumentation-der-beispiele">
-<h1>Dokumentation der Beispiele<a class="headerlink" href="#dokumentation-der-beispiele" title="Permalink to this headline">¶</a></h1>
+<h2>Dokumentation der Beispiele<a class="headerlink" href="#dokumentation-der-beispiele" title="Permalink to this headline">¶</a></h2>
 <p><strong>`PhyPraKit.py`</strong> ist ein Paket mit nützlichen Hilfsfunktionen
 zum import in eigene Beispiele mittels:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">PhyPraKit</span> <span class="k">as</span> <span class="nn">ppk</span>
@@ -189,7 +194,7 @@ zum import in eigene Beispiele mittels:</p>
 <li><p>round_to_error() Runden von Daten mit Präzision wie Unsicherheit</p></li>
 <li><p>ustring()        korrekt gerundete Werte v +/- u als Text;
 alternativ: der Datentyp <em>ufloat(v, u)</em> im Paket <em>uncertainties</em>
-untertützt die korrekte Ausgabe von Werten <em>v</em> mit Unsicherheiten <em>u</em>.</p></li>
+unterstützt die korrekte Ausgabe von Werten <em>v</em> mit Unsicherheiten <em>u</em>.</p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="2">
@@ -216,16 +221,16 @@ untertützt die korrekte Ausgabe von Werten <em>v</em> mit Unsicherheiten <em>u<
 <blockquote>
 <div><ul class="simple">
 <li><p>wmean()                  Berechnen des gewichteten Mittelwerts</p></li>
-<li><p>BuildCovarianceMatrix()  Koravianzmatrix aus Einzelunsicherheiten</p></li>
+<li><p>BuildCovarianceMatrix()  Kovarianzmatrix aus Einzelunsicherheiten</p></li>
 <li><p>Cov2Cor()                Konversion Kovarianzmatrix -&gt; Korrelationsmatrix</p></li>
 <li><p>Cor2Cov()                Konversion Korrelationsmatrix +
 Unsicherheiten -&gt; Kovarianzmatrix</p></li>
 <li><p>chi2prob()               Berechnung der chi^2-Wahrscheinlichkeit</p></li>
 <li><p>propagatedError()        Numerische Fehlerfortpflanzung;
 Hinweis: der Datentyp <em>ufloat(v, u)</em> im Paket <em>uncertainties</em>
-untertützt Funktionen von Werten <em>v</em> mit Unsicherheiten <em>u</em> und
+unterstützt Funktionen von Werten <em>v</em> mit Unsicherheiten <em>u</em> und
 die korrekte Fehlerfortpflanzung</p></li>
-<li><p>getModelError()          Numerische Fehlefortpflanzung für
+<li><p>getModelError()          Numerische Fehlfortpflanzung für
 parameterabhängige Funktionswerte</p></li>
 </ul>
 </div></blockquote>
@@ -247,7 +252,7 @@ Standardabweichung, Unsicherheit des Mittelwerts)</p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="5">
-<li><p>Lineare Regression und Anpassen von Fuktionen:</p></li>
+<li><p>Lineare Regression und Anpassen von Funktionen:</p></li>
 </ol>
 <blockquote>
 <div><ul class="simple">
@@ -291,7 +296,7 @@ ebenso wie das deutsche Dezimalkomma durch den Dezimalpunkt</p></li>
 der Marke PicoScope im Format <cite>.csv</cite> oder <cite>.txt</cite>.</p></li>
 <li><p><cite>test_labxParser.py</cite> liest Ausgabedateien von Leybold
 CASSY im <cite>.labx</cite>-Format. Die Kopfzeilen und Daten von Messreihen
-werden als Listen in <em>python</em> zur Verfügung gestellt.</p></li>
+werden als Listen in <em>Python</em> zur Verfügung gestellt.</p></li>
 <li><p><cite>test_convolutionFilter.py</cite> liest die Datei <cite>Wellenform.csv</cite> und
 bestimmt Maxima und fallende Flanken des Signals</p></li>
 <li><p><cite>test_AutoCorrelation.py</cite> liest die Datei <cite>AudioData.csv</cite> und führt
@@ -310,7 +315,7 @@ Korrelierte Unsicherheiten werden nicht unterstützt.</p></li>
 Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit
 allen Messpunkten gemeinsamen (d. h. korrelierten) relativen oder
 absoluten systematischen Fehlern. Dazu wird das Paket imunit
-verwendet, das den am CERN entwicklten Minimierer MINUIT nutzt.
+verwendet, das den am CERN entwickelten Minimierer MINUIT nutzt.
 Da die Kostenfunktion frei definiert und auch während der Anpassung
 dynamisch aktualisiert werden kann, ist die Implementierung von
 Parameter-abhängigen Unsicherheiten möglich. Ferner unterstützt
@@ -337,9 +342,9 @@ zur Datenauswertung erzeugen kann.</p></li>
 <li><p><cite>toyMC_Fit.py</cite> führt eine große Anzahl Anpassungen an simulierte
 Daten durch. Durch Vergleich der wahren Werte mit den aus der
 Anpassung bestimmten Werten lassen sich Verzerrungen der
-Parameterschätzungen oder die Form der Verteilung der
-Chi2-Wahrscheinlichkeit überprüfen, die im Idealfall eine
-Rechteckverteilung im Intervall [0,1] sein sollte.</p></li>
+Parameterschätzungen, Korrelationen der Parameter oder die Form
+der Verteilung der Chi2-Wahrscheinlichkeit überprüfen, die im
+Idealfall eine Rechteckverteilung im Intervall [0,1] sein sollte.</p></li>
 </ul>
 <p>Die folgenden <em>python</em>-Skripte sind etwas komplexer und illustrieren
 typische Anwendungsfälle der Module in <cite>PhyPraKit</cite>:</p>
@@ -347,7 +352,8 @@ typische Anwendungsfälle der Module in <cite>PhyPraKit</cite>:</p>
 <li><p><cite>kfitf.py</cite> ist ein Kommandozeilen-Werkzeug, mit dem man komfortabel
 Anpassungen ausführen kann, bei denen Daten und Fit-Funktion in
 einer einzigen Datei angegeben werden. Beispiele finden sich
-in den Dateien mit der Endung <cite>.fit</cite>.</p></li>
+in den Dateien mit der Endung <cite>.fit</cite>.
+!!! Mittlerweile veraltet, Ersatz <cite>kafe2go</cite> aus dem Paket <cite>kafe2</cite>!</p></li>
 <li><p><cite>Beispiel_Diodenkennlinie.py</cite> demonstriert die Analyse einer
 Strom-Spannungskennlinie am Beispiel von (künstlichen) Daten,
 an die die Shockley-Gleichung angepasst wird. Typisch für
@@ -358,7 +364,7 @@ Strom-Spannungskennlinie ist es außerdem wichtig, auch die Unsicherheit
 der auf der x-Achse aufgetragen Spannungsmessungen zu berücksichtigen.
 Eine weitere Komponente der Unsicherheit ergibt sich aus der
 Kalibrationsgenauigkeit des Messgeräts, die als relative,
-korrelierte Unsicherheit aller Messwerte berücksichtig weden
+korrelierte Unsicherheit aller Messwerte berücksichtigt werden
 muss. Das Beispiel zeigt, wie man in diesem Fall die Kovarianzmatrix
 aus Einzelunsicherheiten aufbaut. Die Funktionen <em>k2Fit()</em> und
 <em>mfit()</em> bieten dazu komfortable und leicht zu verwendende
@@ -389,7 +395,7 @@ des CASSY-Systems im <cite>.labx</cite> -Format gespeicherten Dateien ein
 </div></blockquote>
 </div>
 <div class="section" id="module-PhyPraKit">
-<span id="module-documentation"></span><h1>Module Documentation<a class="headerlink" href="#module-PhyPraKit" title="Permalink to this headline">¶</a></h1>
+<span id="module-documentation"></span><h2>Module Documentation<a class="headerlink" href="#module-PhyPraKit" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
 <dt><strong>PhyPraKit</strong>  </dt><dd><p>a collection of tools for data handling, visualisation and analysis 
 in Physics Lab Courses, recommended for “Physikalisches Praktikum am KIT”</p>
@@ -398,7 +404,7 @@ in Physics Lab Courses, recommended for “Physikalisches Praktikum am KIT”</p
 <dl class="py function">
 <dt id="PhyPraKit.A0_readme">
 <code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">A0_readme</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.A0_readme" title="Permalink to this definition">¶</a></dt>
-<dd><p>Package PhyPrakit</p>
+<dd><p>Package PhyPraKit</p>
 <p><strong>PhyPraKit</strong>  for Data Handling, Visualisation and Analysis</p>
 <p>contains the following functions:</p>
 <blockquote>
@@ -2218,6 +2224,7 @@ am Beispiel der Gamma-Spektroskopie</p>
 </dd>
 </dl>
 </div>
+</div>
 
 
             <div class="clearer"></div>
@@ -2233,11 +2240,11 @@ am Beispiel der Gamma-Spektroskopie</p>
 <li><a class="reference internal" href="#installation">Installation:</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a class="reference internal" href="#visualisation-and-analysis-of-measurement-data"><strong>Visualisation and Analysis of Measurement Data</strong></a></li>
+<li><a class="reference internal" href="#visualization-and-analysis-of-measurement-data"><strong>Visualization and Analysis of Measurement Data</strong></a></li>
 <li><a class="reference internal" href="#dokumentation-der-beispiele">Dokumentation der Beispiele</a></li>
 <li><a class="reference internal" href="#module-PhyPraKit">Module Documentation</a></li>
+</ul>
+</li>
 </ul>
 
   <div role="note" aria-label="source link">
