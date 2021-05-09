@@ -6,7 +6,7 @@
 
   Requirements: 
    - Python >= 3.6
-   - supports iminuit vers. < 2 and >= 2.
+   - only supports iminuit vers. > 2.0
    - scipy > 1.5.0
    - matplotlib > 3
 
@@ -284,7 +284,7 @@ class mnFit():
     """
     
     # create data object and pass all input arguments
-    self.data = self.DataUncertainties(self, x, y, ex, ey,
+    self.data = self.xyDataUncertainties(self, x, y, ex, ey,
                     erelx, erely, cabsx, crelx, cabsy, crely,
                     quiet=self.quiet)
     
@@ -366,9 +366,7 @@ class mnFit():
         p_id = self.costf.pnam2id[limits[0]]
       else:
         p_id = limits[0]
-      self.limits[p_id]=[limits[1], limits[2]]
-
-            
+      self.limits[p_id]=[limits[1], limits[2]]          
       
   def do_fit(self):
     """perform all necessary steps of fitting sequence
@@ -493,7 +491,7 @@ class mnFit():
     return (self.ParameterValues, self.OneSigInterval,
             self.CorrelationMatrix, self.Chi2)
 
-  class DataUncertainties:
+  class xyDataUncertainties:
     """
     Handle data and uncertainties, 
     build covariance matrices from components
@@ -929,7 +927,7 @@ class mnFit():
     Input:
 
     - outer: pointer to instance of calling class
-    - data: data object of type DataUncertainties
+    - data: data object of type xyDataUncertainties
     - model: model function f(x, \*par)
     - use_neg2logL: use full -2log(L) instead of chi2 if True
 
@@ -947,7 +945,7 @@ class mnFit():
 
     - model(x, \*par)
     """
-  
+ 
     def __init__(self, outer, 
                  data, model,
                  use_neg2logL=False, quiet=True):
@@ -1326,6 +1324,139 @@ class mnFit():
       else:
         kwargs[p.name]=p.default
     return args, kwargs
+
+# --- end class mnFit ----
+
+class histFit():
+  """**Fit a debsuty funtion f(x, *par) to binned data (histogram)**  
+  """  
+
+  def __init__(self):
+
+    # no data or model provided yet
+    self.hdata = hdata
+    self.model = model
+    self.quiet = quiet
+    # no fit done yet
+    self.migradResult = None
+    self.minosResult = None
+    self.migrad_ok = False
+    self.minos_ok = False
+    # default options
+    self.run_minos = True
+    self.use_negLogL = True
+    self.quiet = True
+    
+  class histData:
+    """ 
+      Container for Histogram data
+    """
+    
+    def __init__(self, outer,
+                 bin_contents, bin_edges, err2=None):
+      """ initialize histogram Data
+
+      Args:
+        * bin_contents: array of floats
+        * bin_edges: array of length len(bin_contents)*1
+        * err2: array of floats, extra error component, 
+          lambda of Poisson distribution (lam = mean + err2) 
+      """
+      self.contents = bin_contents
+      self.edges=bin_edges
+      if delta_lam is None:
+        self.err2 = np.zeros(len(bin_contents))
+      else:
+        self.err2 = err2
+      #  
+      self.lefts=self.bin_edges[:-1]
+      self.rights=self.bin_edges[1:]
+      self.centers = (self.rights  + self.lefts)/2.
+      self.widths = self.rights - self.lefts
+
+  # --- add custom cost function for histogram data
+  class histCost:
+    """ Cost function for binned data (histogram)
+    """
+    from scipy.special import loggamma
+
+    def __init__(self, outer, 
+                 hdata, model,
+                 use_GaussApprox=False, quiet=True):
+
+      self.hdata = hdata
+      self.model = model
+      self.quiet = quiet
+
+      self.constraints = []
+      self.nconstraints = 0
+      pass
+
+    @staticmethod
+    def snLogPoisson(xk, lam, mu): # 
+      """2* neg. logarithm of generalized Poisson distribution: 
+         shifted to new mean mu for real-valued xk        
+         for lam=mu, the standard Poisson distribution is recovered
+         lam=sigma*2 is the variance of the shifted Poisson distribution.
+      """
+      xs = (xk + lam - mu)
+      return lam - xs*np.log(lam) + loggamma(xs+1.)
+
+    @staticmethod
+    def integral_overBins(model, *par, ledges, redges):
+      """Calculate approx. integral of model over bins using Simpson's rule
+      """
+      return (redges - leges)/6. * \
+                            ( model(ledges, *par) \
+                            + 4.*model((ledges+redges)/2., *par) \
+                            + model(redges, *par) ) 
+    
+    def setConstraints(self, constraints):
+      """Add parameter constraints
+
+      format: nested list(s) of type 
+      [parameter name, value, uncertainty] or
+      [parameter index, value, uncertainty]
+      """
+      
+      if isinstance(constraints[1], list):
+         for c in constraints:
+           self.constraints.append(c)
+      else:
+         self.constraints.append(constraints)
+      self.nconstraints = len(self.constraints)
+      # take account of constraints in degrees of freedom 
+      self.ndof = len(self.data.y) - self.npar + self.nconstraints
+
+    def __call__(self, *par):  
+      # called iteratively by minuit
+      # cost function is likelihood of shifted poisson or Gauss approximation
+
+      nlL2 = 0. # initialize -2*ln(L)
+
+      #-  first, take into account possible parameter constraints  
+      if self.nconstraints:
+        for c in self.constraints:
+          if type(c[0])==type(' '):
+            p_id = self.pnam2id[c[0]]
+          else:
+            p_id = c[0]
+          r = ( par[p_id] - c[1]) / c[2] 
+          nlL2 += r*r
+
+      # - calculate 2*negLogL Poisson;
+      #  model prediction as appr. integral over bin
+      model_values = self.integral_overBins(model, *par,
+                                            self.hdata.lefts,
+                                            self.hdata.rights) 
+      # 
+      nlL2 += 2. * np.sum( snLogPoisson( self.hdata.contents, 
+                                      model_values+self.hdata.err2,
+                                      model_values)
+                     )
+      return nlL2
+    
+  # --- end definition of calss histogramCost
 
   
 if __name__ == "__main__": # --- interface and example
