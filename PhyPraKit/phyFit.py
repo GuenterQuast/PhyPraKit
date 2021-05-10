@@ -200,7 +200,7 @@ class mnFit():
   - plot_nsigContour(): plot n-sigma coutours for pair of parameters  
  
   Public data members:
-
+  - fit_type:           type of fit, presently "xy" or "hist"
   - ParameterNames:     names of parameters (as specified in model function)
   - Chi2:               chi2 at best-fit point
   - NDoF:               number of degrees of freedom
@@ -221,10 +221,13 @@ class mnFit():
   - costf.\*:  methods and members of sub-class xLSQ
   """
 
-  def __init__(self):
+  def __init__(self, fit_type='xy'):
 
+    self.fit_type = fit_type
+    
     # no data or model provided yet
-    self.data = None
+    self.xyData = None
+    self.hData = None
     self.costf = None
     # no fit done yet
     self.migradResult = None
@@ -234,10 +237,62 @@ class mnFit():
     # default options
     self.refModel=True
     self.run_minos = True
-    self.use_negLogL = True
     self.quiet = True
+    # for xy Fit
+    self.use_negLogL = True
+    # for histogram fit
+    self.use_GaussApprox = False
+
+  def init_data(self, *args, **kwargs):
+    if self.fit_type == 'xy':
+      self.init_xyData(*args, **kwargs)
+    elif self.fit_type == 'hist':
+      self.init_histData(*args, **kwargs)
+    else:
+      print("!**! unknown type of Fit ", self.fit_type)
+      sys.exit('mnFit Error: invalid fit type')
     
-  def setOptions(self,
+  def setOptions(self, *args, **kwargs):
+    if self.fit_type == 'xy':
+      self.set_xyOptions(*args, **kwargs)
+    elif self.fit_type == 'hist':
+      self.init_hOptions(*args, **kwargs)
+    else:
+      print("!**! unknown type of Fit ", self.fit_type)
+      sys.exit('mnFit Error: invalid fit type')    
+
+  def init_fit(self, *args, **kwargs):
+    if self.fit_type == 'xy':
+      self.init_xyFit(*args, **kwargs)
+    elif self.fit_type == 'hist':
+      self.init_hFit(*args, **kwargs)
+    else:
+      print("!**! unknown type of Fit ", self.fit_type)
+      sys.exit('mnFit Error: invalid fit type')
+
+  def do_fit(self, *args, **kwargs):
+    if self.fit_type == 'xy':
+      return self.do_xyFit()
+    elif self.fit_type == 'hist':
+      return self.do_hFit(*args, **kwargs)
+    else:
+      print("!**! unknown type of Fit ", self.fit_type)
+      sys.exit('mnFit Error: invalid fit type')    
+
+  def plotModel(self, *args, **kwargs):
+    if self.fit_type == 'xy':
+      self.plot_xyModel(*args, **kwargs)
+    elif self.fit_type == 'hist':
+      self.plot_hModel(*args, **kwargs)
+    else:
+      print("!**! unknown type of Fit ", self.fit_type)
+      sys.exit('mnFit Error: invalid fit type') 
+
+  #
+  # --- code for xy Fit
+  #      
+
+  def set_xyOptions(self,
               relative_refers_to_model=None,
               run_minos=None,
               use_negLogL=None,
@@ -260,7 +315,7 @@ class mnFit():
     if quiet is not None:
       self.quiet = quiet
     
-  def init_data(self,
+  def init_xyData(self,
                 x, y,             
                 ex=None, ey=1.,
                 erelx=None, erely=None,
@@ -284,15 +339,15 @@ class mnFit():
     """
     
     # create data object and pass all input arguments
-    self.data = self.xyDataUncertainties(self, x, y, ex, ey,
+    self.xyData = self.xyDataUncertainties(self, x, y, ex, ey,
                     erelx, erely, cabsx, crelx, cabsy, crely,
                     quiet=self.quiet)
     
     # set flags for steering of fit process in do_fit()
-    self.iterateFit = self.data.has_xErrors or(
-         self.data.has_rel_yErrors and self.refModel)
+    self.iterateFit = self.xyData.has_xErrors or(
+         self.xyData.has_rel_yErrors and self.refModel)
 
-  def init_fit(self, model, p0=None,
+  def init_xyFit(self, model, p0=None,
                constraints=None,
                limits=None):
     """initialize fit object
@@ -307,7 +362,7 @@ class mnFit():
     """
     self.model = model
     # create cost function
-    self.costf = self.xLSQ(self, self.data, self.model,
+    self.costf = self.xLSQ(self, self.xyData, self.model,
                                  use_neg2logL= self.use_negLogL,
                                  quiet=self.quiet)
     if constraints is not None:
@@ -368,10 +423,10 @@ class mnFit():
         p_id = limits[0]
       self.limits[p_id]=[limits[1], limits[2]]          
       
-  def do_fit(self):
+  def do_xyFit(self):
     """perform all necessary steps of fitting sequence
     """
-    if self.data is None:
+    if self.xyData is None:
       print(' !!! mnFit: no data object defined - call init_data()')
       sys.exit('mnFit Error: no data object')
     if self.costf is None:
@@ -405,7 +460,7 @@ class mnFit():
         print( '*==* mnFit iterating',
                'to account for parameter-dependent uncertainties')
       # enable dynamic calculation of covariance matrix
-      self.data._init_dynamicErrors(self.refModel, self.costf.model)
+      self.xyData._init_dynamicErrors(self.refModel, self.costf.model)
 
       # fit with dynamic recalculation of covariance matrix
       try:
@@ -466,7 +521,7 @@ class mnFit():
       self.OneSigInterval = np.array(list(zip(-parerrs, parerrs)))
 
     # call cost function at miminum to update all results
-    self.data.store_covmat=True # store y covariance 
+    self.xyData.store_covmat=True # store y covariance 
     fval = self.costf(*parvals) 
   
     # store results as class members
@@ -1086,7 +1141,7 @@ class mnFit():
       Delta[i] = np.sum(np.outer(dfdp[:,i], dfdp[:,i]) * covp)
     return np.sqrt(Delta) 
   
-  def plotModel(self,
+  def plot_xyModel(self,
                 axis_labels=['x', 'y = f(x, *par)'], 
                 data_legend = 'data',    
                 model_legend = 'fit',
@@ -1325,27 +1380,104 @@ class mnFit():
         kwargs[p.name]=p.default
     return args, kwargs
 
-# --- end class mnFit ----
 
-class histFit():
-  """**Fit a debsuty funtion f(x, *par) to binned data (histogram)**  
-  """  
+  #
+  # --- code for histogram Fit
+  #      
 
-  def __init__(self):
+  def set_hOptions(self,
+              run_minos=None,
+              use_GaussApprox=None,
+              quiet=None):
 
-    # no data or model provided yet
-    self.hdata = hdata
+    """Define mnFit options
+
+       Args:
+        - run minos else don*t run minos
+        - use Gaussian Approximation of Poisson distribution
+        - don*t provide printout else verbose printout 
+    """
+    if run_minos is not None:   
+      self.run_minos = run_minos
+    if use_negLogL is not None:   
+      self.use_GaussApprox = use_GaussApprox
+    if quiet is not None:
+      self.quiet = quiet
+    
+  def init_hData(self,
+                bin_contents, bin_edges, err2=None):
+
+    """initialize histogram data object
+
+    Args:
+    - bin_contents: array of floats
+    - bin_edges: array of length len(bin_contents)*1
+    - err2: array of floats, extra error component, 
+      lambda of Poisson distribution (lam = mean + err2) 
+    """
+    
+    # create data object and pass all input arguments
+    self.hdata = self.histData(self,
+                               bin_contents, bin_edges,
+                               err2,
+                               quiet=self.quiet)
+    
+  def init_hFit(self, model, p0=None,
+                constraints=None,
+                limits=None):
+    """initialize fit object
+
+    Args:
+      - model: model density function f(x; \*par)
+      - p0: np-array of floats, initial parameter values 
+      - constraints: (nested) list(s): [parameter name, value, uncertainty] 
+        or [parameter index, value, uncertainty]
+      - limits: (nested) list(s): [parameter name, min, max] 
+        or [parameter index, min, max]
+    """
     self.model = model
-    self.quiet = quiet
-    # no fit done yet
-    self.migradResult = None
-    self.minosResult = None
-    self.migrad_ok = False
-    self.minos_ok = False
-    # default options
-    self.run_minos = True
-    self.use_negLogL = True
-    self.quiet = True
+    # create cost function
+    self.costf = self.hCost(self, self.hdata, self.model,
+                            use_GaussApprox=self.use_GaussApprox,
+                            quiet=self.quiet)
+    if constraints is not None:
+      self.costf.setConstraints(constraints)
+
+    # get parameters of model function to set start values for fit
+    args, model_kwargs = self.get_functionSignature(self.model)
+    self.pnams = list.copy(list(model_kwargs.keys()))
+    if p0 is not None:
+      for i, pnam in enumerate(self.pnams):
+        model_kwargs[pnam] = p0[i]    
+
+    if limits is not None:
+      self.setLimits(limits)
+
+    # create Minuit object
+    if __version__ < '2':
+      if self.quiet:
+        print_level = 0
+      else:
+        print_level = 1
+      if limits is not None:
+        for i, pnam in enumerate(self.pnams):
+          model_kwargs['limit_' + pnam] = self.limits[i]
+          
+      self.minuit = Minuit(self.costf, 
+                           errordef=1., print_level=print_level,
+                           **model_kwargs )
+    else:
+      self.minuit = Minuit(self.costf, **model_kwargs)  
+      self.minuit.errordef = 1.
+      if self.quiet:
+        self.minuit.print_level = 0
+      if limits is not None:
+        self.minuit.limits = self.limits       
+
+    def do_hFit(self):
+      # !!! to be implemented
+      pass
+
     
   class histData:
     """ 
@@ -1353,18 +1485,20 @@ class histFit():
     """
     
     def __init__(self, outer,
-                 bin_contents, bin_edges, err2=None):
+                 bin_contents, bin_edges, err2=None, quiet=True):
       """ initialize histogram Data
 
       Args:
-        * bin_contents: array of floats
-        * bin_edges: array of length len(bin_contents)*1
-        * err2: array of floats, extra error component, 
+      - bin_contents: array of floats
+      - bin_edges: array of length len(bin_contents)*1
+      - err2: array of floats, extra error component, 
           lambda of Poisson distribution (lam = mean + err2) 
+      - quiet: boolean, controls printed output
       """
+
       self.contents = bin_contents
-      self.edges=bin_edges
-      if delta_lam is None:
+      self.edges = bin_edges
+      if err2 is None:
         self.err2 = np.zeros(len(bin_contents))
       else:
         self.err2 = err2
@@ -1374,8 +1508,8 @@ class histFit():
       self.centers = (self.rights  + self.lefts)/2.
       self.widths = self.rights - self.lefts
 
-  # --- add custom cost function for histogram data
-  class histCost:
+  # --- cost function for histogram data
+  class hCost:
     """ Cost function for binned data (histogram)
     """
     from scipy.special import loggamma
@@ -1390,7 +1524,23 @@ class histFit():
 
       self.constraints = []
       self.nconstraints = 0
-      pass
+
+    def setConstraints(self, constraints):
+      """Add parameter constraints
+
+      format: nested list(s) of type 
+      [parameter name, value, uncertainty] or
+      [parameter index, value, uncertainty]
+      """
+      
+      if isinstance(constraints[1], list):
+         for c in constraints:
+           self.constraints.append(c)
+      else:
+         self.constraints.append(constraints)
+      self.nconstraints = len(self.constraints)
+      # take account of constraints in degrees of freedom 
+      self.ndof = len(self.hdata.contents) - self.npar + self.nconstraints
 
     @staticmethod
     def snLogPoisson(xk, lam, mu): # 
@@ -1458,7 +1608,10 @@ class histFit():
     
   # --- end definition of calss histogramCost
 
-  
+    def plot_hModel(self):
+      # !!! to be implemented 
+      pass
+    
 if __name__ == "__main__": # --- interface and example
   
   #

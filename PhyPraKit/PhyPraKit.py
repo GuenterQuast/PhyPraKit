@@ -65,18 +65,10 @@ def A0_readme():
     5. linear regression and function fitting:
 
       - linRegression()    linear regression, y=ax+b, with analytical formula
-      - linRegressionXY()  linear regression, y=ax+b, with x and y errors  
-        ``! deprecated, use `odFit` with linear model instead``
-      - kRegression()      linear regression, y=ax+b, with (correlated) 
-        errors on x, and y   
-        ``! deprecated, consider using `k2Fit` with linear model instead``
       - odFit()            fit function with x and y errors (scipy ODR)
       - mFit()             fit with with correlated x and y errors,
         profile likelihood and contour lines (module phyFit) 
-      - kFit()             fit function with (correlated) errors on x and y 
-        (with package kafe, deprecated)
       - k2Fit()            fit function with (correlated) errors on x and y 
-        (with package kafe2)
 
     6. simulated data with MC-method:
 
@@ -90,7 +82,8 @@ def A0_readme():
 # Author:       G. Quast   Dec. 2015
 # dependencies: PYTHON v2.7 or >v3.5, numpy, matplotlib.pyplot 
 #
-# last modified: Jan. 2020
+# last modified: Jan. May2021
+#
 #   16-Nov-16    GQ  readPicoscope now also supports .csv export format    
 #                GQ  added fuctions for signal processing/analysis
 #   17-Nov-16    GQ  added readCassy for Cassy data in .txt format
@@ -115,6 +108,7 @@ def A0_readme():
 #   05-Nov-20    GQ  changed to GNU GPL, automatic handling of missing uncertainties
 #                      in odFit, kFit and k2Fit
 #   08-Jan-21    GQ  added fit example with iminuit
+#   06-May-21    GQ  new version 1.2.0dev; removed kafe and old iminuit
 # ---------------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
@@ -1307,64 +1301,6 @@ def linRegression(x, y, sy=None):
   return a, b, sa, sb, cor, chi2
 
 
-def linRegressionXY(x, y, sx=None, sy=None):
-  """
-    linear regression y(x) = ax + b  with errors on x and y
-    uses numerical "orthogonal distance regression" from package scipy.odr
-
-    !!! deprecated, consider using odFit() with linear model instead 
-
-    Args:
-      * x:  np-array, independent data
-      * y:  np-array, dependent data
-      * sx: scalar or np-array, uncertainty(ies) on x      
-      * sy: scalar or np-array, uncertainty(ies) on y
-
-    Returns:
-      * float: a     slope
-      * float: b     constant
-      * float: sa    sigma on slope
-      * float: sb    sigma on constant
-      * float: cor   correlation
-      * float: chi2  \chi-square
-  """  
-  from scipy import odr
-
-  def fitf(P, x):     # the linear model (note order of parameters for odr !)
-    return P[1]*x + P[0]
-
-  print(' !!! linRegressionXY() is deprecated\n', 
-     'consider using `k2Fit` with linear model instead')
-
-  # set y-errors to 1. if not given
-  if sy is None:
-    sy=np.ones(len(y))
-    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
-  if sx is None:
-    sx=0.
-    
-  # transform uncertainties to numpy-arrays, if necessary
-  if not hasattr(sx,'__iter__'): sx=sx*np.ones(len(x))
-  if not hasattr(sy,'__iter__'): sy=sy*np.ones(len(y))
-
-  # get initial values for numerical optimisation from linear
-  #   regression with analytical formula, ignoring x errors
-  a0, b0, sa0, sb0, cor0, chi20 = linRegression(x, y, sy)
-
-  # set up odr package:
-  mod = odr.Model(fitf)
-  dat = odr.RealData(x, y, sx, sy)
-  odrfit = odr.ODR(dat, mod, beta0=[b0, a0])
-  r = odr.ODR.run(odrfit)
-  ndf = len(x)-2
-  a, b, sa, sb = r.beta[1], r.beta[0],\
-                 np.sqrt(r.cov_beta[1,1]), np.sqrt(r.cov_beta[0,0])
-  cor = r.cov_beta[0,1]/(sa*sb) 
-  chi2 = r.res_var*ndf
-  
-  return a, b, sa, sb, cor, chi2
-
-
 def odFit(fitf, x, y, sx=None, sy=None, p0=None):
   """
     fit an arbitrary function with errors on x and y
@@ -1426,94 +1362,6 @@ def odFit(fitf, x, y, sx=None, sy=None, p0=None):
 
     return par, pare, cor, chi2
 
-
-def kRegression(x, y, sx, sy,
-        xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
-        title='Daten', axis_labels=['x', 'y-data'], 
-        plot=True, quiet=False):
-  """
-    linear regression y(x) = ax + b  with errors on x and y;
-    uses package `kafe`
-
-    !!! deprecated, consider using k2Fit() with linear model 
-
-    Args:
-      * x:  np-array, independent data
-      * y:  np-array, dependent data
-
-    the following are single floats or arrays of length of x
-      * sx: scalar or np-array, uncertainty(ies) on x      
-      * sy: scalar or np-array, uncertainty(ies) on y
-      * xabscor: absolute, correlated error(s) on x
-      * yabscor: absolute, correlated error(s) on y
-      * xrelcor: relative, correlated error(s) on x
-      * yrelcor: relative, correlated error(s) on y
-      * title:   string, title of gaph
-      * axis_labels: List of strings, axis labels x and y
-      * plot: flag to switch off graphical output
-      * quiet: flag to suppress text and log output
-
-   Returns:
-      * float: a     slope
-      * float: b     constant
-      * float: sa    sigma on slope
-      * float: sb    sigma on constant
-      * float: cor   correlation
-      * float: chi2  \chi-square
-  """  
-  # regression with kafe
-  import kafe
-  from kafe.function_library import linear_2par
-
-  print(' !!! kRegression() is deprecated\n', 
-     'consider using `k2Fit` with linear model instead')
-
-  # create a data set ...
-  dat = kafe.Dataset(data=(x,y), title=title, axis_labels=axis_labels,
-                       basename='kRegression') 
-
-  # ... check if errors are provided ...
-  if sy is None:
-    sy=np.ones(len(y))
-    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
-  
-  # ... and add all error sources  
-  if sx is not None:
-    dat.add_error_source('x', 'simple', sx)
-  dat.add_error_source('y', 'simple', sy)
-  if xabscor is not None:
-    dat.add_error_source('x', 'simple', xabscor, correlated=True)
-  if yabscor is not None:
-    dat.add_error_source('y', 'simple', yabscor, correlated=True)
-  if xrelcor is not None:
-    dat.add_error_source('x', 'simple', xrelcor, relative=True, correlated=True)
-  if yrelcor is not None:
-    dat.add_error_source('y', 'simple', yrelcor, relative=True, correlated=True)
-  # set up and run fit
-  fit = kafe.Fit(dat, linear_2par) 
-  fit.do_fit(quiet=quiet)                        
-
-# harvest results
-#  par, perr, cov, chi2 = fit.get_results() # for kafe vers. > 1.1.0
-#  a = par[0]  
-#  b = par[1]
-#  sa = perr[0]
-#  sb = perr[1]
-#  cor = cov[1,0]/(sa*sb)
-  a = fit.final_parameter_values[0]  
-  b = fit.final_parameter_values[1]
-  sa = fit.final_parameter_errors[0]
-  sb = fit.final_parameter_errors[1]
-  cor = fit.par_cov_mat[1,0]/(sa*sb)
-  chi2 = fit.minimizer.get_fit_info('fcn') 
-
-  if(plot):
-    kplot=kafe.Plot(fit, asymmetric_parameter_errors=True)
-    kplot=kafe.Plot(fit)
-    kplot.plot_all()
-    kplot.show()
-    
-  return a, b, sa, sb, cor, chi2  
 
 def mFit(fitf, x, y, sx = None, sy = None,
          srelx = None, srely = None, 
@@ -1633,142 +1481,6 @@ def mFit(fitf, x, y, sx = None, sy = None,
   #   correlation matrix and chi2
   return Fit.getResult()
 
-def kFit(func, x, y, sx=None, sy=None,
-         p0=None, p0e=None,
-         xabscor=None, yabscor=None,
-         xrelcor=None, yrelcor=None,
-         constraints= None, plot=True,
-         title='Daten', axis_labels=['X', 'Y'], 
-         fit_info=True, quiet=False):
-  """
-    fit function func with errors on x and y;
-    uses package `kafe`
-
-    !!! deprecated, consider using k2Fit() with kafe2 instead
-
-    Args:
-      * func: function to fit
-      * x:  np-array, independent data
-      * y:  np-array, dependent data
-
-    the following are single floats or arrays of length of x
-      * sx: scalar or np-array, uncertainty(ies) on x      
-      * sy: scalar or np-array, uncertainty(ies) on y
-      * p0: array-like, initial guess of parameters
-      * p0e: array-like, initial guess of parameter uncertainties
-      * xabscor: absolute, correlated error(s) on x
-      * yabscor: absolute, correlated error(s) on y
-      * xrelcor: relative, correlated error(s) on x
-      * yrelcor: relative, correlated error(s) on y
-      * parameter constrains (name, value, uncertainty)        
-      * title:   string, title of gaph
-      * axis_labels: List of strings, axis labels x and y
-      * parameter constraints: (name, value, uncertainty)        
-      * plot: flag to switch off graphical output
-      * title: name of data set
-      * axis labels: labels for x and y axis
-      * fit info: controls display of fit results on figure
-      * quiet: flag to suppress text and log output
-
-   Returns:
-      * np-array of float: parameter values
-      * np-array of float: parameter errors
-      * np-array: cor   correlation matrix 
-      * float: chi2  \chi-square
-  """  
-  # regression with kafe
-  import kafe
-
-  print(' !!! kFit() is deprecated\n', 
-     'consider using `k2Fit` instead')
-  
-  # create a data set ...
-  dat = kafe.Dataset(data=(x,y), title=title, axis_labels=axis_labels,
-          basename='kRegression')
-
-  # ... check if errors are provided ...
-  if sy is None:
-    sy=np.ones(len(y))
-    print('\n!**! No y-errors given -> parameter errors from fit are meaningless!\n')
-  
-  # ... add independent ...   
-  if sx is not None:
-    dat.add_error_source('x','simple', sx)
-  dat.add_error_source('y','simple', sy)
-  # ... and correlated error sources 
-  if xabscor is not None:
-    if len(np.shape(np.array(xabscor))) <2:
-      dat.add_error_source('x', 'simple', xabscor, correlated= True)
-    else:
-      for c in xabscor:
-        dat.add_error_source('x', 'simple', c, correlated= True)
-  if yabscor is not None:
-    if len(np.shape(np.array(yabscor))) < 2:
-      dat.add_error_source('y','simple', yabscor, correlated=True)
-    else:
-      for c in yabscor:
-        dat.add_error_source('y','simple', c, correlated=True)
-  if xrelcor is not None:
-    if len(np.shape(np.array(xrelcor))) < 2:
-      dat.add_error_source('x','simple', xrelcor, relative=True, correlated=True)
-    else:
-      for c in xrelcor:
-        dat.add_error_source('x','simple', c, relative=True, correlated=True)
-  if yrelcor is not None:
-    if len(np.shape(np.array(yrelcor))) < 2:
-      dat.add_error_source('y','simple', yrelcor, relative=True, correlated=True)
-    else:
-     for c in yrelcor:
-       dat.add_error_source('y','simple', c, relative=True, correlated=True)
-
-  # set up fit ...
-  fit = kafe.Fit(dat, func) 
-  if p0 is not None: fit.set_parameters(p0, p0e)
-  if constraints is not None:
-    if not (isinstance(constraints[0], tuple) or isinstance(constraints[0], list)):
-      constraints = (constraints,)
-    cparn = []
-    cparv = []
-    cpare = []
-    for c in constraints:
-      cparn.append(c[0])
-      cparv.append(c[1])
-      cpare.append(c[2])
-    fit.constrain_parameters( cparn, cparv, cpare ) 
-  # ... and run fit
-  fit.do_fit(quiet=quiet)                        
-
-# harvest results
-#  par, perr, cov, chi2 = fit.get_results() # for kafe vers. > 1.1.0
-  par = np.array(fit.final_parameter_values) 
-  pare = np.array(fit.final_parameter_errors)
-  cor = fit.par_cov_mat/np.outer(pare, pare)
-  chi2 = fit.minimizer.get_fit_info('fcn') 
-
-  if(plot):
-  # instantiate a kafe.PlotStyle and change (some) options
-    ps=kafe.PlotStyle()
-  # some 'nice' options
-    ps.pointsizes = [5] # smaller points
-    ps.markercolors = ['b','g','c','m','k','r'] # different colors
-    ps.markers = ['x','o', '^', 's', 'D', 'v', 'h', '*', '+'] # other markers
-    ps.lines = ['--', '-.', ':', '-'] # other line styles
-    ps.linecolors = ['r', 'b', 'g', 'c', 'm', 'k'] # other line colors
-#    ps.rcparams_kw['figure.figsize'] = (15, 7.5)
-    ps.rcparams_kw['legend.fontsize'] = 15  # font size for legend
-    ps.axis_label_coords = ((1.02, -.05), (-0.1, 1.02))
-    ps.rcparams_kw['axes.labelsize'] = 25   # 
-    ps.rcparams_kw['xtick.labelsize'] = 20  # axis tick mark sizes
-    ps.rcparams_kw['ytick.labelsize'] = 20  # 
-    ps.axis_label_pad = (5, 6)  # distance of tick labels from axes
-
-    kplot=kafe.Plot(fit, plotstyle=ps)
-    info = 'all'
-    if not fit_info: info=None
-    kplot.plot_all(show_info_for=info)
-    kplot.show()
-    
-  return par, pare, cor, chi2
 
 def k2Fit(func, x, y,
       sx=None, sy=None, srelx=None, srely=None, 

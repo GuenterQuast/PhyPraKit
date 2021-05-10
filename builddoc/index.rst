@@ -248,17 +248,10 @@ oder::
       5. Lineare Regression und Anpassen von Funktionen:
 
         - linRegression()    lineare Regression, y=ax+b, mit analytische Formel
-        - linRegressionXY()  lineare Regression, y=ax+b, mit x- und y-Unsicherheiten   
-          ``! veraltet, `odFit` mit linearem Model verwenden``  
-	- kRegression()      lineare Regression, y=ax+b, mit (korrelierten) x-
-	  und y-Unsicherheiten   
-          ``! veraltet, `k2Fit` mit linearem Modell verwenden``  	    
         - odFit()            Funktionsanpassung mit x- und y-Unsicherheiten
 	  (scipy ODR)
         - mFit()             Funktionsanpassung mit (korrelierten) x- und
 	  y-Unsicherheiten mit *phyFit*
-        - kFit()             Funktionsanpassung mit (korrelierten) x- und
-	  y-Unsicherheiten mit dem Pakte *kafe*, ``! veraltet, `k2Fit` verwenden`` 
         - k2Fit()            Funktionsanpassung mit (korrelierten) x- und
 	  y-Unsicherheiten mit dem Paket *kafe2*
 
@@ -411,13 +404,9 @@ Module Documentation
 
 ..  automodule:: test_propagatedError  
 
-..  automodule:: test_kRegression
-
 ..  automodule:: test_odFit
 
 ..  automodule:: test_mFit
-
-..  automodule:: test_kFit
 
 ..  automodule:: test_k2Fit
 
