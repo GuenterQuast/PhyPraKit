@@ -247,7 +247,7 @@ class mnFit():
     if self.fit_type == 'xy':
       self.init_xyData(*args, **kwargs)
     elif self.fit_type == 'hist':
-      self.init_histData(*args, **kwargs)
+      self.init_hData(*args, **kwargs)
     else:
       print("!**! unknown type of Fit ", self.fit_type)
       sys.exit('mnFit Error: invalid fit type')
@@ -278,15 +278,6 @@ class mnFit():
     else:
       print("!**! unknown type of Fit ", self.fit_type)
       sys.exit('mnFit Error: invalid fit type')    
-
-  def plotModel(self, *args, **kwargs):
-    if self.fit_type == 'xy':
-      self.plot_xyModel(*args, **kwargs)
-    elif self.fit_type == 'hist':
-      self.plot_hModel(*args, **kwargs)
-    else:
-      print("!**! unknown type of Fit ", self.fit_type)
-      sys.exit('mnFit Error: invalid fit type') 
 
   #
   # --- code for xy Fit
@@ -362,9 +353,10 @@ class mnFit():
     """
     self.model = model
     # create cost function
-    self.costf = self.xLSQ(self, self.xyData, self.model,
-                                 use_neg2logL= self.use_negLogL,
-                                 quiet=self.quiet)
+    self.costf = self.xLSQ(self,
+                           self.xyData, self.model,
+                           use_neg2logL= self.use_negLogL,
+                           quiet=self.quiet)
     if constraints is not None:
       self.costf.setConstraints(constraints)
 
@@ -570,7 +562,8 @@ class mnFit():
       - get_xCov(): covariance of x-values
       - get_yCov(): covariance of y-values
       - get_iCov(): inverse covariance matrix
-
+      - plot(): provide a figure with data
+ 
     Data members:  
       * copy of all input arguments
       * covx: covariance matrix of x
@@ -936,6 +929,34 @@ class mnFit():
         return self.iCov
       else:
         return np.diag(1./self.err2)
+
+    def plot(self, num='Data and Model',
+                   figsize=(7.5, 6.5),                             
+                   data_label='data' ):
+      """return figure with data
+      """
+#    # get data
+      x = self.x
+      y = self.y
+      ey = self.get_yCov()
+      if ey.ndim == 2:
+        ey = np.sqrt(np.diagonal(ey))
+      else:
+        ey = np.sqrt(ey)
+      ex = self.get_xCov()
+      if ex is not None:
+        if ex.ndim ==2:
+          ex = np.sqrt(np.diagonal(ex))
+        else:
+          ex = np.sqrt(ex)
+   # draw data
+      fig = plt.figure(num=num, figsize=figsize)
+      plt.plot(x, y, marker='x', linestyle='', color='grey', alpha=0.5)
+      if ex is not None:
+        plt.errorbar(x, y, xerr=ex, yerr=ey, fmt='.', label=data_label)
+      else:
+        plt.errorbar(x, y, ey, fmt=".", label=data_label)
+      return fig
       
   # define custom cost function for iminuit
   class xLSQ:
@@ -1141,7 +1162,7 @@ class mnFit():
       Delta[i] = np.sum(np.outer(dfdp[:,i], dfdp[:,i]) * covp)
     return np.sqrt(Delta) 
   
-  def plot_xyModel(self,
+  def plotModel(self,
                 axis_labels=['x', 'y = f(x, *par)'], 
                 data_legend = 'data',    
                 model_legend = 'fit',
@@ -1149,7 +1170,7 @@ class mnFit():
     """
     Plot model function and data 
     
-    Uses iminuitObject abd cost Fuction of type LSQwithCov
+    Uses iminuitObject, cost Fuction (and data object)
 
     Args: 
       * list of str: axis labels
@@ -1163,7 +1184,8 @@ class mnFit():
   # access low-level fit objects
     m = self.minuit  # minuit object
     cf = self.costf  # cost function object
-
+    d = cf.data
+    
   # retrieve fit results
     pvals, pmerrs, cor, chi2 = self.getResult()
     pcov = self.CovarianceMatrix
@@ -1171,29 +1193,11 @@ class mnFit():
     ndof = cf.ndof
     chi2prb = self.chi2prb(chi2, ndof) 
     
-  # get data
-    x = cf.data.x
-    y = cf.data.y
-    ey = cf.data.get_yCov()
-    if ey.ndim ==2:
-      ey = np.sqrt(np.diagonal(ey))
-    else:
-      ey = np.sqrt(ey)
-    ex = cf.data.get_xCov()
-    if ex is not None:
-      if ex.ndim ==2:
-        ex = np.sqrt(np.diagonal(ex))
-      else:
-        ex = np.sqrt(ex)
-
-   # draw data and fitted line
-    fig_model = plt.figure(num='Data and Model', figsize=(7.5, 6.5))
-    plt.plot(x, y, marker='x', linestyle='', color='grey', alpha=0.5)
-    if ex is not None:
-      plt.errorbar(x, y, xerr=ex, yerr=ey, fmt='.', label=data_legend)
-    else:
-      plt.errorbar(x, y, ey, fmt=".", label=data_legend)
-    xmin, xmax = plt.xlim()
+  # plot data
+    fig_model = d.plot(figsize=(7.5, 6.5),
+          num='Data and Model', data_label=data_legend)
+  # overlay model function
+    xmin, xmax = plt.xlim()    
     xplt=np.linspace(xmin, xmax, 100)
     yplt = cf.model(xplt, *pvals)
     plt.plot(xplt, yplt, label=model_legend, linestyle='dashed', alpha=0.7)
@@ -1382,7 +1386,7 @@ class mnFit():
 
 
   #
-  # --- code for histogram Fit
+  # --- code for histogramm Fit
   #      
 
   def set_hOptions(self,
@@ -1407,7 +1411,8 @@ class mnFit():
   def init_hData(self,
                 bin_contents, bin_edges, err2=None):
 
-    """initialize histogram data object
+    """
+    initialize histogramm data object
 
     Args:
     - bin_contents: array of floats
@@ -1417,7 +1422,7 @@ class mnFit():
     """
     
     # create data object and pass all input arguments
-    self.hdata = self.histData(self,
+    self.hData = self.histData(self,
                                bin_contents, bin_edges,
                                err2,
                                quiet=self.quiet)
@@ -1435,9 +1440,11 @@ class mnFit():
       - limits: (nested) list(s): [parameter name, min, max] 
         or [parameter index, min, max]
     """
+    
     self.model = model
     # create cost function
-    self.costf = self.hCost(self, self.hdata, self.model,
+    self.costf = self.hCost(self,
+                            self.hData, self.model,
                             use_GaussApprox=self.use_GaussApprox,
                             quiet=self.quiet)
     if constraints is not None:
@@ -1448,7 +1455,7 @@ class mnFit():
     self.pnams = list.copy(list(model_kwargs.keys()))
     if p0 is not None:
       for i, pnam in enumerate(self.pnams):
-        model_kwargs[pnam] = p0[i]    
+        model_kwargs[pnam] = p0[i]
 
     if limits is not None:
       self.setLimits(limits)
@@ -1480,13 +1487,13 @@ class mnFit():
 
     
   class histData:
-    """ 
-      Container for Histogram data
+    """Container for Histogram data
     """
     
     def __init__(self, outer,
                  bin_contents, bin_edges, err2=None, quiet=True):
-      """ initialize histogram Data
+      """ 
+      initialize histogramm Data
 
       Args:
       - bin_contents: array of floats
@@ -1503,30 +1510,56 @@ class mnFit():
       else:
         self.err2 = err2
       #  
-      self.lefts=self.bin_edges[:-1]
-      self.rights=self.bin_edges[1:]
+      self.lefts=self.edges[:-1]
+      self.rights=self.edges[1:]
       self.centers = (self.rights  + self.lefts)/2.
       self.widths = self.rights - self.lefts
 
-  # --- cost function for histogram data
+    def plot(self, num='Data and Model',
+                   figsize=(7.5, 6.5),                             
+                   data_label='data' ):
+      """return figure with data
+      """
+
+      w = self.edges[1:] - self.edges[:-1]
+      fig = plt.figure(num=num, figsize=figsize)
+      plt.bar(self.centers, self.contents,
+              align='center', width = w,
+              facecolor='cadetblue', edgecolor='darkblue', alpha=0.66,
+              label=data_label) 
+      return fig
+      
+  # --- cost function for histogramm data
   class hCost:
-    """ Cost function for binned data (histogram)
     """
-    from scipy.special import loggamma
+    Cost function for binned data
+    """
 
     def __init__(self, outer, 
-                 hdata, model,
+                 hData, model,
                  use_GaussApprox=False, quiet=True):
+      from iminuit.util import describe, make_func_code
+      from scipy.special import loggamma
 
-      self.hdata = hdata
+      self.data = hData
       self.model = model
       self.quiet = quiet
 
+      # set proper signature of model function for iminuit
+      self.pnams = describe(model)[1:]
+      self.func_code = make_func_code(self.pnams)
+      self.npar = len(self.pnams)
+      # dictionary assigning parameter name to index
+      self.pnam2id = {
+        self.pnams[i] : i for i in range(0,self.npar)
+        } 
+      self.ndof = len(hData.contents) - self.npar
       self.constraints = []
       self.nconstraints = 0
-
+      
     def setConstraints(self, constraints):
-      """Add parameter constraints
+      """
+      Add parameter constraints
 
       format: nested list(s) of type 
       [parameter name, value, uncertainty] or
@@ -1540,7 +1573,36 @@ class mnFit():
          self.constraints.append(constraints)
       self.nconstraints = len(self.constraints)
       # take account of constraints in degrees of freedom 
-      self.ndof = len(self.hdata.contents) - self.npar + self.nconstraints
+      self.ndof = len(self.data.contents) - self.npar + self.nconstraints
+    
+    def __call__(self, *par):
+      # called iteratively by minuit
+
+      # cost function is likelihood of shifted poisson or Gauss approximation
+
+      nlL2 = 0. # initialize -2*ln(L)
+
+      # - first, take into account possible parameter constraints  
+      if self.nconstraints:
+        for c in self.constraints:
+          if type(c[0])==type(' '):
+            p_id = self.pnam2id[c[0]]
+          else:
+            p_id = c[0]
+          r = ( par[p_id] - c[1]) / c[2] 
+          nlL2 += r*r
+
+      # - calculate 2*negLogL Poisson;
+      #  model prediction as appr. integral over bin
+      model_values = self.integral_overBins(self.model, *par,
+                                            self.data.lefts,
+                                            self.data.rights) 
+      # 
+      nlL2 += 2. * np.sum( snLogPoisson( self.data.contents, 
+                                      model_values+self.data.err2,
+                                      model_values)
+                     )
+      return nlL2
 
     @staticmethod
     def snLogPoisson(xk, lam, mu): # 
@@ -1553,65 +1615,15 @@ class mnFit():
       return lam - xs*np.log(lam) + loggamma(xs+1.)
 
     @staticmethod
-    def integral_overBins(model, *par, ledges, redges):
+    def integral_overBins(f, *par, ledges, redges):
       """Calculate approx. integral of model over bins using Simpson's rule
       """
       return (redges - leges)/6. * \
-                            ( model(ledges, *par) \
-                            + 4.*model((ledges+redges)/2., *par) \
-                            + model(redges, *par) ) 
-    
-    def setConstraints(self, constraints):
-      """Add parameter constraints
+                            ( f(ledges, *par) \
+                            + 4.*f((ledges+redges)/2., *par) \
+                            + f(redges, *par) ) 
 
-      format: nested list(s) of type 
-      [parameter name, value, uncertainty] or
-      [parameter index, value, uncertainty]
-      """
-      
-      if isinstance(constraints[1], list):
-         for c in constraints:
-           self.constraints.append(c)
-      else:
-         self.constraints.append(constraints)
-      self.nconstraints = len(self.constraints)
-      # take account of constraints in degrees of freedom 
-      self.ndof = len(self.data.y) - self.npar + self.nconstraints
 
-    def __call__(self, *par):  
-      # called iteratively by minuit
-      # cost function is likelihood of shifted poisson or Gauss approximation
-
-      nlL2 = 0. # initialize -2*ln(L)
-
-      #-  first, take into account possible parameter constraints  
-      if self.nconstraints:
-        for c in self.constraints:
-          if type(c[0])==type(' '):
-            p_id = self.pnam2id[c[0]]
-          else:
-            p_id = c[0]
-          r = ( par[p_id] - c[1]) / c[2] 
-          nlL2 += r*r
-
-      # - calculate 2*negLogL Poisson;
-      #  model prediction as appr. integral over bin
-      model_values = self.integral_overBins(model, *par,
-                                            self.hdata.lefts,
-                                            self.hdata.rights) 
-      # 
-      nlL2 += 2. * np.sum( snLogPoisson( self.hdata.contents, 
-                                      model_values+self.hdata.err2,
-                                      model_values)
-                     )
-      return nlL2
-    
-  # --- end definition of calss histogramCost
-
-    def plot_hModel(self):
-      # !!! to be implemented 
-      pass
-    
 if __name__ == "__main__": # --- interface and example
   
   #
