@@ -57,6 +57,8 @@ import numpy as np, matplotlib.pyplot as plt
 from scipy import stats, linalg
 from inspect import signature
 from iminuit import __version__, Minuit
+from scipy.special import loggamma
+
 
 def mFit(fitf, x, y, sx = None, sy = None,
        srelx = None, srely = None, 
@@ -333,7 +335,7 @@ class mnFit():
     self.xyData = self.xyDataUncertainties(self, x, y, ex, ey,
                     erelx, erely, cabsx, crelx, cabsy, crely,
                     quiet=self.quiet)
-    
+    self.data=self.xyData
     # set flags for steering of fit process in do_fit()
     self.iterateFit = self.xyData.has_xErrors or(
          self.xyData.has_rel_yErrors and self.refModel)
@@ -513,7 +515,7 @@ class mnFit():
       self.OneSigInterval = np.array(list(zip(-parerrs, parerrs)))
 
     # call cost function at miminum to update all results
-    self.xyData.store_covmat=True # store y covariance 
+    self.data.store_covmat=True # store y covariance 
     fval = self.costf(*parvals) 
   
     # store results as class members
@@ -1198,23 +1200,34 @@ class mnFit():
           num='Data and Model', data_label=data_legend)
   # overlay model function
     xmin, xmax = plt.xlim()    
-    xplt=np.linspace(xmin, xmax, 100)
+    xplt = np.linspace(xmin, xmax, 100)
     yplt = cf.model(xplt, *pvals)
-    plt.plot(xplt, yplt, label=model_legend, linestyle='dashed', alpha=0.7)
+    if self.fit_type=='xy':
+      bw = 1.
+    elif self.fit_type=='hist':
+      bw=cf.data.widths.mean()
+    plt.plot(xplt, yplt*bw, label=model_legend,
+             linestyle='dashed', alpha=0.7,
+             color='darkorange')
     plt.xlabel(axis_labels[0], size='x-large')
     plt.ylabel(axis_labels[1], size='x-large')
     plt.grid()
    # draw error band around model function
     if plot_band:
       DeltaF = self.getFunctionError(xplt, cf.model, pvals, pcov)
-      plt.fill_between(xplt, yplt+DeltaF, yplt-DeltaF, alpha=0.1,
-                           color='green')    
+      plt.fill_between(xplt, bw*(yplt+DeltaF),
+                             bw*(yplt-DeltaF),
+                             alpha=0.1, color='green')
 
     # display legend with some fit info
     pe = 2   # number of significant digits of uncertainty
-    fit_info = [
-      "$\\chi^2$/$n_\\mathrm{{dof}}$={:.1f}/{}".format(chi2,ndof) + \
-       ", p={:.1f}%".format(100*chi2prb)]
+    if self.fit_type=='xy':
+      fit_info = [
+        "$\\chi^2$/$n_\\mathrm{{dof}}$={:.1f}/{}".format(chi2,ndof) + \
+         ", p={:.1f}%".format(100*chi2prb)]
+    elif self.fit_type=='hist':
+      fit_info = [
+        "g.o.f = {:.1f}/{}".format(chi2, ndof)] 
 
     if self.minosResult is not None and self.minos_ok:
       for pn, v, e in zip(pnams, pvals, pmerrs):
@@ -1386,7 +1399,7 @@ class mnFit():
 
 
   #
-  # --- code for histogramm Fit
+  # --- code for histogram Fit
   #      
 
   def set_hOptions(self,
@@ -1412,7 +1425,7 @@ class mnFit():
                 bin_contents, bin_edges, err2=None):
 
     """
-    initialize histogramm data object
+    initialize histogram data object
 
     Args:
     - bin_contents: array of floats
@@ -1426,6 +1439,7 @@ class mnFit():
                                bin_contents, bin_edges,
                                err2,
                                quiet=self.quiet)
+    self.data=self.hData
     
   def init_hFit(self, model, p0=None,
                 constraints=None,
@@ -1481,9 +1495,48 @@ class mnFit():
       if limits is not None:
         self.minuit.limits = self.limits       
 
-    def do_hFit(self):
-      # !!! to be implemented
-      pass
+  def do_hFit(self):
+    """perform fitting sequence for histogram fit
+    """
+    if self.hData is None:
+      print(' !!! mnFit: no data object defined - call init_data()')
+      sys.exit('mnFit Error: no data object')
+    if self.costf is None:
+      print(' !!! mnFit: no fit object defined - call init_fit()')
+      sys.exit('mnFit Error: no fit object')
+    
+    # summarize options
+    if not self.quiet:
+      print( '*==* mnFit starting (pre-)fit')
+      print( '  Options:')
+      if self.run_minos is not None:
+        print( '     - performing minos profile likelihood scan')
+      
+    # perform fit
+    try:
+      self.migradResult = self.minuit.migrad()  # find minimum of cost function
+      self.migrad_ok = True
+    except Exception as e:
+      self.migrad_ok = False
+      print('*==* !!! fit with migrad failed')
+      print(e)
+      exit(1)
+
+    # run profile likelihood scan to check for asymmetric errors
+    if self.run_minos:
+      if not self.quiet:
+        print( '*==* mnFit starting minos scan')
+      try:  
+        self.minosResult = self.minuit.minos()
+        self.minos_ok = True
+      except Exception as e:
+        self.minos_ok = False
+        if not self.quiet:
+          print( '*==* mnFit: !!! minos failed \n', e)
+        
+    self._storeResult()
+    
+    return self.migradResult, self.minosResult
 
     
   class histData:
@@ -1493,7 +1546,7 @@ class mnFit():
     def __init__(self, outer,
                  bin_contents, bin_edges, err2=None, quiet=True):
       """ 
-      initialize histogramm Data
+      initialize histogram Data
 
       Args:
       - bin_contents: array of floats
@@ -1517,7 +1570,7 @@ class mnFit():
 
     def plot(self, num='Data and Model',
                    figsize=(7.5, 6.5),                             
-                   data_label='data' ):
+                   data_label='Binned data' ):
       """return figure with data
       """
 
@@ -1525,11 +1578,15 @@ class mnFit():
       fig = plt.figure(num=num, figsize=figsize)
       plt.bar(self.centers, self.contents,
               align='center', width = w,
-              facecolor='cadetblue', edgecolor='darkblue', alpha=0.66,
-              label=data_label) 
+              facecolor='cadetblue', edgecolor='darkblue', alpha=0.3,
+              label=data_label)
+      plt.errorbar(self.centers, self.contents,
+                   yerr=np.sqrt(self.contents+self.err2),
+                   fmt='_', ecolor='darkblue', alpha=0.5,
+                   label="symm. uncertainties")
       return fig
       
-  # --- cost function for histogramm data
+  # --- cost function for histogram data
   class hCost:
     """
     Cost function for binned data
@@ -1539,7 +1596,6 @@ class mnFit():
                  hData, model,
                  use_GaussApprox=False, quiet=True):
       from iminuit.util import describe, make_func_code
-      from scipy.special import loggamma
 
       self.data = hData
       self.model = model
@@ -1553,7 +1609,7 @@ class mnFit():
       self.pnam2id = {
         self.pnams[i] : i for i in range(0,self.npar)
         } 
-      self.ndof = len(hData.contents) - self.npar
+      self.ndof = len(self.data.contents) - self.npar
       self.constraints = []
       self.nconstraints = 0
       
@@ -1594,31 +1650,39 @@ class mnFit():
 
       # - calculate 2*negLogL Poisson;
       #  model prediction as appr. integral over bin
-      model_values = self.integral_overBins(self.model, *par,
-                                            self.data.lefts,
-                                            self.data.rights) 
+      model_values = self.integral_overBins(
+        self.data.lefts, self.data.rights,
+        self.model, *par) 
       # 
-      nlL2 += 2. * np.sum( snLogPoisson( self.data.contents, 
-                                      model_values+self.data.err2,
-                                      model_values)
+      nlL2 += 2. * np.sum(
+        self.snLogPoisson( self.data.contents, 
+                           model_values+self.data.err2,
+                           model_values )
                      )
+      # store goodness-of-fit (difference of nlL2 w.r.t. saturated model)
+      c = self.data.contents
+      cs = c + self.data.err2
+      sumlog_saturated = np.sum(c - cs*np.log(c+0.005) + loggamma(cs+1.))      
+      self.chi2 = nlL2 - 2.* sumlog_saturated
+
       return nlL2
 
     @staticmethod
-    def snLogPoisson(xk, lam, mu): # 
-      """2* neg. logarithm of generalized Poisson distribution: 
-         shifted to new mean mu for real-valued xk        
-         for lam=mu, the standard Poisson distribution is recovered
-         lam=sigma*2 is the variance of the shifted Poisson distribution.
+    def snLogPoisson(xk, lam, mu):  
+      """
+      2* neg. logarithm of generalized Poisson distribution: 
+      shifted to new mean mu for real-valued xk        
+      for lam=mu, the standard Poisson distribution is recovered
+      lam=sigma*2 is the variance of the shifted Poisson distribution.
       """
       xs = (xk + lam - mu)
       return lam - xs*np.log(lam) + loggamma(xs+1.)
 
     @staticmethod
-    def integral_overBins(f, *par, ledges, redges):
+    def integral_overBins(ledges, redges, f, *par):
       """Calculate approx. integral of model over bins using Simpson's rule
       """
-      return (redges - leges)/6. * \
+      return (redges - ledges)/6. * \
                             ( f(ledges, *par) \
                             + 4.*f((ledges+redges)/2., *par) \
                             + f(redges, *par) ) 
