@@ -7,7 +7,7 @@
 """
 
 import numpy as np, matplotlib.pyplot as plt
-from PhyPraKit.phyFit import mnFit
+from PhyPraKit.phyFit import hFit
 
 if __name__ == "__main__": # --------------------------------------  
   #
@@ -34,7 +34,7 @@ if __name__ == "__main__": # --------------------------------------
   width = 0.33 # signal width
   
   # fix random generator seed 
-  #!np.random.seed(314159)  # initialize random generator
+  np.random.seed(314159)  # initialize random generator
 
   def generate_data(N, min, max, p, w, s):
     '''generate a random dataset: 
@@ -47,31 +47,34 @@ if __name__ == "__main__": # --------------------------------------
     data_b = np.random.uniform(low=min, high=max, size=int((1-s)*N) )
     return np.concatenate( (data_s, data_b) )
 
-  # generate a histogram data sample ...
+  # generate a data sample ...
   SplusB_data = generate_data(N, min, max, pos, width, s)  
-
 # ... and create the histogram
   bc, be = np.histogram(SplusB_data, bins=40)
-  
-  Fit = mnFit("hist")
-  Fit.init_hData(bc, be)
-  Fit.init_hFit(model)
-  # perform fit to histogram data
-  fitResult = Fit.do_hFit()
-  print(fitResult[0])
-  print(fitResult[1])
 
-  # plot graph
-  Fit.plotModel(data_legend="Binned data", model_legend="Signal + Background Fit")
-  
-  plt.show()
-
+#  
+# ---  perform fit  
+#
+  parvals, parerrs, cor, gof = hFit(model,
+      bc, be,              # bin entries and bin edges
+      p0=None,        # initial guess for parameter values 
+   #  constraints=['name', val ,err ],   # constraints within errors
+   #  limits=('name', None, None),       #limits
+      use_chi2=False,      # no Gaussian approximation
+      plot=True,           # plot data and model
+      plot_band=True,      # plot model confidence-band
+      plot_cor=False,      # plot profiles likelihood and contours
+      quiet=False,         # suppress informative printout
+      axis_labels=['x', 'y   \  f(x, *par)'], 
+      data_legend = 'random data',    
+      model_legend = 'exponential model'
+  )
 
 # Print results to illustrate how to use output
-#  print('\n*==* Fit Result:')
-#  print(" chi2: {:.3g}".format(chi2))
-#  print(" parameter values:      ", parvals)
-#  print(" neg. parameter errors: ", parerrs[:,0])
-#  print(" pos. parameter errors: ", parerrs[:,1])
-#  print(" correlations : \n", cor)
+  print('\n*==* Fit Result:')
+  print(" goodness-of-fit: {:.3g}".format(gof))
+  print(" parameter values:      ", parvals)
+  print(" neg. parameter errors: ", parerrs[:,0])
+  print(" pos. parameter errors: ", parerrs[:,1])
+  print(" correlations : \n", cor)
   

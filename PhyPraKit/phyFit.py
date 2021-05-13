@@ -12,11 +12,18 @@
 
   The class `mnFit.py` uses the package `iminuit` for fitting 
   a parameter-dependent model  f(x, \*par) to data points (x, y)
-  with independent and/or correlated absolute and/or 
-  relative uncertainties in the x and/or y directions. 
-  An example function mFit() illustrates how to control the 
-  interface of `mnFit`, and a short script is provided to 
-  perform a fit on sample data.  
+  or to binned histogram data. Parameter estimation is based
+  on the the Maximum-Likelihood method in both cases. Classical
+  least-square methods are available optionally for comparison
+  with other packages. 
+
+  A unique feature of the package ist the support of different
+  kinds of uncertainties, i. e. independent and/or correlated 
+  absolute and/or relative uncertainties in the x and/or y directions. 
+  
+  Example functions mFit() and hFit() illustrate how to control 
+  the  interface of `mnFit` for x-y and histogram fits, and a 
+  short script is provided to perform a fit on sample data.  
  
   Method:
     A user-defined cost function in `iminuit` with uncertainties 
@@ -32,22 +39,26 @@
   special, user-defined cost functions.
 
   The main features of this package are:
-    - definition of a custom cost function 
-    - implementation of the least squares method with correlated errors
+    - provisioning of cost functions for x-y and binned histogram fits 
+    - implementation of the least-squares method for correlated Gaussian errors
     - support for correlated x-uncertainties by projection on the y-axis
-    - support of relative errors with reference to the model values  
+    - support of relative errors with reference to the model values 
     - evaluation of profile likelihoods to determine asymetric uncertainties
     - plotting of profile likeliood and confidence contours
 
-  The **cost function** that is optimized is a least-squares one, or an 
-  extended version if parameter-dependent uncertainties are present. In 
-  the latter case,  the logarithm of the determinant of the covariance 
-  matrix is added to the least-squares cost function, so that it corresponds 
-  to twice the negative log-likelihood of a multivariate Gaussian distribution.
+  The **cost function** that is optimized is for x-y fits basically is a 
+  least-squares one, which is extended if parameter-dependent uncertainties 
+  are present. In the latter case, the logarithm of the determinant of the 
+  covariance matrix is added to the least-squares cost function, so that it 
+  corresponds to twice the negative log-likelihood of a multivariate Gaussian 
+  distribution. Fits to bistogram data rely on the negative log-likelihood
+  of the Poisson distribution, which is generalised to support fractional
+  observed values, which may occur if corrections to the observed bin counts 
+  have to be applied. 
 
-  A fully functional example is provided by the function `mFit()` and
-  the executable script below, which contains sample data, executes the
-  fitting procecure and collects the results. 
+  A fully functional example is provided by the functions `mFit()` and
+  `hFit()` and the executable script below, which contains sample data, 
+  executes the fitting procecure and collects the results. 
   
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
@@ -117,7 +128,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
     * np-array of float: parameter values
     * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
     * np-array: correlation matrix 
-    * float: chi2  \chi-square of fit a minimum
+    * float: 2*negLog L, corresponding to \chi-square of fit a minimum
   """
 
   ## from .phyFit import mnFit #! already contained in this file
@@ -149,7 +160,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
                limits=limits)
    # perform the fit
   fitResult = Fit.do_fit()
-  # print fit resule (dictionary from migrad/minos(
+  # print fit result(dictionary from migrad/minos(
   if not quiet:
     print("\nFit Result from migrad:")
     print(fitResult[0])
@@ -177,9 +188,100 @@ def mFit(fitf, x, y, sx = None, sy = None,
   #   numpy arrays with fit result: parameter values,
   #   negative and positive parameter uncertainties,
   #   correlation matrix
-  #   chi2
+  #   gof
   return Fit.getResult()
 
+def hFit(fitf, bin_contents, bin_edges, err2=None,
+       p0 = None, constraints = None, limits=None,
+       use_chi2 = False, 
+       plot = True, plot_cor = True,
+       showplots = True, 
+       plot_band=True, quiet = False,
+       axis_labels=['x', 'counts/bin = f(x, *par)'],
+       data_legend = 'Histogram Data',    
+       model_legend = 'Model'):
+  
+  """Fit an arbitrary function fitf(x, \*par) to binned data (histogram)
+  with the package iminuit.
+
+  Args:
+    * fitf: model function to fit, arguments (float:x, float: \*args)
+    * bin_contents:  
+    * bin_edges: 
+    * err2: array of additional uncertainties/bin
+    * p0: array-like, initial guess of parameters
+    * constraints: (nested) list(s) [name or id, value, error] 
+    * limits: (nested) list(s) [name or id, min, max] 
+    * use_chi2: Gaussion approximation instead of Poisson 
+    * plot: show data and model if True
+    * plot_cor: show profile liklihoods and conficence contours
+    * plot_band: plot uncertainty band around model function
+    * quiet: suppress printout
+    * list of str: axis labels
+    * str: legend for data
+    * str: legend for model 
+
+  Returns:
+    * np-array of float: parameter values
+    * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
+    * np-array: correlation matrix 
+    * float: 2*negLog L, corresponding to \chi-square of fit a minimum
+  """
+
+  ## from .phyFit import mnFit #! already contained in this file
+
+  # ... check if errors are provided ...
+  
+  # set up a fit object for histogram fits
+  Fit = mnFit('hist')
+
+  # set some options
+  Fit.setOptions(run_minos=True,
+                 use_GaussApprox = use_chi2,
+                 quiet=quiet)
+
+  # pass data and uncertainties to fit object
+  Fit.init_data(bin_contents, bin_edges, err2)
+   # pass model fuction, start parameter and possibe constraints
+  Fit.init_fit(fitf, p0=p0,
+               constraints=constraints,
+               limits=limits)
+   # perform the fit
+  fitResult = Fit.do_fit()
+  # print fit result (dictionary from migrad/minos(
+  if not quiet:
+    print("\nFit Result from migrad:")
+    print(fitResult[0])
+    if fitResult[1] is not None:
+      print("\nResult of minos error analysis:")
+      print(fitResult[1])
+    
+  # produce figure with data and model
+  if plot:
+    fig = Fit.plotModel(axis_labels=axis_labels,
+                 data_legend=data_legend,
+                 model_legend=model_legend,
+                      plot_band=plot_band)
+
+  # figure with visual representation of covariances
+  #   prifile likelihood scan and confidence contours
+  if plot_cor:
+    fig_cor = Fit.plotContours()
+
+  # show plots on screen
+  if showplots and (plot or plot_cor):
+    plt.show()
+
+  # return
+  #   numpy arrays with fit result: parameter values,
+  #   negative and positive parameter uncertainties,
+  #   correlation matrix
+  #   gof
+  return Fit.getResult()
+
+#
+# --- classes and functions
+#
 class mnFit():
   """**Fit an arbitrary funtion f(x, *par) to data**  
   with independent and/or correlated absolute and/or relative uncertainties
@@ -204,7 +306,7 @@ class mnFit():
   Public data members:
   - fit_type:           type of fit, presently "xy" or "hist"
   - ParameterNames:     names of parameters (as specified in model function)
-  - Chi2:               chi2 at best-fit point
+  - GoF:                goodness-of-fit, i.e. chi2 at best-fit point
   - NDoF:               number of degrees of freedom
   - ParameterValues:    parameter values at best-fit point
   - MigradErrors:       symmetric uncertainties
@@ -258,7 +360,7 @@ class mnFit():
     if self.fit_type == 'xy':
       self.set_xyOptions(*args, **kwargs)
     elif self.fit_type == 'hist':
-      self.init_hOptions(*args, **kwargs)
+      self.set_hOptions(*args, **kwargs)
     else:
       print("!**! unknown type of Fit ", self.fit_type)
       sys.exit('mnFit Error: invalid fit type')    
@@ -514,15 +616,18 @@ class mnFit():
     else:
       self.OneSigInterval = np.array(list(zip(-parerrs, parerrs)))
 
-    # call cost function at miminum to update all results
-    self.data.store_covmat=True # store y covariance 
+    # final call of cost function at miminum to update all results
+    # -  signals xsDataUncertainies object to store y covariance
+    self.data.final_call=True
+    # -  and cost fucntion to store goodness-of-fit
+    self.costf.final_call=True
     fval = self.costf(*parvals) 
   
     # store results as class members
     #   parameter names
     self.ParameterNames = parnames
     #   chi2 at best-fit point (possibly different from minCost)
-    self.Chi2 = self.costf.chi2  
+    self.GoF = self.costf.gof  
     #   parameter values at best-fit point
     self.ParameterValues = np.array(parvals, copy=True)
     #   number of degrees of freedom
@@ -538,7 +643,7 @@ class mnFit():
     """return most im portant results as numpy arrays
     """
     return (self.ParameterValues, self.OneSigInterval,
-            self.CorrelationMatrix, self.Chi2)
+            self.CorrelationMatrix, self.GoF)
 
   class xyDataUncertainties:
     """
@@ -792,7 +897,7 @@ class mnFit():
 
       # rebuild covariance matrix during fitting procedure
       self.needs_dynamicErrors = True    # flag for cost function
-      self.store_covmat = False # flag for _rebuild_Cov: no storage of ycov 
+      self.final_call = False # flag for _rebuild_Cov: no storage of ycov 
       
       if self.needs_covariance:
         # build static (=parameter-independent) part of covariance matrix      
@@ -879,7 +984,7 @@ class mnFit():
      # add projected x errors
       if self.has_xErrors:
         # store covariance matrix of y-uncertainties    
-        if self.store_covmat:
+        if self.final_call:
           self.covy = np.array(self.cov, copy=True)
 
        # determine derivatives of model function w.r.t. x,
@@ -1015,7 +1120,7 @@ class mnFit():
 
     - ndof: degrees of freedom 
     - nconstraints: number of parameter constraints
-    - chi2: chi2-value (goodness of fit)
+    - gof: chi2-value (goodness of fit)
     - use_neg2logL: usage of full 2*neg Log Likelihood
     - quiet: no printpout if True    
 
@@ -1048,6 +1153,8 @@ class mnFit():
       self.ndof = len(data.y) - self.npar
       self.constraints = []
       self.nconstraints = 0
+      # flag to control final actions in cost function
+      self.final_call = False
 
     def setConstraints(self, constraints):
       """Add parameter constraints
@@ -1092,7 +1199,7 @@ class mnFit():
          # static covariance, use its inverse
           nlL2 += float(np.inner(np.matmul(_r, self.data.iCov), _r))
           # identical to classical Chi2
-          self.chi2 = nlL2
+          self.gof = nlL2
           
         else: # dynamically rebuild covariance matrix
           self.data._rebuild_Cov(par)
@@ -1100,7 +1207,7 @@ class mnFit():
           L, is_lower = linalg.cho_factor(self.data.cov, check_finite=False)
           nlL2 += np.inner(_r, linalg.cho_solve((L, is_lower), _r) )
           # up to here, identical to classical Chi2
-          self.chi2 = nlL2                  
+          self.gof = nlL2                  
         # take into account parameter-dependent normalisation term
           if self.use_neg2logL:
          #  fast calculation of determinant det(V) from Cholesky factor 
@@ -1115,7 +1222,7 @@ class mnFit():
           nlL2 += np.sum(_r * _r * self.data.iErr2)
 
         # this is identical to classical Chi2
-        self.chi2 = nlL2
+        self.gof = nlL2
         
         # add parameter-dependent normalisation term if needed and wanted
         if self.data.needs_dynamicErrors and self.use_neg2logL:
@@ -1189,18 +1296,18 @@ class mnFit():
     d = cf.data
     
   # retrieve fit results
-    pvals, pmerrs, cor, chi2 = self.getResult()
+    pvals, pmerrs, cor, gof = self.getResult()
     pcov = self.CovarianceMatrix
     pnams = self.ParameterNames
     ndof = cf.ndof
-    chi2prb = self.chi2prb(chi2, ndof) 
+    chi2prb = self.chi2prb(gof, ndof) 
     
   # plot data
     fig_model = d.plot(figsize=(7.5, 6.5),
           num='Data and Model', data_label=data_legend)
   # overlay model function
     xmin, xmax = plt.xlim()    
-    xplt = np.linspace(xmin, xmax, 100)
+    xplt = np.linspace(xmin, xmax, 190)
     yplt = cf.model(xplt, *pvals)
     if self.fit_type=='xy':
       bw = 1.
@@ -1208,7 +1315,7 @@ class mnFit():
       bw=cf.data.widths.mean()
     plt.plot(xplt, yplt*bw, label=model_legend,
              linestyle='dashed', alpha=0.7,
-             color='darkorange')
+             linewidth=2.5, color='darkorange')
     plt.xlabel(axis_labels[0], size='x-large')
     plt.ylabel(axis_labels[1], size='x-large')
     plt.grid()
@@ -1218,16 +1325,20 @@ class mnFit():
       plt.fill_between(xplt, bw*(yplt+DeltaF),
                              bw*(yplt-DeltaF),
                              alpha=0.1, color='green')
+      plt.plot(xplt, bw*(yplt+DeltaF), linewidth=1, 
+                             alpha=0.3, color='darkgreen')
+      plt.plot(xplt, bw*(yplt-DeltaF), linewidth=1,
+                             alpha=0.3, color='darkgreen')
 
     # display legend with some fit info
     pe = 2   # number of significant digits of uncertainty
     if self.fit_type=='xy':
       fit_info = [
-        "$\\chi^2$/$n_\\mathrm{{dof}}$={:.1f}/{}".format(chi2,ndof) + \
+        "$\\chi^2$/$n_\\mathrm{{dof}}$={:.1f}/{}".format(gof,ndof) + \
          ", p={:.1f}%".format(100*chi2prb)]
     elif self.fit_type=='hist':
       fit_info = [
-        "g.o.f = {:.1f}/{}".format(chi2, ndof)] 
+        "g.o.f = {:.1f}/{}".format(gof, ndof)] 
 
     if self.minosResult is not None and self.minos_ok:
       for pn, v, e in zip(pnams, pvals, pmerrs):
@@ -1240,7 +1351,7 @@ class mnFit():
         nd, _v, _e = self.round_to_error(v, e[1], nsd_e=pe)
         txt="{} = ${:#.{pv}g}\pm{:#.{pe}g}$"
         fit_info.append(txt.format(pn, _v, _e, pv=nd, pe=pe))
-    plt.legend(title="\n".join(fit_info))      
+    plt.legend(loc='best', title="\n".join(fit_info))      
 
     return fig_model
   
@@ -1416,7 +1527,7 @@ class mnFit():
     """
     if run_minos is not None:   
       self.run_minos = run_minos
-    if use_negLogL is not None:   
+    if use_GaussApprox is not None:   
       self.use_GaussApprox = use_GaussApprox
     if quiet is not None:
       self.quiet = quiet
@@ -1567,7 +1678,10 @@ class mnFit():
       self.rights=self.edges[1:]
       self.centers = (self.rights  + self.lefts)/2.
       self.widths = self.rights - self.lefts
-
+      # flag to control final actions in cost function
+      self.final_call = False
+      self.model_related_uncertainties = None
+      
     def plot(self, num='Data and Model',
                    figsize=(7.5, 6.5),                             
                    data_label='Binned data' ):
@@ -1580,8 +1694,14 @@ class mnFit():
               align='center', width = w,
               facecolor='cadetblue', edgecolor='darkblue', alpha=0.3,
               label=data_label)
+      # set and plot error bars
+      if self.model_related_uncertainties is not None:
+        ep = self.model_related_uncertainties
+      else:
+        ep = (self.contents + self.err2)      
+      em = [ep[i] if self.contents[i]-ep[i]>0. else self.contents[i] for i in range(len(ep))]
       plt.errorbar(self.centers, self.contents,
-                   yerr=np.sqrt(self.contents+self.err2),
+                   yerr=(em, ep),
                    fmt='_', ecolor='darkblue', alpha=0.5,
                    label="symm. uncertainties")
       return fig
@@ -1612,7 +1732,9 @@ class mnFit():
       self.ndof = len(self.data.contents) - self.npar
       self.constraints = []
       self.nconstraints = 0
-      
+      # flag to control final actions in cost function
+      self.final_call = False
+
     def setConstraints(self, constraints):
       """
       Add parameter constraints
@@ -1636,9 +1758,8 @@ class mnFit():
 
       # cost function is likelihood of shifted poisson or Gauss approximation
 
-      nlL2 = 0. # initialize -2*ln(L)
-
       # - first, take into account possible parameter constraints  
+      n2lL= 0.
       if self.nconstraints:
         for c in self.constraints:
           if type(c[0])==type(' '):
@@ -1646,7 +1767,7 @@ class mnFit():
           else:
             p_id = c[0]
           r = ( par[p_id] - c[1]) / c[2] 
-          nlL2 += r*r
+          n2lL += r*r
 
       # - calculate 2*negLogL Poisson;
       #  model prediction as appr. integral over bin
@@ -1654,21 +1775,41 @@ class mnFit():
         self.data.lefts, self.data.rights,
         self.model, *par) 
       # 
-      nlL2 += 2. * np.sum(
-        self.snLogPoisson( self.data.contents, 
-                           model_values+self.data.err2,
-                           model_values )
-                     )
-      # store goodness-of-fit (difference of nlL2 w.r.t. saturated model)
-      c = self.data.contents
-      cs = c + self.data.err2
-      sumlog_saturated = np.sum(c - cs*np.log(c+0.005) + loggamma(cs+1.))      
-      self.chi2 = nlL2 - 2.* sumlog_saturated
+#      n2Ll += 2. * np.sum(
+#        self.nLogLsPoisson( self.data.contents, 
+#                           model_values+self.data.err2,
+#                           model_values ) )
 
-      return nlL2
+      n2lL += 2.*np.sum(
+        self.nLogLPoisson( self.data.contents + self.data.err2, 
+                           model_values + self.data.err2) )
+       
+      if self.final_call:
+        # store goodness-of-fit (difference of nlL2 w.r.t. saturated model)
+        n2lL_saturated = 2*np.sum(
+          self.nLogLPoisson(
+              self.data.contents + self.data.err2, 
+              self.data.contents + self.data.err2 + 0.005) )
+        #                                !!! const. 0.005 to aviod log(0.)
+        self.gof =  n2lL - n2lL_saturated
+
+        # provide true, model-related uncertainties to data object
+        self.data.model_related_uncertainties = np.sqrt( 
+                           model_values + self.data.err2 ) 
+        
+        # calculate asymmetric poisson error bars
+        #
+        #f = np.sum(self.nLogLsPoisson( model_values, 
+        #                   model_values+self.data.err2,
+        #                   model_values )
+        #           scipy.optimize.newton(2*nLogLsPoission(x, lam[i], err2[i]),
+        #          (mu[i]-2*np.sqrt(mu[i]), mu[i]+2*np.sqrt(mu[i]))
+          
+      # return 2 * neg. logL
+      return n2lL
 
     @staticmethod
-    def snLogPoisson(xk, lam, mu):  
+    def nLogLsPoisson(xs, lam, mu):  
       """
       2* neg. logarithm of generalized Poisson distribution: 
       shifted to new mean mu for real-valued xk        
@@ -1678,6 +1819,26 @@ class mnFit():
       xs = (xk + lam - mu)
       return lam - xs*np.log(lam) + loggamma(xs+1.)
 
+    @staticmethod
+    def nLogLPoisson(x, lam):  
+      """
+      neg. logarithm of Poisson distribution for real-valued x
+
+      """
+      return lam - x*np.log(lam) + loggamma(x+1.)
+
+    @staticmethod
+    def nLogLsPoisson(xs, lam, mu):  
+      """
+      2* neg. logarithm of generalized Poisson distribution: 
+      shifted to new mean mu for real-valued xk        
+      for lam=mu, the standard Poisson distribution is recovered
+      lam=sigma*2 is the variance of the shifted Poisson distribution.
+      """
+      xs = (xk + lam - mu)
+      return lam - xs*np.log(lam) + loggamma(xs+1.)
+
+    
     @staticmethod
     def integral_overBins(ledges, redges, f, *par):
       """Calculate approx. integral of model over bins using Simpson's rule
@@ -1751,4 +1912,3 @@ if __name__ == "__main__": # --- interface and example
   print(" neg. parameter errors: ", parerrs[:,0])
   print(" pos. parameter errors: ", parerrs[:,1])
   print(" correlations : \n", cor)
-  
