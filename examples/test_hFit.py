@@ -15,21 +15,21 @@ if __name__ == "__main__": # --------------------------------------
   #
 
   # define the model function to fit
-  def model(x, A=1., mu = 3., sigma = 2., s = 0.5):
+  def model(x, mu = 5., sigma = 0.5, s = 0.8):
     '''pdf of a Gaussian signal on top of flat background
     '''
     normal = np.exp(-0.5*((x-mu)/sigma)**2)/np.sqrt(2.*np.pi*sigma**2)
     flat = 1./(max-min) 
-    return A*(s * normal + (1-s) * flat)
+    return s * normal + (1-s) * flat
 
   #
   # generate Histogram Data
   #
   # parameters of data sample, signal and background parameters
-  N = 200  # number of entries
+  N = 100  # number of entries
   min=0.   # range of data, mimimum
   max= 10. # maximum
-  s = 0.8  # signal fraction 
+  s = 0.25 # signal fraction 
   pos = 6.66 # signal position
   width = 0.33 # signal width
   
@@ -59,8 +59,8 @@ if __name__ == "__main__": # --------------------------------------
       bc, be,              # bin entries and bin edges
       p0=None,        # initial guess for parameter values 
    #  constraints=['name', val ,err ],   # constraints within errors
-   #  limits=('name', None, None),       #limits
-      use_chi2=False,      # no Gaussian approximation
+      limits=('s', 0., None),  #limits
+      GaussApprox=False,   # Gaussian approximation
       plot=True,           # plot data and model
       plot_band=True,      # plot model confidence-band
       plot_cor=False,      # plot profiles likelihood and contours
