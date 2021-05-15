@@ -1307,16 +1307,25 @@ class mnFit():
           num='Data and Model', data_label=data_legend)
 
   # overlay model function
-    # histogram fit provides normalised distribution, set scale factor
+    # histogram fit provides normalised distribution,
+    #    determine bin widhts and scale factor
+    xmin, xmax = plt.xlim()    
+    xplt = np.linspace(xmin, xmax, 190)
     if self.fit_type=='hist':
-      sfac = cf.data.Ntot * cf.data.widths.mean()
+      # detemine local bin width
+      bwidths = np.zeros(len(xplt))
+      i=0
+      for j, x in enumerate(xplt):  
+        if x >= cf.data.rights[min(i, cf.data.nbins-1)]:
+          i += 1
+        bwidths[j] = cf.data.widths[min(i, cf.data.nbins-1)]
+      sfac = cf.data.Ntot * bwidths
     elif self.fit_type=="xy":
       sfac = 1.
     else:
       print("!**! mnFit.plotModel: unknown fit type: self.fit_type")
-      sfac = 1.     
-    xmin, xmax = plt.xlim()    
-    xplt = np.linspace(xmin, xmax, 190)
+      sfac = 1.
+    # plot model line  
     yplt = cf.model(xplt, *pvals)
     plt.plot(xplt, yplt*sfac, label=model_legend,
              linestyle='dashed', alpha=0.7,
@@ -1586,7 +1595,9 @@ class mnFit():
     if p0 is not None:
       for i, pnam in enumerate(self.pnams):
         model_kwargs[pnam] = p0[i]
-
+# !!!
+    print(model_kwargs)
+        
     if limits is not None:
       self.setLimits(limits)
 
@@ -1675,6 +1686,7 @@ class mnFit():
       """
 
       self.contents = bin_contents
+      self.nbins=len(bin_contents)
       self.Ntot = np.sum(bin_contents)
       self.edges = bin_edges
       if DeltaMu is None:

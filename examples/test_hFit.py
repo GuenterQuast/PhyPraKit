@@ -15,7 +15,7 @@ if __name__ == "__main__": # --------------------------------------
   #
 
   # define the model function to fit
-  def model(x, mu = 5., sigma = 0.5, s = 0.8):
+  def model(x, mu = 6.0, sigma = 0.5, s = 0.3):
     '''pdf of a Gaussian signal on top of flat background
     '''
     normal = np.exp(-0.5*((x-mu)/sigma)**2)/np.sqrt(2.*np.pi*sigma**2)
