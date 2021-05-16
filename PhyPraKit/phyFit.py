@@ -56,7 +56,7 @@
   observed values, which may occur if corrections to the observed bin counts 
   have to be applied. 
 
-  A fully functional example is provided by the functions `mFit()` and
+  Fully functional examples are provided by the functions `mFit()` and
   `hFit()` and the executable script below, which contains sample data, 
   executes the fitting procecure and collects the results. 
   
@@ -1717,6 +1717,7 @@ class mnFit():
       self.widths = self.rights - self.lefts
       # flag to control final actions in cost function
       self.final_call = False
+      self.model_values = None
       self.model_related_uncertainties = None
       
     def plot(self, num='Data and Model',
@@ -1727,10 +1728,16 @@ class mnFit():
 
       w = self.edges[1:] - self.edges[:-1]
       fig = plt.figure(num=num, figsize=figsize)
-      plt.bar(self.centers, self.contents,
+      if self.model_values is not None:
+        plt.bar(self.centers, self.model_values,
+              align='center', width = w,
+              facecolor='wheat', edgecolor='brown', alpha=0.2,
+                label = "entries/bin from model")
+      else:
+        plt.bar(self.centers, self.contents,
               align='center', width = w,
               facecolor='cadetblue', edgecolor='darkblue', alpha=0.2,
-              label=data_label)
+              label = data_label)
       # set and plot error bars
       if self.model_related_uncertainties is not None:
         ep = self.model_related_uncertainties
@@ -1739,8 +1746,9 @@ class mnFit():
       em = [ep[i] if self.contents[i]-ep[i]>0. else self.contents[i] for i in range(len(ep))]
       plt.errorbar(self.centers, self.contents,
                    yerr=(em, ep),
-                   fmt='_', ecolor='darkblue', alpha=0.5,
-                   label="symm. uncertainties")
+                   fmt='_', color='darkblue', markersize=15,
+                   ecolor='darkblue', alpha=0.8,
+                   label = data_label)
       return fig
       
   # --- cost function for histogram data
@@ -1768,8 +1776,7 @@ class mnFit():
       self.npar = len(self.pnams)
       # dictionary assigning parameter name to index
       self.pnam2id = {
-        self.pnams[i] : i for i in range(0,self.npar)
-        } 
+        self.pnams[i] : i for i in range(0,self.npar) } 
       self.ndof = len(self.data.contents) - self.npar
       self.constraints = []
       self.nconstraints = 0
@@ -1840,19 +1847,12 @@ class mnFit():
         #                                !!! const. 0.005 to aviod log(0.)
         self.gof =  n2lL - n2lL_saturated
 
-        # provide true, model-related uncertainties to data object
+        # provide model values and model-related uncertainties to data object
+        self.data.model_values = model_values       
         self.data.model_related_uncertainties = np.sqrt( 
                            model_values + np.abs(self.data.DeltaMu) ) 
         
-        # calculate asymmetric poisson error bars
-        #
-        #f = np.sum(self.nLogLsPoisson( model_values, 
-        #                   model_values+self.data.err2,
-        #                   model_values )
-        #           scipy.optimize.newton(2*nLogLsPoission(x, lam[i], err2[i]),
-        #          (mu[i]-2*np.sqrt(mu[i]), mu[i]+2*np.sqrt(mu[i]))
-          
-      # return 2 * neg. logL
+       # return 2 * neg. logL
       return n2lL
 
     @staticmethod
