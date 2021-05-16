@@ -119,6 +119,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
     * plot_band: plot uncertainty band around model function
+    * showplots: show plots on screen
     * quiet: suppress printout
     * list of str: axis labels
     * str: legend for data
@@ -176,9 +177,9 @@ def mFit(fitf, x, y, sx = None, sy = None,
                       plot_band=plot_band)
 
   # figure with visual representation of covariances
-  #   prifile likelihood scan and confidence contours
+  #   profile likelihood scan and confidence contours
   if plot_cor:
-    fig_cor = Fit.plotContours()
+    fig_cor = Fit.plotContours(figname="xyFit: Profiles and Contours")
 
   # show plots on screen
   if showplots and (plot or plot_cor):
@@ -202,18 +203,15 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
        data_legend = 'Histogram Data',    
        model_legend = 'Model'):
   
-  """Fit density f(x, \*par) to binned data (histogram)
-  with the package iminuit. The cost function is two times the negative
-  log-likelihood of the Poission distribution (Pois(k, lam), or - optionally - 
-  of its Gaussian approximation, 
+  """Fit density f(x, \*par) to binned data (histogram) with the package iminuit. 
+  The cost function is two times the negative log-likelihood of the Poission 
+  distribution (Pois(k, lam), or - optionally -  of its Gaussian approximation, 
   Poiss(x, lam) \simeq Gauss(x, mu=lam, sig**2=lam). 
-  In all cases,
-  uncertainties are determined from the model values to take into account
-  also empty bins of an histogram. The default behavious is to fit a
-  normalised density; optionally, it is also possible to fit the number
-  of entries in order to take into account the Poission fluctuations of 
-  the total number of entries in the histogram. 
-
+  In all cases, uncertainties are determined from the model values to take into 
+  account also empty bins of an histogram. The default behavious is to fit a
+  normalised density; optionally, it is also possible to fit the number of 
+  entries in order to take into account the Poission fluctuations of the total 
+  number of entries in the histogram. 
 
   Args:
     * fitf: model function to fit, arguments (float:x, float: \*args)
@@ -228,6 +226,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
     * plot_band: plot uncertainty band around model function
+    * showplots: show plots on screen
     * quiet: suppress printout
     * axis_labes: list of tow strings, axis labels
     * data_legend: legend entry for data
@@ -242,8 +241,6 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
 
   ## from .phyFit import mnFit #! already contained in this file
 
-  # ... check if errors are provided ...
-  
   # set up a fit object for histogram fits
   Fit = mnFit('hist')
 
@@ -279,7 +276,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
   # figure with visual representation of covariances
   #   prifile likelihood scan and confidence contours
   if plot_cor:
-    fig_cor = Fit.plotContours()
+    fig_cor = Fit.plotContours(figname="histFit: Profiles and Contours")
 
   # show plots on screen
   if showplots and (plot or plot_cor):
@@ -302,11 +299,15 @@ class mnFit():
   This implementation depends on and heavily uses features of 
   the minimizer **iminuit**.
    
+  Public Data member
+
+  - fit_type: 'xy' (default) or 'hist', controls type of fit 
+
   Public methods:
 
-  - init_data():        initialze data and uncertainties
-  - init_fit():         initialize fit: data, model and parameter constraints
-  - setOptions():       set options for mnFit
+  - init_data():        initialze data and uncertainties (generic)
+  - init_fit():         initialize generic fit: data, model and constraints
+  - setOptions():       set options for mnFit (generic)
   - do_fit():           perform fit
   - plotModel():        plot model function and data
   - plotContours():     plot profile likelihoods and confidence contours 
@@ -315,9 +316,19 @@ class mnFit():
   - plot_Profile():     plot profile Likelihood for parameter
   - plot_clContour():   plot confidence level coutour for pair of parameters  
   - plot_nsigContour(): plot n-sigma coutours for pair of parameters  
+
+  Methods:
+
+  - init_xyData():       initialze xy data and uncertainties
+  - init_hData():        initialze histogram data and uncertainties
+  - init_xyFit():        initialize xy fit: data, model and constraints
+  - init_hFit():         initialize histogram fit: data, model and constraints
+  - set_xyOptions():     set options for xy Fit
+  - set_hOptions():      set options for histogram Fit
+  - do_xyFit():          perform xy fit
+  - do_hFit():           perform histogram fit
  
-  Public data members:
-  - fit_type:           type of fit, presently "xy" or "hist"
+  Data members:
   - ParameterNames:     names of parameters (as specified in model function)
   - GoF:                goodness-of-fit, i.e. chi2 at best-fit point
   - NDoF:               number of degrees of freedom
@@ -331,18 +342,22 @@ class mnFit():
   - covy:     covariance matrix of y-data 
   - cov:      combined covariance matrix, including projected x-uncertainties
 
+
+
   Instances of sub-classes:
 
   - minuit.\*: methods and members of Minuit object 
-  - data.\*:   methods and members of sub-class DataUncertainties
-  - costf.\*:  methods and members of sub-class xLSQ
+  - data.\*:   methods and members of data sub-class, generic for xyData or hData 
+  - costf.\*:  methods and members of cost sub-class, generic for xLSQ or hCost
   """
 
   def __init__(self, fit_type='xy'):
 
     self.fit_type = fit_type
-    
-    # no data or model provided yet
+
+    # set default of all options
+    #
+    #   no data or model provided yet
     self.xyData = None
     self.hData = None
     self.costf = None
@@ -1051,10 +1066,10 @@ class mnFit():
       else:
         return np.diag(1./self.err2)
 
-    def plot(self, num='Data and Model',
+    def plot(self, num='xyData and Model',
                    figsize=(7.5, 6.5),                             
                    data_label='data' ):
-      """return figure with data
+      """return figure with xy data and uncertainties
       """
 #    # get data
       x = self.x
@@ -1318,7 +1333,7 @@ class mnFit():
     
   # plot data
     fig_model = d.plot(figsize=(7.5, 6.5),
-          num='Data and Model', data_label=data_legend)
+          data_label=data_legend)
 
   # overlay model function
     # histogram fit provides normalised distribution,
@@ -1329,7 +1344,7 @@ class mnFit():
       # detemine local bin width
       bwidths = np.zeros(len(xplt))
       i=0
-      for j, x in enumerate(xplt):  
+      for j, x in enumerate(xplt):
         if x >= cf.data.rights[min(i, cf.data.nbins-1)]:
           i += 1
         bwidths[j] = cf.data.widths[min(i, cf.data.nbins-1)]
@@ -1384,7 +1399,7 @@ class mnFit():
     return fig_model
   
 # plot array of profiles and contours
-  def plotContours(self):
+  def plotContours(self, figname='Profiles and Contours'):
     """
     Plot grid of profile curves and one- and two-sigma
     contour lines from iminuit object
@@ -1409,7 +1424,7 @@ class mnFit():
 
     fsize=3.5
     cor_fig, axarr = plt.subplots(npar, npar,
-                                  num='Profiles and Contours',
+                                  num=figname,
                                   figsize=(fsize*npar, fsize*npar))
 # protect the following, may fail
     try:
@@ -1720,10 +1735,10 @@ class mnFit():
       self.model_values = None
       self.model_related_uncertainties = None
       
-    def plot(self, num='Data and Model',
+    def plot(self, num='histData and Model',
                    figsize=(7.5, 6.5),                             
                    data_label='Binned data' ):
-      """return figure with data
+      """return figure with histogram data and uncertainties
       """
 
       w = self.edges[1:] - self.edges[:-1]
@@ -1907,7 +1922,7 @@ if __name__ == "__main__": # --- interface and example
     return a*x**2 + b*x + c
 
   # set model to use in fit
-  fitmodel=exp_model  # also try poy2_model
+  fitmodel=exp_model  # also try poly2_model !
   # get keyword-arguments
   mpardict = mnFit.get_functionSignature(fitmodel)[1]
   
@@ -1944,15 +1959,67 @@ if __name__ == "__main__": # --- interface and example
                                      plot=True,
                                      plot_band=True,
                                      plot_cor=True,
+                                     showplots=False,
                                      quiet=False,
                                      axis_labels=['x', 'y   \  f(x, *par)'], 
                                      data_legend = 'random data',    
                                      model_legend = 'model')
 
 # Print results to illustrate how to use output
-  print('\n*==* Fit Result:')
+  print('\n*==* xyFit Result:')
   print(" chi2: {:.3g}".format(chi2))
   print(" parameter values:      ", parvals)
   print(" neg. parameter errors: ", parerrs[:,0])
   print(" pos. parameter errors: ", parerrs[:,1])
   print(" correlations : \n", cor)
+
+
+  #
+  # Example of an application of phyFit.hFit()
+  #
+
+  # define the model function to fit
+  def SplusB_model(x, mu = 6.0, sigma = 0.5, s = 0.3):
+    '''pdf of a Gaussian signal on top of flat background
+    '''
+    normal = np.exp(-0.5*((x-mu)/sigma)**2)/np.sqrt(2.*np.pi*sigma**2)
+    flat = 1./(xmx-xmn) 
+    return s * normal + (1-s) * flat 
+
+  nbins=40
+  xmn = 1
+  xmx = 10
+  bedges=np.linspace(xmn, xmx, nbins+1)
+  bcontents = np.array([1, 1, 1, 2, 2, 2, 6, 1, 0, 3, 1, 1, 0,
+                        2, 3, 3, 1, 1, 0, 2, 3, 2, 3, 1, 1, 8,
+                        6, 7, 9, 1, 0, 1, 2, 6, 3, 1, 3, 3, 3, 4])
+  #  
+  # ---  perform fit  
+  #
+  pvals, perrs, cor, gof = hFit(SplusB_model,
+      bcontents, bedges,  # bin entries and bin edges
+      p0=None,                # initial guess for parameter values 
+   #  constraints=['s', val , err ],   # constraints within errors
+      limits=('s', 0., None),  #limits
+      use_GaussApprox=False,   # Gaussian approximation
+      fit_density = True,      # fit density
+      plot=True,           # plot data and model
+      plot_band=True,      # plot model confidence-band
+      plot_cor=True,      # plot profiles likelihood and contours
+      showplots=False,      # show / don't show plots
+      quiet=True,         # suppress informative printout
+      axis_labels=['x', 'y   \  f(x, *par)'], 
+      data_legend = 'random data',    
+      model_legend = 'signal + background model'
+  )
+
+# Print results to illustrate how to use output
+  print('\n*==* histogram fit Result:')
+  print(" goodness-of-fit: {:.3g}".format(gof))
+  print(" parameter values:      ", parvals)
+  print(" neg. parameter errors: ", parerrs[:,0])
+  print(" pos. parameter errors: ", parerrs[:,1])
+  print(" correlations : \n", cor)
+ 
+# finally, show all figures
+  plt.show()
