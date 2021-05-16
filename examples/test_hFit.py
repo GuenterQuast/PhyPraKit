@@ -60,7 +60,8 @@ if __name__ == "__main__": # --------------------------------------
       p0=None,        # initial guess for parameter values 
    #  constraints=['name', val ,err ],   # constraints within errors
       limits=('s', 0., None),  #limits
-      GaussApprox=False,   # Gaussian approximation
+      use_GaussApprox=False,   # Gaussian approximation
+      fit_density = True,      # fit density
       plot=True,           # plot data and model
       plot_band=True,      # plot model confidence-band
       plot_cor=False,      # plot profiles likelihood and contours

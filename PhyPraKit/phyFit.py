@@ -193,16 +193,27 @@ def mFit(fitf, x, y, sx = None, sy = None,
 
 def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
        p0 = None, constraints = None, limits=None,
-       GaussApprox = False, 
+       use_GaussApprox = False,
+       fit_density = True,
        plot = True, plot_cor = True,
-       showplots = True, 
-       plot_band=True, quiet = False,
+       showplots = True, plot_band=True,
+       quiet = False,
        axis_labels=['x', 'counts/bin = f(x, *par)'],
        data_legend = 'Histogram Data',    
        model_legend = 'Model'):
   
-  """Fit an arbitrary function fitf(x, \*par) to binned data (histogram)
-  with the package iminuit.
+  """Fit density f(x, \*par) to binned data (histogram)
+  with the package iminuit. The cost function is two times the negative
+  log-likelihood of the Poission distribution (Pois(k, lam), or - optionally - 
+  of its Gaussian approximation, 
+  Poiss(x, lam) \simeq Gauss(x, mu=lam, sig**2=lam). 
+  In all cases,
+  uncertainties are determined from the model values to take into account
+  also empty bins of an histogram. The default behavious is to fit a
+  normalised density; optionally, it is also possible to fit the number
+  of entries in order to take into account the Poission fluctuations of 
+  the total number of entries in the histogram. 
+
 
   Args:
     * fitf: model function to fit, arguments (float:x, float: \*args)
@@ -213,13 +224,14 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     * constraints: (nested) list(s) [name or id, value, error] 
     * limits: (nested) list(s) [name or id, min, max] 
     * GaussApprox: Gaussion approximation instead of Poisson 
+    * density: fit density (not number of events)
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
     * plot_band: plot uncertainty band around model function
     * quiet: suppress printout
-    * list of str: axis labels
-    * str: legend for data
-    * str: legend for model 
+    * axis_labes: list of tow strings, axis labels
+    * data_legend: legend entry for data
+    * model_legend: legend entry for model 
 
   Returns:
     * np-array of float: parameter values
@@ -235,10 +247,11 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
   # set up a fit object for histogram fits
   Fit = mnFit('hist')
 
-  # set some options
-  Fit.setOptions(run_minos=True,
-                 use_GaussApprox = GaussApprox,
-                 quiet=quiet)
+  # set default options
+  Fit.setOptions(run_minos = True,
+                 use_GaussApprox = use_GaussApprox,
+                 fit_density = fit_density,
+                 quiet = quiet)
 
   # pass data and uncertainties to fit object
   Fit.init_data(bin_contents, bin_edges, DeltaMu)
@@ -346,6 +359,7 @@ class mnFit():
     self.use_negLogL = True
     # for histogram fit
     self.use_GaussApprox = False
+    self.fit_density = True
 
   def init_data(self, *args, **kwargs):
     if self.fit_type == 'xy':
@@ -1237,7 +1251,7 @@ class mnFit():
     """ determine error of model at x  
     
     Formula: 
-    Delta(x) = sqrt( sum_i,j (df/dp_i(x) df/dp_j(x) Vp_i,j) )
+      Delta(x) = sqrt( sum_i,j (df/dp_i(x) df/dp_j(x) Vp_i,j) )
 
     Args:
       * x: scalar or np-array of x values
@@ -1319,7 +1333,7 @@ class mnFit():
         if x >= cf.data.rights[min(i, cf.data.nbins-1)]:
           i += 1
         bwidths[j] = cf.data.widths[min(i, cf.data.nbins-1)]
-      sfac = cf.data.Ntot * bwidths
+      sfac = cf.norm * bwidths
     elif self.fit_type=="xy":
       sfac = 1.
     else:
@@ -1498,13 +1512,13 @@ class mnFit():
   
   @staticmethod
   def CL2Chi2(CL):
-    """calculate DeltaChi2 from confidence level CL
+    """calculate DeltaChi2 from confidence level CL for 2-dim contours
     """
     return -2.*np.log(1.-CL)
 
   @staticmethod
   def Chi22CL(dc2):
-    """calculate confidence level CL from DeltaChi2
+    """calculate confidence level CL from DeltaChi2 for 2-dim contours
     """
     return (1. - np.exp(-dc2 / 2.))
 
@@ -1530,6 +1544,7 @@ class mnFit():
   def set_hOptions(self,
               run_minos=None,
               use_GaussApprox=None,
+              fit_density = None,
               quiet=None):
 
     """Define mnFit options
@@ -1543,12 +1558,13 @@ class mnFit():
       self.run_minos = run_minos
     if use_GaussApprox is not None:   
       self.use_GaussApprox = use_GaussApprox
+    if fit_density is not None:
+      self.fit_density = fit_density
     if quiet is not None:
       self.quiet = quiet
     
   def init_hData(self,
                 bin_contents, bin_edges, DeltaMu=None):
-
     """
     initialize histogram data object
 
@@ -1556,7 +1572,7 @@ class mnFit():
     - bin_contents: array of floats
     - bin_edges: array of length len(bin_contents)*1
     - DeltaMu: shift in mean (Delta mu) versus lambda 
-      of Poisson distribution 
+    of Poisson distribution 
     """
     
     # create data object and pass all input arguments
@@ -1585,6 +1601,7 @@ class mnFit():
     self.costf = self.hCost(self,
                             self.hData, self.model,
                             use_GaussApprox=self.use_GaussApprox,
+                            density = self.fit_density,
                             quiet=self.quiet)
     if constraints is not None:
       self.costf.setConstraints(constraints)
@@ -1734,13 +1751,17 @@ class mnFit():
 
     def __init__(self, outer, 
                  hData, model,
-                 use_GaussApprox=False, quiet=True):
+                 use_GaussApprox=False, density= True,
+                 quiet=True):
       from iminuit.util import describe, make_func_code
 
       self.data = hData
       self.model = model
       self.quiet = quiet
-
+      self.density = density
+      self.GaussApprox = use_GaussApprox
+      self.quiet = quiet
+      
       # set proper signature of model function for iminuit
       self.pnams = describe(model)[1:]
       self.func_code = make_func_code(self.pnams)
@@ -1755,11 +1776,16 @@ class mnFit():
       # flag to control final actions in cost function
       self.final_call = False
 
-      if use_GaussApprox:
-        self.nlLcost = self.nlLpGauss
+      if self.GaussApprox:
+        self.n2lLcost = self.n2lLGauss
       else:
-        self.nlLcost = self.nlLPoisson
-      
+        self.n2lLcost = self.n2lLPoisson
+
+      if self.density:
+        self.norm = self.data.Ntot
+      else:
+        self.norm = 1.
+        
     def setConstraints(self, constraints):
       """
       Add parameter constraints
@@ -1796,23 +1822,19 @@ class mnFit():
 
       # - calculate 2*negLogL Poisson;
       #  model prediction as appr. integral over bin
-      model_values = self.data.Ntot * self.integral_overBins(
+      model_values = self.norm * self.integral_overBins(
         self.data.lefts, self.data.rights,
         self.model, *par) 
       # 
-#      n2Ll += 2. * np.sum(
-#        self.nLogLsPoisson( self.data.contents, 
-#                           model_values +np.abs(DeltaMU),
-#                           model_values ) )
 
-      n2lL += 2.*np.sum(
-        self.nlLcost( self.data.contents - self.data.DeltaMu, 
+      n2lL += np.sum(
+        self.n2lLcost( self.data.contents - self.data.DeltaMu, 
                       model_values + np.abs(self.data.DeltaMu) ) )
        
       if self.final_call:
         # store goodness-of-fit (difference of nlL2 w.r.t. saturated model)
-        n2lL_saturated = 2*np.sum(
-          self.nlLcost(
+        n2lL_saturated = np.sum(
+          self.n2lLcost(
               self.data.contents - self.data.DeltaMu, 
               self.data.contents + np.abs(self.data.DeltaMu) + 0.005) )
         #                                !!! const. 0.005 to aviod log(0.)
@@ -1834,26 +1856,15 @@ class mnFit():
       return n2lL
 
     @staticmethod
-    def nlLsPoisson(xs, lam, mu):  
-      """
-      2* neg. logarithm of generalized Poisson distribution: 
-      shifted to new mean mu for real-valued xk        
-      for lam=mu, the standard Poisson distribution is recovered
-      lam=sigma*2 is the variance of the shifted Poisson distribution.
-      """
-      xs = (xk + lam - mu)
-      return lam - xs*np.log(lam) + loggamma(xs+1.)
-
-    @staticmethod
-    def nlLPoisson(x, lam):  
+    def n2lLPoisson(x, lam):  
       """
       neg. logarithm of Poisson distribution for real-valued x
 
       """
-      return lam - x*np.log(lam) + loggamma(x+1.)
+      return 2.*(lam - x*np.log(lam) + loggamma(x+1.))
 
     @staticmethod
-    def nLogLsPoisson(xs, lam, mu):  
+    def n2lLsPoisson(xs, lam, mu):  
       """
       2* neg. logarithm of generalized Poisson distribution: 
       shifted to new mean mu for real-valued xk        
@@ -1861,16 +1872,16 @@ class mnFit():
       lam=sigma*2 is the variance of the shifted Poisson distribution.
       """
       xs = (xk + lam - mu)
-      return lam - xs*np.log(lam) + loggamma(xs+1.)
+      return 2.*(lam - xs*np.log(lam) + loggamma(xs+1.))
 
     @staticmethod
-    def nlLpGauss(x, lam):  
+    def n2lLGauss(x, lam):  
       """    
       negative log-likelihood of Gaussian approximation
       Pois(x, lam) \simeq Gauss(x, lam, lam)
       """
       r = (x-lam)
-      return 0.5 * (r * r/lam + np.log(lam))
+      return (r * r/lam + np.log(lam))
            
     @staticmethod
     def integral_overBins(ledges, redges, f, *par):

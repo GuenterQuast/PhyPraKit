@@ -68,6 +68,7 @@ def A0_readme():
       - odFit()            fit function with x and y errors (scipy ODR)
       - mFit()             fit with with correlated x and y errors,
         profile likelihood and contour lines (module phyFit) 
+      - hFit()             fit of a density to histogram data
       - k2Fit()            fit function with (correlated) errors on x and y 
 
     6. simulated data with MC-method:
