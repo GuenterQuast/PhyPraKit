@@ -10,12 +10,13 @@
    - scipy > 1.5.0
    - matplotlib > 3
 
-  The class `mnFit.py` uses the package `iminuit` for fitting 
-  a parameter-dependent model  f(x, \*par) to data points (x, y)
-  or to binned histogram data. Parameter estimation is based
-  on the the Maximum-Likelihood method in both cases. Classical
-  least-square methods are available optionally for comparison
-  with other packages. 
+  The class `mnFit.py` uses the optimization and uncertainty-estimation
+  package `iminuit` for fitting a parameter-dependent model f(x, \*par) 
+  or a probability distribution to data points (x, y), to binned histogram 
+  data or to unbinned data. Parameter estimation is based on the the 
+  Maximum-Likelihood method in the first two cases, or an a user-defined
+  likelihood function in the latter case. Classical least-square methods 
+  are optionally available for comparison with other packages. 
 
   A unique feature of the package ist the support of different
   kinds of uncertainties, i. e. independent and/or correlated 
@@ -23,7 +24,7 @@
   
   Example functions mFit() and hFit() illustrate how to control 
   the  interface of `mnFit` for x-y and histogram fits, and a 
-  short script is provided to perform a fit on sample data.  
+  short script is provided to perform fits on sample data.  
  
   Method:
     A user-defined cost function in `iminuit` with uncertainties 
@@ -46,7 +47,7 @@
     - evaluation of profile likelihoods to determine asymetric uncertainties
     - plotting of profile likeliood and confidence contours
 
-  The **cost function** that is optimized is for x-y fits basically is a 
+  The **cost function** that is optimized for x-y fits basically is a 
   least-squares one, which is extended if parameter-dependent uncertainties 
   are present. In the latter case, the logarithm of the determinant of the 
   covariance matrix is added to the least-squares cost function, so that it 
@@ -58,7 +59,9 @@
 
   Fully functional examples are provided by the functions `mFit()` and
   `hFit()` and the executable script below, which contains sample data, 
-  executes the fitting procecure and collects the results. 
+  executes the fitting procecure and collects the results. The script also
+  contains only a few lines of code to perform a very minimalistic fit
+  to unbinnde data with a user-defined likelihood function. 
   
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
@@ -2262,8 +2265,7 @@ if __name__ == "__main__": # --- interface and example
       quiet=True,         # suppress informative printout
       axis_labels=['x', 'y   \  f(x, *par)'], 
       data_legend = 'random data',    
-      model_legend = 'signal + background model'
-  )
+      model_legend = 'signal + background model' )
 
 # Print results 
   print('\n*==* histogram fit Result:')
@@ -2275,24 +2277,23 @@ if __name__ == "__main__": # --- interface and example
 
 
 #
-# *** simple fit with user-defined cost function with phyFit
+# *** unbinned ML fit with user-defined cost function
 #
-
-  # generate some Gaussian-distributed data
+  # generate Gaussian-distributed data
   mu0=2.
   sig0=0.5
-  dat = mu0+ sig0*np.random.randn(1000)
+  data = mu0 + sig0 * np.random.randn(100)
 
-  # define cost function: 2 * negative log likelihood of Gauß
-  #   as unbinned ML fit
+  # define cost function: 2 * negative log likelihood of Gauß;
   def myCost(mu=1., sigma=1.):
-    r= (dat-mu)/sigma
+    r= (data-mu)/sigma
     return np.sum( r*r + 2.*np.log(sigma))
 
-  # set up a fit with user-defined cost function
+  # set up an mnFit with user-defined cost function
+  #   (this code illustrates the basic interface of mnFit)
   userFit = mnFit("user")
-  userFit.init_mnFit(myCost)
-  fitResult = userFit.do_mnFit()
+  userFit.init_fit(myCost)
+  fitResult = userFit.do_fit()
   userFit.plotContours()  
   pvals, perrs, cor, gof = userFit.getResult()
   
@@ -2302,8 +2303,6 @@ if __name__ == "__main__": # --- interface and example
   print(" neg. parameter errors: ", perrs[:,0])
   print(" pos. parameter errors: ", perrs[:,1])
   print(" correlations : \n", cor)  
-
-
 
   # finally, show all figures
   plt.show()
