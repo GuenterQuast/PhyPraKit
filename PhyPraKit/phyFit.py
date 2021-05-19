@@ -12,32 +12,37 @@
 
   The class `mnFit.py` uses the optimization and uncertainty-estimation
   package `iminuit` for fitting a parameter-dependent model f(x, \*par) 
-  or a probability distribution to data points (x, y), to binned histogram 
-  data or to unbinned data. Parameter estimation is based on the the 
-  Maximum-Likelihood method in the first two cases, or an a user-defined
+  to data points (x, y) or a probability density function to binned 
+  histogram data or to unbinned data. Parameter estimation is based on 
+  the Maximum-Likelihood method in the first two cases, or on a user-defined
   likelihood function in the latter case. Classical least-square methods 
   are optionally available for comparison with other packages. 
 
-  A unique feature of the package ist the support of different
-  kinds of uncertainties, i. e. independent and/or correlated 
+  A unique feature of the package ist the support of different kinds 
+  of uncertainties for x-y data, namely independent and/or correlated 
   absolute and/or relative uncertainties in the x and/or y directions. 
-  
+  Parameter estimation for density distributions is based on the shifted 
+  Poission distibution, Poisson(x-loc, lambda), of the number of entries 
+  in each bin of a histogram. 
+
+  Method:
+    Uncertainties that depend on model parameters are treated by dynamically 
+    updating the cost function during the fitting process wit `iminuit`.
+    Data points with relative errors can thus be referred to the model 
+    instead of the data. The derivative of the model function w.r.t. x is 
+    used to project the covariance matrix of x-uncertainties on the y-axis. 
+
   Example functions mFit() and hFit() illustrate how to control 
   the  interface of `mnFit` for x-y and histogram fits, and a 
   short script is provided to perform fits on sample data.  
- 
-  Method:
-    A user-defined cost function in `iminuit` with uncertainties 
-    that depend on model parameters is dynamically updated during 
-    the fitting process. Data points with relative errors can thus
-    be referred to the model instead of the data. The derivative
-    of the model function w.r.t. x is used to project the 
-    covariance matrix of x-uncertainties on the y-axis. 
+  A brief example how to implement fit of a prbability density to
+  a set of (unbinned) data is also provided. 
 
-  The implementation in this example is minimalistic and
-  intended to illustrate the principle of an advanced usage
-  of `iminuit`. It is also meant to stimulate own studies with 
-  special, user-defined cost functions.
+  The implementation of the fitting procedure in this package is 
+  - intenitionally - rather minimalistic, and it is intended to 
+  illustrate the principle of an advanced usage of `iminuit`. It is 
+  also meant to stimulate own applications of special, user-defined cost 
+  functions.
 
   The main features of this package are:
     - provisioning of cost functions for x-y and binned histogram fits 
@@ -55,7 +60,9 @@
   distribution. Fits to bistogram data rely on the negative log-likelihood
   of the Poisson distribution, which is generalised to support fractional
   observed values, which may occur if corrections to the observed bin counts 
-  have to be applied. 
+  have to be applied. If there is a difference between the mean value and
+  the variance of the number of entries in a bin due to corrections, 
+  a "shifted Poisson distribution", Poiss(x-DeltaMu, lambda), is supported.
 
   Fully functional examples are provided by the functions `mFit()` and
   `hFit()` and the executable script below, which contains sample data, 
@@ -2213,7 +2220,7 @@ if __name__ == "__main__": # --- interface and example
                                      use_negLogL=True,
                                      plot=True,
                                      plot_band=True,
-                                     plot_cor=True,
+                                     plot_cor=False,
                                      showplots=False,
                                      quiet=False,
                                      axis_labels=['x', 'y   \  f(x, *par)'], 
@@ -2260,7 +2267,7 @@ if __name__ == "__main__": # --- interface and example
       fit_density = True,      # fit density
       plot=True,           # plot data and model
       plot_band=True,      # plot model confidence-band
-      plot_cor=True,      # plot profiles likelihood and contours
+      plot_cor=False,      # plot profiles likelihood and contours
       showplots=False,      # show / don't show plots
       quiet=True,         # suppress informative printout
       axis_labels=['x', 'y   \  f(x, *par)'], 
