@@ -2172,40 +2172,41 @@ class mnFit():
 
 if __name__ == "__main__": # --- interface and example
   
-#
-# *** Example of an application of phyFit.mFit()
-#
+
+  def example_xyFit():
+  #
+  # *** Example of an application of phyFit.mFit()
+  #
   # define the model function to fit
-  def exp_model(x, A=1., x0=1.):
-    return A*np.exp(-x/x0)
+    def exp_model(x, A=1., x0=1.):
+      return A*np.exp(-x/x0)
 
-  # another model function
-  def poly2_model(x, a=0.1, b=1., c=1.):
-    return a*x**2 + b*x + c
+    # another model function
+    def poly2_model(x, a=0.1, b=1., c=1.):
+      return a*x**2 + b*x + c
 
-  # set model to use in fit
-  fitmodel=exp_model  # also try poly2_model !
-  # get keyword-arguments
-  mpardict = mnFit.get_functionSignature(fitmodel)[1]
+    # set model to use in fit
+    fitmodel=exp_model  # also try poly2_model !
+    # get keyword-arguments
+    mpardict = mnFit.get_functionSignature(fitmodel)[1]
   
-#data ...
-  data_x = [0.0, 0.2, 0.4, 0.6, 0.8, 1., 1.2,
+    # the data ...
+    data_x = [0.0, 0.2, 0.4, 0.6, 0.8, 1., 1.2,
           1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6]
-  data_y = [1.149, 0.712, 0.803, 0.464, 0.398, 0.354, 0.148,
+    data_y = [1.149, 0.712, 0.803, 0.464, 0.398, 0.354, 0.148,
             0.328, 0.181, 0.140, 0.065, 0.005,-0.005, 0.116]
-# ... and uncertaities  
-  sabsy = 0.07 # independent y
-  srely = 0.05 # 5% of model value
-  cabsy = 0.04 # correlated
-  crely = 0.03 # 3% of model value correlated
-  sabsx = 0.05 # independent x
-  srelx = 0.04 # 4% of x
-  cabsx = 0.03 # correlated x
-  crelx = 0.02 # 2% of x correlated
+    # ... and uncertaities  
+    sabsy = 0.07 # independent y
+    srely = 0.05 # 5% of model value
+    cabsy = 0.04 # correlated
+    crely = 0.03 # 3% of model value correlated
+    sabsx = 0.05 # independent x
+    srelx = 0.04 # 4% of x
+    cabsx = 0.03 # correlated x
+    crelx = 0.02 # 2% of x correlated
 
-
-# perform fit to data with function mFit using class mnFit
-  parvals, parerrs, cor, chi2 = mFit(fitmodel, data_x, data_y,
+    # perform fit to data with function mFit using class mnFit
+    parvals, parerrs, cor, chi2 = mFit(fitmodel, data_x, data_y,
                                      sx=sabsx,
                                      sy=sabsy,
                                      srelx=srelx,
@@ -2214,9 +2215,9 @@ if __name__ == "__main__": # --- interface and example
                                      xrelcor=crelx,
                                      yabscor=cabsy,
                                      yrelcor=crely,
-##                                   p0=(1., 0.5),     
-#                                     constraints=['A', 1., 0.03],
-#                                     constraints=[0, 1., 0.03],
+  ##                                   p0=(1., 0.5),     
+  #                                     constraints=['A', 1., 0.03],
+  #                                     constraints=[0, 1., 0.03],
                                      use_negLogL=True,
                                      plot=True,
                                      plot_band=True,
@@ -2226,90 +2227,107 @@ if __name__ == "__main__": # --- interface and example
                                      axis_labels=['x', 'y   \  f(x, *par)'], 
                                      data_legend = 'random data',    
                                      model_legend = 'model')
+    plt.title("Fit to x-y data",
+               size='xx-large', color='darkblue')
 
-# Print results 
-  print('\n*==* xyFit Result:')
-  print(" chi2: {:.3g}".format(chi2))
-  print(" parameter values:      ", parvals)
-  print(" neg. parameter errors: ", parerrs[:,0])
-  print(" pos. parameter errors: ", parerrs[:,1])
-  print(" correlations : \n", cor)
+  # Print results 
+    print('\n*==* xyFit Result:')
+    print(" chi2: {:.3g}".format(chi2))
+    print(" parameter values:      ", parvals)
+    print(" neg. parameter errors: ", parerrs[:,0])
+    print(" pos. parameter errors: ", parerrs[:,1])
+    print(" correlations : \n", cor)
 
 
-#
-# *** Histogram Fit: Example of an application of phyFit.hFit()
-#
+  def example_histogramFit():
+  #
+  # *** Histogram Fit: Example of an application of phyFit.hFit() 
+  #
 
-  # define the model function to fit
-  def SplusB_model(x, mu = 6.0, sigma = 0.5, s = 0.3):
-    '''pdf of a Gaussian signal on top of flat background
-    '''
-    normal = np.exp(-0.5*((x-mu)/sigma)**2)/np.sqrt(2.*np.pi*sigma**2)
-    flat = 1./(xmx-xmn) 
-    return s * normal + (1-s) * flat 
+  #    # define the model function to fit
+    def SplusB_model(x, mu = 6.0, sigma = 0.5, s = 0.3):
+      '''pdf of a Gaussian signal on top of flat background
+      '''
+      normal = np.exp(-0.5*((x-mu)/sigma)**2)/np.sqrt(2.*np.pi*sigma**2)
+      flat = 1./(xmx-xmn) 
+      return s * normal + (1-s) * flat 
 
-  nbins=40
-  xmn = 1
-  xmx = 10
-  bedges=np.linspace(xmn, xmx, nbins+1)
-  bcontents = np.array([1, 1, 1, 2, 2, 2, 6, 1, 0, 3, 1, 1, 0,
+    nbins=40
+    xmn = 1
+    xmx = 10
+    bedges=np.linspace(xmn, xmx, nbins+1)
+    bcontents = np.array([1, 1, 1, 2, 2, 2, 6, 1, 0, 3, 1, 1, 0,
                         2, 3, 3, 1, 1, 0, 2, 3, 2, 3, 1, 1, 8,
                         6, 7, 9, 1, 0, 1, 2, 6, 3, 1, 3, 3, 3, 4])
-  #  
-  # ---  perform fit  
-  #
-  pvals, perrs, cor, gof = hFit(SplusB_model,
-      bcontents, bedges,  # bin entries and bin edges
-      p0=None,                # initial guess for parameter values 
-   #  constraints=['s', val , err ],   # constraints within errors
-      limits=('s', 0., None),  #limits
-      use_GaussApprox=False,   # Gaussian approximation
-      fit_density = True,      # fit density
-      plot=True,           # plot data and model
-      plot_band=True,      # plot model confidence-band
-      plot_cor=False,      # plot profiles likelihood and contours
-      showplots=False,      # show / don't show plots
-      quiet=True,         # suppress informative printout
-      axis_labels=['x', 'y   \  f(x, *par)'], 
-      data_legend = 'random data',    
-      model_legend = 'signal + background model' )
+    #  
+    # ---  perform fit  
+    #
+    pvals, perrs, cor, gof = hFit(SplusB_model,
+          bcontents, bedges,  # bin entries and bin edges
+          p0=None,                # initial guess for parameter values 
+     #   constraints=['s', val , err ],   # constraints within errors
+          limits=('s', 0., None),  #limits
+          use_GaussApprox=False,   # Gaussian approximation
+          fit_density = True,      # fit density
+          plot=True,           # plot data and model
+          plot_band=True,      # plot model confidence-band
+          plot_cor=False,      # plot profiles likelihood and contours
+          showplots=False,      # show / don't show plots
+          quiet=True,         # suppress informative printout
+          axis_labels=['x', 'y   \  f(x, *par)'], 
+          data_legend = 'random data',    
+          model_legend = 'signal + background model' )
 
-# Print results 
-  print('\n*==* histogram fit Result:')
-  print(" goodness-of-fit: {:.3g}".format(gof))
-  print(" parameter values:      ", parvals)
-  print(" neg. parameter errors: ", parerrs[:,0])
-  print(" pos. parameter errors: ", parerrs[:,1])
-  print(" correlations : \n", cor)
+    plt.title("Fit to histogram data",
+              size='xx-large', color='darkblue')
 
+    # Print results 
+    print('\n*==* histogram fit Result:')
+    print(" goodness-of-fit: {:.3g}".format(gof))
+    print(" parameter values:      ", pvals)
+    print(" neg. parameter errors: ", perrs[:,0])
+    print(" pos. parameter errors: ", perrs[:,1])
+    print(" correlations : \n", cor)
 
-#
-# *** unbinned ML fit with user-defined cost function
-#
-  # generate Gaussian-distributed data
-  mu0=2.
-  sig0=0.5
-  data = mu0 + sig0 * np.random.randn(100)
+  def likelihood_Fit():
+    """**unbinned ML fit** with user-defined cost function
 
-  # define cost function: 2 * negative log likelihood of Gauß;
-  def myCost(mu=1., sigma=1.):
-    r= (data-mu)/sigma
-    return np.sum( r*r + 2.*np.log(sigma))
+    This code illustrates the interface of class **mnFit**
+    """  
 
-  # set up an mnFit with user-defined cost function
-  #   (this code illustrates the basic interface of mnFit)
-  userFit = mnFit("user")
-  userFit.init_fit(myCost)
-  fitResult = userFit.do_fit()
-  userFit.plotContours()  
-  pvals, perrs, cor, gof = userFit.getResult()
+    # generate Gaussian-distributed data
+    mu0=2.
+    sig0=0.5
+    data = mu0 + sig0 * np.random.randn(100)
+
+    # define cost function: 2 * negative log likelihood of Gauß;
+    def myCost(mu=1., sigma=1.):
+      r= (data-mu)/sigma
+      return np.sum( r*r + 2.*np.log(sigma))
+
+    # set up an mnFit with user-defined cost function
+    #   (this code illustrates the basic interface of mnFit)
+    userFit = mnFit("user")
+    userFit.init_fit(myCost)
+    fitResult = userFit.do_fit()
+    fig_cor=userFit.plotContours()  
+    pvals, perrs, cor, gof = userFit.getResult()
   
-# Print results
-  print('\n*==* user-defined cost: Fit Result:')
-  print(" parameter values:      ", pvals)
-  print(" neg. parameter errors: ", perrs[:,0])
-  print(" pos. parameter errors: ", perrs[:,1])
-  print(" correlations : \n", cor)  
+    fig_cor.suptitle("Maximum-likelihood fit: profiles and contours",
+                     size='xx-large', color='darkblue')
+    # Print results
+    print('\n*==* user-defined cost: Fit Result:')
+    print(" parameter values:      ", pvals)
+    print(" neg. parameter errors: ", perrs[:,0])
+    print(" pos. parameter errors: ", perrs[:,1])
+    print(" correlations : \n", cor)  
 
-  # finally, show all figures
+  #
+  # --- run examples
+  #
+  example_xyFit()
+  example_histogramFit()
+  likelihood_Fit()
+
+  # show all figures
   plt.show()
