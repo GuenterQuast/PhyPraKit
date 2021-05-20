@@ -590,16 +590,19 @@ class mnFit():
       for i, pnam in enumerate(self.pnams):
         model_kwargs[pnam] = p0[i]    
 
+    self.constraints = []
+    if constraints is not None:
+      self.setConstraints(constraints)
+    self.nconstraints = len(self.constraints)
+
     # create cost function
     self.costf = self.xLSQ(self,
                            self.xyData, model,
                            use_neg2logL= self.use_negLogL,
                            quiet=self.quiet)
+
     if limits is not None:
       self.setLimits(limits)
-
-    if constraints is not None:
-      self.costf.setConstraints(constraints)
 
     # create Minuit object
     if __version__ < '2':
@@ -622,30 +625,6 @@ class mnFit():
         self.minuit.print_level = 0
       if limits is not None:
         self.minuit.limits = self.limits       
-      
-  def setLimits(self, limits):
-    """store parameter limits
-
-    format: nested list(s) of type 
-    [parameter name, min, max] or
-    [parameter index, min, max]
-    """
-
-    # get parameter names (from cost function)
-    self.limits=[ [None, None]] * len(self.costf.pnams)
-    if isinstance(limits[1], list):
-      for l in limits:
-        if type(l[0])==type(' '):
-          p_id = self.costf.pnam2id[l[0]]
-        else:
-          p_id = l[0]
-        self.limits[p_id] = [l[1], l[2]]          
-    else:
-      if type(limits[0])==type(' '):
-        p_id = self.costf.pnam2id[limits[0]]
-      else:
-        p_id = limits[0]
-      self.limits[p_id]=[limits[1], limits[2]]          
       
   def do_xyFit(self):
     """perform all necessary steps of fit sequence
@@ -1214,29 +1193,16 @@ class mnFit():
       # dictionary assigning parameter name to index
       self.pnam2id = {
         self.pnams[i] : i for i in range(0,self.npar)
-        } 
-      self.ndof = len(data.y) - self.npar
-      self.constraints = []
-      self.nconstraints = 0
+        }
+      
+      # take account of constraints 
+      self.constraints = outer.constraints
+      self.nconstraints = outer.nconstraints
+      self.ndof = len(self.data.y) - self.npar + self.nconstraints
+
       # flag to control final actions in cost function
       self.final_call = False
 
-    def setConstraints(self, constraints):
-      """Add parameter constraints
-
-      format: nested list(s) of type 
-      [parameter name, value, uncertainty] or
-      [parameter index, value, uncertainty]
-      """
-      
-      if isinstance(constraints[1], list):
-         for c in constraints:
-           self.constraints.append(c)
-      else:
-         self.constraints.append(constraints)
-      self.nconstraints = len(self.constraints)
-      # take account of constraints in degrees of freedom 
-      self.ndof = len(self.data.y) - self.npar + self.nconstraints
 
     def __call__(self, *par):  
       # called iteratively by minuit
@@ -1363,17 +1329,20 @@ class mnFit():
       for i, pnam in enumerate(self.pnams):
         model_kwargs[pnam] = p0[i]
         
+    self.constraints = []
+    if constraints is not None:
+      self.setConstraints(constraints)
+    self.nconstraints = len(self.constraints)
+
     # create cost function
     self.costf = self.hCost(self,
                             self.hData, model,
                             use_GaussApprox=self.use_GaussApprox,
                             density = self.fit_density,
                             quiet=self.quiet)
+
     if limits is not None:
       self.setLimits(limits)
-
-    if constraints is not None:
-      self.costf.setConstraints(constraints)
 
     # create Minuit object
     if __version__ < '2':
@@ -1602,9 +1571,12 @@ class mnFit():
       # dictionary assigning parameter name to index
       self.pnam2id = {
         self.pnams[i] : i for i in range(0,self.npar) } 
-      self.ndof = len(self.data.contents) - self.npar
-      self.constraints = []
-      self.nconstraints = 0
+ 
+      self.constraints = outer.constraints
+      self.nconstraints = outer.nconstraints
+      # take account of constraints in degrees of freedom 
+      self.ndof = len(self.data.contents) - self.npar + self.nconstraints
+
       # flag to control final actions in cost function
       self.final_call = False
 
@@ -1618,24 +1590,6 @@ class mnFit():
       else:
         self.norm = 1.
         
-    def setConstraints(self, constraints):
-      """
-      Add parameter constraints
-
-      format: nested list(s) of type 
-      [parameter name, value, uncertainty] or
-      [parameter index, value, uncertainty]
-      """
-      
-      if isinstance(constraints[1], list):
-         for c in constraints:
-           self.constraints.append(c)
-      else:
-         self.constraints.append(constraints)
-      self.nconstraints = len(self.constraints)
-      # take account of constraints in degrees of freedom 
-      self.ndof = len(self.data.contents) - self.npar + self.nconstraints
-    
     def __call__(self, *par):
       # called iteratively by minuit
 
@@ -1739,16 +1693,19 @@ class mnFit():
     if p0 is not None:
       for i, pnam in enumerate(self.pnams):
         model_kwargs[pnam] = p0[i]
-        
+
+    self.constraints = []
+    if constraints is not None:
+      self.setConstraints(constraints)
+    self.nconstraints = len(self.constraints)
+
     #set up cost function for iminuit ...
     self.costf = self.mnCost(self,
                              userCostFunction,
                              quiet=self.quiet)      
+
     if limits is not None:
       self.setLimits(limits)
-
-    if constraints is not None:
-      self.costf.setConstraints(constraints)
 
     # ... and create Minuit object
     if __version__ < '2':
@@ -1865,30 +1822,14 @@ class mnFit():
       # dictionary assigning parameter name to index
       self.pnam2id = {
         self.pnams[i] : i for i in range(0,self.npar) } 
-      self.constraints = []
-      self.nconstraints = 0
+      self.constraints = outer.constraints
+      self.nconstraints = len(self.constraints)
 
       # for this kind of fit, some input and ouput quantities are not know
       self.data = None
       self.gof = None
       self.ndof = None
       
-    def setConstraints(self, constraints):
-      """
-      Add parameter constraints
-
-      format: nested list(s) of type 
-      [parameter name, value, uncertainty] or
-      [parameter index, value, uncertainty]
-      """
-      
-      if isinstance(constraints[1], list):
-         for c in constraints:
-           self.constraints.append(c)
-      else:
-         self.constraints.append(constraints)
-      self.nconstraints = len(self.constraints)
-
     def __call__(self, *par):
       cost = 0.
       # add constraints to cost
@@ -1909,6 +1850,43 @@ class mnFit():
  #
  # --- comon code for all fit types
  #
+
+  def setLimits(self, limits):
+    """store parameter limits
+
+    format: nested list(s) of type 
+    [parameter name, min, max] or
+    [parameter index, min, max]
+    """
+
+    # get parameter names (from cost function)
+    self.limits=[ [None, None]] * len(self.costf.pnams)
+    if isinstance(limits[1], list):
+      for l in limits:
+        if type(l[0])==type(' '):
+          p_id = self.costf.pnam2id[l[0]]
+        else:
+          p_id = l[0]
+        self.limits[p_id] = [l[1], l[2]]          
+    else:
+      if type(limits[0])==type(' '):
+        p_id = self.costf.pnam2id[limits[0]]
+      else:
+        p_id = limits[0]
+      self.limits[p_id]=[limits[1], limits[2]]          
+
+  def setConstraints(self, constraints):
+    """Add parameter constraints
+    format: nested list(s) of type 
+    [parameter name, value, uncertainty] or
+    [parameter index, value, uncertainty]
+    """
+    if isinstance(constraints[1], list):
+       for c in constraints:
+         self.constraints.append(c)
+    else:
+       self.constraints.append(constraints)
+      
   def _storeResult(self):
   # collect results as numpy arrays
     # !!! this part depends on iminuit version !!!    
