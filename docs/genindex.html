@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; PhyPraKit 1.1.3 documentation</title>
+    <title>Index &#8212; PhyPraKit 1.2.0dev documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PhyPraKit 1.1.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PhyPraKit 1.2.0dev documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
     </div>  
@@ -151,7 +151,13 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.do_fit">do_fit() (PhyPraKit.phyFit.mnFit method)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.do_hFit">do_hFit() (PhyPraKit.phyFit.mnFit method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.do_mnFit">do_mnFit() (PhyPraKit.phyFit.mnFit method)</a>
+</li>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.do_xyFit">do_xyFit() (PhyPraKit.phyFit.mnFit method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -173,17 +179,17 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#PhyPraKit.generateXYdata">generateXYdata() (in module PhyPraKit)</a>
 </li>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.DataUncertainties.get_Cov">get_Cov() (PhyPraKit.phyFit.mnFit.DataUncertainties method)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.xyDataUncertainties.get_Cov">get_Cov() (PhyPraKit.phyFit.mnFit.xyDataUncertainties method)</a>
 </li>
       <li><a href="index.html#PhyPraKit.phyFit.mnFit.get_functionSignature">get_functionSignature() (PhyPraKit.phyFit.mnFit static method)</a>
 </li>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.DataUncertainties.get_iCov">get_iCov() (PhyPraKit.phyFit.mnFit.DataUncertainties method)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.xyDataUncertainties.get_iCov">get_iCov() (PhyPraKit.phyFit.mnFit.xyDataUncertainties method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.DataUncertainties.get_xCov">get_xCov() (PhyPraKit.phyFit.mnFit.DataUncertainties method)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.xyDataUncertainties.get_xCov">get_xCov() (PhyPraKit.phyFit.mnFit.xyDataUncertainties method)</a>
 </li>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.DataUncertainties.get_yCov">get_yCov() (PhyPraKit.phyFit.mnFit.DataUncertainties method)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.xyDataUncertainties.get_yCov">get_yCov() (PhyPraKit.phyFit.mnFit.xyDataUncertainties method)</a>
 </li>
       <li><a href="index.html#PhyPraKit.phyFit.mnFit.getFunctionError">getFunctionError() (PhyPraKit.phyFit.mnFit static method)</a>
 </li>
@@ -197,10 +203,12 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="index.html#PhyPraKit.hist2dstat">hist2dstat() (in module PhyPraKit)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.hFit">hFit() (in module PhyPraKit.phyFit)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#PhyPraKit.hist2dstat">hist2dstat() (in module PhyPraKit)</a>
+</li>
       <li><a href="index.html#PhyPraKit.histstat">histstat() (in module PhyPraKit)</a>
 </li>
   </ul></td>
@@ -209,11 +217,19 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.init_data">init_data() (PhyPraKit.phyFit.mnFit method)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.init_hData">init_hData() (PhyPraKit.phyFit.mnFit method)</a>
+</li>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.init_hFit">init_hFit() (PhyPraKit.phyFit.mnFit method)</a>
+</li>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.init_mnFit">init_mnFit() (PhyPraKit.phyFit.mnFit method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.init_fit">init_fit() (PhyPraKit.phyFit.mnFit method)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.init_xyData">init_xyData() (PhyPraKit.phyFit.mnFit method)</a>
+</li>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.init_xyFit">init_xyFit() (PhyPraKit.phyFit.mnFit method)</a>
+</li>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.hCost.integral_overBins">integral_overBins() (PhyPraKit.phyFit.mnFit.hCost static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -222,8 +238,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#PhyPraKit.k2Fit">k2Fit() (in module PhyPraKit)</a>
-</li>
-      <li><a href="index.html#PhyPraKit.kFit">kFit() (in module PhyPraKit)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -234,8 +248,6 @@
         <li><a href="index.html#module-kfitf">module</a>
 </li>
       </ul></li>
-      <li><a href="index.html#PhyPraKit.kRegression">kRegression() (in module PhyPraKit)</a>
-</li>
   </ul></td>
 </tr></table>
 
@@ -247,8 +259,6 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#PhyPraKit.linRegression">linRegression() (in module PhyPraKit)</a>
-</li>
-      <li><a href="index.html#PhyPraKit.linRegressionXY">linRegressionXY() (in module PhyPraKit)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -266,9 +276,15 @@
       </ul></li>
       <li><a href="index.html#PhyPraKit.phyFit.mnFit">mnFit (class in PhyPraKit.phyFit)</a>
 </li>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.DataUncertainties">mnFit.DataUncertainties (class in PhyPraKit.phyFit)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.hCost">mnFit.hCost (class in PhyPraKit.phyFit)</a>
+</li>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.histData">mnFit.histData (class in PhyPraKit.phyFit)</a>
+</li>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.mnCost">mnFit.mnCost (class in PhyPraKit.phyFit)</a>
 </li>
       <li><a href="index.html#PhyPraKit.phyFit.mnFit.xLSQ">mnFit.xLSQ (class in PhyPraKit.phyFit)</a>
+</li>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.xyDataUncertainties">mnFit.xyDataUncertainties (class in PhyPraKit.phyFit)</a>
 </li>
       <li>
     module
@@ -302,10 +318,6 @@
 </li>
         <li><a href="index.html#module-test_k2Fit">test_k2Fit</a>
 </li>
-        <li><a href="index.html#module-test_kFit">test_kFit</a>
-</li>
-        <li><a href="index.html#module-test_kRegression">test_kRegression</a>
-</li>
         <li><a href="index.html#module-test_labxParser">test_labxParser</a>
 </li>
         <li><a href="index.html#module-test_mFit">test_mFit</a>
@@ -329,10 +341,16 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="index.html#PhyPraKit.nhist">nhist() (in module PhyPraKit)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.hCost.n2lLGauss">n2lLGauss() (PhyPraKit.phyFit.mnFit.hCost static method)</a>
+</li>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.hCost.n2lLPoisson">n2lLPoisson() (PhyPraKit.phyFit.mnFit.hCost static method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.hCost.n2lLsPoisson">n2lLsPoisson() (PhyPraKit.phyFit.mnFit.hCost static method)</a>
+</li>
+      <li><a href="index.html#PhyPraKit.nhist">nhist() (in module PhyPraKit)</a>
+</li>
       <li><a href="index.html#PhyPraKit.nhist2d">nhist2d() (in module PhyPraKit)</a>
 </li>
   </ul></td>
@@ -367,10 +385,16 @@
         <li><a href="index.html#module-PhyPraKit.phyFit">module</a>
 </li>
       </ul></li>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.plot_clContour">plot_clContour() (PhyPraKit.phyFit.mnFit method)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.histData.plot">plot() (PhyPraKit.phyFit.mnFit.histData method)</a>
+
+      <ul>
+        <li><a href="index.html#PhyPraKit.phyFit.mnFit.xyDataUncertainties.plot">(PhyPraKit.phyFit.mnFit.xyDataUncertainties method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.plot_clContour">plot_clContour() (PhyPraKit.phyFit.mnFit method)</a>
+</li>
       <li><a href="index.html#PhyPraKit.phyFit.mnFit.plot_nsigContour">plot_nsigContour() (PhyPraKit.phyFit.mnFit method)</a>
 </li>
       <li><a href="index.html#PhyPraKit.phyFit.mnFit.plot_Profile">plot_Profile() (PhyPraKit.phyFit.mnFit method)</a>
@@ -415,13 +439,21 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.xLSQ.setConstraints">setConstraints() (PhyPraKit.phyFit.mnFit.xLSQ method)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.set_hOptions">set_hOptions() (PhyPraKit.phyFit.mnFit method)</a>
 </li>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.setLimits">setLimits() (PhyPraKit.phyFit.mnFit method)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.set_mnOptions">set_mnOptions() (PhyPraKit.phyFit.mnFit method)</a>
 </li>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.set_xyOptions">set_xyOptions() (PhyPraKit.phyFit.mnFit method)</a>
+</li>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.hCost.setConstraints">setConstraints() (PhyPraKit.phyFit.mnFit.hCost method)</a>
+
+      <ul>
+        <li><a href="index.html#PhyPraKit.phyFit.mnFit.xLSQ.setConstraints">(PhyPraKit.phyFit.mnFit.xLSQ method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="index.html#PhyPraKit.phyFit.mnFit.setOptions">setOptions() (PhyPraKit.phyFit.mnFit method)</a>
+      <li><a href="index.html#PhyPraKit.phyFit.mnFit.setLimits">setLimits() (PhyPraKit.phyFit.mnFit method)</a>
 </li>
       <li><a href="index.html#PhyPraKit.simplePeakfinder">simplePeakfinder() (in module PhyPraKit)</a>
 </li>
@@ -476,28 +508,14 @@
 </li>
       </ul></li>
       <li>
-    test_kFit
-
-      <ul>
-        <li><a href="index.html#module-test_kFit">module</a>
-</li>
-      </ul></li>
-      <li>
-    test_kRegression
-
-      <ul>
-        <li><a href="index.html#module-test_kRegression">module</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
     test_labxParser
 
       <ul>
         <li><a href="index.html#module-test_labxParser">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     test_mFit
 
@@ -553,6 +571,10 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#PhyPraKit.phyFit.userFit">userFit() (in module PhyPraKit.phyFit)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#PhyPraKit.ustring">ustring() (in module PhyPraKit)</a>
 </li>
   </ul></td>
@@ -603,7 +625,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PhyPraKit 1.1.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PhyPraKit 1.2.0dev documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
     </div>

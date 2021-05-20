@@ -6,7 +6,7 @@
 
   Requirements: 
    - Python >= 3.6
-   - only supports iminuit vers. > 2.0
+   - iminuit vers. > 2.0
    - scipy > 1.5.0
    - matplotlib > 3
 
@@ -24,6 +24,11 @@
   Parameter estimation for density distributions is based on the shifted 
   Poission distibution, Poisson(x-loc, lambda), of the number of entries 
   in each bin of a histogram. 
+
+  Parameter constraints, i.e. external knowledge of parameters within
+  Gaussian uncertainties, and limits on parameters in order to avoid 
+  problematic regions in parameter space during the minimization process, 
+  are also supported by mnFit.
 
   Method:
     Uncertainties that depend on model parameters are treated by dynamically 
@@ -95,9 +100,9 @@ def mFit(fitf, x, y, sx = None, sy = None,
        data_legend = 'data',    
        model_legend = 'model'):
   
-  """Fit an arbitrary function fitf(x, \*par) to data points (x, y) 
-  with independent and/or correlated absolute and/or relative errors 
-  on x- and/or y- values with class mnFit using the package iminuit.
+  """Wrapper function to fit an arbitrary function fitf(x, \*par) 
+  to data points (x, y) with independent and/or correlated absolute 
+  and/or relative errors  on x- and/or y- values with class mnFit
 
   Correlated absolute and/or relative uncertainties of input data 
   are specified as floats (if all uncertainties are equal) or as 
@@ -213,25 +218,15 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
        data_legend = 'Histogram Data',    
        model_legend = 'Model'):
   
-  """Fit a density distribution f(x, \*par) to binned data (histogram) 
-  with the package iminuit. 
+  """Wrapper function to fit a density distribution f(x, \*par) 
+  to binned data (histogram) with calss mnFit 
   
   The cost function is two times the negative log-likelihood of the Poission 
-  distribution 
+  distribution, or - optionally - of the Gaussian approximation.
 
-  .. math::
-    -2\ln({\mathrm{Poisson}}(k; \lambda)) 
-
-  or - optionally -  of the Gaussian approximation, 
-  
-  .. math::
-    -2\ln({\mathrm{Gauss}}(x; \mu=\lambda,\sigma^2=\lambda)). 
-
-  In all cases, uncertainties are determined from the model values to take into 
-  account also empty bins of an histogram. The default behavious is to fit a
-  normalised density; optionally, it is also possible to fit the number of 
-  entries in order to take into account the Poission fluctuations of the total 
-  number of entries in the histogram. 
+  Uncertainties are determined from the model values in order to avoid biases and to
+  to take account of empty bins of an histogram. The default behaviour is to fit a
+  normalised density; optionally, it is also possible to fit the number of bin entries.
 
   Args:
     * fitf: model function to fit, arguments (float:x, float: \*args)
@@ -276,7 +271,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
   Fit.init_fit(fitf, p0=p0,
                constraints=constraints,
                limits=limits)
-   # perform the fit
+  # perform the fit
   fitResult = Fit.do_fit()
   # print fit result (dictionary from migrad/minos(
   if not quiet:
@@ -294,7 +289,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
                       plot_band=plot_band)
 
   # figure with visual representation of covariances
-  #   prifile likelihood scan and confidence contours
+  #   profile likelihood scan and confidence contours
   if plot_cor:
     fig_cor = Fit.plotContours(figname="histFit: Profiles and Contours")
 
@@ -309,6 +304,64 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
   #   gof
   return Fit.getResult()
 
+def userFit(cost, p0 = None, 
+            constraints = None, limits=None,
+            neg2logL = True,
+            plot_cor = True,
+            showplots = True, quiet = False):
+  
+  """Wrapper function to directly fit a user-defined cost funtion
+
+  This is the simplest fit possibe with the class mnFit. A user-defined
+  cost function is minimized and an estimation of the parameter uncertainties performed
+
+  Args:
+    * cost: user-defined cost funtion to be minimized; the uncertaintiy estimation
+      releys this being a negative log-likelihood function ('nlL') 
+    * p0: array-like, initial guess of parameters
+    * constraints: (nested) list(s) [name or id, value, error] 
+    * limits: (nested) list(s) [name or id, min, max] 
+    * neg2logL: use 2 * nlL (corresponding to a least-squares-type cost)
+    * plot_cor: plot likelihood profiles and confidence contours of parameters
+    * showplots: show plots on screen (can also be done by calling script)
+    * quiet: contrlos verbose output
+    """
+
+  uFit = mnFit("user")
+  # set options
+  uFit.setOptions(run_minos = True,
+                 neg2logL = neg2logL,
+                 quiet = quiet)
+  # no internal data, directly initialze fit with the supplied cost function
+  uFit.init_fit(cost, p0=p0,
+                constraints=constraints,
+                limits=limits)
+  # perform the fit
+  fitResult = uFit.do_fit()
+  # print fit result (dictionary from migrad/minos(
+  if not quiet:
+    print("\nFit Result from migrad:")
+    print(fitResult[0])
+    if fitResult[1] is not None:
+      print("\nResult of minos error analysis:")
+      print(fitResult[1])
+    
+  # figure with visual representation of covariances
+  #    profile likelihood scan and confidence contours
+  if plot_cor:
+    fig_cor = uFit.plotContours(figname="userFit: Profiles and Contours")
+
+  # show plots on screen
+  if showplots and (plot or plot_cor):
+    plt.show()
+
+  # return
+  #   numpy arrays with fit result: parameter values,
+  #   negative and positive parameter uncertainties,
+  #   correlation matrix
+  #   gof
+  return uFit.getResult()
+
 #
 # --- classes and functions
 #
@@ -317,7 +370,7 @@ class mnFit():
   with independent and/or correlated absolute and/or relative uncertainties
 
   This implementation depends on and heavily uses features of 
-  the minimizer **iminuit**.
+  the minimizer and uncertainty-estimator **iminuit**.
    
   Public Data member
 
@@ -325,10 +378,10 @@ class mnFit():
 
   Public methods:
 
-  - init_data():        initialze data and uncertainties (generic)
-  - init_fit():         initialize generic fit: data, model and constraints
-  - setOptions():       set options for mnFit (generic)
-  - do_fit():           perform fit
+  - init_data():        generic wrapper for init_*Data() methods
+  - init_fit():         generic wrapper for init_*Fit() methods
+  - setOptions():       generic wrapper for set_*Options() methods
+  - do_fit():           generic wrapper for do_*Fit() methods
   - plotModel():        plot model function and data
   - plotContours():     plot profile likelihoods and confidence contours 
   - getResult():        access to final fit results 
@@ -343,12 +396,16 @@ class mnFit():
   - init_hData():        initialze histogram data and uncertainties
   - init_xyFit():        initialize xy fit: data, model and constraints
   - init_hFit():         initialize histogram fit: data, model and constraints
+  - init_mnFit():        initialize histogram simple minuit fit
   - set_xyOptions():     set options for xy Fit
   - set_hOptions():      set options for histogram Fit
+  - set_mnOptions():     set options for simple minuit fit with external cost function
   - do_xyFit():          perform xy fit
   - do_hFit():           perform histogram fit
+  - do_mnFit():          simple minuit fit with external, user-defined cost function
  
   Data members:
+
   - ParameterNames:     names of parameters (as specified in model function)
   - GoF:                goodness-of-fit, i.e. chi2 at best-fit point
   - NDoF:               number of degrees of freedom
@@ -381,8 +438,7 @@ class mnFit():
 
     if fit_type not in ['xy', 'hist', 'user']:
       sys.exit(
-        '!**! mnFit: invalid fit type ', fit_type, '- exiting!'
-      ) 
+        '!**! mnFit: invalid fit type ', fit_type, '- exiting!') 
     self.fit_type = fit_type
 
     # set default of all options
@@ -427,7 +483,7 @@ class mnFit():
     elif self.fit_type == 'hist':
       self.set_hOptions(*args, **kwargs)
     elif self.fit_type == 'user':
-      selt.set_mnOptions(*args, **kwargs)
+      self.set_mnOptions(*args, **kwargs)
     else:
       print("!**! unknown type of Fit ", self.fit_type)
       sys.exit('mnFit Error: invalid fit type')    
@@ -1666,7 +1722,8 @@ class mnFit():
   #
   # --- code for fit with user-supplied cost function
   #      
-  def init_mnFit(self, userCostFunction, p0=None, limits=None):
+  def init_mnFit(self, userCostFunction, p0=None, 
+                       constraints=None, limits=None):
     """initialize fit object for simple minuit fit with user-supplied cost
 
     Args:
@@ -1690,6 +1747,9 @@ class mnFit():
     if limits is not None:
       self.setLimits(limits)
 
+    if constraints is not None:
+      self.costf.setConstraints(constraints)
+
     # ... and create Minuit object
     if __version__ < '2':
       if self.quiet:
@@ -1710,22 +1770,29 @@ class mnFit():
       if self.quiet:
         self.minuit.print_level = 0
       if limits is not None:
-        self.minuit.limits = self.limits           
+        self.minuit.limits = self.limits
         
   def set_mnOptions(self,
+                      run_minos=None,
                       neg2logL=None,
                       quiet=None):
     """Define options for minuit fit with user cost function
+
     Args:
-       - cost function is -2 negLogL
+
+    - run_minos: run minos profile likelihood scan
+    - neg2logL: cost function is -2 negLogL
+
     """
+    if run_minos is not None:   
+      self.run_minos = run_minos
     if neg2logL is not None:
       self.neg2logL = neg2logL
       if self.neg2logL:
         self.ErrDef = 1.
       else:
         self.ErrDef = 0.5
-    if quiete is not None:
+    if quiet is not None:
       self.quiet = quiet
 
   def do_mnFit(self):
@@ -1768,7 +1835,6 @@ class mnFit():
     self._storeResult()
     return self.migradResult, self.minosResult
 
-
   # --- class encapsulating user-defined cost function
   class mnCost:
     """
@@ -1789,7 +1855,9 @@ class mnFit():
 
       self.cost = userCostFunction
       self.quiet = quiet
-      
+
+      self.ErrDef = outer.ErrDef
+
       # set proper signature of model function for iminuit
       self.pnams = outer.pnams
       self.func_code = make_func_code(self.pnams)
@@ -1797,15 +1865,44 @@ class mnFit():
       # dictionary assigning parameter name to index
       self.pnam2id = {
         self.pnams[i] : i for i in range(0,self.npar) } 
+      self.constraints = []
+      self.nconstraints = 0
 
       # for this kind of fit, some input and ouput quantities are not know
       self.data = None
       self.gof = None
       self.ndof = None
       
+    def setConstraints(self, constraints):
+      """
+      Add parameter constraints
+
+      format: nested list(s) of type 
+      [parameter name, value, uncertainty] or
+      [parameter index, value, uncertainty]
+      """
+      
+      if isinstance(constraints[1], list):
+         for c in constraints:
+           self.constraints.append(c)
+      else:
+         self.constraints.append(constraints)
+      self.nconstraints = len(self.constraints)
+
     def __call__(self, *par):
+      cost = 0.
+      # add constraints to cost
+      if self.nconstraints:
+        for c in self.constraints:
+          if type(c[0])==type(' '):
+            p_id = self.pnam2id[c[0]]
+          else:
+            p_id = c[0]
+          r = ( par[p_id] - c[1]) / c[2] 
+          cost += r*r
+        cost *= self.ErrDef 
       # called iteratively by minuit
-      return self.cost(*par)
+      return cost + self.cost(*par)
 
  # --- end definition of class mnCost ----
 
@@ -2227,7 +2324,7 @@ if __name__ == "__main__": # --- interface and example
                                      axis_labels=['x', 'y   \  f(x, *par)'], 
                                      data_legend = 'random data',    
                                      model_legend = 'model')
-    plt.title("Fit to x-y data",
+    plt.suptitle("mnFit example: fit to x-y data",
                size='xx-large', color='darkblue')
 
   # Print results 
@@ -2278,7 +2375,7 @@ if __name__ == "__main__": # --- interface and example
           data_legend = 'random data',    
           model_legend = 'signal + background model' )
 
-    plt.title("Fit to histogram data",
+    plt.suptitle("mnFit example: fit to histogram data",
               size='xx-large', color='darkblue')
 
     # Print results 
@@ -2292,7 +2389,8 @@ if __name__ == "__main__": # --- interface and example
   def likelihood_Fit():
     """**unbinned ML fit** with user-defined cost function
 
-    This code illustrates the interface of class **mnFit**
+    This code illustrates uasge of the wrapper function userFit() 
+    for  class **mnFit** 
     """  
 
     # generate Gaussian-distributed data
@@ -2305,15 +2403,17 @@ if __name__ == "__main__": # --- interface and example
       r= (data-mu)/sigma
       return np.sum( r*r + 2.*np.log(sigma))
 
-    # set up an mnFit with user-defined cost function
-    #   (this code illustrates the basic interface of mnFit)
-    userFit = mnFit("user")
-    userFit.init_fit(myCost)
-    fitResult = userFit.do_fit()
-    fig_cor=userFit.plotContours()  
-    pvals, perrs, cor, gof = userFit.getResult()
-  
-    fig_cor.suptitle("Maximum-likelihood fit: profiles and contours",
+    pvals, perrs, cor, gof = userFit(myCost,
+          p0=None,                 # initial guess for parameter values 
+        #  limits=('sigma', None, None),  #limits
+        #  constraints=['mu', 2., 0.01], # Gaussian parameter constraints
+          neg2logL = True,         # cost ist -2 * ln(L)
+          plot_cor=True,           # plot profiles likelihood and contours
+          showplots=False,         # show / don't show plots
+          quiet=True,              # suppress informative printout
+          )
+
+    plt.suptitle("Maximum-likelihood fit: profiles and contours",
                      size='xx-large', color='darkblue')
     # Print results
     print('\n*==* user-defined cost: Fit Result:')
