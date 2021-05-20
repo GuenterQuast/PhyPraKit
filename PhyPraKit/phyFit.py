@@ -592,7 +592,7 @@ class mnFit():
 
     self.constraints = []
     if constraints is not None:
-      self.setConstraints(constraints)
+      self._storeConstraints(constraints)
     self.nconstraints = len(self.constraints)
 
     # create cost function
@@ -602,7 +602,7 @@ class mnFit():
                            quiet=self.quiet)
 
     if limits is not None:
-      self.setLimits(limits)
+      self._storeLimits(limits)
 
     # create Minuit object
     if __version__ < '2':
@@ -1331,7 +1331,7 @@ class mnFit():
         
     self.constraints = []
     if constraints is not None:
-      self.setConstraints(constraints)
+      self._storeConstraints(constraints)
     self.nconstraints = len(self.constraints)
 
     # create cost function
@@ -1342,7 +1342,7 @@ class mnFit():
                             quiet=self.quiet)
 
     if limits is not None:
-      self.setLimits(limits)
+      self._storeLimits(limits)
 
     # create Minuit object
     if __version__ < '2':
@@ -1696,7 +1696,7 @@ class mnFit():
 
     self.constraints = []
     if constraints is not None:
-      self.setConstraints(constraints)
+      self._storeConstraints(constraints)
     self.nconstraints = len(self.constraints)
 
     #set up cost function for iminuit ...
@@ -1705,7 +1705,7 @@ class mnFit():
                              quiet=self.quiet)      
 
     if limits is not None:
-      self.setLimits(limits)
+      self._storeLimits(limits)
 
     # ... and create Minuit object
     if __version__ < '2':
@@ -1851,7 +1851,7 @@ class mnFit():
  # --- comon code for all fit types
  #
 
-  def setLimits(self, limits):
+  def _storeLimits(self, limits):
     """store parameter limits
 
     format: nested list(s) of type 
@@ -1875,7 +1875,7 @@ class mnFit():
         p_id = limits[0]
       self.limits[p_id]=[limits[1], limits[2]]          
 
-  def setConstraints(self, constraints):
+  def _storeConstraints(self, constraints):
     """Add parameter constraints
     format: nested list(s) of type 
     [parameter name, value, uncertainty] or
