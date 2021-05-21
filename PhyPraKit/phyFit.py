@@ -1683,6 +1683,7 @@ class mnFit():
     Args:
       - costFunction: cost function to optimize
       - p0: np-array of floats, initial parameter values 
+      - parameter constraints: (nested) list(s): [parameter name, value, uncertainty] 
       - limits: (nested) list(s): [parameter name, min, max] 
         or [parameter index, min, max]
     """
@@ -1813,19 +1814,21 @@ class mnFit():
       self.cost = userCostFunction
       self.quiet = quiet
 
+      # take account of possible parameter constraints
+      self.constraints = outer.constraints
+      self.nconstraints = len(self.constraints)
       self.ErrDef = outer.ErrDef
 
       # set proper signature of model function for iminuit
       self.pnams = outer.pnams
       self.func_code = make_func_code(self.pnams)
       self.npar = len(self.pnams)
+
       # dictionary assigning parameter name to index
       self.pnam2id = {
-        self.pnams[i] : i for i in range(0,self.npar) } 
-      self.constraints = outer.constraints
-      self.nconstraints = len(self.constraints)
+        self.pnams[i] : i for i in range(0,self.npar) }
 
-      # for this kind of fit, some input and ouput quantities are not know
+      # for this kind of fit, some input and ouput quantities are not known
       self.data = None
       self.gof = None
       self.ndof = None
@@ -1859,8 +1862,8 @@ class mnFit():
     [parameter index, min, max]
     """
 
-    # get parameter names (from cost function)
-    self.limits=[ [None, None]] * len(self.costf.pnams)
+    # get parameter names
+    self.limits=[ [None, None]] * len(self.pnams)
     if isinstance(limits[1], list):
       for l in limits:
         if type(l[0])==type(' '):
@@ -2290,9 +2293,10 @@ if __name__ == "__main__": # --- interface and example
                                      xrelcor=crelx,
                                      yabscor=cabsy,
                                      yrelcor=crely,
-  ##                                   p0=(1., 0.5),     
-  #                                     constraints=['A', 1., 0.03],
-  #                                     constraints=[0, 1., 0.03],
+    #                                 p0=(1., 0.5),     
+    #                                 constraints=['A', 1., 0.03],
+    #                                 constraints=[0, 1., 0.03] (alternative)
+    #                                 limits=('A', 0., None),  # parameter limits
                                      use_negLogL=True,
                                      plot=True,
                                      plot_band=True,
@@ -2340,8 +2344,8 @@ if __name__ == "__main__": # --- interface and example
     pvals, perrs, cor, gof = hFit(SplusB_model,
           bcontents, bedges,  # bin entries and bin edges
           p0=None,                # initial guess for parameter values 
-     #   constraints=['s', val , err ],   # constraints within errors
-          limits=('s', 0., None),  #limits
+     #     constraints=['s', val , err ],   # constraints within errors
+          limits=('s', 0., None),  # limits
           use_GaussApprox=False,   # Gaussian approximation
           fit_density = True,      # fit density
           plot=True,           # plot data and model
@@ -2364,7 +2368,7 @@ if __name__ == "__main__": # --- interface and example
     print(" pos. parameter errors: ", perrs[:,1])
     print(" correlations : \n", cor)
 
-  def likelihood_Fit():
+  def example_userFit():
     """**unbinned ML fit** with user-defined cost function
 
     This code illustrates uasge of the wrapper function userFit() 
@@ -2383,8 +2387,8 @@ if __name__ == "__main__": # --- interface and example
 
     pvals, perrs, cor, gof = userFit(myCost,
           p0=None,                 # initial guess for parameter values 
-        #  limits=('sigma', None, None),  #limits
         #  constraints=['mu', 2., 0.01], # Gaussian parameter constraints
+        #  limits=('sigma', None, None),  #limits
           neg2logL = True,         # cost ist -2 * ln(L)
           plot_cor=True,           # plot profiles likelihood and contours
           showplots=False,         # show / don't show plots
@@ -2401,11 +2405,13 @@ if __name__ == "__main__": # --- interface and example
     print(" correlations : \n", cor)  
 
   #
-  # --- run examples
+  # -------------------------------------------------------------------------
   #
+  # --- run above examples
+  
   example_xyFit()
   example_histogramFit()
-  likelihood_Fit()
+  example_userFit()
 
   # show all figures
   plt.show()
