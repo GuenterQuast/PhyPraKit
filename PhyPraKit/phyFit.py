@@ -454,11 +454,12 @@ class mnFit():
     self.migrad_ok = False
     self.minos_ok = False
     # default options
-    self.refModel=True
     self.run_minos = True
     self.quiet = True
     # for xy Fit
+    self.refModel=True
     self.use_negLogL = True
+    self.iterateFit = False
     # for histogram fit
     self.use_GaussApprox = False
     self.fit_density = True
@@ -466,6 +467,27 @@ class mnFit():
     self.neg2logL = True
     self.ErrDef = 1.
 
+    self.options = {}
+    self.options["run_minos"] = [1, "all",
+                  "doing no likelihood scan",
+                  "MINOS profile likelihood scan"]
+    self.options["refModel"]=[1, "xy",
+                            "relative uncertainties refer to data",
+                            "relative uncertainties refer to model"]
+    self.options["use_negLogL"] = [1, "xy"
+                                 "using simple chi^2 cost-function",
+                                 "using full negative log-likelihood"]
+
+    self.options["use_GaussApprox"] = [0, "hist",
+            "using Poisson likelihood",
+            "using Gaussian approximation of Poisson distibution"]
+    self.options["fit_density"] = [1, "hist"
+                                 "fit for number of entries/bin",
+                                 "fit density distribution"]
+    self.options["neg2logL"] = [1, "user",
+                              "using standard likelihood -> errdef = 0.5",
+                              "using -2 * neg. log. likelihood -> errdef=1."]
+                                                               
   def init_data(self, *args, **kwargs):
     if self.fit_type == 'xy':
       self.init_xyData(*args, **kwargs)
@@ -499,19 +521,8 @@ class mnFit():
       print("!**! unknown type of Fit ", self.fit_type)
       sys.exit('mnFit Error: invalid fit type')
 
-  def do_fit(self, *args, **kwargs):
-    if self.fit_type == 'xy':
-      return self.do_xyFit()
-    elif self.fit_type == 'hist':
-      return self.do_hFit(*args, **kwargs)
-    elif self.fit_type == 'user':
-      return self.do_mnFit(*args, **kwargs)
-    else:
-      print("!**! unknown type of Fit ", self.fit_type)
-      sys.exit('mnFit Error: invalid fit type')    
-
   #
-  # --- code for xy Fit
+  # --- special code for xy Fit
   #      
 
   def set_xyOptions(self,
@@ -530,10 +541,13 @@ class mnFit():
     """
     if relative_refers_to_model is not None:
       self.refModel = relative_refers_to_model
+      self.options["refModel"][0] = int(relative_refers_to_model)
     if run_minos is not None:   
       self.run_minos = run_minos
+      self.options["run_minos"][0] = int(run_minos)
     if use_negLogL is not None:   
       self.use_negLogL = use_negLogL
+      self.options["use_negLogL"][0] = int(use_negLogL)
     if quiet is not None:
       self.quiet = quiet
     
@@ -626,69 +640,6 @@ class mnFit():
       if limits is not None:
         self.minuit.limits = self.limits       
       
-  def do_xyFit(self):
-    """perform all necessary steps of fit sequence
-    """
-    if self.xyData is None:
-      print(' !!! mnFit: no data object defined - call init_data()')
-      sys.exit('mnFit Error: no data object')
-    if self.costf is None:
-      print(' !!! mnFit: no fit object defined - call init_fit()')
-      sys.exit('mnFit Error: no fit object')
-    
-    # summarize options
-    if not self.quiet:
-      print( '*==* mnFit starting (pre-)fit')
-      print( '  Options:')
-      if self.run_minos is not None:
-        print( '     - performing minos profile likelihood scan')
-      if self.refModel is not None:
-        print( '     - relative uncertainties refer to model ')
-      if self.iterateFit and self.use_negLogL is not None:
-        print( '     - using negative log-likelihood')
-      
-    # perform initial fit
-    try:
-      self.migradResult = self.minuit.migrad()  # find minimum of cost function
-      self.migrad_ok = True
-    except Exception as e:
-      self.migrad_ok = False
-      print('*==* !!! fit with migrad failed')
-      print(e)
-      exit(1)
-
-    # possibly, need to iterate
-    if self.iterateFit:
-      if not self.quiet:
-        print( '*==* mnFit iterating',
-               'to account for parameter-dependent uncertainties')
-      # enable dynamic calculation of covariance matrix
-      self.xyData._init_dynamicErrors(self.refModel, self.costf.model)
-
-      # fit with dynamic recalculation of covariance matrix
-      try:
-        self.migradResult = self.minuit.migrad()
-        self.migrad_ok = True
-      except Exception as e:
-        self.migrad_ok = False
-        print('*==* !!! iteration of fit with migrad failed')
-        print(e)
-        exit(1)
-
-    # run profile likelihood scan to check for asymmetric errors
-    if self.run_minos:
-      if not self.quiet:
-        print( '*==* mnFit starting minos scan')
-      try:  
-        self.minosResult = self.minuit.minos()
-        self.minos_ok = True
-      except Exception as e:
-        self.minos_ok = False
-        if not self.quiet:
-          print( '*==* mnFit: !!! minos failed \n', e)    
-    self._storeResult()
-    return self.migradResult, self.minosResult
-  
   class xyDataUncertainties:
     """
     Handle data and uncertainties, 
@@ -709,6 +660,7 @@ class mnFit():
       - quiet:   no informative printout if True
 
     Public methods:
+      - init_dynamicErrors():
       - get_Cov(): final covariance matrix (incl. proj. x)  
       - get_xCov(): covariance of x-values
       - get_yCov(): covariance of y-values
@@ -726,8 +678,11 @@ class mnFit():
                  x, y, ex, ey,
                  erelx, erely, cabsx, crelx, cabsy, crely,
                  quiet=True):
+      # save poiner to calling class
+      self.outer = outer
 
-      self.needs_covariance = False # assume simple case w.o. cov.mat.
+      # assume simple case w.o. cov.mat.
+      self.needs_covariance = False 
 
       nd = len(x)      
       # store input data as numpy float arrays, ensure length nd if needed
@@ -929,11 +884,11 @@ class mnFit():
       # total covariance is that of y-errors
       self.cov = self.covy      
       
-    def _init_dynamicErrors(self, ref_toModel = False, model = None):
+    def init_dynamicErrors(self):
       # method to switch on dynamic re-calculation of covariance matrix 
-      self.ref_toModel = ref_toModel
-      self.model = model
-
+      self.ref_toModel = self.outer.refModel
+      self.model = self.outer.costf.model
+     
       self._staticCov = None
       self._staticErr2 = None
       self.iCov = None
@@ -1264,7 +1219,7 @@ class mnFit():
   # --- end definition of class xLSQ ----
 
   #
-  # --- code for histogram Fit
+  # --- special code for histogram Fit
   #      
 
   def set_hOptions(self,
@@ -1282,10 +1237,13 @@ class mnFit():
     """
     if run_minos is not None:   
       self.run_minos = run_minos
+      self.options["run_minos"][0] = int(run_minos)
     if use_GaussApprox is not None:   
       self.use_GaussApprox = use_GaussApprox
+      self.options["use_GaussApprox"][0] = int(use_GaussApprox)
     if fit_density is not None:
       self.fit_density = fit_density
+      self.options["fit_density"][0] = int(fit_density)
     if quiet is not None:
       self.quiet = quiet
     
@@ -1365,51 +1323,6 @@ class mnFit():
         self.minuit.print_level = 0
       if limits is not None:
         self.minuit.limits = self.limits       
-
-  def do_hFit(self):
-    """perform fit sequence for histogram fit
-    """
-    if self.hData is None:
-      print(' !!! mnFit: no data object defined - call init_data()')
-      sys.exit('mnFit Error: no data object')
-    if self.costf is None:
-      print(' !!! mnFit: no fit object defined - call init_fit()')
-      sys.exit('mnFit Error: no fit object')
-    
-    # summarize options
-    if not self.quiet:
-      print( '*==* mnFit starting (pre-)fit')
-      print( '  Options:')
-      if self.use_GaussApprox:
-        print( '     - using Gaussian approximation of Poisson distibution')
-      if self.run_minos is not None:
-        print( '     - performing minos profile likelihood scan')
-        
-    # perform fit
-    try:
-      self.migradResult = self.minuit.migrad()  # find minimum of cost function
-      self.migrad_ok = True
-    except Exception as e:
-      self.migrad_ok = False
-      print('*==* !!! fit with migrad failed')
-      print(e)
-      exit(1)
-
-    # run profile likelihood scan to check for asymmetric errors
-    if self.run_minos:
-      if not self.quiet:
-        print( '*==* mnFit starting minos scan')
-      try:  
-        self.minosResult = self.minuit.minos()
-        self.minos_ok = True
-      except Exception as e:
-        self.minos_ok = False
-        if not self.quiet:
-          print( '*==* mnFit: !!! minos failed \n', e)
-        
-    self._storeResult()
-    
-    return self.migradResult, self.minosResult
 
   
   class histData:
@@ -1674,7 +1587,7 @@ class mnFit():
   # --- end definition of class hCost ----
 
   #
-  # --- code for fit with user-supplied cost function
+  # --- special code for fit with user-supplied cost function
   #      
   def init_mnFit(self, userCostFunction, p0=None, 
                        constraints=None, limits=None):
@@ -1744,54 +1657,16 @@ class mnFit():
     """
     if run_minos is not None:   
       self.run_minos = run_minos
+      self.options["run_minos"][0] = int(run_minos)
     if neg2logL is not None:
       self.neg2logL = neg2logL
+      self.options["neg2logL"][0] = int(neg2logL)
       if self.neg2logL:
         self.ErrDef = 1.
       else:
         self.ErrDef = 0.5
     if quiet is not None:
       self.quiet = quiet
-
-  def do_mnFit(self):
-    """perform fit sequence for user-defined cost function
-    """
-    if self.costf is None:
-      print(' !!! mnFit: no fit object defined - call init_fit()')
-      sys.exit('mnFit Error: no fit object')
-    
-    # summarize options
-    if not self.quiet:
-      print( '*==* mnFit starting (pre-)fit')
-      print( '  Options:')
-      if self.neg2logL:
-        print( ' assuming cost is 2 * negative log-likelihood')
-      else:
-        print( ' assuming cost is negative log-likelihood')
-        
-    # perform fit
-    try:
-      self.migradResult = self.minuit.migrad()  # find minimum of cost function
-      self.migrad_ok = True
-    except Exception as e:
-      self.migrad_ok = False
-      print('*==* !!! fit with migrad failed')
-      print(e)
-      exit(1)
-
-    # run profile likelihood scan to check for asymmetric errors
-    if self.run_minos:
-      if not self.quiet:
-        print( '*==* mnFit starting minos scan')
-      try:  
-        self.minosResult = self.minuit.minos()
-        self.minos_ok = True
-      except Exception as e:
-        self.minos_ok = False
-        if not self.quiet:
-          print( '*==* mnFit: !!! minos failed \n', e)        
-    self._storeResult()
-    return self.migradResult, self.minosResult
 
   # --- class encapsulating user-defined cost function
   class mnCost:
@@ -1989,6 +1864,81 @@ class mnFit():
     for i in range(len(x)):
       Delta[i] = np.sum(np.outer(dfdp[:,i], dfdp[:,i]) * covp)
     return np.sqrt(Delta) 
+  
+
+  def do_fit(self):
+    """perform all necessary steps of fit sequence
+    """
+    if self.data is None and self.fit_type != "user":
+      print(' !!! mnFit: no data object defined - call init_data()')
+      sys.exit('mnFit Error: no data object')
+    if self.costf is None:
+      print(' !!! mnFit: no fit object defined - call init_fit()')
+      sys.exit('mnFit Error: no fit object')
+    
+    # summarize options
+    if not self.quiet:
+      print( '*==* mnFit starting (pre-)fit')
+      print( '  Options:')
+      for key in self.options.keys():
+        relevant = self.options[key][1] == "all" or \
+                  self.options[key][1]==self.fit_type 
+        if relevant:
+          iopt = self.options[key][0] + 2
+          print(5*" " + "- ",
+              self.options[key][iopt])
+      print('\n')  
+
+
+#      if self.run_minos is not None:
+#        print( '     - performing minos profile likelihood scan')
+#      if self.refModel is not None:
+#        print( '     - relative uncertainties refer to model ')
+#      if self.iterateFit and self.use_negLogL is not None:
+#        print( '     - using negative log-likelihood')
+      
+    # perform initial fit
+    try:
+      self.migradResult = self.minuit.migrad()  # find minimum of cost function
+      self.migrad_ok = True
+    except Exception as e:
+      self.migrad_ok = False
+      print('*==* !!! fit with migrad failed')
+      print(e)
+      exit(1)
+
+    # possibly, need to iterate
+    if self.iterateFit:
+      if not self.quiet:
+        print( '*==* mnFit iterating',
+               'to account for parameter-dependent uncertainties')
+      # enable dynamic calculation of covariance matrix
+      self.data.init_dynamicErrors()
+
+      # fit with dynamic recalculation of covariance matrix
+      try:
+        self.migradResult = self.minuit.migrad()
+        self.migrad_ok = True
+      except Exception as e:
+        self.migrad_ok = False
+        print('*==* !!! iteration of fit with migrad failed')
+        print(e)
+        exit(1)
+
+    # run profile likelihood scan to check for asymmetric errors
+    if self.run_minos:
+      if not self.quiet:
+        print( '*==* mnFit starting minos scan')
+      try:  
+        self.minosResult = self.minuit.minos()
+        self.minos_ok = True
+      except Exception as e:
+        self.minos_ok = False
+        if not self.quiet:
+          print( '*==* mnFit: !!! minos failed \n', e)    
+    self._storeResult()
+    return self.migradResult, self.minosResult
+
   
   def plotModel(self,
                 axis_labels=['x', 'y = f(x, *par)'], 
@@ -2351,8 +2301,8 @@ if __name__ == "__main__": # --- interface and example
           plot=True,           # plot data and model
           plot_band=True,      # plot model confidence-band
           plot_cor=False,      # plot profiles likelihood and contours
-          showplots=False,      # show / don't show plots
-          quiet=True,         # suppress informative printout
+          showplots=False,     # show / don't show plots
+          quiet=False,         # suppress informative printout
           axis_labels=['x', 'y   \  f(x, *par)'], 
           data_legend = 'random data',    
           model_legend = 'signal + background model' )
@@ -2392,7 +2342,7 @@ if __name__ == "__main__": # --- interface and example
           neg2logL = True,         # cost ist -2 * ln(L)
           plot_cor=True,           # plot profiles likelihood and contours
           showplots=False,         # show / don't show plots
-          quiet=True,              # suppress informative printout
+          quiet=False,              # suppress informative printout
           )
 
     plt.suptitle("Maximum-likelihood fit: profiles and contours",
