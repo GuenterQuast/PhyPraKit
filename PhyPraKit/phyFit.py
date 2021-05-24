@@ -91,7 +91,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
        xabscor = None, xrelcor = None,        
        yabscor = None, yrelcor = None,
        ref_to_model = True, 
-       p0 = None, constraints = None, limits=None,
+       p0 = None, constraints = None, fixPars=None, limits=None,
        use_negLogL=True, 
        plot = True, plot_cor = True,
        showplots = True, 
@@ -129,7 +129,8 @@ def mFit(fitf, x, y, sx = None, sy = None,
     * yrelcor: scalar or np-array, relative, correlated error(s) on y
     * p0: array-like, initial guess of parameters
     * use_negLogL:  use full -2ln(L)  
-    * constraints: (nested) list(s) [name or id, value, error] 
+    * constraints: (nested) list(s) [name or id, value, error]
+    * fix parameter(s) in fit: list of parameter names or indices
     * limits: (nested) list(s) [name or id, min, max] 
     * plot: show data and model if True
     * plot_cor: show profile liklihoods and conficence contours
@@ -173,6 +174,7 @@ def mFit(fitf, x, y, sx = None, sy = None,
    # pass model fuction, start parameter and possibe constraints
   Fit.init_fit(fitf, p0=p0,
                constraints=constraints,
+               fixPars=fixPars,
                limits=limits)
    # perform the fit
   fitResult = Fit.do_fit()
@@ -208,15 +210,16 @@ def mFit(fitf, x, y, sx = None, sy = None,
   return Fit.getResult()
 
 def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
-       p0 = None, constraints = None, limits=None,
-       use_GaussApprox = False,
-       fit_density = True,
-       plot = True, plot_cor = True,
-       showplots = True, plot_band=True,
-       quiet = False,
-       axis_labels=['x', 'counts/bin = f(x, *par)'],
-       data_legend = 'Histogram Data',    
-       model_legend = 'Model'):
+         p0 = None, constraints = None,
+         fixPars=None, limits=None,
+         use_GaussApprox = False,
+         fit_density = True,
+         plot = True, plot_cor = True,
+         showplots = True, plot_band=True,
+         quiet = False,
+         axis_labels=['x', 'counts/bin = f(x, *par)'],
+         data_legend = 'Histogram Data',    
+         model_legend = 'Model'):
   
   """Wrapper function to fit a density distribution f(x, \*par) 
   to binned data (histogram) with calss mnFit 
@@ -270,6 +273,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
    # pass model fuction, start parameter and possibe constraints
   Fit.init_fit(fitf, p0=p0,
                constraints=constraints,
+               fixPars=fixPars,
                limits=limits)
   # perform the fit
   fitResult = Fit.do_fit()
@@ -305,7 +309,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
   return Fit.getResult()
 
 def userFit(cost, p0 = None, 
-            constraints = None, limits=None,
+            constraints = None, limits=None, fixPars=None,
             neg2logL = True,
             plot_cor = True,
             showplots = True, quiet = False):
@@ -333,9 +337,10 @@ def userFit(cost, p0 = None,
                  neg2logL = neg2logL,
                  quiet = quiet)
   # no internal data, directly initialze fit with the supplied cost function
-  uFit.init_fit(cost, p0=p0,
-                constraints=constraints,
-                limits=limits)
+  uFit.init_fit(cost, p0 = p0,
+                constraints = constraints,
+                fixPars = fixPars,
+                limits = limits)
   # perform the fit
   fitResult = uFit.do_fit()
   # print fit result (dictionary from migrad/minos(
@@ -406,7 +411,10 @@ class mnFit():
  
   Data members:
 
+  - nconstraints        nunber of constrained parameters    
+  - nfixed              number of fixed parameters
   - ParameterNames:     names of parameters (as specified in model function)
+  - freeParNams:        names of free parameters 
   - GoF:                goodness-of-fit, i.e. chi2 at best-fit point
   - NDoF:               number of degrees of freedom
   - ParameterValues:    parameter values at best-fit point
@@ -440,6 +448,11 @@ class mnFit():
       sys.exit(
         '!**! mnFit: invalid fit type ', fit_type, '- exiting!') 
     self.fit_type = fit_type
+
+    # counter for number of external constraints 
+    self.nconstraints = 0
+    # counter for number of fixed parameters
+    self.nfixed = 0 
 
     # set default of all options
     #
@@ -584,8 +597,9 @@ class mnFit():
          self.xyData.has_rel_yErrors and self.refModel)
 
   def init_xyFit(self, model, p0=None,
-               constraints=None,
-               limits=None):
+                 constraints=None,
+                 fixPars=None,
+                 limits=None):
     """initialize fit object
 
     Args:
@@ -600,6 +614,11 @@ class mnFit():
     # get parameters of model function to set start values for fit
     args, model_kwargs = self.get_functionSignature(model)
     self.pnams = list.copy(list(model_kwargs.keys()))
+    self.npar = len(self.pnams)
+    # dictionary assigning parameter name to index
+    self.pnam2id = {
+      self.pnams[i] : i for i in range(0,self.npar) } 
+
     if p0 is not None:
       for i, pnam in enumerate(self.pnams):
         model_kwargs[pnam] = p0[i]    
@@ -607,16 +626,21 @@ class mnFit():
     self.constraints = []
     if constraints is not None:
       self._storeConstraints(constraints)
-    self.nconstraints = len(self.constraints)
+
 
     # create cost function
     self.costf = self.xLSQ(self,
                            self.xyData, model,
                            use_neg2logL= self.use_negLogL,
                            quiet=self.quiet)
-
     if limits is not None:
       self._storeLimits(limits)
+
+    self.fixedPars = [ False ] * self.npar
+    if fixPars is not None:
+      self._storeFixedPars(fixPars)
+    else:
+      self.freeParNams = self.pnams  
 
     # create Minuit object
     if __version__ < '2':
@@ -627,7 +651,9 @@ class mnFit():
       if limits is not None:
         for i, pnam in enumerate(self.pnams):
           model_kwargs['limit_' + pnam] = self.limits[i]
-          
+      if fixPars is not None:
+        for i, pnam in enumerate(self.pnams):
+          model_kwargs['fix_' + pnam] = self.fixedPars[i]          
       self.minuit = Minuit(self.costf, 
                            errordef=self.ErrDef,
                            print_level=print_level,
@@ -638,7 +664,10 @@ class mnFit():
       if self.quiet:
         self.minuit.print_level = 0
       if limits is not None:
-        self.minuit.limits = self.limits       
+        self.minuit.limits = self.limits
+      if fixPars is not None:
+        for i, pnam in enumerate(self.pnams):
+          if self.fixedPars[i]: self.minuit.fixed[pnam]=True 
       
   class xyDataUncertainties:
     """
@@ -1144,16 +1173,14 @@ class mnFit():
       # set proper signature of model function for iminuit
       self.pnams = outer.pnams
       self.func_code = make_func_code(self.pnams)
-      self.npar = len(self.pnams)
+      self.npar = outer.npar
       # dictionary assigning parameter name to index
-      self.pnam2id = {
-        self.pnams[i] : i for i in range(0,self.npar)
-        }
+      self.pnam2id = outer.pnam2id
       
       # take account of constraints 
       self.constraints = outer.constraints
-      self.nconstraints = outer.nconstraints
-      self.ndof = len(self.data.y) - self.npar + self.nconstraints
+      self.nconstraints = len(self.constraints)
+      self.ndof = len(data.y) - self.npar + self.nconstraints + outer.nfixed
 
       # flag to control final actions in cost function
       self.final_call = False
@@ -1268,6 +1295,7 @@ class mnFit():
     
   def init_hFit(self, model, p0=None,
                 constraints=None,
+                fixPars = None, 
                 limits=None):
     """initialize fit object
 
@@ -1276,6 +1304,7 @@ class mnFit():
       - p0: np-array of floats, initial parameter values 
       - constraints: (nested) list(s): [parameter name, value, uncertainty] 
         or [parameter index, value, uncertainty]
+      - fix parameter(s) in fit: list of parameter names or indices
       - limits: (nested) list(s): [parameter name, min, max] 
         or [parameter index, min, max]
     """
@@ -1283,6 +1312,11 @@ class mnFit():
     # get parameters of model function to set start values for fit
     args, model_kwargs = self.get_functionSignature(model)
     self.pnams = list.copy(list(model_kwargs.keys()))
+    self.npar = len(self.pnams)
+    # dictionary assigning parameter name to index
+    self.pnam2id = {
+      self.pnams[i] : i for i in range(0,self.npar) } 
+
     if p0 is not None:
       for i, pnam in enumerate(self.pnams):
         model_kwargs[pnam] = p0[i]
@@ -1290,17 +1324,23 @@ class mnFit():
     self.constraints = []
     if constraints is not None:
       self._storeConstraints(constraints)
-    self.nconstraints = len(self.constraints)
 
+    if limits is not None:
+      self._storeLimits(limits)
+
+    self.fixedPars = [ False ] * self.npar
+    if fixPars is not None:
+      self._storeFixedPars(fixPars)
+    else:
+      self.freeParNams = self.pnams
+      
+      
     # create cost function
     self.costf = self.hCost(self,
                             self.hData, model,
                             use_GaussApprox=self.use_GaussApprox,
                             density = self.fit_density,
                             quiet=self.quiet)
-
-    if limits is not None:
-      self._storeLimits(limits)
 
     # create Minuit object
     if __version__ < '2':
@@ -1311,7 +1351,9 @@ class mnFit():
       if limits is not None:
         for i, pnam in enumerate(self.pnams):
           model_kwargs['limit_' + pnam] = self.limits[i]
-          
+      if fixPars is not None:
+        for i, pnam in enumerate(self.pnams):
+          model_kwargs['fix_' + pnam] = self.fixedPars[i]          
       self.minuit = Minuit(self.costf, 
                            errordef=self.ErrDef,
                            print_level=print_level,
@@ -1323,6 +1365,9 @@ class mnFit():
         self.minuit.print_level = 0
       if limits is not None:
         self.minuit.limits = self.limits       
+      if fixPars is not None:
+        for i, pnam in enumerate(self.pnams):
+          if self.fixedPars[i]: self.minuit.fixed[pnam]=True 
 
   
   class histData:
@@ -1480,15 +1525,14 @@ class mnFit():
       # set proper signature of model function for iminuit
       self.pnams = outer.pnams
       self.func_code = make_func_code(self.pnams)
-      self.npar = len(self.pnams)
+      self.npar = outer.npar
       # dictionary assigning parameter name to index
-      self.pnam2id = {
-        self.pnams[i] : i for i in range(0,self.npar) } 
+      self.pnam2id = outer.pnam2id
  
       self.constraints = outer.constraints
-      self.nconstraints = outer.nconstraints
+      self.nconstraints =len(self.constraints)
       # take account of constraints in degrees of freedom 
-      self.ndof = len(self.data.contents) - self.npar + self.nconstraints
+      self.ndof = hData.nbins-self.npar+self.nconstraints+outer.nfixed
 
       # flag to control final actions in cost function
       self.final_call = False
@@ -1590,13 +1634,14 @@ class mnFit():
   # --- special code for fit with user-supplied cost function
   #      
   def init_mnFit(self, userCostFunction, p0=None, 
-                       constraints=None, limits=None):
+                       constraints=None, fixPars=None, limits=None):
     """initialize fit object for simple minuit fit with user-supplied cost
 
     Args:
       - costFunction: cost function to optimize
       - p0: np-array of floats, initial parameter values 
       - parameter constraints: (nested) list(s): [parameter name, value, uncertainty] 
+      - fix parameter(s) in fit: list of parameter names or indices
       - limits: (nested) list(s): [parameter name, min, max] 
         or [parameter index, min, max]
     """
@@ -1604,6 +1649,11 @@ class mnFit():
     # get parameters of model function to set start values for fit
     args, model_kwargs = self.get_functionSignature(userCostFunction)
     self.pnams = list.copy(list(model_kwargs.keys()))
+    self.npar = len(self.pnams)
+    # dictionary assigning parameter name to index
+    self.pnam2id = {
+      self.pnams[i] : i for i in range(0,self.npar) } 
+
     if p0 is not None:
       for i, pnam in enumerate(self.pnams):
         model_kwargs[pnam] = p0[i]
@@ -1611,16 +1661,20 @@ class mnFit():
     self.constraints = []
     if constraints is not None:
       self._storeConstraints(constraints)
-    self.nconstraints = len(self.constraints)
 
     #set up cost function for iminuit ...
     self.costf = self.mnCost(self,
                              userCostFunction,
                              quiet=self.quiet)      
-
     if limits is not None:
       self._storeLimits(limits)
 
+    self.fixedPars = [ False ] * self.npar
+    if fixPars is not None:
+      self._storeFixedPars(fixPars)
+    else:
+      self.freeParNams = self.pnams  
+  
     # ... and create Minuit object
     if __version__ < '2':
       if self.quiet:
@@ -1630,6 +1684,9 @@ class mnFit():
       if limits is not None:
         for i, pnam in enumerate(self.pnams):
           model_kwargs['limit_' + pnam] = self.limits[i]
+      if fixPars is not None:
+        for i, pnam in enumerate(self.pnams):
+          model_kwargs['fix_' + pnam] = self.fixedPars[i]
           
       self.minuit = Minuit(self.costf, 
                            errordef=self.ErrDef,
@@ -1642,6 +1699,9 @@ class mnFit():
         self.minuit.print_level = 0
       if limits is not None:
         self.minuit.limits = self.limits
+      if fixPars is not None:
+        for i, pnam in enumerate(self.pnams):
+          if self.fixedPars[i]: self.minuit.fixed[pnam]=True 
         
   def set_mnOptions(self,
                       run_minos=None,
@@ -1682,11 +1742,17 @@ class mnFit():
     """
     
     def __init__(self, outer, 
-                 userCostFunction,
+                 userFunction,
                  quiet=True):
       from iminuit.util import make_func_code
 
-      self.cost = userCostFunction
+      self.data = outer.data
+      if self.data is None:
+        self.cost = userFunction
+      else:
+        self.modelPDF = userFunction
+        self.cost = nlLcost
+        
       self.quiet = quiet
 
       # take account of possible parameter constraints
@@ -1697,11 +1763,8 @@ class mnFit():
       # set proper signature of model function for iminuit
       self.pnams = outer.pnams
       self.func_code = make_func_code(self.pnams)
-      self.npar = len(self.pnams)
-
-      # dictionary assigning parameter name to index
-      self.pnam2id = {
-        self.pnams[i] : i for i in range(0,self.npar) }
+      self.npar = outer.npar
+      self.pnam2id = outer.pnam2id
 
       # for this kind of fit, some input and ouput quantities are not known
       self.data = None
@@ -1723,12 +1786,52 @@ class mnFit():
       # called iteratively by minuit
       return cost + self.cost(*par)
 
+
+    @staticmethod
+    def nlLcost(*par):
+      """negative log likelihood of data and user-defined PDF and 
+      """
+       # check if PDF is nomalized to 1
+       # ...
+       
+      c = self.ErrDef*np.log(self.modelPDF(self.data.x, *par))
+      return c
+        
  # --- end definition of class mnCost ----
 
  #
  # --- comon code for all fit types
  #
 
+  def _storeFixedPars(self, fixPars):
+    """store fixed parameters
+
+    input format: list of names or parameter ids 
+    
+    output format: list of len(pnams) with True/False
+    """
+    
+    # get parameter names or indices to fix
+    if isinstance(fixPars, list):
+      for f in fixPars:
+        if type(f)==type(' '):
+          p_id = self.pnam2id[f]
+        else:
+          p_id = f
+        self.fixedPars[p_id] = True          
+      self.nfixed = len(fixPars)
+    else:
+      if type(fixPars)==type(' '):
+        p_id = self.pnam2id[fixPars]
+      else:
+        p_id = fixedPars
+      self.fixedPars[p_id]=True          
+      self.nfixed = 1
+    # get parameter names or indices to fix
+    self.freeParNams = []
+    for i, fixed in enumerate(self.fixedPars):
+      if not fixed: self.freeParNams.append(self.pnams[i])
+      
   def _storeLimits(self, limits):
     """store parameter limits
 
@@ -1742,13 +1845,13 @@ class mnFit():
     if isinstance(limits[1], list):
       for l in limits:
         if type(l[0])==type(' '):
-          p_id = self.costf.pnam2id[l[0]]
+          p_id = self.pnam2id[l[0]]
         else:
           p_id = l[0]
         self.limits[p_id] = [l[1], l[2]]          
     else:
       if type(limits[0])==type(' '):
-        p_id = self.costf.pnam2id[limits[0]]
+        p_id = self.pnam2id[limits[0]]
       else:
         p_id = limits[0]
       self.limits[p_id]=[limits[1], limits[2]]          
@@ -1764,26 +1867,28 @@ class mnFit():
          self.constraints.append(c)
     else:
        self.constraints.append(constraints)
-      
+    self.nconstraints = len(self.constraints)
+       
   def _storeResult(self):
   # collect results as numpy arrays
     # !!! this part depends on iminuit version !!!    
     m=self.minuit
     minCost = m.fval                        # minimum value of cost function
-    npar = m.nfit                           # numer of parameters
+    nfpar = m.nfit                           # numer of free parameters
     ndof = self.costf.ndof                  # degrees of freedom
     if __version__< '2':
       parnames = m.values.keys()            # parameter names
       parvals = np.array(m.values.values()) # best-fit values
       parerrs = np.array(m.errors.values()) # parameter uncertainties
-      cov=np.array(m.matrix())
+      cov=np.array(m.matrix())              # cov. matrix of free parameters
     else:
     # vers. >=2.0 
       parnames = m.parameters      # parameter names
       parvals = np.array(m.values) # best-fit values
       parerrs = np.array(m.errors) # parameter uncertainties
-      cov=np.array(m.covariance)
-      
+      cov=np.array(m.covariance)   # covariance matrix of free parameters
+    npar=len(parnames)             # number of parameters
+
     if self.minosResult is not None and self.minos_ok:
       pmerrs = [] 
     #  print("MINOS errors:")
@@ -1807,17 +1912,22 @@ class mnFit():
     # store results as class members
     #   parameter names
     self.ParameterNames = parnames
+    # * flag for fixed parameters in self.fixedPars
+    # * names of free parameters in self.freeParNams
     #   chi2 at best-fit point (possibly different from minCost)
     self.GoF = self.costf.gof  
     #   parameter values at best-fit point
     self.ParameterValues = np.array(parvals, copy=True)
+    self.freeParVals = np.array(
+      [ parvals[i] for i in range(npar) if not self.fixedPars[i] ])
     #   number of degrees of freedom
     self.NDoF = ndof  
     #   symmetric uncertainties
     self.MigradErrors = np.array(parerrs, copy=True)
     #   covariance and correlation matrices
     self.CovarianceMatrix = np.array(cov, copy=True)
-    self.CorrelationMatrix = cov/np.outer(parerrs, parerrs)
+    perrs = np.sqrt(np.diagonal(cov))
+    self.CorrelationMatrix = cov/np.outer(perrs, perrs)
     #   1-sigma (68% CL) range in self.OneSigInterval
     
   def getResult(self):
@@ -1827,7 +1937,7 @@ class mnFit():
             self.CorrelationMatrix, self.GoF)
 
   @staticmethod
-  def getFunctionError(x, model, pvals, covp):
+  def getFunctionError(x, model, pvals, covp, fixedPars):
     """ determine error of model at x  
     
     Formula: 
@@ -1847,18 +1957,23 @@ class mnFit():
 
     #   parameter step size 
     dp = 0.01 * np.sqrt(np.diagonal(covp))
+    # number of variable parameters 
+    nvpar = len(dp)
     #   derivative df/dp_j at each x_i
-    dfdp = np.empty( (len(pvals), len(x)) )
+    dfdp = np.empty( (nvpar, len(x)) )
     p_plus = np.array(pvals, copy=True)
     p_minus = np.array(pvals, copy=True)
-    for j in range(len(pvals)): 
-      p_plus[j] = pvals[j] + dp[j]
-      p_minus[j] = pvals[j] - dp[j]
-      dfdp[j] = 0.5 / dp[j] * (
+    k=0
+    for j in range(len(pvals)):
+      if not fixedPars[j]:
+        p_plus[j] = pvals[j] + dp[k]
+        p_minus[j] = pvals[j] - dp[k]
+        dfdp[k] = 0.5 / dp[k] * (
                     model(x, *p_plus) - 
                     model(x, *p_minus) )
-      p_plus[j] = pvals[j]
-      p_minus[j] = pvals[j]
+        p_plus[j] = pvals[j]
+        p_minus[j] = pvals[j]
+        k+=1
     #   square of uncertainties on function values
     Delta= np.empty(len(x))
     for i in range(len(x)):
@@ -1963,14 +2078,28 @@ class mnFit():
     m = self.minuit  # minuit object
     cf = self.costf  # cost function object
     d = cf.data
+    fixedPars = self.fixedPars
     
   # retrieve fit results
     pvals, pmerrs, cor, gof = self.getResult()
     # symmetric errors
     perrs = (pmerrs[:,1]-pmerrs[:,0])/2.
+    # values of free parameters
+    fpvals = self.freeParVals
     # covariance matrix
     pcov = cor * np.outer(perrs, perrs)
+    # parameter names
     pnams = self.ParameterNames
+    fpnams = self.freeParNams
+    # fixed parameter names and values
+    fixed_pnams=[]
+    fixed_pvals=[]
+    for i, n in enumerate(pnams):
+      if self.fixedPars[i]:
+        fixed_pnams.append(n)
+        fixed_pvals.append(pvals[i])
+    nfixed = len(fixed_pnams)
+    # ndof and chi2prb
     ndof = cf.ndof
     chi2prb = self.chi2prb(gof, ndof) 
     
@@ -2007,7 +2136,7 @@ class mnFit():
     plt.grid()
    # draw error band around model function
     if plot_band:
-      DeltaF = self.getFunctionError(xplt, cf.model, pvals, pcov)
+      DeltaF = self.getFunctionError(xplt, cf.model, pvals, pcov, fixedPars)
       plt.fill_between(xplt, sfac*(yplt+DeltaF),
                              sfac*(yplt-DeltaF),
                              alpha=0.3, color='darkkhaki')
@@ -2021,16 +2150,20 @@ class mnFit():
     #  1. parameter values and uncertainties
     pe = 2   # number of significant digits of uncertainty
     if self.minosResult is not None and self.minos_ok:
-      for pn, v, e in zip(pnams, pvals, pmerrs):
-        nd, _v, _e = self.round_to_error(v, min(abs(e[0]), abs(e[1])),
-                                         nsd_e=pe )
+      for pn, v, e in zip(fpnams, fpvals, pmerrs):
+        nd, _v, _e = self.round_to_error(v,min(abs(e[0]),abs(e[1])),nsd_e=pe)
         txt="{} = ${:#.{pv}g}^{{+{:#.{pe}g}}}_{{{:#.{pe}g}}}$"
         fit_info.append(txt.format(pn, _v, e[1], e[0], pv=nd, pe=pe))
     else:
-      for pn, v, e in zip(pnams, pvals, pmerrs):
+      for pn, v, e in zip(fpnams, fpvals, pmerrs):
         nd, _v, _e = self.round_to_error(v, e[1], nsd_e=pe)
         txt="{} = ${:#.{pv}g}\pm{:#.{pe}g}$"
         fit_info.append(txt.format(pn, _v, _e, pv=nd, pe=pe))
+    if nfixed:
+      for pn, v in zip(fixed_pnams, fixed_pvals):
+        txt="{} = {:g}  fixed"
+        fit_info.append(txt.format(pn, v))
+        
     #  2. goodness-of-fit
     if self.fit_type=='xy':
       fit_info.append(
@@ -2060,13 +2193,9 @@ class mnFit():
     if not self.quiet:
       print( '*==* mnFit: scanning contours')
 
-    m = self.minuit     
-    npar = m.nfit    # numer of parameters
-    if __version__< '2':
-      pnams = m.values.keys()  # parameter names
-    else:
-  # vers. >=2.0 
-      pnams = m.parameters      # parameter names
+    m = self.minuit
+    fpnams = self.freeParNams
+    npar = len(fpnams)
 
     fsize=3.5
     cor_fig, axarr = plt.subplots(npar, npar,
@@ -2086,14 +2215,14 @@ class mnFit():
           elif ip == jp:
            # plot profile
             plt.sca(axarr[ip, ip])
-            m.draw_mnprofile(pnams[i], subtract_min=True)
+            m.draw_mnprofile(fpnams[i], subtract_min=True)
             plt.ylabel('$\Delta\chi^2$')
           else:
             plt.sca(axarr[jp, ip])
             if __version__ <'2':
-              m.draw_mncontour(pnams[i], pnams[j])
+              m.draw_mncontour(fpnams[i], fpnams[j])
             else:
-              m.draw_mncontour(pnams[i], pnams[j],
+              m.draw_mncontour(fpnams[i], fpnams[j],
                 cl=(self.Chi22CL(1.), self.Chi22CL(4.)) )
       return cor_fig
 
@@ -2154,13 +2283,15 @@ class mnFit():
     v = abs(val)
     # round uncertainty to nd0 significant digits
     e = float("{:.{p}g}".format(abs(err), p=nsd_e))
-    
+
+    _v = e if v<e else v
     # determine # of siginifcant digits vor v
-    _nd = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
+    _nd = int( np.floor(np.log10(_v) - np.floor(np.log10(e)) ) ) + nsd_e
     # take into account possible rounding of v ...
     v = float("{:.{p}g}".format(v, p=_nd))
     # ... and determine final # of sig. digits
-    nsd_v = int( np.floor(np.log10(v) - np.floor(np.log10(e)) ) ) + nsd_e
+    _v = e if v<e else v
+    nsd_v = int( np.floor(np.log10(_v) - np.floor(np.log10(e)) ) ) + nsd_e
     v = float("{:.{p}g}".format(v, p=nsd_v))
      
     return nsd_v, np.sign(val)*v, e               
@@ -2247,6 +2378,7 @@ if __name__ == "__main__": # --- interface and example
     #                                 constraints=['A', 1., 0.03],
     #                                 constraints=[0, 1., 0.03] (alternative)
     #                                 limits=('A', 0., None),  # parameter limits
+    #                                 fixPars = ['A'],         # fix parameter(s) 
                                      use_negLogL=True,
                                      plot=True,
                                      plot_band=True,
@@ -2274,20 +2406,20 @@ if __name__ == "__main__": # --- interface and example
   #
 
   #    # define the model function to fit
-    def SplusB_model(x, mu = 6.0, sigma = 0.5, s = 0.3):
+    def SplusB_model(x, mu = 6.987, sigma = 0.5, a=0., s = 0.2):
       '''pdf of a Gaussian signal on top of flat background
       '''
       normal = np.exp(-0.5*((x-mu)/sigma)**2)/np.sqrt(2.*np.pi*sigma**2)
-      flat = 1./(xmx-xmn) 
-      return s * normal + (1-s) * flat 
+      linear = (a*(xmx+xmn)/2 + 1.)/(xmx-xmn) 
+      return s * normal + (1-s) * linear 
 
     nbins=40
     xmn = 1
     xmx = 10
     bedges=np.linspace(xmn, xmx, nbins+1)
-    bcontents = np.array([1, 1, 1, 2, 2, 2, 6, 1, 0, 3, 1, 1, 0,
+    bcontents = np.array([1, 1, 1, 2, 2, 2, 4, 1, 0, 3, 1, 1, 0,
                         2, 3, 3, 1, 1, 0, 2, 3, 2, 3, 1, 1, 8,
-                        6, 7, 9, 1, 0, 1, 2, 6, 3, 1, 3, 3, 3, 4])
+                        6, 7, 9, 1, 0, 1, 2, 1, 3, 2, 1, 3, 2, 4])
     #  
     # ---  perform fit  
     #
@@ -2295,12 +2427,13 @@ if __name__ == "__main__": # --- interface and example
           bcontents, bedges,  # bin entries and bin edges
           p0=None,                # initial guess for parameter values 
      #     constraints=['s', val , err ],   # constraints within errors
+          fixPars = ['a'],        # fix parameter(s) 
           limits=('s', 0., None),  # limits
           use_GaussApprox=False,   # Gaussian approximation
           fit_density = True,      # fit density
           plot=True,           # plot data and model
           plot_band=True,      # plot model confidence-band
-          plot_cor=False,      # plot profiles likelihood and contours
+          plot_cor=True,      # plot profiles likelihood and contours
           showplots=False,     # show / don't show plots
           quiet=False,         # suppress informative printout
           axis_labels=['x', 'y   \  f(x, *par)'], 
@@ -2339,6 +2472,7 @@ if __name__ == "__main__": # --- interface and example
           p0=None,                 # initial guess for parameter values 
         #  constraints=['mu', 2., 0.01], # Gaussian parameter constraints
         #  limits=('sigma', None, None),  #limits
+        #  fixPars = ['mu'],        # fix parameter(s) 
           neg2logL = True,         # cost ist -2 * ln(L)
           plot_cor=True,           # plot profiles likelihood and contours
           showplots=False,         # show / don't show plots
@@ -2358,9 +2492,12 @@ if __name__ == "__main__": # --- interface and example
   # -------------------------------------------------------------------------
   #
   # --- run above examples
-  
+
+  print("*==* xy fit example")
   example_xyFit()
+  print("\n\n*==* histogram fit example")
   example_histogramFit()
+  print("\n\n*==* simple minuit fit with user-defined cost function")
   example_userFit()
 
   # show all figures
