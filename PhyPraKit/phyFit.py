@@ -86,7 +86,7 @@ from iminuit import __version__, Minuit
 from scipy.special import loggamma
 
 
-def mFit(fitf, x, y, sx = None, sy = None,
+def xyFit(fitf, x, y, sx = None, sy = None,
        srelx = None, srely = None, 
        xabscor = None, xrelcor = None,        
        yabscor = None, yrelcor = None,
@@ -308,11 +308,15 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
   #   gof
   return Fit.getResult()
 
-def userFit(cost, p0 = None, 
-            constraints = None, limits=None, fixPars=None,
-            neg2logL = True,
-            plot_cor = True,
-            showplots = True, quiet = False):
+def mFit(ufcn, data = None, p0 = None, 
+          constraints = None, limits=None, fixPars=None,
+          neg2logL = True,
+          plot = False, plot_band=True,
+          plot_cor = True,
+          showplots = True, quiet = False,
+          axis_labels=['x', 'Density = f(x, *par)'],
+          data_legend = 'data',    
+          model_legend = 'model'):
   
   """Wrapper function to directly fit a user-defined cost funtion
 
@@ -320,24 +324,39 @@ def userFit(cost, p0 = None,
   cost function is minimized and an estimation of the parameter uncertainties performed
 
   Args:
-    * cost: user-defined cost funtion to be minimized; the uncertaintiy estimation
+    * ufcn: user-defined cost funtion or pdf to be minimized; the uncertaintiy estimation
       releys this being a negative log-likelihood function ('nlL') 
     * p0: array-like, initial guess of parameters
     * constraints: (nested) list(s) [name or id, value, error] 
     * limits: (nested) list(s) [name or id, min, max] 
     * neg2logL: use 2 * nlL (corresponding to a least-squares-type cost)
+    * plot: show data and model if True
+    * plot_band: plot uncertainty band around model function
     * plot_cor: plot likelihood profiles and confidence contours of parameters
     * showplots: show plots on screen (can also be done by calling script)
     * quiet: contrlos verbose output
     """
+  if data is None:
+    fit_type="user"
+  else:
+    fit_type = "ml"
+  uFit = mnFit(fit_type)
 
-  uFit = mnFit("user")
   # set options
   uFit.setOptions(run_minos = True,
                  neg2logL = neg2logL,
                  quiet = quiet)
-  # no internal data, directly initialze fit with the supplied cost function
-  uFit.init_fit(cost, p0 = p0,
+
+  # initialize data container if data is provided
+  #  !!! if no data given, the user-supplied cost function must
+  #      handle got calulation of the cost function 
+  if data is not None:
+    uFit.init_data(data)
+
+  # initialze fit
+  #  - with the user-supplied cost function cost(*pars) if no data given
+  #  - with probability density pdf(x; *pars) if data (=x) provided 
+  uFit.init_fit(ufcn, p0 = p0,
                 constraints = constraints,
                 fixPars = fixPars,
                 limits = limits)
@@ -351,6 +370,12 @@ def userFit(cost, p0 = None,
       print("\nResult of minos error analysis:")
       print(fitResult[1])
     
+  # produce figure with data and model
+  if plot:
+    fig = uFit.plotModel(axis_labels=axis_labels,
+                 data_legend=data_legend,
+                 model_legend=model_legend,
+                      plot_band=plot_band)
   # figure with visual representation of covariances
   #    profile likelihood scan and confidence contours
   if plot_cor:
@@ -379,7 +404,7 @@ class mnFit():
    
   Public Data member
 
-  - fit_type: 'xy' (default) or 'hist', controls type of fit 
+  - fit_type: 'xy' (default), 'hist', 'user' or 'ml', controls type of fit 
 
   Public methods:
 
@@ -443,7 +468,7 @@ class mnFit():
     - 'user': user-supplied cost-function (i.e. neg. log-likelihood)
     """
 
-    if fit_type not in ['xy', 'hist', 'user']:
+    if fit_type not in ['xy', 'hist', 'user', 'ml']:
       sys.exit(
         '!**! mnFit: invalid fit type ', fit_type, '- exiting!') 
     self.fit_type = fit_type
@@ -505,6 +530,8 @@ class mnFit():
       self.init_xyData(*args, **kwargs)
     elif self.fit_type == 'hist':
       self.init_hData(*args, **kwargs)
+    elif self.fit_type == 'ml':
+      self.init_mnData(*args, **kwargs)
     elif self.fit_type == 'user':
       print("!**! mnFit: not data object definded for fit_type 'user'" )
     else:
@@ -516,7 +543,7 @@ class mnFit():
       self.set_xyOptions(*args, **kwargs)
     elif self.fit_type == 'hist':
       self.set_hOptions(*args, **kwargs)
-    elif self.fit_type == 'user':
+    elif self.fit_type == 'user' or self.fit_type == 'ml':
       self.set_mnOptions(*args, **kwargs)
     else:
       print("!**! unknown type of Fit ", self.fit_type)
@@ -527,7 +554,7 @@ class mnFit():
       self.init_xyFit(*args, **kwargs)
     elif self.fit_type == 'hist':
       self.init_hFit(*args, **kwargs)
-    elif self.fit_type == 'user':
+    elif self.fit_type == 'user' or self.fit_type == 'ml':
       self.init_mnFit(*args, **kwargs)
     else:
       print("!**! unknown type of Fit ", self.fit_type)
@@ -611,6 +638,10 @@ class mnFit():
         or [parameter index, min, max]
     """
 
+    if self.xyData is None: 
+      print(' !!! mnFit.init_xyFit: no data object defined - call init_data()')
+      sys.exit('mnFit Error: no data object')
+
     # get parameters of model function to set start values for fit
     args, model_kwargs = self.get_functionSignature(model)
 
@@ -621,7 +652,7 @@ class mnFit():
     self.costf = self.xLSQ(self,
                            self.xyData, model,
                            use_neg2logL= self.use_negLogL)
-    self._setupMinuit(*par) 
+    self._setupMinuit(model_kwargs) 
 
       
   class xyDataUncertainties:
@@ -821,7 +852,7 @@ class mnFit():
         else:
           er_ = np.array(erel) * data
           cov += np.diag(er_ * er_)   # diagonal elements of covariance matrix
-        
+  
       # 3. add absolute, correlated error components  
       if eabscor is not None:
         if len(np.shape(eabscor )) < 2: # has one entry
@@ -1129,8 +1160,6 @@ class mnFit():
       self.pnams = outer.pnams
       self.func_code = make_func_code(self.pnams)
       self.npar = outer.npar
-      # dictionary assigning parameter name to index
-      self.pnam2id = outer.pnam2id
       
       # take account of constraints 
       self.constraints = outer.constraints
@@ -1151,10 +1180,7 @@ class mnFit():
       #  first, take into account possible parameter constraints  
       if self.nconstraints:
         for c in self.constraints:
-          if type(c[0])==type(' '):
-            p_id = self.pnam2id[c[0]]
-          else:
-            p_id = c[0]
+          p_id = c[0]
           r = ( par[p_id] - c[1]) / c[2] 
           nlL2 += r*r
 
@@ -1263,6 +1289,10 @@ class mnFit():
       - limits: (nested) list(s): [parameter name, min, max] 
         or [parameter index, min, max]
     """
+
+    if self.hData is None: 
+      print(' !!! mnFit.init_hFit: no data object defined - call init_data()')
+      sys.exit('mnFit Error: no data object')
     
     # get parameters of model function to set start values for fit
     args, model_kwargs = self.get_functionSignature(model)
@@ -1275,7 +1305,7 @@ class mnFit():
                             self.hData, model,
                             use_GaussApprox=self.use_GaussApprox,
                             density = self.fit_density)
-    self._setupMinuit(*par) 
+    self._setupMinuit(model_kwargs) 
       
   class histData:
     """
@@ -1432,8 +1462,6 @@ class mnFit():
       self.pnams = outer.pnams
       self.func_code = make_func_code(self.pnams)
       self.npar = outer.npar
-      # dictionary assigning parameter name to index
-      self.pnam2id = outer.pnam2id
  
       self.constraints = outer.constraints
       self.nconstraints =len(self.constraints)
@@ -1462,10 +1490,7 @@ class mnFit():
       n2lL= 0.
       if self.nconstraints:
         for c in self.constraints:
-          if type(c[0])==type(' '):
-            p_id = self.pnam2id[c[0]]
-          else:
-            p_id = c[0]
+          p_id = c[0]
           r = ( par[p_id] - c[1]) / c[2] 
           n2lL += r*r
 
@@ -1538,8 +1563,23 @@ class mnFit():
 
   #
   # --- special code for fit with user-supplied cost function
-  #     or pdf for neg. log-L fit 
+  #     or pdf for neg. log-likelihood fit 
   #      
+
+  def init_mnData(self, x):
+    """
+    initialize data object
+
+    Args:
+    - x, array of floats
+    """
+    
+    # create data object and pass all input arguments
+    self.mnData = self.mnData(self, x)
+    self.data = self.mnData
+
+
+
   def init_mnFit(self, userFunction, p0=None, 
                        constraints=None, fixPars=None, limits=None):
     """initialize fit object for simple minuit fit with
@@ -1554,6 +1594,9 @@ class mnFit():
       - limits: (nested) list(s): [parameter name, min, max] or
         [parameter index, min, max]
     """
+    if self.data is None and self.fit_type != "user":
+      print(' !!! mnFit.init_mnFit: no data object defined - call init_data()')
+      sys.exit('mnFit Error: no data object')
 
     # get parameters of model function to set start values for fit
     args, model_kwargs = self.get_functionSignature(userFunction)
@@ -1563,7 +1606,7 @@ class mnFit():
 
     #set up cost function for iminuit
     self.costf = self.mnCost(self, userFunction)
-    self._setupMinuit(*par) 
+    self._setupMinuit(model_kwargs) 
 
   def set_mnOptions(self, run_minos=None, neg2logL=None, quiet=None):
     """Define options for minuit fit with user cost function
@@ -1586,6 +1629,54 @@ class mnFit():
     if quiet is not None:
       self.quiet = quiet
 
+
+  class mnData:
+    """
+      Container for general (indexed) data
+
+      Data Members:
+
+      - x, array of floats: data
+
+
+      Methods:
+
+      - plot(): create figure with representation of data
+    """
+    
+    def __init__(self, outer, x):
+      """ 
+      store data
+
+      Args:
+      - x, array of floats
+      - quiet: boolean, controls printed output
+
+      """
+
+      self.x = np.asarray(x)
+      
+    def plot(self, num='indexed data',
+                   figsize=(7.5, 6.5),                             
+                   data_label='Data' ):
+      """return figure with histogram data and uncertainties
+      """
+
+      fig = plt.figure(num=num, figsize=figsize)
+
+      if self.x is None:
+        print(' !!! mnFit.mnData.plot: no data object defined')
+        return fig
+      
+      mn = min(self.x)
+      mx = max(self.x)
+      ymn = 0.
+      ymx = 0.25/(mx-mn)
+      plt.vlines(self.x, ymn, ymx, lw=1, color='grey', alpha=0.5, label=data_label)
+      
+      return fig
+
+      
   # --- class encapsulating user-defined cost function
   class mnCost:
     """
@@ -1607,8 +1698,8 @@ class mnFit():
       if self.data is None:
         self.cost = userFunction
       else:
-        self.modelPDF = userFunction
-        self.cost = nlLcost
+        self.model = userFunction
+        self.cost = self.nlLcost
         
       self.quiet = outer.quiet
 
@@ -1616,12 +1707,12 @@ class mnFit():
       self.constraints = outer.constraints
       self.nconstraints = len(self.constraints)
       self.ErrDef = outer.ErrDef
-
+      self.sf_lL = -2.*self.ErrDef
+      
       # set proper signature of model function for iminuit
       self.pnams = outer.pnams
       self.func_code = make_func_code(self.pnams)
       self.npar = outer.npar
-      self.pnam2id = outer.pnam2id
 
       # for this kind of fit, some input and ouput quantities are not known
       self.gof = None
@@ -1632,25 +1723,21 @@ class mnFit():
       # add constraints to cost
       if self.nconstraints:
         for c in self.constraints:
-          if type(c[0])==type(' '):
-            p_id = self.pnam2id[c[0]]
-          else:
-            p_id = c[0]
+          p_id = c[0]
           r = ( par[p_id] - c[1]) / c[2] 
           cost += r*r
         cost *= self.ErrDef 
       # called iteratively by minuit
       return cost + self.cost(*par)
 
-    @staticmethod
-    def nlLcost(*par):
+    def nlLcost(self, *par):
       """negative log likelihood of data and user-defined PDF and 
       """
        # check if PDF is nomalized to 1
        # ...
-       
-      c = -self.ErrDef*np.log(self.modelPDF(self.data.x, *par))
-      return c
+
+      lL= np.sum( np.log( self.model(self.data.x, *par) ) )
+      return self.sf_lL * lL
         
  # --- end definition of class mnCost ----
 
@@ -1662,31 +1749,85 @@ class mnFit():
     """set up parameters needed for Minuit and cost function
     """
 
+    # get parameter names from kwargs of model function
     self.pnams = list.copy(list(model_kwargs.keys()))
     self.npar = len(self.pnams)
     # dictionary assigning parameter name to index
     self.pnam2id = {
       self.pnams[i] : i for i in range(0,self.npar) } 
 
+    # proess and store parameter constraints (used in cost function)
+    self.setConstraints = constraints    
+    self.constraints = []
+    if constraints is not None:
+      if len(np.shape(constraints))==2:
+        for c in constraints:
+          # name to parameter id
+          if type(c[0])==type(' '):
+            c[0] = self.pnam2id[c[0]]
+          self.constraints.append(c)
+      else:
+        # name to parameter id
+        if type(constraints[0])==type(' '):
+          constraints[0] = self.pnam2id[constraints[0]]
+        self.constraints.append(constraints)
+    self.nconstraints = len(self.constraints)
+
+    # set initial parameters for fit (used by minuit) 
     if p0 is not None:
       for i, pnam in enumerate(self.pnams):
         model_kwargs[pnam] = p0[i]    
 
-    self.constraints = []
-    if constraints is not None:
-      self._storeConstraints(constraints)
-
+    # store informations on parameter limits (used by minuit)
+    self.setLimits = limits    
+    self.limits = []
     if limits is not None:
-      self._storeLimits(limits)
+      self.limits=[ [None, None]] * len(self.pnams)
+      if len(np.shape(limits))==2:
+        for l in limits:
+          if type(l[0])==type(' '):
+            p_id = self.pnam2id[l[0]]
+          else:
+            p_id = l[0]
+          self.limits[p_id] = [l[1], l[2]]          
+      else:
+        if type(limits[0])==type(' '):
+          p_id = self.pnam2id[limits[0]]
+        else:
+          p_id = limits[0]
+        self.limits[p_id]=[limits[1], limits[2]]          
 
+    # store information on fixed parameters 
+    self.fixPars = fixPars    
     self.fixedPars = [ False ] * self.npar
     if fixPars is not None:
-      self._storeFixedPars(fixPars)
+      # get parameter names or indices to fix
+      if len(np.shape(fixPars))==1:
+        for f in fixPars:
+          if type(f)==type(' '):
+            p_id = self.pnam2id[f]
+          else:
+            p_id = f
+          self.fixedPars[p_id] = True          
+        self.nfixed = len(fixPars)
+      else:
+        if type(fixPars)==type(' '):
+          p_id = self.pnam2id[fixPars]
+        else:
+          p_id = fixPars
+        self.fixedPars[p_id]=True          
+        self.nfixed = 1
+    # get parameter names or indices of fixed parameters
+      self.freeParNams = []
+      self.fixedParNams = []
+      for i, fixed in enumerate(self.fixedPars):
+        if not fixed: self.freeParNams.append(self.pnams[i])
+        if fixed: self.fixedParNams.append(self.pnams[i])
     else:
       self.freeParNams = self.pnams  
       self.fixedParNams = []  
 
-  def _setupMinuit(self, model_kwargs, p0, constraints, fixPars, limits): 
+  def _setupMinuit(self, model_kwargs):
 
     # create Minuit object (depends on Minuit version)
     if __version__ < '2':
@@ -1694,10 +1835,10 @@ class mnFit():
         print_level=0
       else:
         print_level=1
-      if limits is not None:
+      if self.setLimits is not None:
         for i, pnam in enumerate(self.pnams):
           model_kwargs['limit_' + pnam] = self.limits[i]
-      if fixPars is not None:
+      if self.fixPars is not None:
         for i, pnam in enumerate(self.pnams):
           model_kwargs['fix_' + pnam] = self.fixedPars[i]          
       self.minuit = Minuit(self.costf, 
@@ -1709,80 +1850,12 @@ class mnFit():
       self.minuit.errordef = self.ErrDef
       if self.quiet:
         self.minuit.print_level = 0
-      if limits is not None:
+      if self.setLimits is not None:
         self.minuit.limits = self.limits
-      if fixPars is not None:
+      if self.fixPars is not None:
         for i, pnam in enumerate(self.pnams):
           if self.fixedPars[i]: self.minuit.fixed[pnam]=True 
 
-  def _storeFixedPars(self, fixPars):
-    """store fixed parameters
-
-    input format: list of names or parameter ids 
-    
-    output format: list of len(pnams) with True/False
-    """
-    
-    # get parameter names or indices to fix
-    if isinstance(fixPars, list):
-      for f in fixPars:
-        if type(f)==type(' '):
-          p_id = self.pnam2id[f]
-        else:
-          p_id = f
-        self.fixedPars[p_id] = True          
-      self.nfixed = len(fixPars)
-    else:
-      if type(fixPars)==type(' '):
-        p_id = self.pnam2id[fixPars]
-      else:
-        p_id = fixedPars
-      self.fixedPars[p_id]=True          
-      self.nfixed = 1
-    # get parameter names or indices to fix
-    self.freeParNams = []
-    self.fixedParNams = []
-    for i, fixed in enumerate(self.fixedPars):
-      if not fixed: self.freeParNams.append(self.pnams[i])
-      if fixed: self.fixedParNams.append(self.pnams[i])
-      
-  def _storeLimits(self, limits):
-    """store parameter limits
-
-    format: nested list(s) of type 
-    [parameter name, min, max] or
-    [parameter index, min, max]
-    """
-
-    # get parameter names
-    self.limits=[ [None, None]] * len(self.pnams)
-    if isinstance(limits[1], list):
-      for l in limits:
-        if type(l[0])==type(' '):
-          p_id = self.pnam2id[l[0]]
-        else:
-          p_id = l[0]
-        self.limits[p_id] = [l[1], l[2]]          
-    else:
-      if type(limits[0])==type(' '):
-        p_id = self.pnam2id[limits[0]]
-      else:
-        p_id = limits[0]
-      self.limits[p_id]=[limits[1], limits[2]]          
-
-  def _storeConstraints(self, constraints):
-    """Add parameter constraints
-    format: nested list(s) of type 
-    [parameter name, value, uncertainty] or
-    [parameter index, value, uncertainty]
-    """
-    if isinstance(constraints[1], list):
-       for c in constraints:
-         self.constraints.append(c)
-    else:
-       self.constraints.append(constraints)
-    self.nconstraints = len(self.constraints)
-       
   def _storeResult(self):
   # collect results as numpy arrays
     # !!! this part depends on iminuit version !!!    
@@ -1803,7 +1876,7 @@ class mnFit():
       cov = np.array(m.covariance)  # covariance matrix of all(!) parameters
       # produce reduced covariance matrix for free parameters only
       if self.nfixed != 0:
-        for i in range(len(parnames)):
+        for i in range(len(parnames)-1, -1, -1): # start from largest index and work back
           if self.fixedPars[i]:
             cov = np.delete(np.delete(cov, i, 0 ), i, 1)
     npar=len(parnames)             # number of parameters
@@ -1926,7 +1999,10 @@ class mnFit():
     
     # summarize options
     if not self.quiet:
-      print( '*==* mnFit starting (pre-)fit')
+      if self.iterateFit:
+        print( '*==* mnFit starting pre-fit')
+      else: 
+        print( '*==* mnFit starting fit')
       print( '  Options:')
       for key in self.options.keys():
         relevant = self.options[key][1] == "all" or \
@@ -1938,14 +2014,7 @@ class mnFit():
       print('\n')  
 
 
-#      if self.run_minos is not None:
-#        print( '     - performing minos profile likelihood scan')
-#      if self.refModel is not None:
-#        print( '     - relative uncertainties refer to model ')
-#      if self.iterateFit and self.use_negLogL is not None:
-#        print( '     - using negative log-likelihood')
-      
-    # perform initial fit
+    # perform (initial) fit
     try:
       self.migradResult = self.minuit.migrad()  # find minimum of cost function
       self.migrad_ok = True
@@ -2024,8 +2093,10 @@ class mnFit():
     gof = self.GoF
     ndof = cf.ndof
     #  chi2prb
-    chi2prb = self.chi2prb(gof, ndof) 
-
+    if gof is not None:
+      chi2prb = self.chi2prb(gof, ndof) 
+    else:
+      chi2prb = None      
     # values of free and fixed parameters
     fixedPars = self.fixedPars
     free_pvals = self.freeParVals
@@ -2052,10 +2123,10 @@ class mnFit():
           i += 1
         bwidths[j] = cf.data.widths[min(i, cf.data.nbins-1)]
       sfac = cf.norm * bwidths
-    elif self.fit_type=="xy":
+    elif self.fit_type=="xy" or self.fit_type=='ml':
       sfac = 1.
     else:
-      print("!**! mnFit.plotModel: unknown fit type: self.fit_type")
+      print("!**! mnFit.plotModel: unknown fit type: ", self.fit_type)
       sfac = 1.
     # plot model line  
     yplt = cf.model(xplt, *pvals)
@@ -2092,7 +2163,7 @@ class mnFit():
         fit_info.append(txt.format(pn, _v, _e, pv=nd, pe=pe))
     if nfixed:
       for pn, v in zip(fixed_pnams, fixed_pvals):
-        txt="{} = {:g}  fixed"
+        txt="{} = {:g}  (fixed)"
         fit_info.append(txt.format(pn, v))
         
     #  2. goodness-of-fit
@@ -2295,8 +2366,8 @@ if __name__ == "__main__": # --- interface and example
     cabsx = 0.03 # correlated x
     crelx = 0.02 # 2% of x correlated
 
-    # perform fit to data with function mFit using class mnFit
-    pnams, pvals, perrs, cor, chi2 = mFit(fitmodel, data_x, data_y,
+    # perform fit to data with function xyFit using class mnFit
+    pnams, pvals, perrs, cor, chi2 = xyFit(fitmodel, data_x, data_y,
                                      sx=sabsx,
                                      sy=sabsy,
                                      srelx=srelx,
@@ -2402,12 +2473,12 @@ if __name__ == "__main__": # --- interface and example
       r= (data-mu)/sigma
       return np.sum( r*r + 2.*np.log(sigma))
 
-    pnams, pvals, perrs, cor, gof = userFit(myCost,
+    pnams, pvals, perrs, cor, gof = mFit(myCost,
           p0=None,                 # initial guess for parameter values 
-        #  constraints=['mu', 2., 0.01], # Gaussian parameter constraints
+          constraints=[['mu', 2., 0.01]], # Gaussian parameter constraints
         #  limits=('sigma', None, None),  #limits
         #  fixPars = ['mu'],        # fix parameter(s) 
-          neg2logL = True,         # cost ist -2 * ln(L)
+          neg2logL = True,         # cost is -2 * ln(L)
           plot_cor=True,           # plot profiles likelihood and contours
           showplots=False,         # show / don't show plots
           quiet=False,              # suppress informative printout
@@ -2423,6 +2494,77 @@ if __name__ == "__main__": # --- interface and example
     print(" pos. parameter errors: ", perrs[:,1])
     print(" correlations : \n", cor)  
 
+  def example_unbinnedMLFit():
+    """**unbinned ML fit** of pdf to unbinned data
+    
+    real data from measurement with a Water Cherenkov detector ("Kamiokanne")
+
+      numbers represent time differences (in µs) between the passage of a 
+      muon and the registration of a second pulse, often caused by an 
+      electron from the muon decay
+    """
+    dT=[7.42, 3.773, 5.968, 4.924, 1.468, 4.664, 1.745, 2.144, 3.836, 3.132,
+        1.568, 2.352, 2.132, 9.381, 1.484, 1.181, 5.004, 3.06,  4.582, 2.076,
+        1.88,  1.337, 3.092, 2.265, 1.208, 2.753, 4.457, 3.499, 8.192, 5.101,
+        1.572, 5.152, 4.181, 3.52,  1.344, 10.29, 1.152, 2.348, 2.228, 2.172,
+        7.448, 1.108, 4.344, 2.042, 5.088, 1.02,  1.051, 1.987, 1.935, 3.773,
+        4.092, 1.628, 1.688, 4.502, 4.687, 6.755, 2.56,  1.208, 2.649, 1.012,
+        1.73,  2.164, 1.728, 4.646, 2.916, 1.101, 2.54,  1.02,  1.176, 4.716,
+        9.671, 1.692, 9.292, 10.72, 2.164, 2.084, 2.616, 1.584, 5.236, 3.663,
+        3.624, 1.051, 1.544, 1.496, 1.883, 1.92,  5.968, 5.89,  2.896, 2.76,
+        1.475, 2.644, 3.6,   5.324, 8.361, 3.052, 7.703, 3.83,  1.444, 1.343,
+        4.736, 8.7,   6.192, 5.796, 1.4,   3.392, 7.808, 6.344, 1.884, 2.332,
+        1.76,  4.344, 2.988, 7.44,  5.804, 9.5,   9.904, 3.196, 3.012, 6.056,
+        6.328, 9.064, 3.068, 9.352, 1.936, 1.08,  1.984, 1.792, 9.384, 10.15,
+        4.756, 1.52,  3.912, 1.712, 10.57, 5.304, 2.968, 9.632, 7.116, 1.212,
+        8.532, 3.000, 4.792, 2.512, 1.352, 2.168, 4.344, 1.316, 1.468, 1.152,
+        6.024, 3.272, 4.96, 10.16,  2.14,  2.856, 10.01, 1.232, 2.668, 9.176 ]
+
+    def modelPDF(t, tau=2., fbg=0.2, a=1., b=11.5):
+      """Probability density function 
+      for an exponential decay with flat background. 
+      The pdf is normed for the interval (a, b).
+
+      :param t: decay time
+      :param fbg: background
+      :param tau: expected mean of the decay time
+      :param a: the minimum decay time which can be measured
+      :param b: the maximum decay time which can be measured
+      :return: probability for decay time x
+      """
+      pdf1 = np.exp(-t / tau) / tau / (np.exp(-a / tau) - np.exp(-b / tau))
+      pdf2 = 1. / (b - a)
+      return (1 - fbg) * pdf1 + fbg * pdf2
+
+    pnams, pvals, perrs, cor, gof = mFit( modelPDF,
+          data = dT,               # data - if not None, a normalised PDF is assumed as model  
+          p0=None,                 # initial guess for parameter values 
+        #  constraints=[['tau', 2.2, 0.01], # Gaussian parameter constraints
+          limits=('fbg', 0., 1.),  #limits
+          fixPars = ['a', 'b'],        # fix parameter(s) 
+          neg2logL = True,         # use  -2 * ln(L)
+          plot=True,               # plot data and model
+          plot_band=True,          # plot model confidence-band
+          plot_cor=False,          # plot profiles likelihood and contours
+          showplots=False,         # show / don't show plots
+          quiet=False,             # suppress informative printout if True
+          axis_labels=['life time  ' + '$\Delta$t ($\mu$s)', 
+                       'Probability Density  pdf($\Delta$t; *p)'], 
+          data_legend = '$\mu$ Lifetime data',    
+          model_legend = 'exponential decay + flat background' )
+          
+
+    plt.suptitle("unbinned ML fit",
+                     size='xx-large', color='darkblue')
+    # Print results
+    print('\n*==* unbinned ML Fit Result:')
+    print(" parameter names:      ", pnams)
+    print(" parameter values:      ", pvals)
+    print(" neg. parameter errors: ", perrs[:,0])
+    print(" pos. parameter errors: ", perrs[:,1])
+    print(" correlations : \n", cor)  
+
+
   #
   # -------------------------------------------------------------------------
   #
@@ -2430,10 +2572,15 @@ if __name__ == "__main__": # --- interface and example
 
   print("*==* xy fit example")
   example_xyFit()
+
   print("\n\n*==* histogram fit example")
   example_histogramFit()
+
   print("\n\n*==* simple minuit fit with user-defined cost function")
   example_userFit()
+
+  print("\n\n*==* ML minuit Fit")
+  example_unbinnedMLFit()
 
   # show all figures
   plt.show()
