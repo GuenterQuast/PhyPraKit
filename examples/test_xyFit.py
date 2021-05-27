@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
-"""test_mFit.py
-   Fitting example with iminiut
+"""test_xyFit.py
+   Fitting example for x-y data with iminiut
 
-   Uses function PhyPraKit.mFit, which in turn uses mnFit from phyFit
+   Uses function PhyPraKit.xmFit, which in turn uses mnFit from phyFit
 
    This is a rather complete example showing a fit to
    data with independent and correlated, absolute and 
@@ -13,11 +13,11 @@
 """
 
 import numpy as np, matplotlib.pyplot as plt
-from PhyPraKit import generateXYdata, mFit
+from PhyPraKit import generateXYdata, xyFit
 
 if __name__ == "__main__": # --------------------------------------  
   #
-  # Example of an application of PhyPraKit.mFit()
+  # Example of an application of PhyPraKit.xyFit()
   #
   # define the model function to fit
   def model(x, A=1., x0=1.):
@@ -49,8 +49,8 @@ if __name__ == "__main__": # --------------------------------------
                                       yrelcor=crely,
                                       mpar=mpardict.values() )
 
-# perform fit to data with function mFit using mnFit class from phyFit
-  parvals, parerrs, cor, chi2 = mFit(model,
+# perform fit to data with function xyFit using mnFit class from phyFit
+  parvals, parerrs, cor, chi2 = xyFit(model,
       data_x, data_y,      # data x and y coordinates
       sx=sabsx,            # indep x
       sy=sabsy,            # indel y

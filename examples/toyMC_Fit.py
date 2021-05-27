@@ -28,13 +28,13 @@ def get_signature(f):
 # --- end helper functions ----
 import sys
 import numpy as np, matplotlib.pyplot as plt
-from PhyPraKit import generateXYdata, mFit,k2Fit,histstat, hist2dstat,round_to_error
+from PhyPraKit import generateXYdata, xyFit, k2Fit,histstat, hist2dstat,round_to_error
 
 from scipy import stats
 
 if __name__ == "__main__": # --------------------------------------  
   #
-  # Example of fitting with PhyPraKit functions mFit, k2Fit and odFit
+  # Example of fitting with PhyPraKit functions xyFit, k2Fit and odFit
   #
   # Fits are run in a loop and 1d and 2d distribution of results plotted.
   
@@ -83,7 +83,7 @@ if __name__ == "__main__": # --------------------------------------
 # set the fitting function  
 #  theFit = odFit    
 #  theFit = k2Fit    
-  theFit = mFit    
+  theFit = xyFit    
 
   # initialize arrays for statistical analysis in loop
   d = [[] for i in range(npar)]

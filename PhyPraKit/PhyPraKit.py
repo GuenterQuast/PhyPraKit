@@ -66,7 +66,7 @@ def A0_readme():
 
       - linRegression()    linear regression, y=ax+b, with analytical formula
       - odFit()            fit function with x and y errors (scipy ODR)
-      - mFit()             fit with with correlated x and y errors,
+      - xyFit()            fit with with correlated x and y errors,
         profile likelihood and contour lines (module phyFit) 
       - hFit()             fit of a density to histogram data
       - k2Fit()            fit function with (correlated) errors on x and y 
@@ -1364,7 +1364,7 @@ def odFit(fitf, x, y, sx=None, sy=None, p0=None):
     return par, pare, cor, chi2
 
 
-def mFit(fitf, x, y, sx = None, sy = None,
+def xyFit(fitf, x, y, sx = None, sy = None,
          srelx = None, srely = None, 
          xabscor = None, xrelcor = None,        
          yabscor = None, yrelcor = None,
