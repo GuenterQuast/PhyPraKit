@@ -14,46 +14,47 @@
   package `iminuit` for fitting a parameter-dependent model f(x, \*par) 
   to data points (x, y) or a probability density function to binned 
   histogram data or to unbinned data. Parameter estimation is based on 
-  the Maximum-Likelihood method in the first two cases, or on a user-defined
-  likelihood function in the latter case. Classical least-square methods 
-  are optionally available for comparison with other packages. 
+  pre-implemented the Maximum-Likelihood methods, or also on a user-defined 
+  likelihood function in the latter case, which provides maximum flexibility.
+  Classical least-square methods are optionally available for comparison 
+  with other packages. 
 
   A unique feature of the package ist the support of different kinds 
   of uncertainties for x-y data, namely independent and/or correlated 
   absolute and/or relative uncertainties in the x and/or y directions. 
   Parameter estimation for density distributions is based on the shifted 
-  Poission distibution, Poisson(x-loc, lambda), of the number of entries 
+  Poission distibution, Poisson(x - loc, lambda), of the number of entries 
   in each bin of a histogram. 
 
   Parameter constraints, i.e. external knowledge of parameters within
-  Gaussian uncertainties, and limits on parameters in order to avoid 
+  Gaussian uncertainties, limits on parameters in order to avoid 
   problematic regions in parameter space during the minimization process, 
-  are also supported by mnFit.
+  and fixing of parameters, e.g. to inlcude the validity range of a model
+  in the parameters without affecting the fit, are also supported by *mnFit*.
 
   Method:
     Uncertainties that depend on model parameters are treated by dynamically 
-    updating the cost function during the fitting process wit `iminuit`.
+    updating the cost function during the fitting process with `iminuit`.
     Data points with relative errors can thus be referred to the model 
     instead of the data. The derivative of the model function w.r.t. x is 
     used to project the covariance matrix of x-uncertainties on the y-axis. 
 
-  Example functions mFit() and hFit() illustrate how to control 
-  the  interface of `mnFit` for x-y and histogram fits, and a 
-  short script is provided to perform fits on sample data.  
-  A brief example how to implement fit of a prbability density to
-  a set of (unbinned) data is also provided. 
+  Example functions *xyFit()*, *hFit()* and *mFit()*, illustrate how to 
+  control the  interface of `mnFit`. A short example script is also 
+  provided to perform fits on sample data.  
 
   The implementation of the fitting procedure in this package is 
-  - intenitionally - rather minimalistic, and it is intended to 
-  illustrate the principle of an advanced usage of `iminuit`. It is 
-  also meant to stimulate own applications of special, user-defined cost 
-  functions.
+  - intenitionally - rather minimalistic, and it is meant to 
+  illustrate the principles of an advanced usage of `iminuit`. It 
+  is also intended to stimulate own applications of special, 
+  user-defined cost functions.
 
   The main features of this package are:
     - provisioning of cost functions for x-y and binned histogram fits 
     - implementation of the least-squares method for correlated Gaussian errors
     - support for correlated x-uncertainties by projection on the y-axis
-    - support of relative errors with reference to the model values 
+    - support of relative errors with reference to the model values
+    - shifted Poisson distibution for binned likelihood fits to histograms 
     - evaluation of profile likelihoods to determine asymetric uncertainties
     - plotting of profile likeliood and confidence contours
 
@@ -65,16 +66,14 @@
   distribution. Fits to bistogram data rely on the negative log-likelihood
   of the Poisson distribution, which is generalised to support fractional
   observed values, which may occur if corrections to the observed bin counts 
-  have to be applied. If there is a difference between the mean value and
-  the variance of the number of entries in a bin due to corrections, 
+  have to be applied. If there is a difference *DeltaMu* between the mean 
+  value and the variance of the number of entries in a bin due to corrections, 
   a "shifted Poisson distribution", Poiss(x-DeltaMu, lambda), is supported.
 
-  Fully functional examples are provided by the functions `mFit()` and
-  `hFit()` and the executable script below, which contains sample data, 
-  executes the fitting procecure and collects the results. The script also
-  contains only a few lines of code to perform a very minimalistic fit
-  to unbinnde data with a user-defined likelihood function. 
-  
+  Fully functional examples are provided by the functions `xyFit(), `hFit()` 
+  and `mFit()` and the executable script below, which contains sample data, 
+  executes the fitting procecure and collects the results.
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
 
@@ -320,12 +319,26 @@ def mFit(ufcn, data = None, p0 = None,
   
   """Wrapper function to directly fit a user-defined cost funtion
 
-  This is the simplest fit possibe with the class mnFit. A user-defined
-  cost function is minimized and an estimation of the parameter uncertainties performed
+  This is the simplest fit possibe with the class mnFit. If no data is
+  specified (data=None), a user-supplied cost function (ufcn) is minimized 
+  and an estimation of the parameter uncertainties performed, assuming
+  the cost function is a negative log-likelihood function (nlL of 2nLL).
+  
+  In case data is provided, the user function `ufcn(data, *par)` is 
+  interpreted as a parameter-dependent probability density function, and
+  the parameters are determined in an unbinned log-likelihood approach. 
 
   Args:
-    * ufcn: user-defined cost funtion or pdf to be minimized; the uncertaintiy estimation
-      releys this being a negative log-likelihood function ('nlL') 
+    * ufcn: user-defined cost funtion or pdf to be minimized; 
+
+      - ufcn(\*par): the uncertaintiy estimation releys on this being a 
+        negative log-likelihood function ('nlL'); in this case, no data
+        is to be provided, i.e. `data=None`. 
+
+      - ufcn(x, \*par): a probability density of the data `x` depending on
+        the set of parameters `par`. 
+
+    * data, optional, array of floats: optional input data
     * p0: array-like, initial guess of parameters
     * constraints: (nested) list(s) [name or id, value, error] 
     * limits: (nested) list(s) [name or id, min, max] 
@@ -334,8 +347,9 @@ def mFit(ufcn, data = None, p0 = None,
     * plot_band: plot uncertainty band around model function
     * plot_cor: plot likelihood profiles and confidence contours of parameters
     * showplots: show plots on screen (can also be done by calling script)
-    * quiet: contrlos verbose output
+    * quiet: controls verbose output
     """
+
   if data is None:
     fit_type="user"
   else:
@@ -420,10 +434,23 @@ class mnFit():
   - plot_clContour():   plot confidence level coutour for pair of parameters  
   - plot_nsigContour(): plot n-sigma coutours for pair of parameters  
 
+  Sub-Classes:
+
+  - xyDataContainer:    Data and uncertainties for x-y data
+  - histDataContainer:  Container for histogram data
+  - mnDataContainter:   Container for general (indexed) data
+
+  - xLSQ:               Extended chi^2 cost function for fits to x-y data
+  - hCost:              Cost function for (binned) histogram data 
+    (2*negl. log. Likelihood of Poisson distribution)
+  - mnCost:             user-supplied cost function or negative log-likelihood 
+    of user-supplied probability distribution
+
   Methods:
 
   - init_xyData():       initialze xy data and uncertainties
   - init_hData():        initialze histogram data and uncertainties
+  - init_mnData():       store data for unbinned likeliood-fit
   - init_xyFit():        initialize xy fit: data, model and constraints
   - init_hFit():         initialize histogram fit: data, model and constraints
   - init_mnFit():        initialize histogram simple minuit fit
@@ -436,9 +463,10 @@ class mnFit():
  
   Data members:
 
+  - options, dict:      list of options 
+  - ParameterNames:     names of parameters (as specified in model function)
   - nconstraints        nunber of constrained parameters    
   - nfixed              number of fixed parameters
-  - ParameterNames:     names of parameters (as specified in model function)
   - freeParNams:        names of free parameters 
   - GoF:                goodness-of-fit, i.e. chi2 at best-fit point
   - NDoF:               number of degrees of freedom
@@ -483,13 +511,17 @@ class mnFit():
     #   no data or model provided yet
     self.xyData = None
     self.hData = None
+    self.mnData = None 
+    # generic, holds active instance of sub-class xxData
     self.data = None
+    # generic, holds active instanc of sub-class xxCost
     self.costf = None
     # no fit done yet
     self.migradResult = None
     self.minosResult = None
     self.migrad_ok = False
     self.minos_ok = False
+
     # default options
     self.run_minos = True
     self.quiet = True
@@ -503,25 +535,25 @@ class mnFit():
     # for fit with external cost
     self.neg2logL = True
     self.ErrDef = 1.
-
+    # legend for possible options
     self.options = {}
     self.options["run_minos"] = [1, "all",
-                  "doing no likelihood scan",
+                  "no likelihood scan",
                   "MINOS profile likelihood scan"]
     self.options["refModel"]=[1, "xy",
                             "relative uncertainties refer to data",
                             "relative uncertainties refer to model"]
-    self.options["use_negLogL"] = [1, "xy"
+    self.options["use_negLogL"] = [1, "xy",
                                  "using simple chi^2 cost-function",
                                  "using full negative log-likelihood"]
 
     self.options["use_GaussApprox"] = [0, "hist",
             "using Poisson likelihood",
             "using Gaussian approximation of Poisson distibution"]
-    self.options["fit_density"] = [1, "hist"
+    self.options["fit_density"] = [1, "hist",
                                  "fit for number of entries/bin",
                                  "fit density distribution"]
-    self.options["neg2logL"] = [1, "user",
+    self.options["neg2logL"] = [1, ["user", "ml"],
                               "using standard likelihood -> errdef = 0.5",
                               "using -2 * neg. log. likelihood -> errdef=1."]
                                                                
@@ -533,7 +565,7 @@ class mnFit():
     elif self.fit_type == 'ml':
       self.init_mnData(*args, **kwargs)
     elif self.fit_type == 'user':
-      print("!**! mnFit: not data object definded for fit_type 'user'" )
+      print("!**! mnFit: not data object to be definded for fit_type 'user'" )
     else:
       print("!**! unknown type of Fit ", self.fit_type)
       sys.exit('mnFit Error: invalid fit type')
@@ -614,7 +646,7 @@ class mnFit():
     """
     
     # create data object and pass all input arguments
-    self.xyData = self.xyDataUncertainties(self, x, y, ex, ey,
+    self.xyData = self.xyDataContainer(self, x, y, ex, ey,
                     erelx, erely, cabsx, crelx, cabsy, crely,
                     quiet=self.quiet)
     self.data = self.xyData
@@ -655,7 +687,7 @@ class mnFit():
     self._setupMinuit(model_kwargs) 
 
       
-  class xyDataUncertainties:
+  class xyDataContainer:
     """
     Handle data and uncertainties, 
     build covariance matrices from components
@@ -1124,7 +1156,7 @@ class mnFit():
     Input:
 
     - outer: pointer to instance of calling class
-    - data: data object of type xyDataUncertainties
+    - data: data object of type xyDataContainer
     - model: model function f(x, \*par)
     - use_neg2logL: use full -2log(L) instead of chi2 if True
 
@@ -1268,7 +1300,7 @@ class mnFit():
     """
     
     # create data object and pass all input arguments
-    self.hData = self.histData(self,
+    self.hData = self.histDataContainer(self,
                                bin_contents, bin_edges,
                                DeltaMu,
                                quiet=self.quiet)
@@ -1307,7 +1339,7 @@ class mnFit():
                             density = self.fit_density)
     self._setupMinuit(model_kwargs) 
       
-  class histData:
+  class histDataContainer:
     """
       Container for Histogram data
 
@@ -1397,11 +1429,10 @@ class mnFit():
                    ecolor='darkblue', alpha=0.8,
                    label = data_label)
       return fig
-      
+
   # --- cost function for histogram data
   class hCost:
-    """
-    Cost function for binned data
+    """    Cost function for binned data
 
     The __call__ method of this class is called by iminuit.
 
@@ -1575,7 +1606,7 @@ class mnFit():
     """
     
     # create data object and pass all input arguments
-    self.mnData = self.mnData(self, x)
+    self.mnData = self.mnDataContainer(self, x)
     self.data = self.mnData
 
 
@@ -1629,8 +1660,7 @@ class mnFit():
     if quiet is not None:
       self.quiet = quiet
 
-
-  class mnData:
+  class mnDataContainer:
     """
       Container for general (indexed) data
 
@@ -2006,13 +2036,12 @@ class mnFit():
       print( '  Options:')
       for key in self.options.keys():
         relevant = self.options[key][1] == "all" or \
-                  self.options[key][1]==self.fit_type 
+          self.fit_type in self.options[key][1]
         if relevant:
           iopt = self.options[key][0] + 2
           print(5*" " + "- ",
               self.options[key][iopt])
       print('\n')  
-
 
     # perform (initial) fit
     try:
@@ -2294,7 +2323,7 @@ class mnFit():
     # ... and determine final # of sig. digits
     _v = e if v<e else v
     nsd_v = int( np.floor(np.log10(_v) - np.floor(np.log10(e)) ) ) + nsd_e
-    v = float("{:.{p}g}".format(v, p=nsd_v))
+    v = float("{:.{p}g}".format(v, p=nsd_v)) if v>e/10**nsd_e else 0
      
     return nsd_v, np.sign(val)*v, e               
 
@@ -2395,7 +2424,7 @@ if __name__ == "__main__": # --- interface and example
 
   # Print results 
     print('\n*==* xyFit Result:')
-    print(" parameter names:      ", pnams)
+    print(" parameter names:       ", pnams)
     print(" chi2: {:.3g}".format(chi2))
     print(" parameter values:      ", pvals)
     print(" neg. parameter errors: ", perrs[:,0])
@@ -2448,7 +2477,7 @@ if __name__ == "__main__": # --- interface and example
 
     # Print results 
     print('\n*==* histogram fit Result:')
-    print(" parameter names:      ", pnams)
+    print(" parameter names:       ", pnams)
     print(" goodness-of-fit: {:.3g}".format(gof))
     print(" parameter values:      ", pvals)
     print(" neg. parameter errors: ", perrs[:,0])
@@ -2470,6 +2499,7 @@ if __name__ == "__main__": # --- interface and example
 
     # define cost function: 2 * negative log likelihood of Gauß;
     def myCost(mu=1., sigma=1.):
+      # simple -2*log-likelihood of a 1-d Gauss distribution
       r= (data-mu)/sigma
       return np.sum( r*r + 2.*np.log(sigma))
 
@@ -2488,7 +2518,7 @@ if __name__ == "__main__": # --- interface and example
                      size='xx-large', color='darkblue')
     # Print results
     print('\n*==* user-defined cost: Fit Result:')
-    print(" parameter names:      ", pnams)
+    print(" parameter names:       ", pnams)
     print(" parameter values:      ", pvals)
     print(" neg. parameter errors: ", perrs[:,0])
     print(" pos. parameter errors: ", perrs[:,1])
@@ -2558,7 +2588,7 @@ if __name__ == "__main__": # --- interface and example
                      size='xx-large', color='darkblue')
     # Print results
     print('\n*==* unbinned ML Fit Result:')
-    print(" parameter names:      ", pnams)
+    print(" parameter names:       ", pnams)
     print(" parameter values:      ", pvals)
     print(" neg. parameter errors: ", perrs[:,0])
     print(" pos. parameter errors: ", perrs[:,1])
