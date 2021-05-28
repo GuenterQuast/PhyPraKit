@@ -554,17 +554,17 @@ def round_to_error(val, err, nsd_e=2):
   # round uncertainty to nd0 significant digits
   e = float("{:.{p}g}".format(abs(err), p=nsd_e))
     
-
-  _v = e if v<e else v
-  # determine # of siginifcant digits vor v
-  _nd = int( np.floor(np.log10(_v) - np.floor(np.log10(e)) ) ) + nsd_e
+  _v = v if v>e else e
+  l10e=np.floor(np.log10(e))
+  # determine # of significant digits for v
+  _nd = int( np.floor(np.log10(_v) - l10e ) ) + nsd_e
   # take into account possible rounding of v ...
   v = float("{:.{p}g}".format(v, p=_nd))
   # ... and determine final # of sig. digits
-  _v = e if v<e else v
-  nsd_v = int( np.floor(np.log10(_v) - np.floor(np.log10(e)) ) ) + nsd_e
-  v = float("{:.{p}g}".format(v, p=nsd_v)) if v>e/10**nsd_e else 0
-      
+  _v = v if v>e else e
+  nsd_v = int( np.floor(np.log10(_v) - l10e ) ) + nsd_e
+  v = float("{:.{p}g}".format(v, p=nsd_v)) if v>=10**(l10e-1) else 0
+
   return nsd_v, np.sign(val)*v, e
 
 def ustring(v, e, pe=2):

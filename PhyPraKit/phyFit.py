@@ -41,7 +41,20 @@
 
   Example functions *xyFit()*, *hFit()* and *mFit()*, illustrate how to 
   control the  interface of `mnFit`. A short example script is also 
-  provided to perform fits on sample data.
+  provided to perform fits on sample data. The sequence of steps performed
+  by these interface functions is rather general and straight-forward:
+  
+  .. code-block:: python
+  
+     Fit = mnFit(fit_type)                # initialize a mnFit object 
+     Fit.setOptions(run_minos=True, ...)  # set options
+     Fit.init_data(data, parameters ...)  # initialize data container
+     Fit.init_fit(ufcn, p0 = p0, ...)     # initialize Fit (and minuit)
+     resultDict = Fit.do_fit()            # perform the fit (returns dictionary)
+     resultTuple = Fit.getResult()        # retrieve results as tuple of np-arrays
+     Fit.plotModel()                      # plot data and best-fit model
+     Fit.plotContours()                       # plot profiles and confidence contours
+
 
   The implementation of the fitting procedure in this package is 
   - intentionally - rather minimalistic, and it is meant to 
@@ -63,16 +76,16 @@
   are present. In the latter case, the logarithm of the determinant of the 
   covariance matrix is added to the least-squares cost function, so that it 
   corresponds to twice the negative log-likelihood of a multivariate Gaussian 
-  distribution. Fits to bistogram data rely on the negative log-likelihood
-  of the Poisson distribution, which is generalized to support fractional
-  observed values, which may occur if corrections to the observed bin counts 
-  have to be applied. If there is a difference *DeltaMu* between the mean 
-  value and the variance of the number of entries in a bin due to corrections, 
+  distribution. Fits to histogram data rely on the negative log-likelihood
+  of the Poisson distribution, generalized to support fractional observed 
+  values, which may occur if corrections to the observed bin counts have 
+  to be applied. If there is a difference *DeltaMu* between the mean value
+  and the variance of the number of entries in a bin due to corrections, 
   a "shifted Poisson distribution", Poiss(x-DeltaMu, lambda), is supported.
 
-  Fully functional examples are provided by the functions `xyFit(), `hFit()` 
-  and `mFit()` and the executable script below, which contains sample data, 
-  executes the fitting procedure and collects the results.
+  Fully functional applications of the package are illustrated in executable
+  script below, which contains sample data, executes the fitting procedure
+  and collects and displays the results.
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
@@ -170,7 +183,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
               erelx = srelx, erely = srely,
               cabsx = xabscor, crelx = xrelcor,
               cabsy = yabscor, crely = yrelcor)
-   # pass model fuction, start parameter and possibe constraints
+   # pass model function, start parameter and possible constraints
   Fit.init_fit(fitf, p0=p0,
                constraints=constraints,
                fixPars=fixPars,
@@ -2315,15 +2328,16 @@ class mnFit():
     # round uncertainty to nd0 significant digits
     e = float("{:.{p}g}".format(abs(err), p=nsd_e))
 
-    _v = e if v<e else v
+    _v = v if v>e else e
+    l10e=np.floor(np.log10(e))
     # determine # of significant digits for v
-    _nd = int( np.floor(np.log10(_v) - np.floor(np.log10(e)) ) ) + nsd_e
+    _nd = int( np.floor(np.log10(_v) - l10e ) ) + nsd_e
     # take into account possible rounding of v ...
     v = float("{:.{p}g}".format(v, p=_nd))
     # ... and determine final # of sig. digits
-    _v = e if v<e else v
-    nsd_v = int( np.floor(np.log10(_v) - np.floor(np.log10(e)) ) ) + nsd_e
-    v = float("{:.{p}g}".format(v, p=nsd_v)) if v>e/10**nsd_e else 0
+    _v = v if v>e else e
+    nsd_v = int( np.floor(np.log10(_v) - l10e ) ) + nsd_e
+    v = float("{:.{p}g}".format(v, p=nsd_v)) if v>=10**(l10e-1) else 0
      
     return nsd_v, np.sign(val)*v, e               
 
@@ -2362,7 +2376,6 @@ class mnFit():
 
 if __name__ == "__main__": # --- interface and example
   
-
   def example_xyFit():
   #
   # *** Example of an application of phyFit.mFit()
@@ -2596,7 +2609,6 @@ if __name__ == "__main__": # --- interface and example
     print(" neg. parameter errors: ", perrs[:,0])
     print(" pos. parameter errors: ", perrs[:,1])
     print(" correlations : \n", cor)  
-
 
   #
   # -------------------------------------------------------------------------
