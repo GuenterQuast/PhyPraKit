@@ -19,9 +19,9 @@ def A0_readme():
       - labxParser()     read CASSY output file, .labx format   
       - writeCSV()       write data in csv-format (opt. with header)
       - writeTexTable()  write data in LaTeX table format
-      - round_to_error() round to same number of sigfinicant digits as uncertainty
+      - round_to_error() round to same number of significant digits as uncertainty
       - ustring()        return rounded value +/- uncertainty as formatted string;   
-        alternative: the data type *ufloat(v,u)* of packge *uncertainties* comfortably 
+        alternative: the data type *ufloat(v,u)* of package *uncertainties* comfortably 
         supports printing of values *v* with uncertainties *u*.
 
     2. signal processing:
@@ -36,19 +36,19 @@ def A0_readme():
       - Fourier_fft()       fast Fourier transformation of an array
       - FourierSpectrum()   Fourier transformation of an array   
         `(slow, preferably use fft version)`
-      - autocorrelate()     autocorrelation function
+      - autocorrelate()     auto-correlation function
 
     3. statistics:
 
       - wmean                  calculate weighted mean
-      - BuildCovarianceMatrix  build coraviance matrix from individual uncertainties
+      - BuildCovarianceMatrix  build covariance matrix from individual uncertainties
       - Cov2Cor                convert covariance matrix to correlation matrix
       - Cor2Cov                convert correlation matrix + errors to covariance matrix 
       - chi2prob               caclulate chi^2 probability 
-      - propagatedError        determine propageted uncertainty, with covariance;  
-        hint: the data type *ufloat(v,u)* of packge *uncertainties* comfortably supports 
+      - propagatedError        determine propagated uncertainty, with covariance;  
+        hint: the data type *ufloat(v,u)* of package *uncertainties* comfortably supports 
         functions of values *v* with uncertainties *u* with correct error propagation
-      - getModelError          determine uncertainty of parameter-depenent model function  
+      - getModelError          determine uncertainty of parameter-dependent model function  
 
     4. histograms tools:
 
@@ -86,7 +86,7 @@ def A0_readme():
 # last modified: Jan. May2021
 #
 #   16-Nov-16    GQ  readPicoscope now also supports .csv export format    
-#                GQ  added fuctions for signal processing/analysis
+#                GQ  added functions for signal processing/analysis
 #   17-Nov-16    GQ  added readCassy for Cassy data in .txt format
 #   24-Nov-16    GQ  fixes to FourierSpectrum()
 #   07-Dec-16    GQ  changed normalisation of Fourier Amplitudes
@@ -121,7 +121,7 @@ def readColumnData(fname, cchar='#', delimiter=None, pr=True):
   """read column-data from file
        - input is assumed to be columns of floats
        - characters following <cchar>, and <cchar> itself, are ignored          
-       - words with preceeding '*' are taken as keywords for meta-data,
+       - words with preceding '*' are taken as keywords for meta-data,
          text following the keyword is returned in a dictionary 
 
      Args:
@@ -238,10 +238,10 @@ def readtxt(file, nlhead=1, delim='\t'):
       l=f.readline()      # read one line
       if (not l): break   # end-of-file reached, exit
 
-    # remove white spaces and contol characters, fix German floats 
+    # remove white spaces and control characters, fix German floats 
         # remove leading and trailing white spaces
       l=l.strip()         
-        # remove ascii contol characters (except delimiter) 
+        # remove ascii control characters (except delimiter) 
       for i in range(32):
         if delim != chr(i) : l=l.replace(chr(i),'') 
       if l=='': continue        # skip empty lines
@@ -353,7 +353,7 @@ def labxParser(file, prlevel=1):
      * prlevel: control printout level, 0=no printout
  
   Returns:
-     * list of strings: tags of measurmement vectors
+     * list of strings: tags of measurement vectors
      * 2d list:         measurement vectors read from file 
   '''
 # --------------------------------------------------------------------
@@ -469,7 +469,7 @@ def writeCSV(file, ldata, hlines=[], fmt='%.10g',
     * ldata: list of columns to be written
     * hlines: list with header lines (optional)
     * fmt: format string (optional)
-    * delim: delimiter to seperate values (default comma)
+    * delim: delimiter to separate values (default comma)
     * nline: newline string
 
   Returns: 
@@ -536,7 +536,7 @@ def writeTexTable(file, ldata, cnames=[], caption='', fmt='%.10g'):
 
 
 def round_to_error(val, err, nsd_e=2):
-  """round float *val* to corresponding number of sigfinicant digits  
+  """round float *val* to corresponding number of significant digits  
   as uncertainty *err*
 
   Arguments:
@@ -574,7 +574,7 @@ def ustring(v, e, pe=2):
 
     Args:
       * v: value
-      * e: uncertrainty
+      * e: uncertainty
       * pe: precision (=number of significant digits) of uncertainty
 
     Returns:
@@ -864,12 +864,12 @@ def Fourier_fft(t, a):
 def FourierSpectrum(t, a, fmax=None):
   '''
   Fourier transform of amplitude spectrum a(t), for equidistant sampling
-  times (a simple implementaion for didactical purpose only,
+  times (a simple implementation for didactical purpose only,
   consider using ``Fourier_fft()`` )
 
     Args:
       * t: np-array of time values
-      * a: np-array amplidude a(t)
+      * a: np-array amplitude a(t)
  
     Returns:
       * arrays freq, amp: frequencies and amplitudes
@@ -897,7 +897,7 @@ def FourierSpectrum(t, a, fmax=None):
     c=sum(a * np.cos(omega * t))*2./n
     amp[i] = np.sqrt(s**2 + c**2)
     i+=1
-  # alternative implementation without explicitely writing the loop
+  # alternative implementation without explicitly writing the loop
   #omegat=np.outer(2.*np.pi*freq, t)  # this uses much memory !!
   #s = np.matmul(np.sin(omegat), a)*2./n
   #c = np.matmul(np.cos(omegat), a)*2./n
@@ -921,7 +921,7 @@ def simplePeakfinder(x, a, th=0.):
  
     Returns:
       * np-array: x positions of peaks as weighted mean over neighbours
-      * np-array: y values correspoding to peaks 
+      * np-array: y values corresponding to peaks 
   '''
 # -----------------------------------------------
 # work on normalized input
@@ -944,7 +944,7 @@ def simplePeakfinder(x, a, th=0.):
 
 def convolutionFilter(a, v, th=0.):
   ''' 
-  convolute normalized array with tmplate funtion and return maxima
+  convolute normalized array with template function and return maxima
 
   method: 
     convolute array a with a template and return extrema of 
@@ -1029,7 +1029,7 @@ def convolutionEdgefinder(a, width=10, th = 0.):
   return convolutionFilter(a, v, th=th)
 
 def autocorrelate(a):
-  '''calculate autocorrelation function of input array 
+  '''calculate auto-correlation function of input array 
 
      method: for array of length l, calculate 
      a[0]=sum_(i=0)^(l-1) a[i]*[i] and 
@@ -1039,7 +1039,7 @@ def autocorrelate(a):
        * a: np-array 
 
      Returns 
-       * np-array of len(a), the autocorrelation function
+       * np-array of len(a), the auto-correlation function
   '''
 
   l=len(a)
@@ -1143,7 +1143,7 @@ def nhist2d(x, y, bins=10, xlabel='x axis', ylabel='y axis', clabel='counts'):
   Hpl = np.ma.masked_where(Hpl==0,Hpl) # ... and mask zero values, ...
   im = plt.pcolormesh(xed,yed,Hpl,cmap='Blues') # ... then make plot
   cbar = plt.colorbar() # show legend 
-  cbar.ax.set_ylabel(clabel) # print lables for legend, ...
+  cbar.ax.set_ylabel(clabel) # print labels for legend, ...
   plt.xlabel(xlabel) # ... for x ...
   plt.ylabel(ylabel) # ... and y axes
 #  plt.show()
@@ -1410,7 +1410,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     * constraints: (nested) list(s) [name or id, value, error]
     * limits: (nested) list(s) [name or id, min, max] 
     * plot: show data and model if True
-    * plot_cor: show profile liklihoods and conficence contours
+    * plot_cor: show profile likelihoods and confidence contours
     * plot_band: plot uncertainty band around model function
     * showplots: show plots on screen, default = False
     * quiet: suppress printout
@@ -1420,7 +1420,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
 
   Returns:
     * np-array of float: parameter values
-    * 2d np-array of float: parameter uncertaities [0]: neg. and [1]: pos. 
+    * 2d np-array of float: parameter uncertainties [0]: neg. and [1]: pos. 
     * np-array: correlation matrix 
     * float: chi2  \chi-square of fit a minimum
 
@@ -1450,7 +1450,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
                 cabsx = xabscor, crelx = xrelcor,
                 cabsy = yabscor, crely = yrelcor)
 
-  # pass model fuction, start parameter and possibe constraints
+  # pass model function, start parameter and possible constraints
   Fit.init_fit(fitf, p0=p0, constraints=constraints, limits=limits)
 
   # perform the fit
@@ -1471,7 +1471,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
                         plot_band=plot_band)
 
   # figure with visual representation of covariances
-  #   prifile likelihood scan and confidence contours
+  #   profile likelihood scan and confidence contours
   if plot_cor:
     fig_cor = Fit.plotContours()
 
@@ -1568,7 +1568,7 @@ def k2Fit(func, x, y,
 
   # create a data container
   dat = XYContainer(x, y)
-  # - provide text for labelling ...      
+  # - provide text for labeling ...      
   dat.label = data_legend
   dat.axis_labels = axis_labels
 
@@ -1594,7 +1594,7 @@ def k2Fit(func, x, y,
   if srelx is not None: 
     dat.add_error(axis='x', err_val=srelx, relative=True)
 
-# correlated componets to construct covariance matrix
+# correlated components to construct covariance matrix
   if xabscor is not None:
     if len(np.shape(np.array(xabscor))) <2:
       dat.add_error(axis='x', err_val=xabscor, correlation=1.)
@@ -1616,7 +1616,7 @@ def k2Fit(func, x, y,
         
   # set up fit object
   fit = Fit(dat, func)
-  # text for labelling       
+  # text for labeling       
   fit.assign_model_function_latex_name(model_name)
   fit.assign_model_function_latex_expression(model_expression)
   fit.model_label = model_legend
@@ -1705,8 +1705,8 @@ def smearData(d, s, srel=None, abscor=None, relcor=None):
     * d:  np-array, (true) input data
     
   the following are single floats or arrays of length of array d
-    * s: gaussian uncertainty(ies) (absolute)
-    * srel: gaussian uncertainties (relative)
+    * s: Gaussian uncertainty(ies) (absolute)
+    * srel: Gaussian uncertainties (relative)
 
   the following are common (correlated) systematic uncertainties
     * abscor: 1d np-array of floats or list of np-arrays:
@@ -1758,8 +1758,8 @@ def generateXYdata(xdata, model, sx, sy, mpar=None,
     the following are single floats or arrays of length of x
       * sx: gaussian uncertainty(ies) on x      
       * sy: gaussian uncertainty(ies) on y
-      * srelx: relative gaussian uncertainty(ies) on x      
-      * srely: relative gaussian uncertainty(ies) on y
+      * srelx: relative Gaussian uncertainty(ies) on x      
+      * srely: relative Gaussian uncertainty(ies) on y
     the following are common (correlated) systematic uncertainties
       * xabscor: absolute, correlated error on x
       * yabscor: absolute, correlated error on y
