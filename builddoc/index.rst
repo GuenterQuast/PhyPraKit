@@ -111,15 +111,22 @@ The class *mnFit* in the module *phyFit* offers a light-weight
 implementation for fitting model functions to data with uncorrelated
 and/or correlated absolute and/or relative uncertainties in ordinate
 and/or abscissa directions. Support for likelihood fits to binned
-data (histograms) is also provided.
-For such complex forms of uncertainties,
-there are hardly any are easy-to-use program packages. Most of the
-existing applications use presets aiming at providing a parametrization 
-of measurement data, whereby the validity of the parametrization is
-assumed and the the parameter uncertainties are scaled so that the
-data is well described. *PhyPraKit* offers adapted interfaces to the
-fit modules in the package *scipy* (*optimize.curve_fit* and *ODR*)
-to perform fits with a test of the validity of the hypothesis.
+data (histograms) and to unbinned data is also provided.
+
+For complex kinds of uncertainties, there are hardly any are easy-to-use
+program packages. Most of the existing applications use presets aiming
+at providing a parametrization of measurement data, whereby the validity
+of the parametrization is assumed and the the parameter uncertainties are
+scaled so that the data is well described. In physics applications, on the
+contrary, testing the validity of model hypothesis is of central importance
+before extracting any model parameters. Therefore, uncertainties must be
+understood, modeled correctly and incorporated in the fitting procedure.
+
+*PhyPraKit* offers adapted interfaces to the fit modules in the package
+*scipy* (*optimize.curve_fit* and *ODR*) to perform fits with a test of
+the validity of the hypothesis. A very lean implementation, relying on
+the mimimization and uncertainty-analysis tool minuit, is also provided
+in the sub-package *phyFit* for the above-mentioned use cases.
 *PhyPraKit* also contains a simplified interface to the very
 function-rich fitting package *kafe2*.
 
@@ -146,19 +153,20 @@ Implementierung zur Anpassung von Modellfunktionen an Daten,
 die mit unkorrelierten und/oder korrelierten absoluten
 und/oder relativen Unsicherheiten in Ordinaten- und/oder
 Abszissenrichtung behaftet sind. Anpassungen an gebinnte Daten
-(Histogramme) werden ebenfalls unterstützt.
+(Histogramme) und Maxium-Likelihood-Anassungen zur Bestimmung der
+Parameter der Verteilung von Daten werden ebenfalls unterstützt.
 Für solche in der Physik häufig auftretenden komplexen Formen von
 Unsicherheiten gibt es kaum andere, einfach zu verwendende
-Programmpakete. Andere Pakte sind meist als Voreinstellung auf
+Programmpakete. Viele Pakte sind als Voreinstellung auf
 die Parametrisierung von Messdaten ausgelegt, wobei die
 Parameterunsicherheiten unter Annahme der Gültigkeit der
 Parametrisierung so skaliert werden, dass die Daten gut
-repräsentiert werden. *PhyPraKit* bietet entsprechend angepasste
-Interfaces zu den Fitmodulen im Paket *scipy*
-(*optimize.curve_fit* und *ODR*), um Anpassungen mit Test der Gültigkeit
-der Modellhypothese durchzuführen. *PhyPraKit* enthält ebenfalls ein
-vereinfachtes Interface zum sehr funktionsreichen Anpassungspaket
-*kafe2* (oder zur mittlerweile veralteten Vorgängerversion *kafe*).
+repräsentiert werden. *PhyPraKit* bietet daher entsprechend 
+angepasste Interfaces zu den Fitmodulen im Paket *scipy*
+(*optimize.curve_fit* und *ODR*), um Anpassungen mit Test der 
+Gültigkeit der Modellhypothese durchzuführen. *PhyPraKit* enthält 
+ebenfalls ein vereinfachtes Interface zum sehr funktionsreichen 
+Anpassungspaket *kafe2*.
 
 In der Vorlesung "Computergestützte Datenauswertung" an der Fakultät
 für Physik am Karlsruher Institut für Physik 
@@ -250,13 +258,11 @@ oder::
       5. Lineare Regression und Anpassen von Funktionen:
 
         - linRegression()    lineare Regression, y=ax+b, mit analytische Formel
-        - odFit()            Funktionsanpassung mit x- und y-Unsicherheiten
-	  (scipy ODR)
-        - mFit()             Funktionsanpassung mit (korrelierten) x- und
-	  y-Unsicherheiten mit *phyFit*
+        - odFit()            Funktionsanpassung mit x- und y-Unsicherheiten (scipy ODR)
+        - xyFit()             Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten mit *phyFit*
         - hFit()             Anpassung einer Verteilungsdichte an Histogramm-Daten
-        - k2Fit()            Funktionsanpassung mit (korrelierten) x- und
-	  y-Unsicherheiten mit dem Paket *kafe2*
+        - k2Fit()            Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten
+          mit dem Paket *kafe2*
 
       6. Erzeugung simulierter Daten mit MC-Methode:
     
@@ -292,7 +298,7 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     `python`-Bordmitteln zur Anpassung einer Geraden an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung. 
     Korrelierte Unsicherheiten werden nicht unterstützt.
-  * `test_mFit` dient zur Anpassung einer beliebigen Funktion an
+  * `test_xyFit` dient zur Anpassung einer beliebigen Funktion an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit
     allen Messpunkten gemeinsamen (d. h. korrelierten) relativen oder
     absoluten systematischen Fehlern. Dazu wird das Paket imunit
@@ -301,23 +307,24 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     dynamisch aktualisiert werden kann, ist die Implementierung von
     Parameter-abhängigen Unsicherheiten möglich. Ferner unterstützt
     iminuit die Erzeugung und Darstellung von Profil-Likelihood-Kurven
-    und Konfidenzkonturen, die so mit mFit ebenfalls dargestellt
+    und Konfidenzkonturen, die so mit `xyFit` ebenfalls dargestellt
     werden können. 
   * `test_hFit` illustriert die Anpassung einer Verteilungsdichte an
     histogrammierte Daten. Die Kostenfunktion für die Minimierung ist
     das zweifache der negative log-Likelihood-Funktion der Poisson-Verteilung,
     Poiss(k; lam), oder - optional - ihrer Annäherung durch eine
-    Gauß-Verteilung mit Gauss(x, mu=lam, sig**2=lam). Die unsicherheiten
+    Gauß-Verteilung mit Gauss(x, mu=lam, sig**2=lam). Die Unsicherheiten
     werden aus der Modellvorhersage bestimmt, um auch Bins mit Null Einträgen
-    korrekt behandeln zu können. Grundsätich wird eine normierte Verteilungsdichte
-    angepasst; es ist aber optional auch möglich, die Anzahl der Einträge
-    mit zu berücksichtigen, um die auch die Poisson-Unsicherheit der
-    Gesamtanzahl der Histogrameinträge zu berücksichtigen. 
+    korrekt behandeln zu können. Grundsätzlich wird eine normierte
+    Verteilungsdichte angepasst; es ist aber optional auch möglich, die
+    Anzahl der Einträge mit zu berücksichtigen, um z.B. ggf. auch die
+    Poisson-Unsicherheit der Gesamtanzahl der Histogrammeinträge zu
+    berücksichtigen. 
   * `test_k2Fit.py` verwendet die Version *kafe2* zur Anpassung einer
     Funktion an Messdaten mit unabhängigen oder korrelierten relativen oder
     absoluten Unsicherheiten in Ordinaten- und Abszissenrichtung.
   * `test_simplek2Fit.py` illustriert die Durchführung einer einfachen
-    linearen Regression mit *kafe2* mit einer minimalen Anzal eigener
+    linearen Regression mit *kafe2* mit einer minimalen Anzahl eigener
     Codezeilen. 
   * `test_Histogram.py` ist ein Beispiel zur Darstellung und 
     statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen) 
@@ -414,15 +421,13 @@ Module Documentation
 
 ..  automodule:: test_odFit
 
-..  automodule:: test_mFit
+..  automodule:: test_xyFit
 
 ..  automodule:: test_k2Fit
 
 ..  automodule:: test_generateData
 
 ..  automodule:: toyMC_Fit
-
-..  automodule:: kfitf
 
 ..  automodule:: Beispiel_Diodenkennlinie
 
@@ -433,4 +438,3 @@ Module Documentation
 ..  automodule:: Beispiel_Wellenform
 
 ..  automodule:: Beispiel_GammaSpektroskopie
-

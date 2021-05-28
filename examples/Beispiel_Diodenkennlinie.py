@@ -15,7 +15,7 @@
 """
 
 import numpy as np, matplotlib.pyplot as plt
-from PhyPraKit import mFit, k2Fit
+from PhyPraKit import xyFit, k2Fit
 
 # define the model function to fit
 def Shockley(U, I_s = 0.5, U0 = 0.03):
@@ -92,7 +92,7 @@ if __name__ == "__main__": # --------------------------------------
   crely = crel_I
       
 # Anpassung ausführen (mit Fit-Funktionen aus Paket PhyPraKit)
-  thisFit = mFit    # Alternativen: mFit oder k2fit
+  thisFit = xyFit    # Alternativen: xyFit oder k2fit
   parvals, parerrs, cor, chi2 = thisFit(model,
  # - data and uncertainties
       data_x, data_y,      # data x and y coordinates
