@@ -7,7 +7,8 @@
 """
 
 import numpy as np, matplotlib.pyplot as plt
-from PhyPraKit.phyFit import mFit
+# from PhyPraKit.phyFit import mFit
+from PhyPraKit import mFit
 
 if __name__ == "__main__": # --------------------------------------  
   #

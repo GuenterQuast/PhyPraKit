@@ -70,6 +70,9 @@ def A0_readme():
         profile likelihood and contour lines (module phyFit) 
       - hFit()             fit of a density to histogram data
       - k2Fit()            fit function with (correlated) errors on x and y 
+      - hFit()             fit density to histogram data    
+      - mFit()             fit of a user-defined cost function, or of a density 
+        to unbinned data
 
     6. simulated data with MC-method:
 
@@ -1372,7 +1375,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
          xabscor = None, xrelcor = None,        
          yabscor = None, yrelcor = None,
          ref_to_model = True, 
-         p0 = None, constraints = None, limits=None,
+         p0 = None, constraints = None, fixPars=None, limits=None,
          use_negLogL=True, 
          plot = True, plot_cor = False,
          plot_band=True,
@@ -1408,6 +1411,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     * p0: array-like, initial guess of parameters
     * use_negLogL:  use full -2ln(L)  
     * constraints: (nested) list(s) [name or id, value, error]
+    * fix parameter(s) in fit: list of parameter names or indices
     * limits: (nested) list(s) [name or id, min, max] 
     * plot: show data and model if True
     * plot_cor: show profile likelihoods and confidence contours
@@ -1451,7 +1455,10 @@ def xyFit(fitf, x, y, sx = None, sy = None,
                 cabsy = yabscor, crely = yrelcor)
 
   # pass model function, start parameter and possible constraints
-  Fit.init_fit(fitf, p0=p0, constraints=constraints, limits=limits)
+  Fit.init_fit(fitf, p0=p0,
+               constraints=constraints,
+               fixPars=fixPars,
+               limits=limits)
 
   # perform the fit
   fitResult = Fit.do_fit()
@@ -1479,10 +1486,12 @@ def xyFit(fitf, x, y, sx = None, sy = None,
   if showplots and (plot or plot_cor):
     plt.show()
 
-  # return
-  #   numpy arrays with fit result: parameter values,
+  # return numpy arrays with fit result:
+  #   parameter names,
+  #   parameter values,
   #   negative and positive parameter uncertainties,
-  #   correlation matrix and chi2
+  #   correlation matrix
+  #   chi2
   return Fit.getResult()
 
 
@@ -1693,6 +1702,211 @@ def k2Fit(func, x, y,
     if showplots: plt.show()    
       
   return par, pare, cor, chi2
+
+
+def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
+       p0 = None, constraints = None,
+       fixPars=None, limits=None,
+       use_GaussApprox = False,
+       fit_density = True,
+       plot = True, plot_cor = True,
+       showplots = True, plot_band=True,
+       quiet = False,
+       axis_labels=['x', 'counts/bin = f(x, *par)'],
+       data_legend = 'Histogram Data',    
+       model_legend = 'Model'):
+  
+  """Wrapper function to fit a density distribution f(x, \*par) 
+  to binned data (histogram) with class mnFit 
+  
+  The cost function is two times the negative log-likelihood of the Poisson 
+  distribution, or - optionally - of the Gaussian approximation.
+
+  Uncertainties are determined from the model values in order to avoid biases and to
+  to take account of empty bins of an histogram. The default behaviour is to fit a
+  normalised density; optionally, it is also possible to fit the number of bin entries.
+
+  Args:
+    * fitf: model function to fit, arguments (float:x, float: \*args)
+    * bin_contents:  
+    * bin_edges: 
+    * DeltaMu: shift mean (=mu) vs. variance (=lam), for Poisson: mu=lam
+    * p0: array-like, initial guess of parameters
+    * constraints: (nested) list(s) [name or id, value, error] 
+    * limits: (nested) list(s) [name or id, min, max] 
+    * GaussApprox: Gaussian approximation instead of Poisson 
+    * density: fit density (not number of events)
+    * plot: show data and model if True
+    * plot_cor: show profile likelihoods and confidence contours
+    * plot_band: plot uncertainty band around model function
+    * showplots: show plots on screen
+    * quiet: suppress printout
+    * axis_labes: list of tow strings, axis labels
+    * data_legend: legend entry for data
+    * model_legend: legend entry for model 
+
+  Returns:
+    * np-array of float: parameter values
+    * 2d np-array of float: parameter uncertainties [0]: neg. and [1]: pos. 
+    * np-array: correlation matrix 
+    * float: 2*negLog L, corresponding to \chi-square of fit a minimum
+  """
+
+  from .phyFit import mnFit 
+
+  # set up a fit object for histogram fits
+  Fit = mnFit('hist')
+
+  # set default options
+  Fit.setOptions(run_minos = True,
+                 use_GaussApprox = use_GaussApprox,
+                 fit_density = fit_density,
+                 quiet = quiet)
+
+  # pass data and uncertainties to fit object
+  Fit.init_data(bin_contents, bin_edges, DeltaMu)
+   # pass model fuction, start parameter and possibe constraints
+  Fit.init_fit(fitf, p0=p0,
+               constraints=constraints,
+               fixPars=fixPars,
+               limits=limits)
+  # perform the fit
+  fitResult = Fit.do_fit()
+  # print fit result (dictionary from migrad/minos(
+  if not quiet:
+    print("\nFit Result from migrad:")
+    print(fitResult[0])
+    if fitResult[1] is not None:
+      print("\nResult of minos error analysis:")
+      print(fitResult[1])
+    
+  # produce figure with data and model
+  if plot:
+    fig = Fit.plotModel(axis_labels=axis_labels,
+                 data_legend=data_legend,
+                 model_legend=model_legend,
+                      plot_band=plot_band)
+
+  # figure with visual representation of covariances
+  #   profile likelihood scan and confidence contours
+  if plot_cor:
+    fig_cor = Fit.plotContours(figname="histFit: Profiles and Contours")
+
+  # show plots on screen
+  if showplots and (plot or plot_cor):
+    plt.show()
+
+  # return numpy arrays with fit result:
+  #   parameter names,
+  #   parameter values,
+  #   negative and positive parameter uncertainties,
+  #   correlation matrix
+  #   gof
+  
+  return Fit.getResult()
+
+
+def mFit(ufcn, data = None, p0 = None, 
+          constraints = None, limits=None, fixPars=None,
+          neg2logL = True,
+          plot = False, plot_band=True,
+          plot_cor = True,
+          showplots = True, quiet = False,
+          axis_labels=['x', 'Density = f(x, *par)'],
+          data_legend = 'data',    
+          model_legend = 'model'):
+  
+  """Wrapper function to directly fit a user-defined cost funtion
+
+  This is the simplest fit possible with the class mnFit. If no data is
+  specified (data=None), a user-supplied cost function (ufcn) is minimized 
+  and an estimation of the parameter uncertainties performed, assuming
+  the cost function is a negative log-likelihood function (nlL of 2nLL).
+  
+  In case data is provided, the user function `ufcn(data, *par)` is 
+  interpreted as a parameter-dependent probability density function, and
+  the parameters are determined in an unbinned log-likelihood approach. 
+
+  Args:
+    * ufcn: user-defined cost function or pdf to be minimized; 
+
+      - ufcn(\*par): the uncertainty estimation relies on this being a 
+        negative log-likelihood function ('nlL'); in this case, no data
+        is to be provided, i.e. `data=None`. 
+
+      - ufcn(x, \*par): a probability density of the data `x` depending on
+        the set of parameters `par`. 
+
+    * data, optional, array of floats: optional input data
+    * p0: array-like, initial guess of parameters
+    * constraints: (nested) list(s) [name or id, value, error] 
+    * limits: (nested) list(s) [name or id, min, max] 
+    * neg2logL: use 2 * nlL (corresponding to a least-squares-type cost)
+    * plot: show data and model if True
+    * plot_band: plot uncertainty band around model function
+    * plot_cor: plot likelihood profiles and confidence contours of parameters
+    * showplots: show plots on screen (can also be done by calling script)
+    * quiet: controls verbose output
+    """
+
+  from .phyFit import mnFit 
+
+  if data is None:
+    fit_type="user"
+  else:
+    fit_type = "ml"
+  uFit = mnFit(fit_type)
+
+  # set options
+  uFit.setOptions(run_minos = True,
+                 neg2logL = neg2logL,
+                 quiet = quiet)
+
+  # initialize data container if data is provided
+  #  !!! if no data given, the user-supplied cost function must
+  #      handle got calulation of the cost function 
+  if data is not None:
+    uFit.init_data(data)
+
+  # initialze fit
+  #  - with the user-supplied cost function cost(*pars) if no data given
+  #  - with probability density pdf(x; *pars) if data (=x) provided 
+  uFit.init_fit(ufcn, p0 = p0,
+                constraints = constraints,
+                fixPars = fixPars,
+                limits = limits)
+  # perform the fit
+  fitResult = uFit.do_fit()
+  # print fit result (dictionary from migrad/minos(
+  if not quiet:
+    print("\nFit Result from migrad:")
+    print(fitResult[0])
+    if fitResult[1] is not None:
+      print("\nResult of minos error analysis:")
+      print(fitResult[1])
+    
+  # produce figure with data and model
+  if plot:
+    fig = uFit.plotModel(axis_labels=axis_labels,
+                 data_legend=data_legend,
+                 model_legend=model_legend,
+                      plot_band=plot_band)
+  # figure with visual representation of covariances
+  #    profile likelihood scan and confidence contours
+  if plot_cor:
+    fig_cor = uFit.plotContours(figname="userFit: Profiles and Contours")
+
+  # show plots on screen
+  if showplots and (plot or plot_cor):
+    plt.show()
+
+  # return numpy arrays with fit result:
+  #   parameter names,
+  #   parameter values,
+  #   negative and positive parameter uncertainties,
+  #   correlation matrix
+  #   gof
+  return uFit.getResult()
 
 
 ## ------- section 6: simulated data -------------------------

@@ -363,6 +363,8 @@ def mFit(ufcn, data = None, p0 = None,
     * quiet: controls verbose output
     """
 
+  # from .phyFit import mnFit # already contained in phyFit package
+
   if data is None:
     fit_type="user"
   else:
