@@ -93,7 +93,7 @@ if __name__ == "__main__": # --------------------------------------
       
 # Anpassung ausführen (mit Fit-Funktionen aus Paket PhyPraKit)
   thisFit = xyFit    # Alternativen: xyFit oder k2fit
-  parvals, parerrs, cor, chi2 = thisFit(model,
+  pnams, pvals, perrs, cor, chi2 = thisFit(model,
  # - data and uncertainties
       data_x, data_y,      # data x and y coordinates
       sx=sabsx,            # indep x
@@ -117,8 +117,9 @@ if __name__ == "__main__": # --------------------------------------
 # Ausgabe der Ergebnisse in Textform:
   print('\n*==* Fit Result:')
   print(" chi2: {:.3g}".format(chi2))
-  print(" parameter values:      ", parvals )
-  print(" parameter uncertainties: ", parerrs )
+  print(" parameter names:       ", pnams )
+  print(" parameter values:      ", pvals )
+  print(" parameter uncertainties: ", perrs )
   np.set_printoptions(precision=3)
   print(" correlations : \n", cor )
 

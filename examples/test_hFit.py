@@ -56,7 +56,7 @@ if __name__ == "__main__": # --------------------------------------
 #  
 # ---  perform fit  
 #
-  parvals, parerrs, cor, gof = hFit(model,
+  pnams, pvals, perrs, cor, gof = hFit(model,
       bc, be,              # bin entries and bin edges
       p0=None,        # initial guess for parameter values 
    #  constraints=['name', val ,err ],   # constraints within errors
@@ -75,8 +75,9 @@ if __name__ == "__main__": # --------------------------------------
 # Print results to illustrate how to use output
   print('\n*==* Fit Result:')
   print(" goodness-of-fit: {:.3g}".format(gof))
-  print(" parameter values:      ", parvals)
-  print(" neg. parameter errors: ", parerrs[:,0])
-  print(" pos. parameter errors: ", parerrs[:,1])
+  print(" parameter names:       ", pnams)
+  print(" parameter values:      ", pvals)
+  print(" neg. parameter errors: ", perrs[:,0])
+  print(" pos. parameter errors: ", perrs[:,1])
   print(" correlations : \n", cor)
   

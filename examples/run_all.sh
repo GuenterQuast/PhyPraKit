@@ -26,9 +26,11 @@ python3 test_Fourier.py
 # regression and fititing
 python3 test_linRegression.py
 python3 test_odFit.py
-python3 test_mFit.py
+python3 test_xyFit.py
 python3 test_simplek2Fit.py
 python3 test_k2Fit.py
+python3 test_hFit.py
+python3 test_mlFit.py
 
 # toy data
 python3 test_generateData.py

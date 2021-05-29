@@ -50,7 +50,7 @@ if __name__ == "__main__": # --------------------------------------
                                       mpar=mpardict.values() )
 
 # perform fit to data with function xyFit using mnFit class from phyFit
-  parvals, parerrs, cor, chi2 = xyFit(model,
+  pnams, pvals, perrs, cor, chi2 = xyFit(model,
       data_x, data_y,      # data x and y coordinates
       sx=sabsx,            # indep x
       sy=sabsy,            # indel y
@@ -76,8 +76,9 @@ if __name__ == "__main__": # --------------------------------------
 # Print results to illustrate how to use output
   print('\n*==* Fit Result:')
   print(" chi2: {:.3g}".format(chi2))
-  print(" parameter values:      ", parvals)
-  print(" neg. parameter errors: ", parerrs[:,0])
-  print(" pos. parameter errors: ", parerrs[:,1])
+  print(" parameter names:       ", pnams)
+  print(" parameter values:      ", pvals)
+  print(" neg. parameter errors: ", perrs[:,0])
+  print(" pos. parameter errors: ", perrs[:,1])
   print(" correlations : \n", cor)
   

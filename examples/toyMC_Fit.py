@@ -106,7 +106,7 @@ if __name__ == "__main__": # --------------------------------------
         plot=True
       else:
         plot=False
-      parvals, parerrs, cor, chi2 = theFit(model,
+      pnams, pvals, perrs, cor, chi2 = theFit(model,
       data_x, data_y,      # data x and y coordinates
       sx=sabsx,            # indep x
       sy=sabsy,            # indel y
@@ -133,13 +133,13 @@ if __name__ == "__main__": # --------------------------------------
   # Print results to illustrate how to use output
       print('\n*==* ', i, ' Fit Result:')
       print(f" chi2: {chi2:.3g}")
-      print(f" parameter values: ", parvals)
-      print(f" parameter errors: ", parerrs)
+      print(f" parameter names:  ", pvals)
+      print(f" parameter errors: ", perrs)
       print(f" correlations : \n", cor)
-      chi2prb = 1.- stats.chi2.cdf(chi2, nd-len(parvals))
+      chi2prb = 1.- stats.chi2.cdf(chi2, nd-len(pvals))
     # analyze
       for i in range(npar):
-        d[i].append(parvals[i]-list(mpardict.values())[i])
+        d[i].append(pvals[i]-list(mpardict.values())[i])
       c2prb.append(chi2prb)
 
       if plot:

@@ -259,10 +259,13 @@ oder::
 
         - linRegression()    lineare Regression, y=ax+b, mit analytische Formel
         - odFit()            Funktionsanpassung mit x- und y-Unsicherheiten (scipy ODR)
-        - xyFit()             Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten mit *phyFit*
+        - xyFit()            Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten mit *phyFit*
         - hFit()             Anpassung einer Verteilungsdichte an Histogramm-Daten
         - k2Fit()            Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten
           mit dem Paket *kafe2*
+        - hFit()             Maximum-Likelihood-Anpassung einer Verteilungsdichte an Histogramm-Daten
+        - mFit()             Anpassung einer Nutzerdefinierten Kostenfunktion, oder einer
+	  Verteilungsdichte an ungebinnete Daten mit der maximum-likelood Methode
 
       6. Erzeugung simulierter Daten mit MC-Methode:
     
@@ -276,28 +279,37 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     Einlesen von Spalten aus Textdateien; die zugehörigen 
     *Metadaten* können ebenfalls an das Script übergeben 
     werden und stehen so bei der Auswertung zur Verfügung.
+
   * `test_readtxt.py` liest Ausgabedateien im allgemeinem `.txt`-Format; 
     ASCII-Sonderzeichen außer dem Spalten-Trenner werden ersetzt,
     ebenso wie das deutsche Dezimalkomma durch den Dezimalpunkt
+
   * `test_readPicoScope.py` liest Ausgabedateien von USB-Oszillographen 
     der Marke PicoScope im Format `.csv` oder `.txt`.
+
   * `test_labxParser.py` liest Ausgabedateien von Leybold
     CASSY im `.labx`-Format. Die Kopfzeilen und Daten von Messreihen 
     werden als Listen in *Python* zur Verfügung gestellt. 
+
   * `test_convolutionFilter.py` liest die Datei `Wellenform.csv` und 
-    bestimmt Maxima und fallende Flanken des Signals 
+    bestimmt Maxima und fallende Flanken des Signals.
+    
   * `test_AutoCorrelation.py` liest die Datei `AudioData.csv` und führt 
-    eine Analyse der Autokorrelation zur Frequenzbestimmung durch. 
+    eine Analyse der Autokorrelation zur Frequenzbestimmung durch.
+    
   * `test_Fourier.py` illustriert die Durchführung einer 
     Fourier-Transfomation eines periodischen Signals, das in 
     der PicoScope-Ausgabedatei `Wellenform.csv` enthalten ist.
+    
   * `test_propagatedError.py` illustriert die Anwendung von numerisch
     berechneter Fehlerfortpflanzung und korrekter Rundung von Größen
     mit Unsicherheit
+    
   * `test_linRegression.py` ist eine einfachere Version mit
     `python`-Bordmitteln zur Anpassung einer Geraden an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung. 
     Korrelierte Unsicherheiten werden nicht unterstützt.
+    
   * `test_xyFit` dient zur Anpassung einer beliebigen Funktion an
     Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit
     allen Messpunkten gemeinsamen (d. h. korrelierten) relativen oder
@@ -308,30 +320,41 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     Parameter-abhängigen Unsicherheiten möglich. Ferner unterstützt
     iminuit die Erzeugung und Darstellung von Profil-Likelihood-Kurven
     und Konfidenzkonturen, die so mit `xyFit` ebenfalls dargestellt
-    werden können. 
-  * `test_hFit` illustriert die Anpassung einer Verteilungsdichte an
-    histogrammierte Daten. Die Kostenfunktion für die Minimierung ist
-    das zweifache der negative log-Likelihood-Funktion der Poisson-Verteilung,
-    Poiss(k; lam), oder - optional - ihrer Annäherung durch eine
-    Gauß-Verteilung mit Gauss(x, mu=lam, sig**2=lam). Die Unsicherheiten
-    werden aus der Modellvorhersage bestimmt, um auch Bins mit Null Einträgen
-    korrekt behandeln zu können. Grundsätzlich wird eine normierte
-    Verteilungsdichte angepasst; es ist aber optional auch möglich, die
-    Anzahl der Einträge mit zu berücksichtigen, um z.B. ggf. auch die
-    Poisson-Unsicherheit der Gesamtanzahl der Histogrammeinträge zu
-    berücksichtigen. 
+    werden können.
+    
   * `test_k2Fit.py` verwendet die Version *kafe2* zur Anpassung einer
     Funktion an Messdaten mit unabhängigen oder korrelierten relativen oder
     absoluten Unsicherheiten in Ordinaten- und Abszissenrichtung.
+    
   * `test_simplek2Fit.py` illustriert die Durchführung einer einfachen
     linearen Regression mit *kafe2* mit einer minimalen Anzahl eigener
-    Codezeilen. 
+    Codezeilen.
+    
+  * `test_hFit` illustriert die Anpassung einer Verteilungsdichte an
+    histogrammierte Daten. Die Kostenfunktion für die Minimierung ist das
+    zweifache der negativen log-Likelihood-Funktion der Poisson-Verteilung,
+    Poiss(k; lam), oder - optional - ihrer Annäherung durch eine
+    Gauß-Verteilung mit Gauss(x, mu=lam, sig**2=lam). Die Unsicherheiten
+    werden aus der Modellvorhersage bestimmt, um auch Bins mit null Einträgen
+    korrekt behandeln zu können. Grundsätzlich wird eine normierte
+    Verteilungsdichte angepasst; es ist aber optional auch möglich, die
+    Anzahl der Einträge mit zu berücksichtigen, um so z. B. ggf. die
+    Poisson-Unsicherheit der Gesamtanzahl der Histogrammeinträge zu
+    berücksichtigen.
+    
+  * `test_mlFit` illustriert die Anpassung einer Verteilungsdichte an
+    ungebinnte Daten mit der maximum-likelihood Methode. Die Kostenfunktion
+    für die Minimierung ist der negative natürliche Logarithmus der vom
+    Nutzer agegebenen Verteilungsdichte (oder, optional, deren Zweifaches).
+
   * `test_Histogram.py` ist ein Beispiel zur Darstellung und 
     statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen) 
     in ein oder zwei Dimensionen.
+
   * `test_generateXYata.py` zeigt, wie man mit Hilfe von Zufallszahlen 
     "künstliche Daten" zur Veranschaulichung oder zum Test von Methoden
     zur Datenauswertung erzeugen kann. 
+
   * `toyMC_Fit.py` führt eine große Anzahl Anpassungen an simulierte
     Daten durch. Durch Vergleich der wahren Werte mit den aus der
     Anpassung bestimmten Werten lassen sich Verzerrungen der
@@ -341,12 +364,6 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
 
   Die folgenden *python*-Skripte sind etwas komplexer und illustrieren 
   typische Anwendungsfälle der Module in `PhyPraKit`:
-
-  * `kfitf.py` ist ein Kommandozeilen-Werkzeug, mit dem man komfortabel
-    Anpassungen ausführen kann, bei denen Daten und Fit-Funktion in
-    einer einzigen Datei angegeben werden. Beispiele finden sich
-    in den Dateien mit der Endung `.fit`.  
-    !!! Mittlerweile veraltet, Ersatz `kafe2go` aus dem Paket `kafe2`!
 
   * `Beispiel_Diodenkennlinie.py` demonstriert die Analyse einer
     Strom-Spannungskennlinie am Beispiel von (künstlichen) Daten,
