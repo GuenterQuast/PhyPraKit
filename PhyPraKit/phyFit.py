@@ -1374,7 +1374,6 @@ class mnFit():
       available after completion of fit:
 
       - model_values: bin contents from best-fit model 
-      - model_related_uncertainties: uncertainties from best-fit model-values
 
       Methods:
 
@@ -1412,7 +1411,6 @@ class mnFit():
       # flag to control final actions in cost function
       self.final_call = False
       self.model_values = None
-      self.model_related_uncertainties = None
       
     def plot(self, num='histData and Model',
                    figsize=(7.5, 6.5),                             
@@ -1422,33 +1420,40 @@ class mnFit():
 
       w = self.edges[1:] - self.edges[:-1]
       fig = plt.figure(num=num, figsize=figsize)
-      if False:
-        plt.bar(self.centers, self.model_values,
+      plt.bar(self.centers, self.contents,
               align='center', width = w,
-              facecolor='wheat', edgecolor='brown', alpha=0.2,
-                label = "entries/bin from model")
-      else:
-        plt.bar(self.centers, self.contents,
-              align='center', width = w,
-              facecolor='cadetblue', edgecolor='darkblue', alpha=0.5,
+              facecolor='cadetblue', edgecolor='darkblue', alpha=0.66,
               label = data_label)
 
       # set and plot error bars
-      if self.outer.use_GaussApprox:
-        ep = self.model_related_uncertainties
+      if self.model_values is not None:
+      # best-fit model values avaiable
+        if not self.outer.use_GaussApprox:
+          # show Poisson Confidence Intervals
+          ep = []
+          em = []
+          for i in range(self.nbins):
+            l = (self.model_values[i] + np.abs(self.DeltaMu[i]))      
+            m, p = self.Poisson_CI(l, sigma=1.)
+            ep.append(p-l)
+            em.append(l-m)
+          plt.errorbar(self.centers, self.model_values,
+                       yerr=(em, ep), fmt=' ', 
+                       ecolor='olive', capsize=3,  
+                     alpha=0.8)
+        else: # show symmetric error bars 
+          ep = np.sqrt(self.model_values + np.abs(self.DeltaMu))
+          em = [ep[i] if self.contents[i]-ep[i]>0. else self.contents[i] for i in range(len(ep))]
+          plt.errorbar(self.centers, self.model_values,
+                       yerr=(em, ep), fmt=' ', 
+                       ecolor='olive', elinewidth=2, alpha=0.8)
+      else: # no model values available (yet), show error bars related to data      
+        ep = np.sqrt(self.contents + np.abs(self.DeltaMu))
         em = [ep[i] if self.contents[i]-ep[i]>0. else self.contents[i] for i in range(len(ep))]      
-      else: # show Poisson Confidence Intervals
-        ep = []
-        em = []
-        for i in range(self.nbins):
-          l = (self.model_values[i] + np.abs(self.DeltaMu[i]))      
-          m, p = self.Poisson_CI(l, sigma=1.)
-          ep.append(p-l)
-          em.append(l-m)
-      plt.errorbar(self.centers, self.model_values,
+        plt.errorbar(self.centers, self.contents,
                    yerr=(em, ep),
-                   fmt=' ', color='orange', markersize=15,
-                   ecolor='olive', alpha=0.8)
+                   fmt='_', color='darkblue', markersize=15,
+                   ecolor='darkblue', alpha=0.8)
       return fig
 
     @staticmethod
@@ -1535,8 +1540,6 @@ class mnFit():
     - model(x, \*par): the model function 
     - data: pointer to instance of class histData
     - data.model_values: bin entries calculated by the best-fit model
-    - data.model_related_uncertainties: uncertainties calculated from 
-      best-fit model-values
     """
 
     def __init__(self, outer, 
@@ -1610,8 +1613,6 @@ class mnFit():
 
         # provide model values and model-related uncertainties to data object
         self.data.model_values = model_values       
-        self.data.model_related_uncertainties = np.sqrt( 
-                           model_values + np.abs(self.data.DeltaMu) ) 
         
        # return 2 * neg. logL
       return n2lL
@@ -2233,7 +2234,7 @@ class mnFit():
       DeltaF = self.getFunctionError(xplt, cf.model, pvals, pcov, fixedPars)
       plt.fill_between(xplt, sfac*(yplt+DeltaF),
                              sfac*(yplt-DeltaF),
-                             alpha=0.3, color='darkkhaki')
+                             alpha=0.3, color='darkkhaki', label='  $\pm 1 \sigma$')
       plt.plot(xplt, sfac*(yplt+DeltaF), linewidth=1, 
                              alpha=0.4, color='darkgreen')
       plt.plot(xplt, sfac*(yplt-DeltaF), linewidth=1,
