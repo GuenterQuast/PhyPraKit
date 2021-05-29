@@ -93,10 +93,10 @@
 import sys
 import numpy as np, matplotlib.pyplot as plt
 from scipy import stats, linalg
+from scipy.special import loggamma
+from scipy.optimize import newton
 from inspect import signature
 from iminuit import __version__, Minuit
-from scipy.special import loggamma
-
 
 def xyFit(fitf, x, y, sx = None, sy = None,
        srelx = None, srely = None, 
@@ -697,7 +697,7 @@ class mnFit():
 
     # create cost function
     self.costf = self.xLSQCost(self,
-                           self.xyData, model,
+                           model,
                            use_neg2logL= self.use_negLogL)
     self._setupMinuit(model_kwargs) 
 
@@ -1171,7 +1171,6 @@ class mnFit():
     Input:
 
     - outer: pointer to instance of calling class
-    - data: data object of type xyDataContainer
     - model: model function f(x, \*par)
     - use_neg2logL: use full -2log(L) instead of chi2 if True
 
@@ -1191,12 +1190,13 @@ class mnFit():
     """
  
     def __init__(self, outer, 
-                 data, model,
+                 model,
                  use_neg2logL=False):
 
       from iminuit.util import make_func_code
 
-      self.data = data
+      # data object of type xyDataContainer
+      self.data = outer.data
       self.model = model
       self.quiet = outer.quiet
       # use -2 * log(L) of Gaussian instead of Chi2
@@ -1211,7 +1211,7 @@ class mnFit():
       # take account of constraints 
       self.constraints = outer.constraints
       self.nconstraints = len(self.constraints)
-      self.ndof = len(data.y) - self.npar + self.nconstraints + outer.nfixed
+      self.ndof = len(self.data.y) - self.npar + self.nconstraints + outer.nfixed
 
       # flag to control final actions in cost function
       self.final_call = False
@@ -1348,8 +1348,7 @@ class mnFit():
     self._setupFitParameters(*par)
 
     # create cost function
-    self.costf = self.hCost(self,
-                            self.hData, model,
+    self.costf = self.hCost(self, model,
                             use_GaussApprox=self.use_GaussApprox,
                             density = self.fit_density)
     self._setupMinuit(model_kwargs) 
@@ -1396,6 +1395,7 @@ class mnFit():
 
       """
 
+      self.outer = outer
       self.contents = bin_contents
       self.nbins=len(bin_contents)
       self.Ntot = np.sum(bin_contents)
@@ -1422,7 +1422,7 @@ class mnFit():
 
       w = self.edges[1:] - self.edges[:-1]
       fig = plt.figure(num=num, figsize=figsize)
-      if self.model_values is not None:
+      if False:
         plt.bar(self.centers, self.model_values,
               align='center', width = w,
               facecolor='wheat', edgecolor='brown', alpha=0.2,
@@ -1430,21 +1430,68 @@ class mnFit():
       else:
         plt.bar(self.centers, self.contents,
               align='center', width = w,
-              facecolor='cadetblue', edgecolor='darkblue', alpha=0.2,
+              facecolor='cadetblue', edgecolor='darkblue', alpha=0.5,
               label = data_label)
+
       # set and plot error bars
-      if self.model_related_uncertainties is not None:
+      if self.outer.use_GaussApprox:
         ep = self.model_related_uncertainties
-      else:
-        ep = (self.contents + np.abs(self.DeltaMu))      
-      em = [ep[i] if self.contents[i]-ep[i]>0. else self.contents[i] for i in range(len(ep))]
-      plt.errorbar(self.centers, self.contents,
+        em = [ep[i] if self.contents[i]-ep[i]>0. else self.contents[i] for i in range(len(ep))]      
+      else: # show Poisson Confidence Intervals
+        ep = []
+        em = []
+        for i in range(self.nbins):
+          l = (self.model_values[i] + np.abs(self.DeltaMu[i]))      
+          m, p = self.Poisson_CI(l, sigma=1.)
+          ep.append(p-l)
+          em.append(l-m)
+      plt.errorbar(self.centers, self.model_values,
                    yerr=(em, ep),
-                   fmt='_', color='darkblue', markersize=15,
-                   ecolor='darkblue', alpha=0.8,
-                   label = data_label)
+                   fmt=' ', color='orange', markersize=15,
+                   ecolor='olive', alpha=0.8)
       return fig
 
+    @staticmethod
+    def Poisson_CI(lam, sigma=1.):
+      """
+      determine one-sigma Confidence Interval around the 
+      mean lambda of a Poisson distribution, Poiss(x, lambda). 
+
+      The method is based on delta-log-Likelihood (dlL) 
+      of the Poission likelihood 
+
+      Args:
+       - lam: mean of Poission distribution
+       - cl: desired confidence level
+       - sigma: alternatively specify an n-sigma interval
+      """
+
+      # functions
+      def nlLPoisson(x, lam):
+        """negative log-likelihood of Poissoin distrbution
+        """
+        return lam - x*np.log(lam) + loggamma(x+1.)
+
+      def f(x, lam, dlL):
+        """Delta log-L - offset, input to Newton method
+        """
+        return nlLPoisson(x, lam) - nlLPoisson(lam, lam) - dlL
+
+      dlL = 0.5*sigma*sigma 
+
+      # for dlL=0.5, there is only one intersection with zero for lam<1.8
+      dl = 1.2*np.sqrt(lam)
+      dlm = min(dl, lam)
+      cp = newton(f, x0=lam+dl, x1=lam, args=(lam, dlL))
+      try: # may not converge for small lambda, as there is no intersection < lam
+        cm = newton(f, x0=lam-dlm, x1=lam, args=(lam, dlL))
+      except:
+        cm = 0.
+      if (cp-cm)<lam/100.: # found same intersection,
+        cm = 0.            #  set 1st one to 0.  
+ 
+      return cm, cp            
+    
   # --- cost function for histogram data
   class hCost:
     """    Cost function for binned data
@@ -1472,7 +1519,6 @@ class mnFit():
     Input:
 
     - outer: pointer to instance of calling class
-    - hData: data object of type histData
     - model: model function f(x, \*par)
     - use_GaussApprox, bool: use Gaussian approximation 
     - density, bool: fit a normalised density; if false, an overall
@@ -1494,11 +1540,13 @@ class mnFit():
     """
 
     def __init__(self, outer, 
-                 hData, model,
+                 model,
                  use_GaussApprox=False, density= True):
       from iminuit.util import make_func_code
 
-      self.data = hData
+      # data object of type histDataContainter
+      self.data = outer.hData
+      
       self.model = model
       self.density = density
       self.GaussApprox = use_GaussApprox
@@ -1512,7 +1560,7 @@ class mnFit():
       self.constraints = outer.constraints
       self.nconstraints =len(self.constraints)
       # take account of constraints in degrees of freedom 
-      self.ndof = hData.nbins-self.npar+self.nconstraints+outer.nfixed
+      self.ndof = self.data.nbins-self.npar+self.nconstraints+outer.nfixed
 
       # flag to control final actions in cost function
       self.final_call = False
