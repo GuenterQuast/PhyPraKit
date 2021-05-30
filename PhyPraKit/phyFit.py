@@ -96,7 +96,8 @@ from scipy import stats, linalg
 from scipy.special import loggamma
 from scipy.optimize import newton
 from inspect import signature
-from iminuit import __version__, Minuit
+from iminuit import __version__ as iminuit_version
+from iminuit import Minuit
 
 def xyFit(fitf, x, y, sx = None, sy = None,
        srelx = None, srely = None, 
@@ -455,7 +456,7 @@ class mnFit():
   - histDataContainer:  Container for histogram data
   - mlDataContainter:   Container for general (indexed) data
 
-  - xLSQCost:           Extended chi^2 cost function for fits to x-y data
+  - xLSqCost:           Extended chi^2 cost function for fits to x-y data
   - hCost:              Cost function for (binned) histogram data 
     (2*negl. log. Likelihood of Poisson distribution)
   - mnCost:             user-supplied cost function or negative log-likelihood 
@@ -477,7 +478,8 @@ class mnFit():
   - do_mnFit():          simple minuit fit with external, user-defined cost function
  
   Data members:
-
+  
+  - iminuit_version     version of iminuit 
   - options, dict:      list of options 
   - ParameterNames:     names of parameters (as specified in model function)
   - nconstraints        number of constrained parameters    
@@ -489,11 +491,12 @@ class mnFit():
   - MigradErrors:       symmetric uncertainties
   - CovarianceMatrix:   covariance matrix
   - CorrelationMatrix:  correlation matrix
-  - OneSigInterval:     one-sigma (68% CL) ranges of parameter values 
- 
-  - covx:     covariance matrix of x-data
-  - covy:     covariance matrix of y-data 
-  - cov:      combined covariance matrix, including projected x-uncertainties
+  - OneSigInterval:     one-sigma (68% CL) ranges of parameter values from MINOS 
+  - for xyFit:
+  
+    - covx:     covariance matrix of x-data
+    - covy:     covariance matrix of y-data 
+    - cov:      combined covariance matrix, including projected x-uncertainties
 
   Instances of (sub-)classes:
 
@@ -515,6 +518,8 @@ class mnFit():
       sys.exit(
         '!**! mnFit: invalid fit type ', fit_type, '- exiting!') 
     self.fit_type = fit_type
+
+    self.iminuit_version = iminuit_version
 
     # counter for number of external constraints 
     self.nconstraints = 0
@@ -696,7 +701,7 @@ class mnFit():
     self._setupFitParameters(*par) 
 
     # create cost function
-    self.costf = self.xLSQCost(self,
+    self.costf = self.xLSqCost(self,
                            model,
                            use_neg2logL= self.use_negLogL)
     self._setupMinuit(model_kwargs) 
@@ -727,7 +732,7 @@ class mnFit():
       - get_xCov(): covariance of x-values
       - get_yCov(): covariance of y-values
       - get_iCov(): inverse covariance matrix
-      - plot(): provide a figure with data
+      - plot(): provide a figure with representation of data
  
     Data members:  
       * copy of all input arguments
@@ -1127,7 +1132,7 @@ class mnFit():
       return fig
       
   # define custom cost function for iminuit
-  class xLSQCost:
+  class xLSqCost:
     """
     Custom e_x_tended Least-SQuares cost function with 
     dynamically updated covariance matrix and -2log(L) 
@@ -1197,6 +1202,9 @@ class mnFit():
 
       # data object of type xyDataContainer
       self.data = outer.data
+      if not isinstance(self.data, mnFit.xyDataContainer):
+          print(" !!! mnFit.xLSqCost: expecting data container of type 'mnFit.xyDataContainer'")
+          sys.exit('!==! mnFit Error: no or wrong data object')
       self.model = model
       self.quiet = outer.quiet
       # use -2 * log(L) of Gaussian instead of Chi2
@@ -1271,7 +1279,7 @@ class mnFit():
 
       return nlL2
     
-  # --- end definition of class xLSQCost ----
+  # --- end definition of class xLSqCost ----
 
   #
   # --- special code for histogram Fit
@@ -1377,7 +1385,7 @@ class mnFit():
 
       Methods:
 
-      - plot(): create figure with histogram of data and uncertainties
+      - plot(): return figure with histogram of data and uncertainties
     """
     
     def __init__(self, outer,
@@ -1549,6 +1557,9 @@ class mnFit():
 
       # data object of type histDataContainter
       self.data = outer.hData
+      if not isinstance(self.data, mnFit.histDataContainer):
+        print(" !!! mnFit.hCost: expecting data container of type 'histDataContainer'")
+        sys.exit('!==! mnFit Error: no or wrong data object')
       
       self.model = model
       self.density = density
@@ -1735,7 +1746,7 @@ class mnFit():
 
       Methods:
 
-      - plot(): create figure with representation of data
+      - plot(): return figure with representation of data
     """
     
     def __init__(self, outer, x):
@@ -1788,14 +1799,20 @@ class mnFit():
                  userFunction):
       from iminuit.util import make_func_code
 
+      self.quiet = outer.quiet
       self.data = outer.data
       if self.data is None:
         self.cost = userFunction
+        if not self.quiet:
+          print("*==* mnFit.mnCost: fit with user-supplied cost function'")          
       else:
+        if not isinstance(self.data, mnFit.mlDataContainer):
+          print(" !!! mnFit.mnCost: expecting data container of type 'mlDataContainer'")
+          sys.exit('!==! mnFit Error: no or wrong data object')      
         self.model = userFunction
         self.cost = self.nlLcost
-        
-      self.quiet = outer.quiet
+        if not self.quiet:
+          print("*==* mnFit.mnCost: negLogL fit with user-defined density function'")          
 
       # take account of possible parameter constraints
       self.constraints = outer.constraints
@@ -1924,7 +1941,7 @@ class mnFit():
   def _setupMinuit(self, model_kwargs):
 
     # create Minuit object (depends on Minuit version)
-    if __version__ < '2':
+    if self.iminuit_version < '2':
       if self.quiet:
         print_level=0
       else:
@@ -1957,7 +1974,7 @@ class mnFit():
     minCost = m.fval                        # minimum value of cost function
     nfpar = m.nfit                           # numer of free parameters
     ndof = self.costf.ndof                  # degrees of freedom
-    if __version__< '2':
+    if self.iminuit_version < '2':
       parnames = m.values.keys()            # parameter names
       parvals = np.array(m.values.values()) # best-fit values
       parerrs = np.array(m.errors.values()) # parameter uncertainties
@@ -1978,7 +1995,7 @@ class mnFit():
     if self.minosResult is not None and self.minos_ok:
       pmerrs = [] 
     #  print("MINOS errors:")
-      if __version__< '2':
+      if self.iminuit_version < '2':
         for pnam in m.merrors.keys():
           pmerrs.append([m.merrors[pnam][2], m.merrors[pnam][3]])
       else:
@@ -2292,7 +2309,7 @@ class mnFit():
     fpnams = self.freeParNams
     npar = len(fpnams)
 
-    fsize=3.5
+    fsize = 3.5 if npar<=3 else 2.5
     cor_fig, axarr = plt.subplots(npar, npar,
                                   num=figname,
                                   figsize=(fsize*npar, fsize*npar))
@@ -2314,7 +2331,7 @@ class mnFit():
             plt.ylabel('$\Delta\chi^2$')
           else:
             plt.sca(axarr[jp, ip])
-            if __version__ <'2':
+            if self.iminuit_version <'2':
               m.draw_mncontour(fpnams[i], fpnams[j])
             else:
               m.draw_mncontour(fpnams[i], fpnams[j],
@@ -2340,7 +2357,7 @@ class mnFit():
     """plot a contour of parameters pnam1 and pnam2
     with confidence level(s) cl
     """
-    if __version__ <'2':
+    if self.iminuit_version <'2':
       print("!!! plot_clContour not implemented vor iminuit vers.<2")
       return
     else:
@@ -2355,7 +2372,7 @@ class mnFit():
     """
     fig = plt.figure(num='Contour(s) ' + pnam1 + ' vs. ' + pnam2,
       figsize=(5., 5.))
-    if __version__ <'2':
+    if self.iminuit_version <'2':
       self.minuit.draw_mncontour(pnam1, pnam2, nsigma=nsig)
     else:
       ns = range(1, nsig+1)
@@ -2616,7 +2633,7 @@ if __name__ == "__main__": # --- interface and example
         8.532, 3.000, 4.792, 2.512, 1.352, 2.168, 4.344, 1.316, 1.468, 1.152,
         6.024, 3.272, 4.96, 10.16,  2.14,  2.856, 10.01, 1.232, 2.668, 9.176 ]
 
-    def modelPDF(t, tau=2., fbg=0.2, a=1., b=11.5):
+    def exponentialDecayPDF(t, tau=2., fbg=0.2, a=1., b=11.5):
       """Probability density function 
 
       for an exponential decay with flat background. The pdf is normed for 
@@ -2634,7 +2651,7 @@ if __name__ == "__main__": # --- interface and example
       pdf2 = 1. / (b - a)
       return (1 - fbg) * pdf1 + fbg * pdf2
 
-    pnams, pvals, perrs, cor, gof = mFit( modelPDF,
+    pnams, pvals, perrs, cor, gof = mFit( exponentialDecayPDF,
           data = dT, # data - if not None, a normalised PDF is assumed as model  
           p0=None,                 # initial guess for parameter values 
         #  constraints=[['tau', 2.2, 0.01], # Gaussian parameter constraints
@@ -2666,16 +2683,16 @@ if __name__ == "__main__": # --- interface and example
   #
   # --- run above examples
 
-  print("*==* xy fit example")
+  print("*** xy fit example")
   example_xyFit()
 
-  print("\n\n*==* histogram fit example")
+  print("\n\n*** histogram fit example")
   example_histogramFit()
 
-  print("\n\n*==* simple minuit fit with user-defined cost function")
+  print("\n\n*** minuit fit with external cost function")
   example_userFit()
 
-  print("\n\n*==* ML minuit Fit")
+  print("\n\n*** ML minuit Fit")
   example_unbinnedMLFit()
 
   # show all figures
