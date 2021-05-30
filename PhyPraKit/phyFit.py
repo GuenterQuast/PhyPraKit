@@ -576,7 +576,10 @@ class mnFit():
     self.options["neg2logL"] = [1, ["user", "ml"],
                               "using standard likelihood -> errdef = 0.5",
                               "using -2 * neg. log. likelihood -> errdef=1."]
-                                                               
+
+    # set options for (nicer) plotting
+    self.setPlotOptions()
+    
   def init_data(self, *args, **kwargs):
     if self.fit_type == 'xy':
       self.init_xyData(*args, **kwargs)
@@ -2166,7 +2169,14 @@ class mnFit():
     self._storeResult()
     return self.migradResult, self.minosResult
 
-  
+
+  def setPlotOptions(self):
+    """Set options for nicer plotting
+    """
+
+    # to be implemented
+    pass
+
   def plotModel(self,
                 axis_labels=['x', 'y = f(x, *par)'], 
                 data_legend = 'data',    
@@ -2305,6 +2315,10 @@ class mnFit():
     if not self.quiet:
       print( '*==* mnFit: scanning contours')
 
+    # save color map and set new one - affects iminuit.draw_mncontour()
+    orig_cm = plt.get_cmap()
+    plt.set_cmap('tab20b')
+
     m = self.minuit
     fpnams = self.freeParNams
     npar = len(fpnams)
@@ -2312,7 +2326,9 @@ class mnFit():
     fsize = 3.5 if npar<=3 else 2.5
     cor_fig, axarr = plt.subplots(npar, npar,
                                   num=figname,
-                                  figsize=(fsize*npar, fsize*npar))
+                                  figsize=(fsize*npar, fsize*npar),
+                                  constrained_layout=True)
+    
 # protect the following, may fail
     try:
       ip = -1
@@ -2336,6 +2352,10 @@ class mnFit():
             else:
               m.draw_mncontour(fpnams[i], fpnams[j],
                 cl=(self.Chi22CL(1.), self.Chi22CL(4.)) )
+
+      # restore color map
+      plt.set_cmap(orig_cm)        
+
       return cor_fig
 
     except Exception as e:
