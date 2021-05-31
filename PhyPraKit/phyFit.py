@@ -14,8 +14,8 @@
   package `iminuit` for fitting a parameter-dependent model f(x, \*par) 
   to data points (x, y) or a probability density function to binned 
   histogram data or to unbinned data. Parameter estimation is based on 
-  pre-implemented the Maximum-Likelihood methods, or also on a user-defined 
-  likelihood function in the latter case, which provides maximum flexibility.
+  pre-implemented Maximum-Likelihood methods, or on a user-defined 
+  cost function in the latter case, which provides maximum flexibility.
   Classical least-square methods are optionally available for comparison 
   with other packages. 
 
@@ -108,7 +108,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
        use_negLogL=True, 
        plot = True, plot_cor = True,
        showplots = True, 
-       plot_band=True, quiet = False,
+       plot_band=True, quiet = True,
        axis_labels=['x', 'y = f(x, *par)'],
        data_legend = 'data',    
        model_legend = 'model'):
@@ -229,7 +229,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
          fit_density = True,
          plot = True, plot_cor = True,
          showplots = True, plot_band=True,
-         quiet = False,
+         quiet = True,
          axis_labels=['x', 'counts/bin = f(x, *par)'],
          data_legend = 'Histogram Data',    
          model_legend = 'Model'):
@@ -325,8 +325,8 @@ def mFit(ufcn, data = None, p0 = None,
           constraints = None, limits=None, fixPars=None,
           neg2logL = True,
           plot = False, plot_band=True,
-          plot_cor = True,
-          showplots = True, quiet = False,
+          plot_cor = False,
+          showplots = True, quiet = True,
           axis_labels=['x', 'Density = f(x, *par)'],
           data_legend = 'data',    
           model_legend = 'model'):
