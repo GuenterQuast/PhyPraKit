@@ -1454,7 +1454,8 @@ class mnFit():
                      alpha=0.8)
         else: # show symmetric error bars 
           ep = np.sqrt(self.model_values + np.abs(self.DeltaMu))
-          em = [ep[i] if self.contents[i]-ep[i]>0. else self.contents[i] for i in range(len(ep))]
+          em = [ep[i] if self.model_values[i]-ep[i]>0. else self.model_values[i]
+                for i in range(len(ep))]
           plt.errorbar(self.centers, self.model_values,
                        yerr=(em, ep), fmt=' ', 
                        ecolor='olive', elinewidth=2, alpha=0.8)
@@ -1975,7 +1976,7 @@ class mnFit():
     # !!! this part depends on iminuit version !!!    
     m=self.minuit
     minCost = m.fval                        # minimum value of cost function
-    nfpar = m.nfit                           # numer of free parameters
+    nfpar = m.nfit                          # numer of free parameters
     ndof = self.costf.ndof                  # degrees of freedom
     if self.iminuit_version < '2':
       parnames = m.values.keys()            # parameter names
@@ -2026,6 +2027,8 @@ class mnFit():
     self.ParameterValues = np.array(parvals, copy=True)
     self.freeParVals = np.array(
       [ parvals[i] for i in range(npar) if not self.fixedPars[i] ])
+    self.freeParErrs = np.array(
+      [ parerrs[i] for i in range(npar) if not self.fixedPars[i] ])
     # fixed parameter names and values
     self.fixedParVals = np.array(
       [ parvals[i] for i in range(npar) if self.fixedPars[i] ])
@@ -2321,6 +2324,8 @@ class mnFit():
 
     m = self.minuit
     fpnams = self.freeParNams
+    fpvals = self.freeParVals
+    fperrs = self.freeParErrs
     npar = len(fpnams)
 
     fsize = 3.5 if npar<=3 else 2.5
@@ -2345,6 +2350,11 @@ class mnFit():
             plt.sca(axarr[ip, ip])
             m.draw_mnprofile(fpnams[i], subtract_min=True)
             plt.ylabel('$\Delta\chi^2$')
+            xmn, xmx = plt.gca().get_xlim()
+            # show horizontal line at self.ErrDef 
+            plt.hlines(self.ErrDef, xmn, xmx, color='orange', linestyle='--')
+            plt.errorbar(fpvals[i], 0., xerr=fperrs[i],
+                         fmt='x', color='blue', linestyle='-', capsize=3)
           else:
             plt.sca(axarr[jp, ip])
             if self.iminuit_version <'2':
@@ -2352,7 +2362,13 @@ class mnFit():
             else:
               m.draw_mncontour(fpnams[i], fpnams[j],
                 cl=(self.Chi22CL(1.), self.Chi22CL(4.)) )
-
+            # plot best-fit values and migrad errors
+            plt.errorbar(fpvals[i], fpvals[j],
+                         xerr=fperrs[i], yerr=fperrs[j],
+                         fmt='x', color='darkblue',
+                         ecolor='blue', capsize=3, 
+                         alpha=0.66)
+            
       # restore color map
       plt.set_cmap(orig_cm)        
 
