@@ -423,8 +423,49 @@ def mFit(ufcn, data = None, p0 = None,
   return uFit.getResult()
 
 #
+# --- helper functions
+#
+def get_functionSignature(f):
+  """get arguments and keyword arguments passed to a function
+  """
+  pars = signature(f).parameters
+  args = []
+  kwargs = {}
+  for p in pars.values():
+    if p.default is p.empty:
+      args.append(p.name)
+    else:
+      kwargs[p.name]=p.default
+  return args, kwargs
+
+def round_to_error(val, err, nsd_e=2):
+  """round float *val* to same number of significant digits as uncertainty *err*
+  
+  Returns:
+    * int:   number of significant digits for v
+    * float: val rounded to precision of err
+    * float: err rounded to precision nsd_e
+  """
+  v = abs(val)
+  # round uncertainty to nd0 significant digits
+  e = float("{:.{p}g}".format(abs(err), p=nsd_e))
+  _v = v if v>e else e
+  l10e=np.floor(np.log10(e))
+  # determine # of significant digits for v
+  _nd = int( np.floor(np.log10(_v) - l10e ) ) + nsd_e
+  # take into account possible rounding of v ...
+  v = float("{:.{p}g}".format(v, p=_nd))
+  # ... and determine final # of sig. digits
+  _v = v if v>e else e
+  nsd_v = int( np.floor(np.log10(_v) - l10e ) ) + nsd_e
+  v = float("{:.{p}g}".format(v, p=nsd_v)) if v>=10**(l10e-1) else 0
+  return nsd_v, np.sign(val)*v, e               
+
+
+#
 # --- classes and functions
 #
+
 class mnFit():
   """**Fit an arbitrary function f(x, *par) to data**  
   with independent and/or correlated absolute and/or relative uncertainties
@@ -698,7 +739,7 @@ class mnFit():
       sys.exit('mnFit Error: no data object')
 
     # get parameters of model function to set start values for fit
-    args, model_kwargs = self.get_functionSignature(model)
+    args, model_kwargs = get_functionSignature(model)
 
     par = (model_kwargs, p0, constraints, fixPars, limits)
     self._setupFitParameters(*par) 
@@ -1353,7 +1394,7 @@ class mnFit():
       sys.exit('mnFit Error: no data object')
     
     # get parameters of model function to set start values for fit
-    args, model_kwargs = self.get_functionSignature(model)
+    args, model_kwargs = get_functionSignature(model)
 
     par = (model_kwargs, p0, constraints, fixPars, limits)
     self._setupFitParameters(*par)
@@ -1709,7 +1750,7 @@ class mnFit():
       sys.exit('mnFit Error: no data object')
 
     # get parameters of model function to set start values for fit
-    args, model_kwargs = self.get_functionSignature(userFunction)
+    args, model_kwargs = get_functionSignature(userFunction)
 
     par = (model_kwargs, p0, constraints, fixPars, limits)
     self._setupFitParameters(*par) 
@@ -2276,12 +2317,12 @@ class mnFit():
     pe = 2   # number of significant digits of uncertainty
     if self.minosResult is not None and self.minos_ok:
       for pn, v, e in zip(free_pnams, free_pvals, pmerrs):
-        nd, _v, _e = self.round_to_error(v,min(abs(e[0]),abs(e[1])),nsd_e=pe)
+        nd, _v, _e = round_to_error(v,min(abs(e[0]),abs(e[1])),nsd_e=pe)
         txt="{} = ${:#.{pv}g}^{{+{:#.{pe}g}}}_{{{:#.{pe}g}}}$"
         fit_info.append(txt.format(pn, _v, e[1], e[0], pv=nd, pe=pe))
     else:
       for pn, v, e in zip(free_pnams, free_pvals, pmerrs):
-        nd, _v, _e = self.round_to_error(v, e[1], nsd_e=pe)
+        nd, _v, _e = round_to_error(v, e[1], nsd_e=pe)
         txt="{} = ${:#.{pv}g}\pm{:#.{pe}g}$"
         fit_info.append(txt.format(pn, _v, _e, pv=nd, pe=pe))
     if nfixed:
@@ -2418,34 +2459,6 @@ class mnFit():
     return fig
 
   @staticmethod
-  def round_to_error(val, err, nsd_e=2):
-    """round float *val* to same number of significant digits as uncertainty *err*
-  
-    Returns:
-      * int:   number of significant digits for v
-      * float: val rounded to precision of err
-      * float: err rounded to precision nsd_e
-
-    """
-
-    v = abs(val)
-    # round uncertainty to nd0 significant digits
-    e = float("{:.{p}g}".format(abs(err), p=nsd_e))
-
-    _v = v if v>e else e
-    l10e=np.floor(np.log10(e))
-    # determine # of significant digits for v
-    _nd = int( np.floor(np.log10(_v) - l10e ) ) + nsd_e
-    # take into account possible rounding of v ...
-    v = float("{:.{p}g}".format(v, p=_nd))
-    # ... and determine final # of sig. digits
-    _v = v if v>e else e
-    nsd_v = int( np.floor(np.log10(_v) - l10e ) ) + nsd_e
-    v = float("{:.{p}g}".format(v, p=nsd_v)) if v>=10**(l10e-1) else 0
-     
-    return nsd_v, np.sign(val)*v, e               
-
-  @staticmethod
   def chi2prb(chi2,ndof):
     """Calculate chi2-probability from chi2 and degrees of freedom
     """
@@ -2462,21 +2475,6 @@ class mnFit():
     """calculate confidence level CL from DeltaChi2 for 2-dim contours
     """
     return (1. - np.exp(-dc2 / 2.))
-
-  @staticmethod
-  def get_functionSignature(f):
-    """get arguments and keyword arguments passed to a function
-    """
-    pars = signature(f).parameters
-    args = []
-    kwargs = {}
-    for p in pars.values():
-      if p.default is p.empty:
-        args.append(p.name)
-      else:
-        kwargs[p.name]=p.default
-    return args, kwargs
-    
 
 if __name__ == "__main__": # --- interface and example
   
@@ -2495,7 +2493,7 @@ if __name__ == "__main__": # --- interface and example
     # set model to use in fit
     fitmodel=exp_model  # also try poly2_model !
     # get keyword-arguments
-    mpardict = mnFit.get_functionSignature(fitmodel)[1]
+    mpardict = get_functionSignature(fitmodel)[1]
   
     # the data ...
     data_x = [0.0, 0.2, 0.4, 0.6, 0.8, 1., 1.2,
