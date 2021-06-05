@@ -43,7 +43,7 @@ if __name__ == "__main__": # --------------------------------------
     return A*np.exp(-x/x0)
 
   # -- another model function
-  def poly2_model(x, a=1.5, b=1., c=1.):
+  def poly2_model(x, a=0.75, b=1., c=1.):
     return a*x**2 + b*x + c
 
   #set parameter of toy MC
@@ -55,12 +55,12 @@ if __name__ == "__main__": # --------------------------------------
 #  model = exp_model
   
  # set error components (!!! odFit only supports non-zero sabsy and sabsx)
-  # indepentent uncertainties
+  # independent uncertainties
   sabsy = 0.07 # 0.07 
   sabsx = 0.05 # 0.05
   
  # the following are only supported by kafe2 and phyFit
-  # indepentent relative uncertainties
+  # independent relative uncertainties
   srely = 0.03 # 5% of model value
   srelx = 0.04 # 4%
   # correlated uncertainties y and x direction 
@@ -91,10 +91,10 @@ if __name__ == "__main__": # --------------------------------------
   #  theFit = odFit    
   #  theFit = k2Fit    
   theFit = xyFit    
-  for i in range(Nexp):
+  for iexp in range(Nexp):
     # generate pseudo data
-    np.random.seed(314159+i)     # initialize random generator
-    
+    np.random.seed(314159+(iexp*2718281)%100000) # initialize random generator
+   
     xt, yt, data_y = generateXYdata(data_x, model, sigx, sigy,
                                       xabscor=cabsx,
                                       xrelcor=crelx,
@@ -103,7 +103,7 @@ if __name__ == "__main__": # --------------------------------------
                                       mpar=true_vals )
   # perform fit to pseudo data 
     try:
-      if i<=0:   # show data and best-fit model
+      if iexp<=0:   # show data and best-fit model
         plot=True
       else:
         plot=False
@@ -133,11 +133,11 @@ if __name__ == "__main__": # --------------------------------------
 
   # Print results to illustrate how to use output
       np.set_printoptions(precision=6)
-      print('\n*==* ', i, ' Fit Result:')
+      print('\n*==*  Fit {:d} Result:'.format(iexp))
       print(f" chi2: {chi2:.3g}")
       print(f" parameter names:  ", pnams)
       print(f" parameter values:  ", pvals)
-      np.set_printoptions(precision=2)
+      np.set_printoptions(precision=3)
       print(f" parameter errors: ", perrs)
       np.set_printoptions(precision=3)
       print(f" correlations : \n", cor)
@@ -156,7 +156,7 @@ if __name__ == "__main__": # --------------------------------------
         if (true_vals[i] >= pmn and true_vals[i]<=pmx): N_coverage[i] +=1
                 
       if plot:
-        plt.suptitle('one fit')
+        plt.suptitle('fit {:d} result'.format(iexp))
         ## plt.show() # blocks at this stage until figure deleted
      
     except Exception as e:
@@ -244,14 +244,13 @@ if __name__ == "__main__": # --------------------------------------
   # analyse chi2 probability
   figc2prb = plt.figure(figsize=(7.5, 5.))
   ax = figc2prb.add_subplot(1,1,1)
-  nbins= int(min(50, Nexp/20))
+  nbins = int(min(50, Nexp/20))
   binc, bine, _ = ax.hist(c2prb, bins=nbins, ec="grey")
+  plt.xlabel('chi2 probability')
+  plt.ylabel('entries/bin')
   # - check compatibility with flat distribution
   mean = (Nexp-nfail)/nbins
   chi2flat= np.sum( (binc - mean)**2 / mean )
   prb = 1.- stats.chi2.cdf(chi2flat, nbins)
-  print(f'compatibility of chi2prb with flat distribution {prb*100:f}%')  
-
-  plt.xlabel('chi2 probability')
-  plt.ylabel('entries/bin')
+  print('compatibility of chi2prb with flat distribution: {:f}%'.format(prb*100))  
   plt.show()
