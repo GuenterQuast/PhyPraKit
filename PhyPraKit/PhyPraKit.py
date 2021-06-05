@@ -61,6 +61,7 @@ def A0_readme():
       - hist2dstat() statistical information from 2d-histogram
       - profile2d()  "profile plot" for 2d data
       - chi2p_indep2d() chi2 test on independence of data
+      - plotCorrelations()  distributions and correlations of a multivariate data set
 
     5. linear regression and function fitting:
 
@@ -122,31 +123,35 @@ from scipy import stats
 
 def readColumnData(fname, cchar='#', delimiter=None, pr=True):
   """read column-data from file
-       - input is assumed to be columns of floats
-       - characters following <cchar>, and <cchar> itself, are ignored          
-       - words with preceding '*' are taken as keywords for meta-data,
-         text following the keyword is returned in a dictionary 
 
-     Args:
-       * string fnam:      file name
-       * int ncols:        number of columns
-       * char delimiter:   character separating columns
-       * bool pr:          print input to std out if True
+  - input is assumed to be columns of floats
+  - characters following <cchar>, and <cchar> itself, are ignored          
+  - words with preceding '*' are taken as keywords for meta-data,
+    text following the keyword is returned in a dictionary 
+
+  Args:
+
+  * string fnam:      file name
+  * int ncols:        number of columns
+  * char delimiter:   character separating columns
+  * bool pr:          print input to std out if True
   """ 
 
 # -- helper function to filter input lines
   def filter_lines(f, keys, cc='#', delim=None):
-    """ filter lines for np.loadtxt and 
+    """filter lines for np.loadtxt and 
         extract non-numerical information
 
-      Args:
-        * string f:  file name
-        * dictionary keys: emtpy dictionary
-        * char cc:   comment character
-      Modifies:
-        * dictionary keys with keywords found in file
-      Yields:
-        * a valid line with numerical data
+    Args:
+    * string f:  file name
+    * dictionary keys: emtpy dictionary
+    * char cc:   comment character
+
+    Modifies:
+    * dictionary keys with keywords found in file
+
+    Yields:
+    * a valid line with numerical data
     """
     while True:
       line=f.readline()
@@ -183,18 +188,17 @@ def readColumnData(fname, cchar='#', delimiter=None, pr=True):
   return arr, mdict
 
 def readCSV(file, nlhead=1, delim=','):
-  '''
-  read Data in .csv format, skip header lines
+  """read Data in .csv format, skip header lines
   
   Args:
     * file: string, file name 
     * nhead: number of header lines to skip
     * delim: column separator
+
   Returns:
     * hlines: list of string, header lines
     * data: 2d array, 1st index for columns
-
-  '''
+  """
 # --------------------------------------------------------------------
 
   # open file for read (if necessary)
@@ -213,9 +217,8 @@ def readCSV(file, nlhead=1, delim=','):
 
 
 def readtxt(file, nlhead=1, delim='\t'):
-  '''
-  read floating point data in general txt format
-    skip header lines, replace decimal comma, remove special characters
+  """ read floating point data in general txt format
+  skip header lines, replace decimal comma, remove special characters
   
   Args:
     * file: string, file name 
@@ -224,19 +227,18 @@ def readtxt(file, nlhead=1, delim='\t'):
   Returns:
     * hlines: list of string, header lines
     * data: 2d array, 1st index for columns
-
-  '''
+  """
 # --------------------------------------------------------------------
 # -- helper function to filter input lines
   def specialCharFilter(f, delim):
-    '''a generator to filter lines read from file
-         replace German ',' by '.', remove special characters 
+    """a generator to filter lines read from file
+    replace German ',' by '.', remove special characters 
 
-      Args:
-        * string f:  file name
-      Yields:
-        * a valid line with numerical data
-    '''
+    Args:
+      * string f:  file name
+    Yields:
+      * a valid line with numerical data
+    """
     while True:
       l=f.readline()      # read one line
       if (not l): break   # end-of-file reached, exit
@@ -274,7 +276,7 @@ def readtxt(file, nlhead=1, delim='\t'):
 
 
 def readPicoScope(file, prlevel=0):
-  '''
+  """
   read Data exported from PicoScope in .txt or .csv format
   
   Args:
@@ -285,7 +287,7 @@ def readPicoScope(file, prlevel=0):
     * units: list of strings, channel units  
     * data: tuple of arrays, channel data
 
-  '''
+  """
 # --------------------------------------------------------------------
 #        special treatment to skip/analyze first three lines
   f = open(file, 'r')
@@ -316,8 +318,7 @@ def readPicoScope(file, prlevel=0):
 
   
 def readCassy(file, prlevel=0):
-  '''
-  read Data exported from Cassy in .txt format
+  """read Data exported from Cassy in .txt format
   
   Args:
     * file: string, file name 
@@ -327,7 +328,7 @@ def readCassy(file, prlevel=0):
     * units: list of strings, channel units  
     * data: tuple of arrays, channel data
 
-  '''
+  """
 # --------------------------------------------------------------------
   delim='\t'                 # Cassy uses <tab> as column delimiter
   hlines, data = readtxt(file, nlhead=5, delim=delim)
@@ -348,8 +349,7 @@ def readCassy(file, prlevel=0):
 
 
 def labxParser(file, prlevel=1):
-  '''   
-  read files in xml-format produced with Leybold CASSY
+  """read files in xml-format produced with Leybold CASSY
    
   Args:
      * file:  input data in .labx format
@@ -358,7 +358,7 @@ def labxParser(file, prlevel=1):
   Returns:
      * list of strings: tags of measurement vectors
      * 2d list:         measurement vectors read from file 
-  '''
+  """
 # --------------------------------------------------------------------
 # dependencies: xml.etree.ElementTree
 #
@@ -464,8 +464,7 @@ def labxParser(file, prlevel=1):
 
 def writeCSV(file, ldata, hlines=[], fmt='%.10g',
               delim=',', nline='\n', **kwargs):
-  '''
-  write data in .csv format, including header lines
+  """write data in .csv format, including header lines
   
   Args:
     * file: string, file name 
@@ -477,7 +476,7 @@ def writeCSV(file, ldata, hlines=[], fmt='%.10g',
 
   Returns: 
     * 0/1  for success/fail
-  '''
+  """
 
 # --------------------------------------------------------------------
 
@@ -504,7 +503,7 @@ def writeCSV(file, ldata, hlines=[], fmt='%.10g',
     return 1
 
 def writeTexTable(file, ldata, cnames=[], caption='', fmt='%.10g'):
-  ''' write data formatted as latex tabular
+  """write data formatted as latex tabular
 
   Args:
     * file: string, file name
@@ -515,7 +514,7 @@ def writeTexTable(file, ldata, cnames=[], caption='', fmt='%.10g'):
 
   Returns:
     * 0/1 for success/fail
-  '''
+  """
 
   delim = " & "
   nline = "\\\\\n"
@@ -572,16 +571,16 @@ def round_to_error(val, err, nsd_e=2):
 
 def ustring(v, e, pe=2):
   """v +/- e as formatted string 
-     with number of significant digits corresponding to 
-     precision pe of uncertainty 
+  with number of significant digits corresponding to 
+  precision pe of uncertainty 
 
-    Args:
-      * v: value
-      * e: uncertainty
-      * pe: precision (=number of significant digits) of uncertainty
+  Args:
+    * v: value
+    * e: uncertainty
+    * pe: precision (=number of significant digits) of uncertainty
 
-    Returns:
-      * string: <v> +/- <e> with appropriate number of digits
+  Returns:
+    * string: <v> +/- <e> with appropriate number of digits
   """
 
   # format string for printout (releys on #.g format)
@@ -595,17 +594,17 @@ def ustring(v, e, pe=2):
 
 def wmean(x, sx, V=None, pr=True):
   """ weighted mean of np-array x with uncertainties sx 
-      or covariance matrix V; if both are given, sx**2 is added 
-      to the diagonal elements of the covariance matrix
+  or covariance matrix V; if both are given, sx**2 is added 
+  to the diagonal elements of the covariance matrix
  
-    Args:
-      * x: np-array of values
-      * sx: np-array uncertainties
-      * V: optional, covariance matrix of x
-      * pr: if True, print result
+  Args:
+    * x: np-array of values
+    * sx: np-array uncertainties
+    * V: optional, covariance matrix of x
+    * pr: if True, print result
 
-    Returns:
-      * float: mean, sigma 
+  Returns:
+    * float: mean, sigma 
   """
   
   if V is None:
@@ -627,8 +626,8 @@ def wmean(x, sx, V=None, pr=True):
   return mean, smean
 
 def BuildCovarianceMatrix(sig, sigc=[]):
-  """
-    Construct a covariance matrix from independent and correlated error components
+  """Construct a covariance matrix 
+  from independent and correlated error components
 
   Args: 
    * sig: iterable of independent errors 
@@ -650,8 +649,7 @@ def BuildCovarianceMatrix(sig, sigc=[]):
   return V
 
 def Cov2Cor(V):
-  """
-    Convert a covariance-matrix into diagonal errors + Correlation matrix
+  """Convert a covariance matrix into diagonal errors + correlation matrix
 
   Args: 
    * V: covariance matrix as numpy array
@@ -666,8 +664,7 @@ def Cov2Cor(V):
 
 
 def Cor2Cov(sig, C):
-  """
-    Convert a covariance-matrix into diagonal errors + Correlation matrix
+  """Convert a correlation matrix and error into covariance matrix
 
   Args: 
    * sig: 1d numpy array of correlated uncertainties
@@ -684,12 +681,12 @@ def Cor2Cov(sig, C):
 def chi2prob(chi2, ndf):
   """ chi2-probability
  
-    Args:
-      * chi2: chi2 value
-      * ndf: number of degrees of freedom
+  Args:
+    * chi2: chi2 value
+    * ndf: number of degrees of freedom
 
-    Returns:
-      * float: chi2 probability
+  Returns:
+    * float: chi2 probability
   """
 
   return 1.- stats.chi2.cdf(chi2, ndf)
@@ -1260,27 +1257,89 @@ def chi2p_indep2d(H2d, bcx, bcy, pr=True):
   return pval
 
 
+def plotCorrelations(vals, names=None):  
+  """plot histograms and sctter plots of value pairs as array of axes
+
+  Args:
+
+  - vals: 2d-Array [[v1_1, ...], ..., [vn_1, ...]] of float, input data
+  - names: labels for variables v1 to vn
+
+  Returns:
+
+  - figure
+  - axis: axis of first empty space in axarray (=[0,1])
+  """
+  npar=len(vals)
+  nd = len(vals[0])
+  if names is None:
+    names = ['var{:d}'.format(i) for i in range(npar)]
+
+  fig, axarr = plt.subplots(npar, npar, figsize=(3. * npar, 3.1 * npar))
+  fig.tight_layout()
+  fig.subplots_adjust(top=0.92, bottom=0.1, left=0.1, right=0.95,
+                        wspace=0.33, hspace=0.3)  
+  nb1= int(min(50, nd/10))
+  nb2= int(min(50, nd/10))
+    
+  ip = -1
+  for i in range(0, npar):
+    ip += 1
+    jp = -1
+    for j in range(0, npar):
+      jp += 1
+      if ip > jp:
+        axarr[jp, ip].axis('off')      # set empty space
+      elif ip == jp:
+        ax=axarr[jp, ip]
+        bc, be, _ = ax.hist(vals[ip], nb1) # plot 1d-histogram
+        ax.set_xlabel(names[ip])
+        ax.locator_params(nbins=5) # number of axis labels
+        m, s, sm = histstat(bc, be, False)  # calculate statistics
+        ax.axvline(m, color='orange', linestyle='--')
+        nsd, _m, _sm = round_to_error(m, sm)
+        ax.text(0.75, 0.85,                
+                '$\\mu=${:#.{p}g}\n'.format(_m, p=nsd) +
+                '$\\sigma=${:#.2g}\n'.format(s) +
+                '$\\sigma_\\mu=${:#.2g}'.format(sm),
+                transform=ax.transAxes,
+                backgroundcolor='white')
+      else:
+        # 2d-plot to visualise correlations
+        ax=axarr[jp, ip]
+        H, xe, ye, _ = ax.hist2d(vals[jp], vals[ip], nb2, cmap='Blues')
+        ax.set_xlabel(names[jp])
+        ax.set_ylabel(names[ip], labelpad=-2)
+        ax.locator_params(nbins=5) # number of axis labels
+        mx, my, vx, vy, cov, cor = hist2dstat(H,xe,ye,False)
+        ax.text(0.33, 0.85, '$\\rho$=%.2f' %cor,
+                  transform=ax.transAxes,
+                  backgroundcolor='white')
+  # set 1st empty space as current axis
+  ax=axarr[0, 1]
+  plt.sca(ax) 
+  return fig, ax
+
 ## ------- section 5: (linear) regression and fits ------------------
 
 def linRegression(x, y, sy=None):
-  """
-    linear regression y(x) = ax + b 
+  """linear regression y(x) = ax + b 
 
-    method: 
-      analytical formula
+  method: 
+    analytical formula
 
-    Args:
-      * x: np-array, independent data
-      * y: np-array, dependent data
-      * sy: scalar or np-array, uncertainty on y
+  Args:
+  * x: np-array, independent data
+  * y: np-array, dependent data
+  * sy: scalar or np-array, uncertainty on y
 
-    Returns:
-      * float: a     slope
-      * float: b     constant
-      * float: sa  sigma on slope
-      * float: sb  sigma on constant
-      * float: cor   correlation
-      * float: chi2  \chi-square
+  Returns:
+  * float: a     slope
+  * float: b     constant
+  * float: sa  sigma on slope
+  * float: sb  sigma on constant
+  * float: cor   correlation
+  * float: chi2  \chi-square
   """
 
   # set y-errors to 1. if not given
@@ -1309,23 +1368,22 @@ def linRegression(x, y, sy=None):
 
 
 def odFit(fitf, x, y, sx=None, sy=None, p0=None):
-  """
-    fit an arbitrary function with errors on x and y
-    uses numerical "orthogonal distance regression" from package scipy.odr
+  """fit an arbitrary function with errors on x and y
+  uses numerical "orthogonal distance regression" from package scipy.odr
 
-    Args:
-      * fitf: function to fit, arguments (array:P, float:x)
-      * x:  np-array, independent data
-      * y:  np-array, dependent data
-      * sx: scalar or np-array, uncertainty(ies) on x      
-      * sy: scalar or np-array, uncertainty(ies) on y
-      * p0: array-like, initial guess of parameters
+  Args:
+  * fitf: function to fit, arguments (array:P, float:x)
+  * x:  np-array, independent data
+  * y:  np-array, dependent data
+  * sx: scalar or np-array, uncertainty(ies) on x      
+  * sy: scalar or np-array, uncertainty(ies) on y
+  * p0: array-like, initial guess of parameters
 
-   Returns:
-      * np-array of float: parameter values
-      * np-array of float: parameter errors
-      * np-array: cor   correlation matrix 
-      * float: chi2  \chi-square
+  Returns:
+  * np-array of float: parameter values
+  * np-array of float: parameter errors
+  * np-array: cor   correlation matrix 
+  * float: chi2  \chi-square
   """  
   from scipy.optimize import curve_fit
   from scipy import odr
