@@ -254,7 +254,10 @@ oder::
         - hist2dstat() statistische Information aus 2d-histogram
         - profile2d()  "profile plot" für 2d-Streudiagramm
         - chi2p_indep2d() chi^2-Test auf Unabhängigkeit zweier Variabler
-    
+        - plotCorrelations() Darstellung von Histogrammen und Streudiagrammen
+	  von Variablen bzw. Paaren von Variablen eines multivariaten
+	  Datensatzes
+	  
       5. Lineare Regression und Anpassen von Funktionen:
 
         - linRegression()    lineare Regression, y=ax+b, mit analytische Formel
