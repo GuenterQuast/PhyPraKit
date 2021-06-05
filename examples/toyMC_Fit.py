@@ -75,22 +75,24 @@ if __name__ == "__main__": # --------------------------------------
   xmax=2.5
   data_x = np.linspace(xmin, xmax, nd)       # x of data points
   mpardict = get_signature(model)[1] # keyword arguments of model
+  true_vals = np.asarray(list(mpardict.values()))
   npar=len(mpardict)
   parnams = list(mpardict.keys())
   sigy = np.sqrt(sabsy * sabsy + (srely*model(data_x, **mpardict))**2)
   sigx = np.sqrt(sabsx * sabsx + (srelx * data_x)**2)
 
-# set the fitting function  
-#  theFit = odFit    
-#  theFit = k2Fit    
-  theFit = xyFit    
-
   # initialize arrays for statistical analysis in loop
-  d = [[] for i in range(npar)]
-  c2prb = []  
-  nfail = 0
-  for i in range(Nexp):  
-    # keep random numbers under control
+  nfail = 0                      # failed fits
+  d = [[] for i in range(npar)]  # bias
+  c2prb = []                     # chi^2 probatility
+  N_coverage = npar*[0]          # counters for coverage
+
+  # set the fitting function  
+  #  theFit = odFit    
+  #  theFit = k2Fit    
+  theFit = xyFit    
+  for i in range(Nexp):
+    # generate pseudo data
     np.random.seed(314159+i)     # initialize random generator
     
     xt, yt, data_y = generateXYdata(data_x, model, sigx, sigy,
@@ -98,9 +100,8 @@ if __name__ == "__main__": # --------------------------------------
                                       xrelcor=crelx,
                                       yabscor=cabsy,
                                       yrelcor=crely,
-                                      mpar=mpardict.values() )
-
-# perform fit to data 
+                                      mpar=true_vals )
+  # perform fit to pseudo data 
     try:
       if i<=0:   # show data and best-fit model
         plot=True
@@ -131,17 +132,29 @@ if __name__ == "__main__": # --------------------------------------
       )
 
   # Print results to illustrate how to use output
+      np.set_printoptions(precision=6)
       print('\n*==* ', i, ' Fit Result:')
       print(f" chi2: {chi2:.3g}")
-      print(f" parameter names:  ", pvals)
+      print(f" parameter names:  ", pnams)
+      print(f" parameter values:  ", pvals)
+      np.set_printoptions(precision=2)
       print(f" parameter errors: ", perrs)
+      np.set_printoptions(precision=3)
       print(f" correlations : \n", cor)
-      chi2prb = 1.- stats.chi2.cdf(chi2, nd-len(pvals))
-    # analyze
-      for i in range(npar):
-        d[i].append(pvals[i]-list(mpardict.values())[i])
-      c2prb.append(chi2prb)
+      np.set_printoptions(precision=8) # default output precision
 
+    #  calculate chi2 probability
+      chi2prb = 1.- stats.chi2.cdf(chi2, nd-len(pvals))
+      c2prb.append(chi2prb)
+    # analyze bias and coverage
+      for i in range(npar):
+        d[i].append( pvals[i] - true_vals[i] )  # bias
+        # get parameter confidence interval (CI)
+        pmn = pvals[i] + perrs[i,0]
+        pmx = pvals[i] + perrs[i,1]
+        # coverage: count how often true value is in CI
+        if (true_vals[i] >= pmn and true_vals[i]<=pmx): N_coverage[i] +=1
+                
       if plot:
         plt.suptitle('one fit')
         ## plt.show() # blocks at this stage until figure deleted
@@ -154,16 +167,28 @@ if __name__ == "__main__": # --------------------------------------
   # - end loop over MC experiments, plot output
 
   # analyze results
-  # - convert to 
+  # - convert to numpy arrays
   for i in range(npar):
     d[i] = np.array(d[i])
   c2prb = np.array(c2prb)
 
-  # print deviation of parameters from their true values
-  print('\n\n*====* ', Nexp - nfail, ' successful fits done:')
+  # printout
+  N_succ = Nexp - nfail 
+  print('\n\n*==* ', N_succ, ' successful fits done:')
+  print(' * parameter names:')
   for i in range(npar):
-    print('   delta par',i,' ', d[i].mean()) 
-    print('        +/-     ', d[i].std()/np.sqrt(Nexp)) 
+    print('   {:d}: {:s}'.format(i, pnams[i])) 
+  print(' * biases:')
+  for i in range(npar):
+  #  bias = deviation of parameters from their true values
+    b = d[i].mean()
+    e = d[i].std()/np.sqrt(Nexp)
+    print('   {:d}: {:.3g} +\- {:.2g}'.format(i, b, e)) 
+  print(' * coverage:')
+  for i in range(npar):
+  #  coverage: fraction of true val in confidence interval
+    p_coverage = N_coverage[i]/(N_succ)*100.
+    print('   {:d}: {:.3g}%'.format(i, p_coverage))
 
 # plot results as array of sub-figures
   fig, axarr = plt.subplots(npar, npar, figsize=(3. * npar, 3.1 * npar))
