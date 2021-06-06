@@ -184,7 +184,7 @@ if __name__ == "__main__": # --------------------------------------
   plt.suptitle("Biases and Correlations", size='xx-large')
   ax = plt.gca()
   ax.text(0.1, 0.45,                
-                '$\\Delta$: fitted - true \n \n' +
+                '$\\Delta$: fit - true \n \n' +
                 '$\\mu$: mean \n' +
                 '$\\sigma$: standard deviation \n' +
                 '$\\sigma_\\mu$: error on mean \n \n' +
