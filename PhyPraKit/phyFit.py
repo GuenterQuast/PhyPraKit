@@ -1659,13 +1659,17 @@ class mnFit():
                       model_values + np.abs(self.data.DeltaMu) ) )
        
       if self.final_call:
-        # store goodness-of-fit (difference of nlL2 w.r.t. saturated model)
-        n2lL_saturated = np.sum(
-          self.n2lLcost(
+        if self.GaussApprox:
+          # return standard chi^2
+          self.gof = n2lL-np.log(model_values+np.abs(self.data.DeltaMu)).sum() 
+        else: 
+          # store goodness-of-fit (difference of nlL2 w.r.t. saturated model)
+          n2lL_saturated = np.sum(
+            self.n2lLcost(
               self.data.contents - self.data.DeltaMu, 
               self.data.contents + np.abs(self.data.DeltaMu) + 0.005) )
-        #                                !!! const. 0.005 to avoid log(0.)
-        self.gof =  n2lL - n2lL_saturated
+        #                                !!! const. 0.005 to avoid log(0.) 
+          self.gof =  n2lL - n2lL_saturated
 
         # provide model values and model-related uncertainties to data object
         self.data.model_values = model_values       
