@@ -50,7 +50,7 @@ if __name__ == "__main__": # --------------------------------------
   
  # the following are only supported by kafe2 and phyFit
   # independent relative uncertainties
-  srely = 0.03 # 5% of model value
+  srely = 0.05 # 5% of model value
   srelx = 0.04 # 4%
   # correlated uncertainties y and x direction 
   cabsy = 0.04 # 0.04
@@ -176,7 +176,7 @@ if __name__ == "__main__": # --------------------------------------
   print(' * coverage:')
   for i in range(npar):
   #  coverage: fraction of true val in confidence interval
-    p_coverage = N_coverage[i]/(N_succ)*100.
+    p_coverage = N_coverage[i]/(N_succ)*100/0.682689492
     print('   {:d}: {:.3g}%'.format(i, p_coverage))
 
   names = [r'$\Delta$'+pnams[i] for i in range(len(pnams))]
