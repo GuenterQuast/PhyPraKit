@@ -42,7 +42,7 @@ if __name__ == "__main__": # --------------------------------------
     srely=sigy_rel, xrelcor=sxrelcor, yabscor=syabscor, mpar=mpars )
 
 # fit with kafe2
-  par, pare, cor, chi2 = k2Fit(model,
+  parn, parv, pare, cor, chi2 = k2Fit(model,
     xdata, ydata,        # data and uncertainties
     sx=sigx_abs,         # indep. x abs.
     sy=sigy_abs,         # indep. y abs.
@@ -74,13 +74,14 @@ if __name__ == "__main__": # --------------------------------------
   print('  y = ', ydata)
   np.set_printoptions(precision=3)
   print('  sx = ', np.sqrt(sigx_abs**2 + (sigx_rel*xdata)**2) )
-  print('  sy = ', np.sqrt(sigy_abs**2 + (sigy_rel*model(xdata, *par))**2) )
+  print('  sy = ', np.sqrt(sigy_abs**2 + (sigy_rel*model(xdata, *parv))**2) )
 
   print('*==* fit result:')
   print("  -> chi2:         %.3g"%chi2)
   np.set_printoptions(precision=3)
-  print("  -> parameters:   ", par)
+  print("  -> parameters:   ", parn)
+  print("  -> parameters:   ", parv)
   np.set_printoptions(precision=2)
-  print("  -> uncertainties:", pare) 
+  print("  -> uncertainties:\n", pare) 
   print("  -> correlation matrix: \n", cor) 
 

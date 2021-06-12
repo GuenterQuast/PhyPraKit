@@ -40,8 +40,9 @@ if __name__ == "__main__": # --------------------------------------
     Nexp=int(sys.argv[1])
   else:
     Nexp = 1000
+
   model = poly2_model
-#  model = exp_model
+## optional:  model = exp_model
   
  # set error components (!!! odFit only supports non-zero sabsy and sabsx)
   # independent uncertainties
@@ -90,12 +91,12 @@ if __name__ == "__main__": # --------------------------------------
   # fit options
   kw_fitoptions= {
       'ref_to_model': True,   # reference of rel. uncert. to model
-      'use_negLogL' : True    # use full 2 neg log L, chi2 if False    
+      # 'use_negLogL' : True  # full -2logL, chi2 if False (not in kafe2)  
       }
   
   # set the fitting function  
   #  theFit = odFit    
-  #  theFit = k2Fit    
+  # theFit = k2Fit    
   theFit = xyFit
 
   def MC_loop():
@@ -143,7 +144,7 @@ if __name__ == "__main__": # --------------------------------------
         print(f" parameter names:  ", pnams)
         print(f" parameter values:  ", pvals)
         np.set_printoptions(precision=3)
-        print(f" parameter errors: ", perrs)
+        print(f" parameter errors:\n ", perrs)
         np.set_printoptions(precision=3)
         print(f" correlations : \n", cor)
         np.set_printoptions(precision=8) # default output precision

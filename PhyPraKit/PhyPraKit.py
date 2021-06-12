@@ -1623,8 +1623,9 @@ def k2Fit(func, x, y,
       * quiet: controls text output
 
   Returns:
+    * list: parameter names
     * np-array of float: parameter values
-    * np-array of float: parameter errors
+    * np-array of float: negative and positive parameter errors
     * np-array: cor   correlation matrix 
     * float: chi2  \chi-square
 
@@ -1726,14 +1727,19 @@ def k2Fit(func, x, y,
 
 # harvest results
 #  par, perr, cov, chi2 = fit.get_results() # for kafe vers. > 1.1.0
-  par = np.array(fit.parameter_values) 
+  parn = np.array(fit.parameter_names) 
+  parv = np.array(fit.parameter_values) 
   pare = np.array(fit.parameter_errors)
   cor = np.array(fit.parameter_cor_mat)
-#  chi2 = fit.cost_function_value
   chi2 = fit.goodness_of_fit
+  if asym_parerrs:
+    parae = np.array(fit.asymmetric_parameter_errors)
+  else:
+    parae = np.array(list(zip(-pare, pare)))
 
-  if not quiet: fit.report(asymmetric_parameter_errors=True)
-  
+  if not quiet:
+    fit.report(asymmetric_parameter_errors=True)
+
   if plot:
    # plot data, uncertainties, model line and model uncertainties
     kplot=Plot(fit)
@@ -1759,7 +1765,7 @@ def k2Fit(func, x, y,
 
     if showplots: plt.show()    
       
-  return par, pare, cor, chi2
+  return parn, parv, parae, cor, chi2
 
 
 def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
