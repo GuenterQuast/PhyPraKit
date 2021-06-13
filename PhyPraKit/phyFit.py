@@ -2105,7 +2105,7 @@ class mnFit():
                 self.GoF,
                 np.concatenate( (self.freeParNams, self.fixedParNams) ) )
     keys = ( 'parameter values',
-             'confidence interval',
+             'confidence intervals',
              'correlation matrix',
              'goodness-of-fit',
              'parameter names' )
