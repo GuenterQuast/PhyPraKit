@@ -50,7 +50,7 @@ if __name__ == "__main__": # --------------------------------------
                                       mpar=mpardict.values() )
 
 # perform fit to data with function xyFit using mnFit class from phyFit
-  pnams, pvals, perrs, cor, chi2 = xyFit(model,
+  rdict = xyFit(model,
       data_x, data_y,      # data x and y coordinates
       sx=sabsx,            # indep x
       sy=sabsy,            # indel y
@@ -70,15 +70,20 @@ if __name__ == "__main__": # --------------------------------------
       quiet=False,         # suppress informative printout
       axis_labels=['x', 'y   \  f(x, *par)'], 
       data_legend = 'random data',    
-      model_legend = 'exponential model'
-  )
+      model_legend = 'exponential model' )
 
-# Print results to illustrate how to use output
+# print results to illustrate how to use output
   print('\n*==* Fit Result:')
+
+  pvals, perrs, cor, chi2, pnams= rdict.values()
   print(" chi2: {:.3g}".format(chi2))
   print(" parameter names:       ", pnams)
   print(" parameter values:      ", pvals)
+  np.set_printoptions(precision=3)
   print(" neg. parameter errors: ", perrs[:,0])
   print(" pos. parameter errors: ", perrs[:,1])
-  print(" correlations : \n", cor)
-  
+  print(" correlation matrix : \n", cor)
+
+#- alternative: print dictionary
+#  for key in rdict:
+#    print("{}\n".format(key), rdict[key])

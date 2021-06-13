@@ -1765,7 +1765,7 @@ def k2Fit(func, x, y,
 
     if showplots: plt.show()    
       
-  return parn, parv, parae, cor, chi2
+  return parv, parae, cor, chi2
 
 
 def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,

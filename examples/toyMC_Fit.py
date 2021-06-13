@@ -96,11 +96,11 @@ if __name__ == "__main__": # --------------------------------------
   
   # set the fitting function  
   #  theFit = odFit    
-  # theFit = k2Fit    
+#  theFit = k2Fit    
   theFit = xyFit
 
   def MC_loop():
-    global fitResults, nfail, biases, c2prb, N_coverage
+    global fitResults, results, nfail, biases, c2prb, N_coverage
 
     # run MC loop
     for iexp in range(Nexp):
@@ -135,8 +135,18 @@ if __name__ == "__main__": # --------------------------------------
         data_legend = 'pseudo-data',    
         model_legend = 'model'
         )
-        
-        pnams, pvals, perrs, cor, chi2 = fitResults
+
+        # adapt to different result formats
+        if type(fitResults) is type({}):
+          results = fitResults.values()
+        else:
+          if len(fitResults) == 5:
+            results = fitResults
+          else:
+            results = fitResults
+            results = results + (parnams,)
+        pvals, perrs, cor, chi2, pnams = results
+            
         # Print results to illustrate how to use output
         np.set_printoptions(precision=6)
         print('\n*==*  Fit {:d} Result:'.format(iexp))
@@ -173,8 +183,8 @@ if __name__ == "__main__": # --------------------------------------
 
   def print_results():
     # print overview of fit results
-    global fitResults, nfail, biases, c2prb, N_coverage
-    pnams, pvals, perrs, cor, chi2 = fitResults
+    global results, nfail, biases, c2prb, N_coverage
+    pvals, perrs, cor, chi2, pnams = results
     # analyze results
     # - convert to numpy arrays
     for i in range(npar):
@@ -201,8 +211,8 @@ if __name__ == "__main__": # --------------------------------------
 
   def plot_correlations():
     # show parameter distributions and correlations 
-    global fitResults, nfail, biases, c2prb, N_coverage
-    pnams, pvals, perrs, cor, chi2 = fitResults
+    global results, nfail, biases, c2prb, N_coverage
+    pvals, perrs, cor, chi2, pnams = results
 
     names = [r'$\Delta$'+pnams[i] for i in range(len(pnams))]
     plotCorrelations(biases, names)
@@ -218,8 +228,8 @@ if __name__ == "__main__": # --------------------------------------
 
   def analyse_chi2():
     # analyse goodness of fit variable
-    global fitResults, nfail, biases, c2prb, N_coverage
-    # analyse chi2 probability
+    global results, nfail, biases, c2prb, N_coverage
+    pvals, perrs, cor, chi2, pnams = results
     figc2prb = plt.figure(figsize=(7.5, 5.))
     ax = figc2prb.add_subplot(1,1,1)
     nbins = int(min(50, Nexp/20))

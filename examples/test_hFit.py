@@ -56,7 +56,7 @@ if __name__ == "__main__": # --------------------------------------
 #  
 # ---  perform fit  
 #
-  pnams, pvals, perrs, cor, gof = hFit(model,
+  rdict = hFit(model,
       bc, be,              # bin entries and bin edges
       p0=None,        # initial guess for parameter values 
    #  constraints=['name', val ,err ],   # constraints within errors
@@ -73,7 +73,9 @@ if __name__ == "__main__": # --------------------------------------
   )
 
 # Print results to illustrate how to use output
-  print('\n*==* Fit Result:')
+  print('\n*==* Results of Histgoram Fit:')  
+#
+  pvals, perrs, cor, gof, pnams = rdict.values()
   print(" goodness-of-fit: {:.3g}".format(gof))
   print(" parameter names:       ", pnams)
   print(" parameter values:      ", pvals)
@@ -81,3 +83,6 @@ if __name__ == "__main__": # --------------------------------------
   print(" pos. parameter errors: ", perrs[:,1])
   print(" correlations : \n", cor)
   
+#- alternatively print results dictionaray directly  
+#  for key in rdict:
+#    print("{}\n".format(key), rdict[key])

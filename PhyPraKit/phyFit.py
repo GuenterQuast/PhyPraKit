@@ -532,7 +532,8 @@ class mnFit():
   - MigradErrors:       symmetric uncertainties
   - CovarianceMatrix:   covariance matrix
   - CorrelationMatrix:  correlation matrix
-  - OneSigInterval:     one-sigma (68% CL) ranges of parameter values from MINOS 
+  - OneSigInterval:     one-sigma (68% CL) ranges of parameter values from MINOS  - ResultDictionary:   dictionary wih summary of fit results
+ 
   - for xyFit:
   
     - covx:     covariance matrix of x-data
@@ -583,6 +584,8 @@ class mnFit():
     self.migrad_ok = False
     self.minos_ok = False
 
+    self.ResultDictionary = None
+    
     # default options
     self.run_minos = True
     self.quiet = True
@@ -2087,23 +2090,37 @@ class mnFit():
     perrs = np.sqrt(np.diagonal(cov))
     self.CorrelationMatrix = cov/np.outer(perrs, perrs)
     #   1-sigma (68% CL) range in self.OneSigInterval
+
+    # build a convenient result dictionary
+    if self.nfixed ==0:
+      rtuple = (self.ParameterValues,
+                self.OneSigInterval,
+                self.CorrelationMatrix,
+                self.GoF,
+                self.ParameterNames )
+    else:
+       rtuple= (np.concatenate( (self.freeParVals, self.fixedParVals) ),
+                self.OneSigInterval,
+                self.CorrelationMatrix,
+                self.GoF,
+                np.concatenate( (self.freeParNams, self.fixedParNams) ) )
+    keys = ( 'parameter values',
+             'confidence interval',
+             'correlation matrix',
+             'goodness-of-fit',
+             'parameter names' )
+    # build dictionary
+    self.ResultDictionary = {k:rtuple[i] for (i, k) in enumerate(keys)}
     
   def getResult(self):
-    """return most im portant results as numpy arrays
+    """return result dictionary
     """
-    if self.nfixed ==0:
-      return (self.ParameterNames,
-              self.ParameterValues,
-              self.OneSigInterval,
-              self.CorrelationMatrix,
-              self.GoF)
+    if self.ResultDictionary is not None:
+      return self.ResultDictionary
     else:
-      return (np.concatenate( (self.freeParNams, self.fixedParNams) ),
-              np.concatenate( (self.freeParVals, self.fixedParVals) ),
-              self.OneSigInterval,
-              self.CorrelationMatrix,
-              self.GoF)
-
+      print(" !!! mnFit.getResult: no results available - run fit first")
+      sys.exit('!==! mnFit Error: results requested before successful fit') 
+       
   @staticmethod
   def getFunctionError(x, model, pvals, covp, fixedPars):
     """ determine error of model at x  

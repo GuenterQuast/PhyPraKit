@@ -48,7 +48,7 @@ if __name__ == "__main__": # --------------------------------------
     pdf2 = 1. / (b - a)
     return (1 - fbg) * pdf1 + fbg * pdf2
 
-  pnams, pvals, perrs, cor, gof = mFit( modelPDF,
+  rdict = mFit( modelPDF,
           data = dT,   # data - if not None, normalised PDF is assumed as model  
           p0=None,                 # initial guess for parameter values 
         #  constraints=[['tau', 2.2, 0.01], # Gaussian parameter constraints
@@ -67,13 +67,19 @@ if __name__ == "__main__": # --------------------------------------
           
   plt.suptitle("Unbinned ML fit of an exponential + flat distribution",
                 size='xx-large', color='darkblue')
-  # Print results
-  print('\n*==* unbinned ML Fit Result:')
-  print(" parameter names:       ", pnams)
-  print(" parameter values:      ", pvals)
-  print(" neg. parameter errors: ", perrs[:,0])
-  print(" pos. parameter errors: ", perrs[:,1])
-  print(" correlations : \n", cor)  
 
+  # Print results
+#  pvals, perrs, cor, gof, pnams = rdict.values()
+#  print('\n*==* unbinned ML Fit Result:')
+#  print(" parameter names:       ", pnams)
+#  print(" parameter values:      ", pvals)
+#  print(" neg. parameter errors: ", perrs[:,0])
+#  print(" pos. parameter errors: ", perrs[:,1])
+#  print(" correlation matrix : \n", cor)  
+## new version
+  print('\n*==* unbinned ML Fit Result:')
+  for key in rdict:
+    print("{}\n".format(key), rdict[key])
+  
   plt.show()
   

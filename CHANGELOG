@@ -1,5 +1,5 @@
 initial beta version Oct. 2016
-=========================
+==============================
 
 v1.0.0    May 2017
 v1.0.1    Aug 2017  python 3 support
@@ -11,3 +11,8 @@ v1.1.3rc1 Jan 2021  added dedicated fitting package,
                     added toy-MC example, propagatedError()
 v1.1.3rc2 Mar 2021  fitting package renamed to phyFit, english docu
 v1.1.3    Apr 2021  release for summer semester 21
+v1.2.0dev May 2022  new version:
+ 	remove support for iminuit<2 and kafe(1)
+	added unibinned and binned ML fits to phyFit
+	added ipynb tutorial for nlL fits
+	changed k2fit return values from tuple to dict
