@@ -2532,33 +2532,34 @@ if __name__ == "__main__": # --- interface and example
     crelx = 0.02 # 2% of x correlated
 
     # perform fit to data with function xyFit using class mnFit
-    pnams, pvals, perrs, cor, chi2 = xyFit(fitmodel, data_x, data_y,
-                                     sx=sabsx,
-                                     sy=sabsy,
-                                     srelx=srelx,
-                                     srely=srely,
-                                     xabscor=cabsx,
-                                     xrelcor=crelx,
-                                     yabscor=cabsy,
-                                     yrelcor=crely,
-    #                                 p0=(1., 0.5),     
-    #                                 constraints=['A', 1., 0.03],
-    #                                 constraints=[0, 1., 0.03] (alternative)
-    #                                 limits=('A', 0., None),  # parameter limits
-    #                                 fixPars = ['A'],         # fix parameter(s) 
-                                     use_negLogL=True,
-                                     plot=True,
-                                     plot_band=True,
-                                     plot_cor=False,
-                                     showplots=False,
-                                     quiet=False,
-                                     axis_labels=['x', 'y   \  f(x, *par)'], 
-                                     data_legend = 'random data',    
-                                     model_legend = 'model')
+    resultDict = xyFit(fitmodel, data_x, data_y,
+                       sx=sabsx,
+                       sy=sabsy,
+                       srelx=srelx,
+                       srely=srely,
+                       xabscor=cabsx,
+                       xrelcor=crelx,
+                       yabscor=cabsy,
+                       yrelcor=crely,
+    #                  p0=(1., 0.5),     
+    #                  constraints=['A', 1., 0.03],
+    #                  constraints=[0, 1., 0.03] (alternative)
+    #                  limits=('A', 0., None),  # parameter limits
+    #                  fixPars = ['A'],         # fix parameter(s) 
+                       use_negLogL=True,
+                       plot=True,
+                       plot_band=True,
+                       plot_cor=False,
+                       showplots=False,
+                       quiet=False,
+                       axis_labels=['x', 'y   \  f(x, *par)'], 
+                       data_legend = 'random data',    
+                       model_legend = 'model')
     plt.suptitle("mnFit example: fit to x-y data",
                size='xx-large', color='darkblue')
-
+    
   # Print results 
+    pvals, perrs, cor, chi2, pnams = resultDict.values()
     print('\n*==* xyFit Result:')
     print(" parameter names:       ", pnams)
     print(" chi2: {:.3g}".format(chi2))
@@ -2591,7 +2592,7 @@ if __name__ == "__main__": # --- interface and example
     #  
     # ---  perform fit  
     #
-    pnams, pvals, perrs, cor, gof = hFit(SplusB_model,
+    resultDict = hFit(SplusB_model,
           bcontents, bedges,  # bin entries and bin edges
           p0=None,            # initial guess for parameter values 
      #     constraints=['s', val , err ],   # constraints within errors
@@ -2613,6 +2614,7 @@ if __name__ == "__main__": # --- interface and example
 
     # Print results 
     print('\n*==* histogram fit Result:')
+    pvals, perrs, cor, gof, pnams = resultDict.values()
     print(" parameter names:       ", pnams)
     print(" goodness-of-fit: {:.3g}".format(gof))
     print(" parameter values:      ", pvals)
@@ -2639,7 +2641,7 @@ if __name__ == "__main__": # --- interface and example
       r= (data-mu)/sigma
       return np.sum( r*r + 2.*np.log(sigma))
 
-    pnams, pvals, perrs, cor, gof = mFit(myCost,
+    resultDict = mFit(myCost,
           p0=None,                 # initial guess for parameter values 
           constraints=[['mu', 2., 0.01]], # Gaussian parameter constraints
         #  limits=('sigma', None, None),  #limits
@@ -2653,6 +2655,7 @@ if __name__ == "__main__": # --- interface and example
     plt.suptitle("Maximum-likelihood fit: profiles and contours",
                      size='xx-large', color='darkblue')
     # Print results
+    pvals, perrs, cor, gof, pnams = resultDict.values()
     print('\n*==* user-defined cost: Fit Result:')
     print(" parameter names:       ", pnams)
     print(" parameter values:      ", pvals)
@@ -2706,7 +2709,7 @@ if __name__ == "__main__": # --- interface and example
       pdf2 = 1. / (b - a)
       return (1 - fbg) * pdf1 + fbg * pdf2
 
-    pnams, pvals, perrs, cor, gof = mFit( exponentialDecayPDF,
+    resultDict = mFit( exponentialDecayPDF,
           data = dT, # data - if not None, a normalised PDF is assumed as model  
           p0=None,                 # initial guess for parameter values 
         #  constraints=[['tau', 2.2, 0.01], # Gaussian parameter constraints
@@ -2726,6 +2729,7 @@ if __name__ == "__main__": # --- interface and example
     plt.suptitle("Unbinned ML fit of an exponential + flat distribution",
                      size='xx-large', color='darkblue')
     # Print results
+    pvals, perrs, cor, gof, pnams = resultDict.values()
     print('\n*==* unbinned ML Fit Result:')
     print(" parameter names:       ", pnams)
     print(" parameter values:      ", pvals)
