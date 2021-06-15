@@ -6,7 +6,7 @@
 .. meta:
    :description lang=en: PhyPraKit - a collection of python modules
    for data visualization and analysis in experimental laboratory
-   courses in Physics, developed at the faculty of physics at
+   courses in Physics, developed in the Department of Physics at
    Karlsruhe Institute of Technology (KIT)
    :description lang=de: PhyPraKit - eine Sammlung von Funktionen in der 
    Sprache `Python` zur Visualisierung und Auswertung von Daten in den 
@@ -33,10 +33,10 @@ About
 
 **PhyPraKit** is a collection of python modules
 for data visualization and analysis in experimental laboratory
-courses in physics, in use at the faculty of physics at
-Karlsruhe Institute of Technology (KIT). As the modules are
-intended primarily for use by undergraduate students in
-Germany, the documentation is partly in German language,
+courses in physics and is in use in the Department of Physics
+at Karlsruhe Institute of Technology (KIT).
+As the modules are intended primarily for use by undergraduate
+students in Germany, the documentation is partly in German language,
 in particular the description of the examples.
 
 Created by: 
@@ -65,12 +65,12 @@ in the main directory of the *PhyPraKit* package (where *setup.py*
 is located) to install in user space.  
 
 The installation via the *whl*-package provided
-in the subdirectory `dist` may also be used:
+in the subdirectory `dist` may alternatively be used:
 
    ``pip install --user --no-cache PhyPraKit<version>.whl``
 
-Installation via the PyPI Python Package Index is also available, simply
-execute:
+Installation via the PyPI Python Package Index is also possible
+by simply executing
    
    ``pip install --user PhyPraKit``
 
@@ -103,9 +103,9 @@ measurement data are required in all laboratory courses in Physics.
 This collection of tools in the package `PhyPraKit` contains
 functions for reading data from various sources, for data
 visualization, signal processing and statistical data analysis and
-model fitting as well as tools for generation of simulated data.
+model fitting as well as tools for the generation of simulated data.
 Emphasis was put on simple implementations, illustrating the
-principles of the underlining coding.
+principles of the underlying algorithms.
 
 The class *mnFit* in the module *phyFit* offers a light-weight
 implementation for fitting model functions to data with uncorrelated
@@ -125,7 +125,7 @@ understood, modeled correctly and incorporated in the fitting procedure.
 *PhyPraKit* offers adapted interfaces to the fit modules in the package
 *scipy* (*optimize.curve_fit* and *ODR*) to perform fits with a test of
 the validity of the hypothesis. A very lean implementation, relying on
-the mimimization and uncertainty-analysis tool minuit, is also provided
+the mimimization and uncertainty-analysis tool *MINUIT*, is also provided
 in the sub-package *phyFit* for the above-mentioned use cases.
 *PhyPraKit* also contains a simplified interface to the very
 function-rich fitting package *kafe2*.
@@ -140,10 +140,10 @@ In allen Praktika zur Physik werden Methoden zur Aufnahme,
 Bearbeitung, Darstellung und Auswertung von Messdaten benötigt.
 
 Die vorliegende Sammlung im Paket `PhyPraKit` enthält 
-Funktionen zum Einlesen von Daten aus diversen Quellen, zur 
-Datenvisualisierung, Signalbearbeitung und zur statistischen
-Datenauswertung und Modellanpassung sowie Werkzeuge zur Erzeugung
-simulierter Daten. 
+Funktionen zum Einlesen von Daten aus diversen Quellen,
+zur Signalbearbeitung und Datenvisualisierung und zur
+statistischen Datenauswertung und Modellanpassung sowie
+Werkzeuge zur Erzeugung simulierter Pseudo-Daten. 
 Dabei wurde absichtlich Wert auf eine einfache, die Prinzipien 
 unterstreichende Codierung gelegt und nicht der möglichst effizienten 
 bzw. allgemeinsten Implementierung der Vorzug gegeben.
@@ -161,25 +161,35 @@ Programmpakete. Viele Pakte sind als Voreinstellung auf
 die Parametrisierung von Messdaten ausgelegt, wobei die
 Parameterunsicherheiten unter Annahme der Gültigkeit der
 Parametrisierung so skaliert werden, dass die Daten gut
-repräsentiert werden. *PhyPraKit* bietet daher entsprechend 
-angepasste Interfaces zu den Fitmodulen im Paket *scipy*
-(*optimize.curve_fit* und *ODR*), um Anpassungen mit Test der 
-Gültigkeit der Modellhypothese durchzuführen. *PhyPraKit* enthält 
-ebenfalls ein vereinfachtes Interface zum sehr funktionsreichen 
-Anpassungspaket *kafe2*.
+repräsentiert werden. Um den besonderen Anforderungen in
+der Physik Rechnung zu tragen, bietet *PhyPraKit* deshalb
+entsprechend  angepasste Interfaces zu den Fitmodulen im
+Paket *scipy* (*optimize.curve_fit* und *ODR*), um Anpassungen
+mit Test der  Gültigkeit der Modellhypothese durchzuführen.
+*PhyPraKit* enthält ebenfalls ein vereinfachtes Interface zum sehr
+funktionsreichen Anpassungspaket *kafe2*.
 
 In der Vorlesung "Computergestützte Datenauswertung" an der Fakultät
 für Physik am Karlsruher Institut für Physik 
 (http://www.etp.kit.edu/~quast/CgDA)
-werden die in *PhyPraKit* verwendeten Methoden eingeführt und beschrieben.
-Hinweise zur Installation der empfohlenen Software finden sich unter den Links
+werden die in *PhyPraKit* verwendeten Methoden eingeführt und
+beschrieben.
+Hinweise zur Installation der empfohlenen Software finden sich
+unter den Links
 http://www.etp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation-html und 
-http://www.etp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf     
+http://www.etp.kit.edu/~quast/CgDA/CgDA-SoftwareInstallation.pdf .
 
 Speziell für das "Praktikum zur klassischen Physik" am KIT gibt es 
 eine  kurze Einführung in die statistischen Methoden und Werkzeuge
-(http://www.etp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf). 
+unter dem Link
+http://www.etp.kit.edu/~quast/CgDA/PhysPrakt/CgDA_APraktikum.pdf .
 
+Über den Link
+http://www.etp.kit.edu/~quast/jupyter/jupyterTutorial.html
+werden eine Einführung in die Verwendung von Jupyter Notebooks
+sowie Tutorials für verschiedene Aspekte der statistischen
+Datenauswertung mit Beispielen zum Einsatz von Modulen aus
+*PhyPraKit* bereit gestellt.
 
 
 Dokumentation der Beispiele
@@ -234,7 +244,7 @@ oder::
         - Cov2Cor()                Konversion Kovarianzmatrix -> Korrelationsmatrix
         - Cor2Cov()                Konversion Korrelationsmatrix +
 	  Unsicherheiten -> Kovarianzmatrix
-        - chi2prob()               Berechnung der chi^2-Wahrscheinlichkeit 
+        - chi2prob()               Berechnung der :math:`\chi^2`-Wahrscheinlichkeit 
         - propagatedError()        Numerische Fehlerfortpflanzung;  
           Hinweis: der Datentyp *ufloat(v, u)* im Paket *uncertainties*
 	  unterstützt Funktionen von Werten *v* mit Unsicherheiten *u* und
@@ -242,7 +252,7 @@ oder::
         - getModelError()          Numerische Fehlfortpflanzung für 
 	  parameterabhängige Funktionswerte 
     
-      4. Histogramm:
+      4. Histogramme:
     
         - barstat()   statistisch Information aus Histogramm (Mittelwert,
 	  Standardabweichung, Unsicherheit des Mittelwerts)
@@ -253,7 +263,7 @@ oder::
           `(besser matplotlib.pyplot.hist2d() nutzen)`  
         - hist2dstat() statistische Information aus 2d-histogram
         - profile2d()  "profile plot" für 2d-Streudiagramm
-        - chi2p_indep2d() chi^2-Test auf Unabhängigkeit zweier Variabler
+        - chi2p_indep2d() :math:`\chi^2`-Test auf Unabhängigkeit von zwei Variablen
         - plotCorrelations() Darstellung von Histogrammen und Streudiagrammen
 	  von Variablen bzw. Paaren von Variablen eines multivariaten
 	  Datensatzes
@@ -361,8 +371,10 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
   * `toyMC_Fit.py` führt eine große Anzahl Anpassungen an simulierte
     Daten durch. Durch Vergleich der wahren Werte mit den aus der
     Anpassung bestimmten Werten lassen sich Verzerrungen der
-    Parameterschätzungen, Korrelationen der Parameter oder die Form
-    der Verteilung der Chi2-Wahrscheinlichkeit überprüfen, die im
+    Parameterschätzungen, die korrekte Überdeckung der in der
+    Anpassung geschätzen Konfidenzbereiche für die Parameter,
+    Korrelationen der Parameter oder die Form der Verteilung der
+    :math:`\chi^2`-Wahrscheinlichkeit überprüfen, die im
     Idealfall eine Rechteckverteilung im Intervall [0,1] sein sollte. 
 
   Die folgenden *python*-Skripte sind etwas komplexer und illustrieren 
@@ -381,7 +393,7 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     korrelierte Unsicherheit aller Messwerte berücksichtigt werden
     muss. Das Beispiel zeigt, wie man in diesem Fall die Kovarianzmatrix
     aus Einzelunsicherheiten aufbaut. Die Funktionen *k2Fit()* und
-    *mfit()* bieten dazu komfortable und leicht zu verwendende
+    *xyfit()* bieten dazu komfortable und leicht zu verwendende
     Interfaces, deren Anwendung zur Umsetzung des komplexen Fehlermodells
     in diesem Beispiel gezeigt wird. 
     
