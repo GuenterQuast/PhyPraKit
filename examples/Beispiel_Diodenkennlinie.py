@@ -93,7 +93,8 @@ if __name__ == "__main__": # --------------------------------------
       
 # Anpassung ausführen (mit Fit-Funktionen aus Paket PhyPraKit)
   thisFit = xyFit    # Alternativen: xyFit oder k2fit
-  pnams, pvals, perrs, cor, chi2 = thisFit(model,
+##  thisFit = k2Fit    # Alternativen: xyFit oder k2fit
+  fitResult = thisFit(model,
  # - data and uncertainties
       data_x, data_y,      # data x and y coordinates
       sx=sabsx,            # indep x
@@ -114,12 +115,18 @@ if __name__ == "__main__": # --------------------------------------
       model_legend = 'Shockley-Gleichung'
   )
 
+# adjust to different output formats of k2Fit and xyFit                      
+  if type(fitResult) is type({}):
+    pvals, puncs, cor, chi2, pnams = fitResult.values()
+  else:
+    pvals, puncs, cor, chi2 = fitResult
+  
 # Ausgabe der Ergebnisse in Textform:
   print('\n*==* Fit Result:')
   print(" chi2: {:.3g}".format(chi2))
-  print(" parameter names:       ", pnams )
+##  print(" parameter names:       ", pnams )
   print(" parameter values:      ", pvals )
-  print(" parameter uncertainties: ", perrs )
+  print(" parameter uncertainties: ", puncs )
   np.set_printoptions(precision=3)
   print(" correlations : \n", cor )
 
