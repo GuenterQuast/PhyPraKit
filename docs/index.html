@@ -41,11 +41,8 @@
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Version 1.2.0rc, Date 2021-06-15</p>
+<div><p>Version 1.2.0rc, Date 2021-06-19</p>
 </div></blockquote>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
 <p><strong>PhyPraKit</strong> is a collection of python modules
 for data visualization and analysis in experimental laboratory
 courses in physics and is in use in the Department of Physics
@@ -60,10 +57,11 @@ in particular the description of the examples.</p>
 <p>A pdf version of this documentation is available here: <a class="reference external" href="PhyPraKit.pdf">PhyPraKit.pdf</a>.</p>
 <div class="section" id="installation">
 <h3>Installation:<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
-<p>To use PhyPraKit, it is sufficient to place the the directory
+<p>To use PhyPraKit, it is sufficient to place the directory
 <cite>PhyPraKit</cite> and all the files in it in the same directory as the
 python scripts importing it.</p>
-<p>Installation via <cite>pip</cite> is also supported. After downloading, execute:</p>
+<p>Installation via <cite>pip</cite> is also supported.
+After downloading, execute:</p>
 <p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">.</span></code></p>
 <p>in the main directory of the <em>PhyPraKit</em> package (where <em>setup.py</em>
 is located) to install in user space.</p>
@@ -77,9 +75,6 @@ by simply executing</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">PhyPraKit</span></code></p>
 </div></blockquote>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -124,9 +119,6 @@ the mimimization and uncertainty-analysis tool <em>MINUIT</em>, is also provided
 in the sub-package <em>phyFit</em> for the above-mentioned use cases.
 <em>PhyPraKit</em> also contains a simplified interface to the very
 function-rich fitting package <em>kafe2</em>.</p>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -279,11 +271,12 @@ Datensatzes</p></li>
 <div><ul class="simple">
 <li><p>linRegression()    lineare Regression, y=ax+b, mit analytische Formel</p></li>
 <li><p>odFit()            Funktionsanpassung mit x- und y-Unsicherheiten (scipy ODR)</p></li>
-<li><p>xyFit()            Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten mit <em>phyFit</em></p></li>
-<li><p>hFit()             Anpassung einer Verteilungsdichte an Histogramm-Daten</p></li>
+<li><p>xyFit()            Funktionsanpassung mit (korrelierten) x- und
+y-Unsicherheiten mit <em>phyFit</em></p></li>
 <li><p>k2Fit()            Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten
 mit dem Paket <em>kafe2</em></p></li>
-<li><p>hFit()             Maximum-Likelihood-Anpassung einer Verteilungsdichte an Histogramm-Daten</p></li>
+<li><p>hFit()             Maximum-Likelihood-Anpassung einer
+Verteilungsdichte an Histogramm-Daten</p></li>
 <li><p>mFit()             Anpassung einer Nutzerdefinierten Kostenfunktion, oder einer
 Verteilungsdichte an ungebinnete Daten mit der maximum-likelood Methode</p></li>
 </ul>
@@ -338,9 +331,10 @@ Parameter-abhängigen Unsicherheiten möglich. Ferner unterstützt
 iminuit die Erzeugung und Darstellung von Profil-Likelihood-Kurven
 und Konfidenzkonturen, die so mit <cite>xyFit</cite> ebenfalls dargestellt
 werden können.</p></li>
-<li><p><cite>test_k2Fit.py</cite> verwendet die Version <em>kafe2</em> zur Anpassung einer
-Funktion an Messdaten mit unabhängigen oder korrelierten relativen oder
-absoluten Unsicherheiten in Ordinaten- und Abszissenrichtung.</p></li>
+<li><p><cite>test_k2Fit.py</cite> verwendet das funktionsreiche Anpassungspaket <em>kafe2</em>
+zur Anpassung einer Funktion an Messdaten mit unabhängigen oder
+korrelierten relativen oder absoluten Unsicherheiten in Ordinaten-
+und Abszissenrichtung.</p></li>
 <li><p><cite>test_simplek2Fit.py</cite> illustriert die Durchführung einer einfachen
 linearen Regression mit <em>kafe2</em> mit einer minimalen Anzahl eigener
 Codezeilen.</p></li>
@@ -349,10 +343,10 @@ histogrammierte Daten. Die Kostenfunktion für die Minimierung ist das
 zweifache der negativen log-Likelihood-Funktion der Poisson-Verteilung,
 Poiss(k; lam), oder - optional - ihrer Annäherung durch eine
 Gauß-Verteilung mit Gauss(x, mu=lam, sig**2=lam). Die Unsicherheiten
-werden aus der Modellvorhersage bestimmt, um auch Bins mit null Einträgen
-korrekt behandeln zu können. Grundsätzlich wird eine normierte
+werden aus der Modellvorhersage bestimmt, um auch Bins mit wenigen oder
+sogar null Einträgen korrekt zu behandeln. Grundsätzlich wird eine normierte
 Verteilungsdichte angepasst; es ist aber optional auch möglich, die
-Anzahl der Einträge mit zu berücksichtigen, um so z. B. ggf. die
+Anzahl der Einträge mit zu berücksichtigen, um so z. B. die
 Poisson-Unsicherheit der Gesamtanzahl der Histogrammeinträge zu
 berücksichtigen.</p></li>
 <li><p><cite>test_mlFit</cite> illustriert die Anpassung einer Verteilungsdichte an
@@ -367,12 +361,12 @@ in ein oder zwei Dimensionen.</p></li>
 zur Datenauswertung erzeugen kann.</p></li>
 <li><p><cite>toyMC_Fit.py</cite> führt eine große Anzahl Anpassungen an simulierte
 Daten durch. Durch Vergleich der wahren Werte mit den aus der
-Anpassung bestimmten Werten lassen sich Verzerrungen der
-Parameterschätzungen, die korrekte Überdeckung der in der
-Anpassung geschätzen Konfidenzbereiche für die Parameter,
+Anpassung bestimmten Schätzwerte und deren Unsicherheiten lassen
+sich Verzerrungen der Parameterschätzungen, die korrekte Überdeckung
+der in der Anpassung geschätzen Konfidenzbereiche für die Parameter,
 Korrelationen der Parameter oder die Form der Verteilung der
-<span class="math notranslate nohighlight">\(\chi^2\)</span>-Wahrscheinlichkeit überprüfen, die im
-Idealfall eine Rechteckverteilung im Intervall [0,1] sein sollte.</p></li>
+<span class="math notranslate nohighlight">\(\chi^2\)</span>-Wahrscheinlichkeit überprüfen, die im Idealfall
+eine Rechteckverteilung im Intervall [0,1] sein sollte.</p></li>
 </ul>
 <p>Die folgenden <em>python</em>-Skripte sind etwas komplexer und illustrieren
 typische Anwendungsfälle der Module in <cite>PhyPraKit</cite>:</p>
@@ -383,8 +377,8 @@ an die die Shockley-Gleichung angepasst wird. Typisch für
 solche Messungen über einen weiten Bereich von Stromstärken
 ist die Änderung des Messbereichs und damit der Anzeigegenauigkeit
 des verwendeten Messgeräts. Im steil ansteigenden Teil der
-Strom-Spannungskennlinie ist es außerdem wichtig, auch die Unsicherheit
-der auf der x-Achse aufgetragen Spannungsmessungen zu berücksichtigen.
+Strom-Spannungskennlinie dominieren die Unsicherheiten
+der auf der x-Achse aufgetragen Spannungsmesswere.
 Eine weitere Komponente der Unsicherheit ergibt sich aus der
 Kalibrationsgenauigkeit des Messgeräts, die als relative,
 korrelierte Unsicherheit aller Messwerte berücksichtigt werden

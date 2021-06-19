@@ -29,7 +29,6 @@ About
 
      Version |release|, Date |date|
 
-|
 
 **PhyPraKit** is a collection of python modules
 for data visualization and analysis in experimental laboratory
@@ -53,11 +52,12 @@ A pdf version of this documentation is available here: PhyPraKit.pdf_.
 Installation:
 -------------
 
-To use PhyPraKit, it is sufficient to place the the directory
+To use PhyPraKit, it is sufficient to place the directory
 `PhyPraKit` and all the files in it in the same directory as the
 python scripts importing it.
 
-Installation via `pip` is also supported. After downloading, execute: 
+Installation via `pip` is also supported.
+After downloading, execute: 
 
 ``pip install --user .`` 
 
@@ -76,8 +76,6 @@ by simply executing
 
 |
 
-|
-
 **German Description:**
 
 **PhyPraKit** ist eine Sammlung nützlicher Funktionen in der Sprache 
@@ -87,7 +85,6 @@ Visualisierung und Auswertung von Daten in Praktika zur Physik.
 Die Anwendung der verschiedenen Funktionen des Pakets   
 werden jeweils durch Beispiele illustriert.
 			     
-
 .. toctree::
    :maxdepth: 2
 
@@ -132,7 +129,6 @@ function-rich fitting package *kafe2*.
 
 |
 
-|
 
   **German: Darstellung und Auswertung von Messdaten**
 
@@ -272,11 +268,12 @@ oder::
 
         - linRegression()    lineare Regression, y=ax+b, mit analytische Formel
         - odFit()            Funktionsanpassung mit x- und y-Unsicherheiten (scipy ODR)
-        - xyFit()            Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten mit *phyFit*
-        - hFit()             Anpassung einer Verteilungsdichte an Histogramm-Daten
+        - xyFit()            Funktionsanpassung mit (korrelierten) x- und
+	  y-Unsicherheiten mit *phyFit*
         - k2Fit()            Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten
           mit dem Paket *kafe2*
-        - hFit()             Maximum-Likelihood-Anpassung einer Verteilungsdichte an Histogramm-Daten
+        - hFit()             Maximum-Likelihood-Anpassung einer
+	  Verteilungsdichte an Histogramm-Daten
         - mFit()             Anpassung einer Nutzerdefinierten Kostenfunktion, oder einer
 	  Verteilungsdichte an ungebinnete Daten mit der maximum-likelood Methode
 
@@ -335,9 +332,10 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     und Konfidenzkonturen, die so mit `xyFit` ebenfalls dargestellt
     werden können.
     
-  * `test_k2Fit.py` verwendet die Version *kafe2* zur Anpassung einer
-    Funktion an Messdaten mit unabhängigen oder korrelierten relativen oder
-    absoluten Unsicherheiten in Ordinaten- und Abszissenrichtung.
+  * `test_k2Fit.py` verwendet das funktionsreiche Anpassungspaket *kafe2*
+    zur Anpassung einer Funktion an Messdaten mit unabhängigen oder
+    korrelierten relativen oder absoluten Unsicherheiten in Ordinaten-
+    und Abszissenrichtung.
     
   * `test_simplek2Fit.py` illustriert die Durchführung einer einfachen
     linearen Regression mit *kafe2* mit einer minimalen Anzahl eigener
@@ -348,10 +346,10 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     zweifache der negativen log-Likelihood-Funktion der Poisson-Verteilung,
     Poiss(k; lam), oder - optional - ihrer Annäherung durch eine
     Gauß-Verteilung mit Gauss(x, mu=lam, sig**2=lam). Die Unsicherheiten
-    werden aus der Modellvorhersage bestimmt, um auch Bins mit null Einträgen
-    korrekt behandeln zu können. Grundsätzlich wird eine normierte
+    werden aus der Modellvorhersage bestimmt, um auch Bins mit wenigen oder
+    sogar null Einträgen korrekt zu behandeln. Grundsätzlich wird eine normierte
     Verteilungsdichte angepasst; es ist aber optional auch möglich, die
-    Anzahl der Einträge mit zu berücksichtigen, um so z. B. ggf. die
+    Anzahl der Einträge mit zu berücksichtigen, um so z. B. die
     Poisson-Unsicherheit der Gesamtanzahl der Histogrammeinträge zu
     berücksichtigen.
     
@@ -370,12 +368,12 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
 
   * `toyMC_Fit.py` führt eine große Anzahl Anpassungen an simulierte
     Daten durch. Durch Vergleich der wahren Werte mit den aus der
-    Anpassung bestimmten Werten lassen sich Verzerrungen der
-    Parameterschätzungen, die korrekte Überdeckung der in der
-    Anpassung geschätzen Konfidenzbereiche für die Parameter,
+    Anpassung bestimmten Schätzwerte und deren Unsicherheiten lassen
+    sich Verzerrungen der Parameterschätzungen, die korrekte Überdeckung
+    der in der Anpassung geschätzen Konfidenzbereiche für die Parameter,
     Korrelationen der Parameter oder die Form der Verteilung der
-    :math:`\chi^2`-Wahrscheinlichkeit überprüfen, die im
-    Idealfall eine Rechteckverteilung im Intervall [0,1] sein sollte. 
+    :math:`\chi^2`-Wahrscheinlichkeit überprüfen, die im Idealfall
+    eine Rechteckverteilung im Intervall [0,1] sein sollte. 
 
   Die folgenden *python*-Skripte sind etwas komplexer und illustrieren 
   typische Anwendungsfälle der Module in `PhyPraKit`:
@@ -386,8 +384,8 @@ Die folgenden **Beispiele** illustrieren die Anwendung:
     solche Messungen über einen weiten Bereich von Stromstärken
     ist die Änderung des Messbereichs und damit der Anzeigegenauigkeit
     des verwendeten Messgeräts. Im steil ansteigenden Teil der
-    Strom-Spannungskennlinie ist es außerdem wichtig, auch die Unsicherheit
-    der auf der x-Achse aufgetragen Spannungsmessungen zu berücksichtigen.
+    Strom-Spannungskennlinie dominieren die Unsicherheiten
+    der auf der x-Achse aufgetragen Spannungsmesswere. 
     Eine weitere Komponente der Unsicherheit ergibt sich aus der
     Kalibrationsgenauigkeit des Messgeräts, die als relative,
     korrelierte Unsicherheit aller Messwerte berücksichtigt werden
