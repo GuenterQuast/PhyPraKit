@@ -51,9 +51,10 @@ execute:
 ----------
 
 PhyPraKit ist eine Sammlung nützlicher Funktionen in der Sprache 
-`Python (vers. 2.7 oder >=3.6)` zum Aufnehmen, zur Bearbeitung, 
-Visualisierung  und  Auswertung von Daten in den physikalischen 
-Praktika. Die Anwendung der verschiedenen Funktionen des Pakets
-werden jeweils durch Beispiele illustriert.
+`Python (vers. >=3.6, 2.7 noch für manche Module lauffähig)`
+zum Aufnehmen, zur Bearbeitung, Visualisierung  und  Auswertung
+von Daten in den physikalischen Praktika.
+Die Anwendung der verschiedenen Funktionen des Pakets
+werden jeweils durch knkrete Beispiele illustriert.
 
 [Dokumentation auf "Read the Docs"](https://readthedocs.org/projects/phyprakit/)
