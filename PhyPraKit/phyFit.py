@@ -111,7 +111,8 @@ def xyFit(fitf, x, y, sx = None, sy = None,
        plot_band=True, quiet = True,
        axis_labels=['x', 'y = f(x, *par)'],
        data_legend = 'data',    
-       model_legend = 'model'):
+       model_legend = 'model',
+      return_fitObject=False):
   
   """Wrapper function to fit an arbitrary function fitf(x, \*par) 
   to data points (x, y) with independent and/or correlated absolute 
@@ -215,24 +216,29 @@ def xyFit(fitf, x, y, sx = None, sy = None,
   if showplots and (plot or plot_cor):
     plt.show()
 
-  # return
-  #   numpy arrays with fit result: parameter values,
-  #   negative and positive parameter uncertainties,
-  #   correlation matrix
-  #   gof
-  return Fit.getResult()
+  if return_fitObject:
+    return Fit
+  else:
+    # return
+    #   numpy arrays with fit result: parameter values,
+    #   negative and positive parameter uncertainties,
+    #   correlation matrix
+    #   gof
+    #   parameter names
+    return Fit.getResult()
 
 def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
          p0 = None, constraints = None,
          fixPars=None, limits=None,
          use_GaussApprox = False,
          fit_density = True,
-         plot = True, plot_cor = True,
+         plot = True, plot_cor = False,
          showplots = True, plot_band=True,
          quiet = True,
          axis_labels=['x', 'counts/bin = f(x, *par)'],
          data_legend = 'Histogram Data',    
-         model_legend = 'Model'):
+         model_legend = 'Model',
+         return_fitObject=False):
   
   """Wrapper function to fit a density distribution f(x, \*par) 
   to binned data (histogram) with class mnFit 
@@ -314,23 +320,28 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
   if showplots and (plot or plot_cor):
     plt.show()
 
-  # return
-  #   numpy arrays with fit result: parameter values,
-  #   negative and positive parameter uncertainties,
-  #   correlation matrix
-  #   gof
-  return Fit.getResult()
+  if return_fitObject:
+    return Fit
+  else:
+    # return
+    #   numpy arrays with fit result: parameter values,
+    #   negative and positive parameter uncertainties,
+    #   correlation matrix
+    #   gof
+    #   parameter names
+    return Fit.getResult()
 
 def mFit(ufcn, data = None, p0 = None, 
           constraints = None, limits=None, fixPars=None,
           neg2logL = True,
-          plot = False, plot_band=True,
+          plot = False, plot_band = True,
           plot_cor = False,
           showplots = True, quiet = True,
           axis_labels=['x', 'Density = f(x, *par)'],
           data_legend = 'data',    
-          model_legend = 'model'):
-  
+          model_legend = 'model',
+         return_fitObject=False):
+
   """Wrapper function to directly fit a user-defined cost funtion
 
   This is the simplest fit possible with the class mnFit. If no data is
@@ -415,12 +426,16 @@ def mFit(ufcn, data = None, p0 = None,
   if showplots and (plot or plot_cor):
     plt.show()
 
-  # return
-  #   numpy arrays with fit result: parameter values,
-  #   negative and positive parameter uncertainties,
-  #   correlation matrix
-  #   gof
-  return uFit.getResult()
+  if return_fitObject:
+    return uFit
+  else:
+    # return
+    #   numpy arrays with fit result: parameter values,
+    #   negative and positive parameter uncertainties,
+    #   correlation matrix
+    #   gof
+    #   parameter names
+    return uFit.getResult()
 
 #
 # --- helper functions
@@ -2441,6 +2456,16 @@ class mnFit():
       print(e)
       return None
 
+  def getProfile(self, pnam, range=3., npvals=30):
+    """return profile likelihood of parameter pnam
+
+    Args:
+      - parameter name
+      - scan range in sigma
+      - number of points 
+    """
+    return self.minuit.mnprofile(pnam, bound = range,
+                                 size=npvals, subtract_min=True)
 
   def plot_Profile(self, pnam):
     """plot profile likelihood of parameter pnam
