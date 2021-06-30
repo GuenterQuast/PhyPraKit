@@ -53,7 +53,7 @@
      resultDict = Fit.do_fit()            # perform the fit (returns dictionary)
      resultTuple = Fit.getResult()        # retrieve results as tuple of np-arrays
      Fit.plotModel()                      # plot data and best-fit model
-     Fit.plotContours()                       # plot profiles and confidence contours
+     Fit.plotContours()                   # plot profiles and confidence contours
 
 
   The implementation of the fitting procedure in this package is 
@@ -112,7 +112,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
        axis_labels=['x', 'y = f(x, *par)'],
        data_legend = 'data',    
        model_legend = 'model',
-      return_fitObject=False):
+       return_fitObject=False ) :
   
   """Wrapper function to fit an arbitrary function fitf(x, \*par) 
   to data points (x, y) with independent and/or correlated absolute 
@@ -154,6 +154,8 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     * list of str: axis labels
     * str: legend for data
     * str: legend for model 
+    * bool: for experts only, return instance of class mnFit to 
+      give access to data members and methods
 
   Returns:
     * np-array of float: parameter values
@@ -238,7 +240,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
          axis_labels=['x', 'counts/bin = f(x, *par)'],
          data_legend = 'Histogram Data',    
          model_legend = 'Model',
-         return_fitObject=False):
+         return_fitObject=False ) :
   
   """Wrapper function to fit a density distribution f(x, \*par) 
   to binned data (histogram) with class mnFit 
@@ -268,6 +270,8 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     * axis_labes: list of tow strings, axis labels
     * data_legend: legend entry for data
     * model_legend: legend entry for model 
+    * bool: for experts only, return instance of class mnFit to give access 
+      to data members and methods
 
   Returns:
     * np-array of float: parameter values
@@ -340,7 +344,7 @@ def mFit(ufcn, data = None, p0 = None,
           axis_labels=['x', 'Density = f(x, *par)'],
           data_legend = 'data',    
           model_legend = 'model',
-         return_fitObject=False):
+          return_fitObject=False ) :
 
   """Wrapper function to directly fit a user-defined cost funtion
 
@@ -373,6 +377,8 @@ def mFit(ufcn, data = None, p0 = None,
     * plot_cor: plot likelihood profiles and confidence contours of parameters
     * showplots: show plots on screen (can also be done by calling script)
     * quiet: controls verbose output
+    * bool: for experts only, return instance of class mnFit to 
+      give access to data members and methods
     """
 
   # from .phyFit import mnFit # already contained in phyFit package
