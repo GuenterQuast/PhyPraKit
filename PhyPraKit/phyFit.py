@@ -511,6 +511,8 @@ class mnFit():
   - plot_Profile():     plot profile Likelihood for parameter
   - plot_clContour():   plot confidence level contour for pair of parameters  
   - plot_nsigContour(): plot n-sigma contours for pair of parameters  
+  - getProfile():       return profile likelihood of parameter pnam
+  - getContour():       return contour points of pair of parameters
 
   Sub-Classes:
 
@@ -2470,8 +2472,31 @@ class mnFit():
       - scan range in sigma
       - number of points 
     """
-    return self.minuit.mnprofile(pnam, bound = range,
+    if self.iminuit_version <'2':
+      print("!!! getProfile not implemented vor iminuit vers.<2")
+      return
+    else:
+      return self.minuit.mnprofile(pnam, bound = range,
                                  size=npvals, subtract_min=True)
+
+  def getContour(self, pnam1, pnam2, cl=None, npoints=100):
+    """return profile likelihood contour of parameters pnam1 and pnam2
+
+    Args:
+      - 1st parameter name 
+      - 2nd parameter name 
+      - confidence level
+      - number of points
+  
+    Returns: 
+      - array of float (npoints * 2) contour points 
+    """
+
+    if self.iminuit_version <'2':
+      print("!!! getContour not implemented vor iminuit vers.<2")
+      return
+    return self.minuit.mncontour(pnam1, pnam2, cl=cl, size=npoints)
+
 
   def plot_Profile(self, pnam):
     """plot profile likelihood of parameter pnam
