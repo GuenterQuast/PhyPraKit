@@ -1262,13 +1262,13 @@ def plotCorrelations(vals, names=None):
 
   Args:
 
-  - vals: 2d-Array [[v1_1, ...], ..., [vn_1, ...]] of float, input data
-  - names: labels for variables v1 to vn
+  - vals: list of arrays [[v1_1, ...], ..., [vn_1, ...]] of float, input data
+  - names: list of labels for variables v1 to vn
 
   Returns:
 
   - figure
-  - axis: axis of first empty space in axarray (=[0,1])
+  - axarray: array of axes
   """
   npar=len(vals)
   nd = len(vals[0])
@@ -1318,7 +1318,7 @@ def plotCorrelations(vals, names=None):
   # set 1st empty space as current axis
   ax=axarr[0, 1]
   plt.sca(ax) 
-  return fig, ax
+  return fig, axarr
 
 ## ------- section 5: (linear) regression and fits ------------------
 
