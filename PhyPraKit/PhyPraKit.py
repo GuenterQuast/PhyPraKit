@@ -1278,7 +1278,7 @@ def plotCorrelations(vals, names=None):
   fig, axarr = plt.subplots(npar, npar, figsize=(3. * npar, 3.1 * npar))
   fig.tight_layout()
   fig.subplots_adjust(top=0.92, bottom=0.1, left=0.1, right=0.95,
-                        wspace=0.33, hspace=0.3)  
+                      wspace=0.33, hspace=0.3)  
   nb1= int(min(50, nd/10))
   nb2= int(min(50, nd/10))
     
