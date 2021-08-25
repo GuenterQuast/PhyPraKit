@@ -108,7 +108,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
        use_negLogL=True, 
        plot = True, plot_cor = False,
        showplots = True, 
-       plot_band=True, quiet = True,
+       plot_band=True, plot_residual=False, quiet = True,
        axis_labels=['x', 'y = f(x, *par)'],
        data_legend = 'data',    
        model_legend = 'model',
@@ -149,6 +149,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     * plot: show data and model if True
     * plot_cor: show profile likelihoods and confidence contours
     * plot_band: plot uncertainty band around model function
+    * plot_residual: plot residuals w.r.t. model instead of model function
     * showplots: show plots on screen
     * quiet: suppress printout
     * list of str: axis labels
@@ -207,7 +208,8 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     fig = Fit.plotModel(axis_labels=axis_labels,
                  data_legend=data_legend,
                  model_legend=model_legend,
-                      plot_band=plot_band)
+                 plot_band=plot_band,
+                 plot_residual=plot_residual)
 
   # figure with visual representation of covariances
   #   profile likelihood scan and confidence contours
@@ -235,7 +237,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
          use_GaussApprox = False,
          fit_density = True,
          plot = True, plot_cor = False,
-         showplots = True, plot_band=True,
+         showplots = True, plot_band=True, plot_residual=False,
          quiet = True,
          axis_labels=['x', 'counts/bin = f(x, *par)'],
          data_legend = 'Histogram Data',    
@@ -265,6 +267,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     * plot: show data and model if True
     * plot_cor: show profile likelihoods and confidence contours
     * plot_band: plot uncertainty band around model function
+    * plot_residual: plot residuals w.r.t. model instead of model function
     * showplots: show plots on screen
     * quiet: suppress printout
     * axis_labes: list of tow strings, axis labels
@@ -313,7 +316,8 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     fig = Fit.plotModel(axis_labels=axis_labels,
                  data_legend=data_legend,
                  model_legend=model_legend,
-                      plot_band=plot_band)
+                 plot_band=plot_band,
+                 plot_residual=plot_residual)
 
   # figure with visual representation of covariances
   #   profile likelihood scan and confidence contours
@@ -873,6 +877,7 @@ class mnFit():
 
       self.nd = nd
       self.model = None # no model defined yet
+      self.model_values = None
 
       # set flags for steering of fit process in do_fit()
       self.rebulildCov = None
@@ -1175,12 +1180,16 @@ class mnFit():
 
     def plot(self, num='xyData and Model',
                    figsize=(7.5, 6.5),                             
-                   data_label='data' ):
+                   data_label='data',
+                   plot_residual=False):
       """return figure with xy data and uncertainties
       """
 #    # get data
       x = self.x
-      y = self.y
+      if plot_residual and self.model_values is not None:
+        y = self.y - self.model_values
+      else:  
+        y = self.y
       ey = self.get_yCov()
       if ey.ndim == 2:
         ey = np.sqrt(np.diagonal(ey))
@@ -1309,8 +1318,9 @@ class mnFit():
           r = ( par[p_id] - c[1]) / c[2] 
           nlL2 += r*r
 
-      # calculate residual of data wrt. model    
-      _r = self.data.y - self.model(self.data.x, *par)
+      # calculate residual of data wrt. model
+      model_values = self.model(self.data.x, *par)
+      _r = self.data.y - model_values
 
       if self.data.needs_covariance:
         #  check if matrix needs rebuilding
@@ -1346,6 +1356,9 @@ class mnFit():
         # add parameter-dependent normalization term if needed and wanted
         if self.data.needs_dynamicErrors and self.use_neg2logL:
           nlL2 += np.sum(np.log(self.data.err2))
+
+      # provide model values to data object
+      self.data.model_values = model_values       
 
       return nlL2
     
@@ -1492,13 +1505,22 @@ class mnFit():
       
     def plot(self, num='histData and Model',
                    figsize=(7.5, 6.5),                             
-                   data_label='Binned data' ):
+                   data_label='Binned data',
+                   plot_residual=False):
+
       """return figure with histogram data and uncertainties
       """
 
       w = self.edges[1:] - self.edges[:-1]
       fig = plt.figure(num=num, figsize=figsize)
-      plt.bar(self.centers, self.contents,
+      if self.model_values is not None:
+        if plot_residual:
+          mconts = np.zeros(self.nbins)
+          bconts = self.contents - self.model_values
+        else:
+          mconts = np.zeros(self.nbins)
+          bconts = self.contents
+      plt.bar(self.centers, bconts,
               align='center', width = w,
               facecolor='cadetblue', edgecolor='darkblue', alpha=0.66,
               label = data_label)
@@ -1515,7 +1537,7 @@ class mnFit():
             m, p = self.Poisson_CI(l, sigma=1.)
             ep.append(p-l)
             em.append(l-m)
-          plt.errorbar(self.centers, self.model_values,
+          plt.errorbar(self.centers, mconts,
                        yerr=(em, ep), fmt=' ', 
                        ecolor='olive', capsize=3,  
                      alpha=0.8)
@@ -1529,7 +1551,7 @@ class mnFit():
       else: # no model values available (yet), show error bars related to data      
         ep = np.sqrt(self.contents + np.abs(self.DeltaMu))
         em = [ep[i] if self.contents[i]-ep[i]>0. else self.contents[i] for i in range(len(ep))]      
-        plt.errorbar(self.centers, self.contents,
+        plt.errorbar(self.centers, bconts,
                    yerr=(em, ep),
                    fmt='_', color='darkblue', markersize=15,
                    ecolor='darkblue', alpha=0.8)
@@ -1821,7 +1843,7 @@ class mnFit():
 
       Methods:
 
-      - plot(): return figure with representation of data
+      -plot(): return figure with representation of data
     """
     
     def __init__(self, outer, x):
@@ -1838,12 +1860,16 @@ class mnFit():
       
     def plot(self, num='indexed data',
                    figsize=(7.5, 6.5),                             
-                   data_label='Data' ):
+                   data_label='Data',
+                   plot_residual=False):
       """return figure with histogram data and uncertainties
       """
 
       fig = plt.figure(num=num, figsize=figsize)
 
+      if plot_residual:
+        print(' !!! mnFit.mlData.plot: plotting residuals not possible for user ML fit')
+        
       if self.x is None:
         print(' !!! mnFit.mlData.plot: no data object defined')
         return fig
@@ -2269,7 +2295,8 @@ class mnFit():
                 axis_labels=['x', 'y = f(x, *par)'], 
                 data_legend = 'data',    
                 model_legend = 'fit',
-                plot_band=True): 
+                plot_band=True,
+                plot_residual=False): 
     """
     Plot model function and data 
     
@@ -2315,7 +2342,8 @@ class mnFit():
     
   # plot data
     fig_model = d.plot(figsize=(7.5, 6.5),
-          data_label=data_legend)
+                       data_label=data_legend,
+                       plot_residual=plot_residual)
 
   # overlay model function
     # histogram fit provides normalised distribution,
@@ -2336,8 +2364,11 @@ class mnFit():
     else:
       print("!**! mnFit.plotModel: unknown fit type: ", self.fit_type)
       sfac = 1.
-    # plot model line  
-    yplt = cf.model(xplt, *pvals)
+    # plot model line
+    if plot_residual:
+      yplt = np.zeros(len(xplt))
+    else:
+      yplt = cf.model(xplt, *pvals)
     plt.plot(xplt, yplt*sfac, label=model_legend,
              linestyle='dashed', alpha=0.7,
              linewidth=2.5, color='darkorange')
