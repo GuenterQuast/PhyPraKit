@@ -1518,7 +1518,7 @@ class mnFit():
           mconts = np.zeros(self.nbins)
           bconts = self.contents - self.model_values
         else:
-          mconts = np.zeros(self.nbins)
+          mconts = self.model_values
           bconts = self.contents
       plt.bar(self.centers, bconts,
               align='center', width = w,
