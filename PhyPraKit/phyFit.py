@@ -1622,12 +1622,23 @@ class mnFit():
     x -> x-deltaMu with deltaMu = mu - lambda, where mu is the mean
     of the shifted Poisson or Gauß distribution.  
 
+    The number of bin entries predicted by the model density is calculated
+    by an approximate integral over the respective bin ranges using the
+    Simpson rule. 
+
+    To judge the level of agreement of model density and histogram data, 
+    a "goodness-of-fit" (*gof*) value is calulated as the likelihood-ratio of
+    the model w.r.t. the data and the so-called "saturated model" describing 
+    the data perfectly, i.e.  :math:`cost_{sat}(x) = cost(x; \lambda=x)`.
+    If the bin entries are sufficiently large, *gof* converges to the standard 
+    *chi2* value. 
+
     Input:
 
     - outer: pointer to instance of calling class
     - model: model function f(x, \*par)
     - use_GaussApprox, bool: use Gaussian approximation 
-    - density, bool: fit a normalised density; if false, an overall
+    - density, bool: fit a normalised density; if False, an overall
       normalisation must be provided in the model function
 
     Data members:
@@ -1734,7 +1745,7 @@ class mnFit():
       return 2.*(lam - x*np.log(lam) + loggamma(x+1.))
 
     @staticmethod
-    def n2lLsPoisson(xs, lam, mu):  
+    def n2lLsPoisson(xk, lam, mu):  
       """
       2* neg. logarithm of generalized Poisson distribution: 
       shifted to new mean mu for real-valued xk        
