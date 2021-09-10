@@ -783,7 +783,7 @@ class mnFit():
       
   class xyDataContainer:
     """
-    Handle data and uncertainties, 
+    Handle data and uncertainties and  
     build covariance matrices from components
 
     Args:
@@ -1215,39 +1215,45 @@ class mnFit():
     """
     Custom e_x_tended Least-SQuares cost function with 
     dynamically updated covariance matrix and -2log(L) 
-    correction term for parameter-dependent uncertainties
+    correction term for parameter-dependent uncertainties.
 
-    For data points (x, y) with model f(x, \*p) 
-    and covariance matrix V(f(x,\*p)
-    the cost function is: 
+    The default cost function is twice the negative logarithm 
+    of the likelihood of a Gaussian distribution for data points 
+    :math:`(x, y)` with a model function :math:`y=f(x, *p)` depending
+    on a set of parameters :math:`*p` and a possibly parameter-dependent
+    covariance matrix :math:`V(x, f(x, *p))` of the x and y data:
 
     .. math:: 
       -2\ln {\cal L} = \chi^2(y, V^{-1}, f(x, *p) \,) 
-      + \ln(\, \det( V(f(x, *p) ) \,)
+      + \ln(\, \det( V(x, f(x, *p) ) \,)
 
-    For uncertainties depending on the model parameters, a more
-    efficient approach is used to calculate the likelihood, which
-    uses the Cholesky decompostion of the covariance matrix into a
-    product of a triangular matrix and its transposed
+    In the absence of parameter-dependent components of the covariance
+    matrix, the last term is omitted and the cost function is identical
+    to the classical :math:`\chi^2`. 
+    For the evaluation of the cost function an efficient approach based
+    on the "Cholesky decomposition" of the covariance matrix in 
+    a product of a triangular matrix and its transposed is used:
 
     .. math::
-       V = L L^T,
+       V = L L^T.    
 
-    thus avoiding the costy calculation of the inverse matrix.
-    
+    The value of the cost function 
+
     .. math::
       \chi^2 = {r}\cdot (V^{-1}{r}) ~~with~~ r = y - f(x,*p)
 
-    is obtained by solving the linear equation  
+    is then calculated by solving the linear equation  
 
    .. math::
       V X = r, ~i.e.~ X=V^{-1} r ~and~ \chi^2= r \cdot X   
 
-   with the effecient linear-equation solver *scipy.linalg.cho_solve(L,x)*
-   for Cholesky-decomposed matrices.
+   with the linear-equation solver *scipy.linalg.cho_solve(L,x)*
+   for Cholesky-decomposed matrices, thus avoiding the costy 
+   calculation of the inverse matrix.
+    
 
-   The determinant is efficiently calculated by taking the product 
-   of the diagonal elements of the matrix L,
+   The determinant, if needed, is efficiently calculated by taking 
+   the product of the diagonal elements of the matrix L,
 
     .. math::
       \det(V) = 2 \, \prod L_{i,i}
