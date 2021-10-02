@@ -2512,12 +2512,12 @@ class mnFit():
       print(e)
       return None
 
-  def getProfile(self, pnam, range=3., npvals=30):
+  def getProfile(self, pnam, range=3., npoints=30):
     """return profile likelihood of parameter pnam
 
     Args:
       - parameter name
-      - scan range in sigma
+      - scan range in sigma, are tuple with lower and upper value
       - number of points 
     """
     if self.iminuit_version <'2':
@@ -2525,7 +2525,7 @@ class mnFit():
       return
     else:
       return self.minuit.mnprofile(pnam, bound = range,
-                                 size=npvals, subtract_min=True)
+                                 size=npoints, subtract_min=True)
 
   def getContour(self, pnam1, pnam2, cl=None, npoints=100):
     """return profile likelihood contour of parameters pnam1 and pnam2
@@ -2546,12 +2546,21 @@ class mnFit():
     return self.minuit.mncontour(pnam1, pnam2, cl=cl, size=npoints)
 
 
-  def plot_Profile(self, pnam, range=2., npvals=30):
+  def plot_Profile(self, pnam, range=2., npoints=30):
     """plot profile likelihood of parameter pnam
+
+    Args:
+      - parameter name
+      - scan range in sigma, are tuple with lower and upper value
+      - number of points
+
+    Returns: 
+      - matplotlib figure 
     """
+
     fig = plt.figure(num='Likelihood profile ' + pnam,
                      figsize=(5., 5.))
-    self.minuit.draw_mnprofile(pnam, bound=range, subtract_min=True)
+    self.minuit.draw_mnprofile(pnam, bound=range, size=npoints, subtract_min=True)
     return fig
 
 
