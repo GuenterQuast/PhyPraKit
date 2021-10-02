@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PhyPraKit Documentation &#8212; PhyPraKit 1.2.0rc1 documentation</title>
+    <title>PhyPraKit Documentation &#8212; PhyPraKit 1.2.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.0rc1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>  
@@ -40,7 +40,7 @@
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Version 1.2.0rc1, Date 2021-09-05</p>
+<div><p>Version 1.2.0, Date 2021-10-02</p>
 </div></blockquote>
 <p><strong>PhyPraKit</strong> is a collection of python modules
 for data visualization and analysis in experimental laboratory
@@ -1858,12 +1858,12 @@ of user-supplied probability distribution</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PhyPraKit.phyFit.mnFit.getProfile">
-<span class="sig-name descname"><span class="pre">getProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pnam</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npvals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.getProfile" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pnam</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.getProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>return profile likelihood of parameter pnam</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>parameter name</p></li>
-<li><p>scan range in sigma</p></li>
+<li><p>scan range in sigma, are tuple with lower and upper value</p></li>
 <li><p>number of points</p></li>
 </ul>
 </dd>
@@ -1894,12 +1894,21 @@ offset to take into account corrections to the number of observed
 bin entries (e.g. due to background or efficiency corrections):
 x -&gt; x-deltaMu with deltaMu = mu - lambda, where mu is the mean
 of the shifted Poisson or Gauß distribution.</p>
+<p>The number of bin entries predicted by the model density is calculated
+by an approximate integral over the respective bin ranges using the
+Simpson rule.</p>
+<p>To judge the level of agreement of model density and histogram data, 
+a “goodness-of-fit” (<em>gof</em>) value is calulated as the likelihood-ratio of
+the model w.r.t. the data and the so-called “saturated model” describing 
+the data perfectly, i.e.  <span class="math notranslate nohighlight">\(cost_{sat}(x) = cost(x; \lambda=x)\)</span>.
+If the bin entries are sufficiently large, <em>gof</em> converges to the standard 
+<em>chi2</em> value.</p>
 <p>Input:</p>
 <ul class="simple">
 <li><p>outer: pointer to instance of calling class</p></li>
 <li><p>model: model function f(x, *par)</p></li>
 <li><p>use_GaussApprox, bool: use Gaussian approximation</p></li>
-<li><p>density, bool: fit a normalised density; if false, an overall
+<li><p>density, bool: fit a normalised density; if False, an overall
 normalisation must be provided in the model function</p></li>
 </ul>
 <p>Data members:</p>
@@ -1935,7 +1944,7 @@ Pois(x, lam) simeq Gauss(x, mu=lam, sigma^2=lam)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PhyPraKit.phyFit.mnFit.hCost.n2lLsPoisson">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">n2lLsPoisson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lam</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.hCost.n2lLsPoisson" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">n2lLsPoisson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lam</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.hCost.n2lLsPoisson" title="Permalink to this definition">¶</a></dt>
 <dd><p>2* neg. logarithm of generalized Poisson distribution: 
 shifted to new mean mu for real-valued xk        
 for lam=mu, the standard Poisson distribution is recovered
@@ -2169,8 +2178,20 @@ contour lines from iminuit object</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PhyPraKit.phyFit.mnFit.plot_Profile">
-<span class="sig-name descname"><span class="pre">plot_Profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pnam</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.plot_Profile" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_Profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pnam</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.plot_Profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>plot profile likelihood of parameter pnam</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>parameter name</p></li>
+<li><p>scan range in sigma, are tuple with lower and upper value</p></li>
+<li><p>number of points</p></li>
+</ul>
+</dd>
+<dt>Returns: </dt><dd><ul class="simple">
+<li><p>matplotlib figure</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2238,30 +2259,35 @@ with confidence level(s) cl</p>
 <dd><blockquote>
 <div><p>Custom e_x_tended Least-SQuares cost function with 
 dynamically updated covariance matrix and -2log(L) 
-correction term for parameter-dependent uncertainties</p>
-<p>For data points (x, y) with model f(x, *p) 
-and covariance matrix V(f(x,*p)
-the cost function is:</p>
+correction term for parameter-dependent uncertainties.</p>
+<p>The default cost function is twice the negative logarithm 
+of the likelihood of a Gaussian distribution for data points 
+<span class="math notranslate nohighlight">\((x, y)\)</span> with a model function <span class="math notranslate nohighlight">\(y=f(x, *p)\)</span> depending
+on a set of parameters <span class="math notranslate nohighlight">\(*p\)</span> and a possibly parameter-dependent
+covariance matrix <span class="math notranslate nohighlight">\(V(x, f(x, *p))\)</span> of the x and y data:</p>
 <div class="math notranslate nohighlight">
 \[-2\ln {\cal L} = \chi^2(y, V^{-1}, f(x, *p) \,) 
-+ \ln(\, \det( V(f(x, *p) ) \,)\]</div>
-<p>For uncertainties depending on the model parameters, a more
-efficient approach is used to calculate the likelihood, which
-uses the Cholesky decompostion of the covariance matrix into a
-product of a triangular matrix and its transposed</p>
++ \ln(\, \det( V(x, f(x, *p) ) \,)\]</div>
+<p>In the absence of parameter-dependent components of the covariance
+matrix, the last term is omitted and the cost function is identical
+to the classical <span class="math notranslate nohighlight">\(\chi^2\)</span>. 
+For the evaluation of the cost function an efficient approach based
+on the “Cholesky decomposition” of the covariance matrix in 
+a product of a triangular matrix and its transposed is used:</p>
 <div class="math notranslate nohighlight">
-\[V = L L^T,\]</div>
-<p>thus avoiding the costy calculation of the inverse matrix.</p>
+\[V = L L^T.    \]</div>
+<p>The value of the cost function</p>
 <div class="math notranslate nohighlight">
 \[\chi^2 = {r}\cdot (V^{-1}{r}) ~~with~~ r = y - f(x,*p)\]</div>
-<p>is obtained by solving the linear equation</p>
+<p>is then calculated by solving the linear equation</p>
 </div></blockquote>
 <div class="math notranslate nohighlight">
 \[V X = r, ~i.e.~ X=V^{-1} r ~and~ \chi^2= r \cdot X   \]</div>
-<p>with the effecient linear-equation solver <em>scipy.linalg.cho_solve(L,x)</em>
-for Cholesky-decomposed matrices.</p>
-<p>The determinant is efficiently calculated by taking the product 
-of the diagonal elements of the matrix L,</p>
+<p>with the linear-equation solver <em>scipy.linalg.cho_solve(L,x)</em>
+for Cholesky-decomposed matrices, thus avoiding the costy 
+calculation of the inverse matrix.</p>
+<p>The determinant, if needed, is efficiently calculated by taking 
+the product of the diagonal elements of the matrix L,</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
 \[\det(V) = 2 \, \prod L_{i,i}\]</div>
@@ -2290,7 +2316,7 @@ of the diagonal elements of the matrix L,</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="PhyPraKit.phyFit.mnFit.xyDataContainer">
 <em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">xyDataContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erelx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erely</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cabsx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crelx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cabsy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crely</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.xyDataContainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handle data and uncertainties, 
+<dd><p>Handle data and uncertainties and  
 build covariance matrices from components</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
@@ -2642,7 +2668,7 @@ am Beispiel der Gamma-Spektroskopie</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.0rc1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>
