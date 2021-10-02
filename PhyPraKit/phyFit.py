@@ -2546,12 +2546,12 @@ class mnFit():
     return self.minuit.mncontour(pnam1, pnam2, cl=cl, size=npoints)
 
 
-  def plot_Profile(self, pnam):
+  def plot_Profile(self, pnam, range=2., npvals=30):
     """plot profile likelihood of parameter pnam
     """
     fig = plt.figure(num='Likelihood profile ' + pnam,
                      figsize=(5., 5.))
-    self.minuit.draw_mnprofile(pnam, subtract_min=True)
+    self.minuit.draw_mnprofile(pnam, bound=range, subtract_min=True)
     return fig
 
 
