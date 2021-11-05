@@ -2482,7 +2482,7 @@ class mnFit():
            # plot profile
             plt.sca(axarr[ip, ip])
             m.draw_mnprofile(fpnams[i], subtract_min=True)
-            plt.ylabel('$\Delta\chi^2$')
+            plt.ylabel('$\Delta \, -2\ln\cal{L}$')
             xmn, xmx = plt.gca().get_xlim()
             # show horizontal line at self.ErrDef 
             plt.hlines(self.ErrDef, xmn, xmx, color='orange', linestyle='--')
@@ -2501,7 +2501,6 @@ class mnFit():
                          fmt='x', color='darkblue',
                          ecolor='blue', capsize=3, 
                          alpha=0.66)
-            
       # restore color map
       plt.set_cmap(orig_cm)        
 
@@ -2561,6 +2560,7 @@ class mnFit():
     fig = plt.figure(num='Likelihood profile ' + pnam,
                      figsize=(5., 5.))
     self.minuit.draw_mnprofile(pnam, bound=range, size=npoints, subtract_min=True)
+    plt.ylabel('$\Delta \, -2\ln\cal{L}$')
     return fig
 
 
