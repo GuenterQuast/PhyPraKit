@@ -60,7 +60,7 @@ if __name__ == "__main__": # --------------------------------------
   crelx = 0.02 # 2%
   
  # parameters of pseudo data
-  nd=120   # number of data points
+  nd=20  # number of data points
   xmin=0.  # x-range
   xmax=2.5
   data_x = np.linspace(xmin, xmax, nd)       # x of data points
@@ -207,8 +207,14 @@ if __name__ == "__main__": # --------------------------------------
     print(' * coverage:')
     for i in range(npar):
     #  coverage: fraction of true val in confidence interval
-      p_coverage = N_coverage[i]/(N_succ)*100/0.682689492
+      p = N_coverage[i]/(N_succ)
+      dp = np.sqrt(p*(1-p)/N_succ)
+      f_p2percent = 100/0.682689492
+      p_coverage = p * f_p2percent
+      dp_coverage = dp * f_p2percent
       print('   {:d}: {:.3g}%'.format(i, p_coverage))
+      p_coverage = N_coverage[i]/(N_succ)*100/0.682689492
+      print('   {:d}: ({:.3g}+/-{:.2g})%'.format(i, p_coverage, dp_coverage))
 
   def plot_correlations():
     # show parameter distributions and correlations 
