@@ -80,6 +80,12 @@ def A0_readme():
       - smearData()          add random deviations to input data
       - generateXYdata()     generate simulated data 
 
+    phyFit fitting package for binned and unbinned ML fits and ML fits to (x,y) data
+
+      - mFit()             unbinned ML fit with user-defined negLogL or PDF
+      - hFit()             fit to binned histogram data
+      - xyFit()            fit to (x,y) data with y = f(x; \*par) 
+
   """
   # print the above docstring if called
   print(A0_readme.__doc__)
@@ -1391,7 +1397,6 @@ def odFit(fitf, x, y, sx=None, sy=None, p0=None):
   # define wrapper for fit function in ODR format
   def fitf_ODR(p, x):
     return fitf(x, *p)
-
 
   # set y-errors to 1. if not given
   if sy is None:
