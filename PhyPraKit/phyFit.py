@@ -2482,7 +2482,11 @@ class mnFit():
            # plot profile
             plt.sca(axarr[ip, ip])
             m.draw_mnprofile(fpnams[i], subtract_min=True)
-            plt.ylabel('$\Delta \, -2\ln\cal{L}$')
+            if (self.ErrDef == 1):
+              ylabel='$\Delta (-2\ln\cal{L})$'
+            else:
+              ylabel='$\Delta (-\ln\cal{L})$'
+            plt.ylabel(ylabel)
             xmn, xmx = plt.gca().get_xlim()
             # show horizontal line at self.ErrDef 
             plt.hlines(self.ErrDef, xmn, xmx, color='orange', linestyle='--')
@@ -2560,7 +2564,12 @@ class mnFit():
     fig = plt.figure(num='Likelihood profile ' + pnam,
                      figsize=(5., 5.))
     self.minuit.draw_mnprofile(pnam, bound=range, size=npoints, subtract_min=True)
-    plt.ylabel('$\Delta \, -2\ln\cal{L}$')
+    
+    if (self.ErrDef == 1):
+      ylabel='$\Delta (-2\ln\cal{L})$'
+    else:
+      ylabel='$\Delta (-\ln\cal{L})$'
+    plt.ylabel(ylabel)
     return fig
 
 
