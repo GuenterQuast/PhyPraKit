@@ -250,9 +250,10 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
   The cost function is two times the negative log-likelihood of the Poisson 
   distribution, or - optionally - of the Gaussian approximation.
 
-  Uncertainties are determined from the model values in order to avoid biases and to
-  to take account of empty bins of an histogram. The default behaviour is to fit a
-  normalised density; optionally, it is also possible to fit the number of bin entries.
+  Uncertainties are determined from the model values in order to avoid biases 
+  and to take account of empty bins of an histogram. The default behaviour is 
+  to fit a normalised density; optionally, it is also possible to fit the 
+  number of bin entries.
 
   Args:
     * fitf: model function to fit, arguments (float:x, float: \*args)
@@ -262,7 +263,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     * p0: array-like, initial guess of parameters
     * constraints: (nested) list(s) [name or id, value, error] 
     * limits: (nested) list(s) [name or id, min, max] 
-    * GaussApprox: Gaussian approximation instead of Poisson 
+    * use_GaussApprox: Gaussian approximation instead of Poisson 
     * density: fit density (not number of events)
     * plot: show data and model if True
     * plot_cor: show profile likelihoods and confidence contours
