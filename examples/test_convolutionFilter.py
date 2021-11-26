@@ -1,4 +1,5 @@
-'''test_convolutionFilter.py 
+# 
+"""test_convolutionFilter.py 
    Read data exported with PicoScope usb-oscilloscpe,
    here the accoustic excitation of a steel rod
 
@@ -7,7 +8,7 @@
   
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
-'''
+"""
 
 from __future__ import print_function  # for python2.7 compatibility
 

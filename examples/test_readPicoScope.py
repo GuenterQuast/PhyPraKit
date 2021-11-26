@@ -1,9 +1,10 @@
-'''test_readPicoSocpe.py 
+#
+"""test_readPicoSocpe.py 
    read data exported by PicoScope usb-oscilloscope
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
-'''
+"""
 
 from __future__ import print_function  # for python2.7 compatibility
 

@@ -1,10 +1,10 @@
 #! /usr/bin/env python
-'''test_k2Fit
+"""test_k2Fit
 
    test fitting simple line with kafe2, without any errors given
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
-'''
+"""
 
 from __future__ import print_function  # for python2.7 compatibility
 

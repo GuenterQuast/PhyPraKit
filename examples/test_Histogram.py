@@ -1,9 +1,10 @@
-'''test_Historgram.py
+#
+"""test_Historgram.py
    demonstrate histogram functionality in PhyPraKit
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
-'''
+"""
 
 import numpy as np, matplotlib.pyplot as plt
 from PhyPraKit import histstat, hist2dstat, profile2d, chi2p_indep2d

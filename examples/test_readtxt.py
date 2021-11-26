@@ -1,4 +1,5 @@
-'''test_readtxt.py 
+#
+"""test_readtxt.py 
    uses readtxt() to read floating-point column-data in very general 
    .txt formats, here the output from PicoTech 8 channel data logger,
    with '\t' separated values, 2 header lines,
@@ -6,7 +7,7 @@
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
-'''
+"""
 
 from __future__ import print_function  # for python2.7 compatibility
 

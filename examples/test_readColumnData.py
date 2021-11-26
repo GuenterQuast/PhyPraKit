@@ -1,8 +1,9 @@
-'''test_readColumnData.py
+#
+"""test_readColumnData.py
    test data input from text file with module PhyPraKit.readColumnData
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
-'''
+"""
 
 from __future__ import print_function  # for python2.7 compatibility
 

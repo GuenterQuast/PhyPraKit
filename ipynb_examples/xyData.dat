@@ -1,0 +1,33 @@
+# Beispieldatei zur Eingabe von Daten im Spalten-Format
+#  nutzt loadtxt() mit vorangesteller Filterfunktion
+#  zur definition for Schlüsselwörtern für Meta-Daten
+#
+# Text nach dem Kommentarzeichen "#" wird ignoriert
+# 
+# Zeilen mit "*" definieren key fuer ein Pyhton-Dictionary,
+#  die Werte nach dem Key werden als text zurückgegeben
+#
+# ab hier der eigentliche Teil der Eingabeatei:
+# ---------------------------------------------------------
+
+*TITLE Messung von x und y vom xx.yy.2016 
+*Author Praktikant
+*xLabel x-name
+*yLabel y-name        
+*xUnit  Xunit
+
+
+# allgemeine Angaben
+*xRelCor 0.015  # correlated, relative error of 1%
+*yRelCor 0.015
+
+# die eigentlichen Daten 
+#  x    ex      y     ey
+  0.30  0.01   0.25  0.01
+  0.40  0.01   0.36  0.01
+  0.50  0.02   0.44  0.01
+  0.60  0.02   0.57  0.02
+  0.70  0.02   0.64  0.02
+  0.80  0.02   0.81  0.02
+  0.90  0.05   0.88  0.02
+
