@@ -1,0 +1,9 @@
+# requirements to run jupyter tutorials in this repo
+numpy
+matplotlib
+scipy
+pandas
+iminuit
+kafe2
+PhyPraKit
+uncertainties
