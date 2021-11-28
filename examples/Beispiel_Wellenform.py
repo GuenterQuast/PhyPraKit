@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Beispiel_Wellenform.py 
-   Einlesen von Daten aus dem mit PicoScope erstellten Dateien
-   am Beispiel der akustischen Anregung eines Stabes
+   Einlesen von mit PicoScope erstellten Dateien am Beispiel
+   der akustischen Anregung eines Stabes
 
    - Fourier-Analyse des Signals
 

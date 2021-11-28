@@ -64,17 +64,19 @@ After downloading, execute:
 in the main directory of the *PhyPraKit* package (where *setup.py*
 is located) to install in user space.  
 
+Comfortable installation via the PyPI Python Package Index
+is also possible by executing
+   
+   ``pip install --user PhyPraKit``
+
 The installation via the *whl*-package provided
 in the subdirectory `dist` may alternatively be used:
 
    ``pip install --user --no-cache PhyPraKit<version>.whl``
 
-Installation via the PyPI Python Package Index is also possible
-by simply executing
-   
-   ``pip install --user PhyPraKit``
+*python* scripts and *Jupyter* notebook versions illustrate common
+use cases of the package and provide examples of typical applications. 
 
-|
 
 **German Description:**
 
@@ -120,14 +122,12 @@ before extracting any model parameters. Therefore, uncertainties must be
 understood, modeled correctly and incorporated in the fitting procedure.
 
 *PhyPraKit* offers adapted interfaces to the fit modules in the package
-*scipy* (*optimize.curve_fit* and *ODR*) to perform fits with a test of
-the validity of the hypothesis. A very lean implementation, relying on
-the mimimization and uncertainty-analysis tool *MINUIT*, is also provided
+*scipy* (*optimize.curve_fit* and *ODR*) to perform fits including a test
+of the validity of the model hypothesis. A very lean implementation, relying
+on the mimimization and uncertainty-analysis tool *MINUIT*, is also provided
 in the sub-package *phyFit* for the above-mentioned use cases.
 *PhyPraKit* also contains a simplified interface to the very
 function-rich fitting package *kafe2*.
-
-|
 
 
   **German: Darstellung und Auswertung von Messdaten**
@@ -283,7 +283,11 @@ oder::
         - generateXYdata()     Erzeugen simulierter Datenpunkte (x+Delta_x, y+Delta_y)
 
 
-Die folgenden **Beispiele** illustrieren die Anwendung:
+Die folgenden **Beispiele** dienen der Illustration der Anwendung der
+zahlreichen Funktionen. 
+Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf 
+`mybinder.org
+<https://mybinder.org/v2/git/https%3A%2F%2Fgit.scc.kit.edu%2Fyh5078%2FPhyPraKit/master>`_.
 
   * `test_readColumnData.py` ist ein Beispiel zum
     Einlesen von Spalten aus Textdateien; die zugehörigen 
