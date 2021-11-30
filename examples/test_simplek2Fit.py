@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-"""test_k2Fit
+"""test_simplek2Fit
 
    test fitting simple line with kafe2, without any errors given
 

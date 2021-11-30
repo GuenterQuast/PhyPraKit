@@ -278,7 +278,7 @@ oder::
 	  Verteilungsdichte an ungebinnete Daten mit der maximum-likelood Methode
 
       6. Erzeugung simulierter Daten mit MC-Methode:
-    
+s    
         - smearData()          Addieren von zufälligen Unsicherheiten auf Eingabedaten
         - generateXYdata()     Erzeugen simulierter Datenpunkte (x+Delta_x, y+Delta_y)
 
@@ -321,18 +321,18 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     
   * `test_linRegression.py` ist eine einfachere Version mit
     `python`-Bordmitteln zur Anpassung einer Geraden an
-    Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung. 
+    Messdaten mit Unsicherheiten in Ordinaten- und Abszissenrichtung. 
     Korrelierte Unsicherheiten werden nicht unterstützt.
     
   * `test_xyFit` dient zur Anpassung einer beliebigen Funktion an
-    Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit
-    allen Messpunkten gemeinsamen (d. h. korrelierten) relativen oder
-    absoluten systematischen Fehlern. Dazu wird das Paket imunit
+    Messdaten mit Unsicherheiten in Ordinaten- und Abszissenrichtung
+    und mit allen Messpunkten gemeinsamen (d. h. korrelierten) relativen
+    oder absoluten systematischen Fehlern. Dazu wird das Paket *imunit*
     verwendet, das den am CERN entwickelten Minimierer MINUIT nutzt.
     Da die Kostenfunktion frei definiert und auch während der Anpassung
     dynamisch aktualisiert werden kann, ist die Implementierung von
     Parameter-abhängigen Unsicherheiten möglich. Ferner unterstützt
-    iminuit die Erzeugung und Darstellung von Profil-Likelihood-Kurven
+    *iminuit* die Erzeugung und Darstellung von Profil-Likelihood-Kurven
     und Konfidenzkonturen, die so mit `xyFit` ebenfalls dargestellt
     werden können.
     
