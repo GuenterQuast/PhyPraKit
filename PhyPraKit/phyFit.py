@@ -488,6 +488,97 @@ def round_to_error(val, err, nsd_e=2):
   return nsd_v, np.sign(val)*v, e               
 
 
+def _build_Err2(e=None, erel=None, data=None):
+  """
+  Build squared sum of independent absolute and/or 
+  relative error components
+
+  Args:
+    * e: scalar or 1d np-array of float: independent uncertainties 
+    * erel: scalar or 1d np-array of float: independent relative 
+      uncertainties
+  """
+      
+  err2 = 0.
+  if e is not None:
+    err2 = e * e
+  if erel is not None:
+    _er = erel * data
+    err2 += _er * _er
+  return err2
+      
+def _build_CovMat(nd, e=None, erel=None,
+                      eabscor=None, erelcor=None, data=None):
+  """
+  Build a covariance matrix from independent and correlated 
+  absolute and/or relative error components
+
+  Correlated absolute and/or relative uncertainties of input data 
+  are to be specified as numpy-arrays of floats; they enter in the 
+  diagonal and off-diagonal elements of the covariance matrix. 
+  Values of 0. may be specified for data points not affected
+  by a correlated uncertainty. E.g. the array [0., 0., 0.5., 0.5]
+  results in a correlated uncertainty of 0.5 of the 3rd and 4th 
+  data points.
+
+  Covariance matrix elements of the individual components are added 
+  to form the complete Covariance Matrix.
+      
+  Args:
+    * nd: number of data points
+    * e: 1d or 2d np-array of float: 
+      independent uncertainties or a full covariance matrix
+    * erel: 1d or 2d np-array of float:
+      independent relative uncertainties or a full covariance matrix
+
+  correlated components of uncertainties
+    * eabscor: 1d np-array of floats or list of np-arrays:
+    absolute correlated uncertainties
+    * erelcor: 1d np-array of floats or list of np-arrays:
+    relative correlated uncertainties
+    * data: np-array of float: data, needed (only) for relative uncertainties
+
+  Returns:
+    * np-array of float: covariance matrix 
+  """
+
+  # 1. independent errors
+  if e is not None:
+    if e.ndim == 2: # already got a matrix, take as covariance matrix
+      cov = np.array(e, copy=True)
+    else:
+      cov = np.diag(e * e) # set diagonal elements of covariance matrix
+  else:
+    cov = np.zeros( (nd, nd) )
+    
+  # 2. add relative errors
+  if erel is not None:
+    if erel.ndim == 2: # got a matrix
+      cov += er * np.outer(data, data)
+    else:
+      er_ = np.array(erel) * data
+      cov += np.diag(er_ * er_)   # diagonal elements of covariance matrix
+  
+  # 3. add absolute, correlated error components  
+  if eabscor is not None:
+    if len(np.shape(eabscor )) < 2: # has one entry
+      cov += np.outer(eabscor, eabscor) 
+    else:            # got a list, add each component
+      for c in eabscor:
+        cov += np.outer(c, c)
+        
+  # 4. add relative, correlated error components
+  if erelcor is not None:
+    if len(np.shape(erelcor) ) < 2: # has one entry
+      c_ = erelcor * data
+      cov += np.outer(c_, c_) 
+    else:            # got a list, add each component
+      for c in erelcor:
+        c_ = np.array(c) * data
+        cov += np.outer(c_, c_) 
+  # return complete matrix
+  return cov
+
 #
 # --- classes and functions
 #
@@ -892,10 +983,10 @@ class mnFit():
 
       # build (initial) covariance matrix (without x-errors)
       if self.needs_covariance:
-        err2 = self._build_CovMat(self.nd,
+        err2 = _build_CovMat(self.nd,
                     self.ey, self.erely, self.cabsy, self.crely, self.y)
       else:
-        err2 = self._build_Err2(self.ey, self.erely, self.y)
+        err2 = _build_Err2(self.ey, self.erely, self.y)
 
       # initialize uncertainties and covariance matrix,
       self._initialCov(err2)
@@ -907,100 +998,6 @@ class mnFit():
       #   self.err2: array of squared uncertainties
       #   self.iErr2: 1./self.err2
       
-    @staticmethod
-    def _build_Err2(e=None, erel=None, data=None):
-      """
-      Build squared sum of independent absolute and/or 
-      relative error components
-
-      Args:
-        * e: scalar or 1d np-array of float: independent uncertainties 
-        * erel: scalar or 1d np-array of float: independent relative 
-          uncertainties
-      """
-      
-      err2 = 0.
-      if e is not None:
-        err2 = e * e
-      if erel is not None:
-        _er = erel * data
-        err2 += _er * _er
-      return err2
-
-      
-    @staticmethod
-    def _build_CovMat(nd, e=None, erel=None,
-                           eabscor=None, erelcor=None, data=None):
-      """
-      Build a covariance matrix from independent and correlated 
-      absolute and/or relative error components
-
-      Correlated absolute and/or relative uncertainties of input data 
-      are to be specified as numpy-arrays of floats; they enter in the 
-      diagonal and off-diagonal elements of the covariance matrix. 
-      Values of 0. may be specified for data points not affected
-      by a correlated uncertainty. E.g. the array [0., 0., 0.5., 0.5]
-      results in a correlated uncertainty of 0.5 of the 3rd and 4th 
-      data points.
-
-      Covariance matrix elements of the individual components are added 
-      to form the complete Covariance Matrix.
-      
-      Args:
-        * nd: number of data points
-        * e: 1d or 2d np-array of float: 
-          independent uncertainties or a full covariance matrix
-        * erel: 1d or 2d np-array of float:
-          independent relative uncertainties or a full covariance matrix
-
-      correlated components of uncertainties
-        * eabscor: 1d np-array of floats or list of np-arrays:
-        absolute correlated uncertainties
-        * erelcor: 1d np-array of floats or list of np-arrays:
-        relative correlated uncertainties
-        * data: np-array of float: data, needed (only) for relative uncertainties
-
-      Returns:
-        * np-array of float: covariance matrix 
-      """
-
-      # 1. independent errors
-      if e is not None:
-        if e.ndim == 2: # already got a matrix, take as covariance matrix
-          cov = np.array(e, copy=True)
-        else:
-          cov = np.diag(e * e) # set diagonal elements of covariance matrix
-      else:
-        cov = np.zeros( (nd, nd) )
-    
-      # 2. add relative errors
-      if erel is not None:
-        if erel.ndim == 2: # got a matrix
-          cov += er * np.outer(data, data)
-        else:
-          er_ = np.array(erel) * data
-          cov += np.diag(er_ * er_)   # diagonal elements of covariance matrix
-  
-      # 3. add absolute, correlated error components  
-      if eabscor is not None:
-        if len(np.shape(eabscor )) < 2: # has one entry
-          cov += np.outer(eabscor, eabscor) 
-        else:            # got a list, add each component
-          for c in eabscor:
-            cov += np.outer(c, c)
-        
-      # 4. add relative, correlated error components
-      if erelcor is not None:
-        if len(np.shape(erelcor) ) < 2: # has one entry
-          c_ = erelcor * data
-          cov += np.outer(c_, c_) 
-        else:            # got a list, add each component
-          for c in erelcor:
-            c_ = np.array(c) * data
-            cov += np.outer(c_, c_) 
-      # return complete matrix
-      return cov
-
     def _initialCov(self, err2):
       """Build initial (static) covariance matrix for y-errors
       (for pre-fit) and calculate inverse matrix
@@ -1045,28 +1042,28 @@ class mnFit():
         # build static (=parameter-independent) part of covariance matrix      
         if self.has_rel_yErrors and self.ref_toModel:
           # some y-errors are parameter-independent
-          self._staticCov = self._build_CovMat(self.nd,
+          self._staticCov = _build_CovMat(self.nd,
                        self.ey, eabscor = self.cabsy)
         else: 
           # all y-errors are parameter-independent
-          self._staticCov = self._build_CovMat(self.nd,
-                                  self.ey, erel=self.erely,
-                                  eabscor = self.cabsy, erelcor=self.crely,
-                                                data=self.y)
+          self._staticCov = _build_CovMat(self.nd,
+                              self.ey, erel=self.erely,
+                              eabscor = self.cabsy, erelcor=self.crely,
+                                            data=self.y)
         # build matrix of relative errors
         if self.ref_toModel and self.has_rel_yErrors:
-          self._covy0 = self._build_CovMat(self.nd,
-                                  erel=self.erely,
-                                  erelcor=self.crely,
-                                  data=np.ones(self.nd))
+          self._covy0 = _build_CovMat(self.nd,
+                             erel=self.erely,
+                             erelcor=self.crely,
+                             data=np.ones(self.nd))
         else:
           self._covy0 = None
         # covariance matrix of x-uncertainties (all are parameter-dependent)
         if self.has_xErrors:
-          self.covx = self._build_CovMat(self.nd,
-                              self.ex, self.erelx,
-                              self.cabsx, self.crelx,
-                              self.x)
+          self.covx = _build_CovMat(self.nd,
+                         self.ex, self.erelx,
+                         self.cabsx, self.crelx,
+                         self.x)
          #  determine dx for derivative from smallest x-uncertainty
           self._dx = np.sqrt(min(np.diagonal(self.covx)))/10.
         else:
@@ -1076,13 +1073,13 @@ class mnFit():
         # build static (=parameter-independent) part of covariance matrix      
         if self.has_rel_yErrors and self.ref_toModel:
           # only independent y-errors do not depend on parameters
-          self._staticErr2 = self._build_Err2(self.ey)
+          self._staticErr2 = _build_Err2(self.ey)
         else: 
           # all y-errors are parameter-independent
-          self._staticErr2 = self._build_Err2( self.ey, self.erely, self.y)
+          self._staticErr2 = _build_Err2( self.ey, self.erely, self.y)
           
         if self.has_xErrors:
-          self.err2x = self._build_Err2(self.ex, self.erelx, self.x)
+          self.err2x = _build_Err2(self.ex, self.erelx, self.x)
          #  determine dx for derivative from smallest x-uncertainty
           self._dx = np.sqrt(min(self.err2x))/10.
         else:
