@@ -116,12 +116,12 @@ def xyFit(fitf, x, y, sx = None, sy = None,
   
   """Wrapper function to fit an arbitrary function fitf(x, \*par) 
   to data points (x, y) with independent and/or correlated absolute 
-  and/or relative errors  on x- and/or y- values with class mnFit
+  and/or relative uncertainites on x- and/or y- values with class mnFit.
 
   Correlated absolute and/or relative uncertainties of input data 
   are specified as floats (if all uncertainties are equal) or as 
   numpy-arrays of floats. The concept of independent or common 
-  uncertainties of (groups) of data points is used construct the 
+  uncertainties of (groups) of data points is used to construct the 
   full covariance matrix from different uncertainty components.
   Independent uncertainties enter only in the diagonal, while correlated 
   ones contribute to diagonal and off-diagonal elements of the covariance 
@@ -230,6 +230,136 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     #   gof
     #   parameter names
     return Fit.getResult()
+
+def xFit(fitf, x, s = None, srel = None, 
+       sabscor = None, srelcor = None,               
+       ref_to_model = True,
+       names = None, 
+       p0 = None, constraints = None, fixPars=None, limits=None,
+       use_negLogL=True, 
+       plot = True, plot_cor = False,
+       showplots = True, 
+       plot_band=True, plot_residual=False, quiet = True,
+       axis_labels=['Index', 'f(*x, *par)'],
+       data_legend = 'data',    
+       model_legend = 'model',
+       return_fitObject=False ) :
+  
+  """Wrapper function to fit an arbitrary function to data with
+  independent and/or correlated absolute and/or relative uncertainties 
+  with class mnFit. Uncertainties are assumed to be desribed by
+  a multivariate Gaussian distribution described by the covariance
+  matrix of the data {x}.
+
+  Correlated absolute and/or relative uncertainties of input data 
+  are specified as floats (if all uncertainties are equal) or as 
+  numpy-arrays of floats. The concept of independent or common 
+  uncertainties of (groups) of values is used to construct the 
+  full covariance matrix from different uncertainty components.
+  Independent uncertainties enter only in the diagonal, while correlated 
+  ones contribute to diagonal and off-diagonal elements of the covariance 
+  matrix. Values of 0. may be specified for data points not affected by a 
+  certain type of uncertainty. E.g. the array [0., 0., 0.5., 0.5] specifies
+  uncertainties only affecting the 3rd and 4th data value. Providing lists 
+  of such arrays permits the construction of arbitrary covariance matrices 
+  from independent and correlated uncertainties of (groups of) data points.
+
+  Args:
+    * fitf: model function to fit, arguments (float:x, float: \*args)
+    * x:  np-array of data values
+    * s: scalar or 1d or 2d np-array with uncertainties
+    * srel: scalar or np-array; relative uncertainties 
+    * sabscor: scalar or np-array; absolute, correlated error(s) 
+    * srelcor: scalar or np-array; relative, correlated error(s) 
+    * ref_to_model: relative errors w.r.t. model if True
+    * names: names for input data
+    * p0: array-like, initial guess of parameters
+    * use_negLogL:  use full -2ln(L)  
+    * constraints: (nested) list(s) [name or id, value, error]
+    * fix parameter(s) in fit: list of parameter names or indices
+    * limits: (nested) list(s) [name or id, min, max] 
+    * plot: show data and model if True
+    * plot_cor: show profile likelihoods and confidence contours
+    * plot_band: plot uncertainty band around model function
+    * plot_residual: plot residuals w.r.t. model instead of model function
+    * showplots: show plots on screen
+    * quiet: suppress printout
+    * list of str: axis labels
+    * str: legend for data
+    * str: legend for model 
+    * bool: for experts only, return instance of class mnFit to 
+      give access to data members and methods
+
+  Returns:
+    * np-array of float: parameter values
+    * 2d np-array of float: parameter uncertainties [0]: neg. and [1]: pos. 
+    * np-array: correlation matrix 
+    * float: 2*negLog L, corresponding to \chi-square of fit a minimum
+  """
+
+  ## from .phyFit import mnFit #! already contained in this file
+
+  # ... check if errors are provided ...
+  if s is None:
+    sy = np.ones(len(x))
+    print('\n!**! No y-errors given, all assumed to be 1.0\n',
+          '-> consider scaling of parameter errors with sqrt(chi^2/Ndf)\n')
+  
+  # set up a fit object
+  indexedFit = mnFit('indexed')
+
+  # set some options
+  indexedFit.setOptions(run_minos=True,
+                  relative_refers_to_model=ref_to_model,
+                  use_negLogL=use_negLogL,
+                  quiet=quiet)
+
+  # pass data and uncertainties to fit object
+  indexedFit.init_data(x, e = s, 
+                       erel = srel, cabs = sabscor, crel = srelcor,
+                       names = names)
+   # pass model function, start parameter and possible constraints
+  indexedFit.init_fit(fitf, p0=p0,
+               constraints=constraints,
+               fixPars=fixPars,
+               limits=limits)
+   # perform the fit
+  fitResult = indexedFit.do_fit()
+  # print fit result(dictionary from migrad/minos(
+  if not quiet:
+    print("\nFit Result from migrad:")
+    print(fitResult[0])
+    if fitResult[1] is not None:
+      print("\nResult of minos error analysis:")
+      print(fitResult[1])
+    
+  # produce figure with data and model
+  if plot:
+    fig = indexedFit.plotModel(axis_labels=axis_labels,
+                 data_legend=data_legend,
+                 model_legend=model_legend,
+                 plot_band=plot_band,
+                 plot_residual=plot_residual)
+
+  # figure with visual representation of covariances
+  #   profile likelihood scan and confidence contours
+  if plot_cor:
+    fig_cor = indexedFit.plotContours(figname="xyFit: Profiles and Contours")
+
+  # show plots on screen
+  if showplots and (plot or plot_cor):
+    plt.show()
+
+  if return_fitObject:
+    return indexedFit
+  else:
+    # return
+    #   numpy arrays with fit result: parameter values,
+    #   negative and positive parameter uncertainties,
+    #   correlation matrix
+    #   gof
+    #   parameter names
+    return indexedFit.getResult()
 
 def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
          p0 = None, constraints = None,
@@ -675,7 +805,7 @@ class mnFit():
     - 'user': user-supplied cost-function (i.e. neg. log-likelihood)
     """
 
-    if fit_type not in ['xy', 'hist', 'user', 'ml']:
+    if fit_type not in ['xy', 'indexed', 'hist', 'user', 'ml']:
       sys.exit(
         '!**! mnFit: invalid fit type ', fit_type, '- exiting!') 
     self.fit_type = fit_type
@@ -692,7 +822,8 @@ class mnFit():
     #   no data or model provided yet
     self.xyData = None
     self.hData = None
-    self.mlData = None 
+    self.mlData = None
+    self.xData = None
     # generic, holds active instance of sub-class xxData
     self.data = None
     # generic, holds active instanc of sub-class xxCost
@@ -708,7 +839,7 @@ class mnFit():
     # default options
     self.run_minos = True
     self.quiet = True
-    # for xy Fit
+    # for xy and indexed Fit
     self.refModel=True
     self.use_negLogL = True
     self.iterateFit = False
@@ -723,10 +854,10 @@ class mnFit():
     self.options["run_minos"] = [1, "all",
                   "no likelihood scan",
                   "MINOS profile likelihood scan"]
-    self.options["refModel"]=[1, "xy",
+    self.options["refModel"]=[1, ["xy", "indexed"],
                             "relative uncertainties refer to data",
                             "relative uncertainties refer to model"]
-    self.options["use_negLogL"] = [1, "xy",
+    self.options["use_negLogL"] = [1, ["xy", "indexed"],
                                  "using simple chi^2 cost-function",
                                  "using full negative log-likelihood"]
 
@@ -746,6 +877,8 @@ class mnFit():
   def init_data(self, *args, **kwargs):
     if self.fit_type == 'xy':
       self.init_xyData(*args, **kwargs)
+    elif self.fit_type == 'indexed':
+      self.init_xData(*args, **kwargs)
     elif self.fit_type == 'hist':
       self.init_hData(*args, **kwargs)
     elif self.fit_type == 'ml':
@@ -759,6 +892,8 @@ class mnFit():
   def setOptions(self, *args, **kwargs):
     if self.fit_type == 'xy':
       self.set_xyOptions(*args, **kwargs)
+    elif self.fit_type == 'indexed':
+      self.set_xOptions(*args, **kwargs)
     elif self.fit_type == 'hist':
       self.set_hOptions(*args, **kwargs)
     elif self.fit_type == 'user' or self.fit_type == 'ml':
@@ -770,6 +905,8 @@ class mnFit():
   def init_fit(self, *args, **kwargs):
     if self.fit_type == 'xy':
       self.init_xyFit(*args, **kwargs)
+    elif self.fit_type == 'indexed':
+      self.init_xFit(*args, **kwargs)
     elif self.fit_type == 'hist':
       self.init_hFit(*args, **kwargs)
     elif self.fit_type == 'user' or self.fit_type == 'ml':
@@ -1369,6 +1506,480 @@ class mnFit():
   # --- end definition of class xLSqCost ----
 
   #
+  # --- special code for indexed Fit (xFit)
+  #      
+
+  def set_xOptions(self,
+              relative_refers_to_model=None,
+              run_minos=None,
+              use_negLogL=None,
+              quiet=None):
+
+    """Define options for indexed fit
+
+       Args:
+        - rel. errors refer to model else data
+        - run minos else don*t run minos
+        - use full neg2logL
+        - don*t provide printout else verbose printout 
+    """
+    if relative_refers_to_model is not None:
+      self.refModel = relative_refers_to_model
+      self.options["refModel"][0] = int(relative_refers_to_model)
+    if run_minos is not None:   
+      self.run_minos = run_minos
+      self.options["run_minos"][0] = int(run_minos)
+    if use_negLogL is not None:   
+      self.use_negLogL = use_negLogL
+      self.options["use_negLogL"][0] = int(use_negLogL)
+    if quiet is not None:
+      self.quiet = quiet
+
+  def init_xData(self, x,             
+                 e=None, 
+                 erel=None,
+                 cabs=None, crel=None,
+                 names=None):
+
+    """initialize data object
+
+    Args:
+      -  x:      data values
+      -  s:      independent uncertainties x
+      -  srel:   independent relative uncertainties x
+      -  cabs:   correlated abolute uncertainties x
+      -  crel:   correlated relative uncertainties x
+    """
+    
+    # create data object and pass all input arguments
+    self.xData = self.xDataContainer(self, x, e, 
+                                     erel, cabs, crel,
+                                     names = names, 
+                                     quiet=self.quiet)
+    self.data = self.xData
+    # set flags for steering of fit process in do_fit()
+    self.iterateFit = self.xData.has_rel_Errors and self.refModel
+
+
+  def init_xFit(self, model, p0=None,
+                 constraints=None,
+                 fixPars=None,
+                 limits=None):
+    """initialize fit object
+
+    Args:
+      - model: model function f(x; \*par)
+      - p0: np-array of floats, initial parameter values 
+      - constraints: (nested) list(s): [parameter name, value, uncertainty] 
+        or [parameter index, value, uncertainty]
+      - limits: (nested) list(s): [parameter name, min, max] 
+        or [parameter index, min, max]
+    """
+
+    if self.xData is None: 
+      print(' !!! mnFit.init_xFit: no data object defined - call init_data()')
+      sys.exit('mnFit Error: no data object')
+
+    # get parameters of model function to set start values for fit
+    args, model_kwargs = get_functionSignature(model)
+
+    par = (model_kwargs, p0, constraints, fixPars, limits)
+    self._setupFitParameters(*par) 
+
+    # create cost function
+    self.costf = self.indexedCost(self,
+                           model,
+                           use_neg2logL= self.use_negLogL)
+    self._setupMinuit(model_kwargs) 
+
+      
+  class xDataContainer:
+    """
+    Handle data and uncertainties and  
+    build covariance matrices from components
+
+    Args:
+      - outer:   pointer to instance of calling object
+      - x:       abscissa of data points ("x values")
+      - e:       independent uncertainties 
+      - erel:   independent relative uncertainties x
+      - cabs:   correlated abolute uncertainties x
+      - crel:   correlated relative uncertainties x
+      - quiet:   no informative printout if True
+
+    Public methods:
+      - init_dynamicErrors():
+      - get_Cov(): final covariance matrix (incl. proj. x)  
+      - get_iCov(): inverse covariance matrix
+      - plot(): provide a figure with representation of data
+ 
+    Data members:  
+      * copy of all input arguments
+      * cov: covariance matrix
+      * iCov: inverse of covariance matrix
+    """
+    def __init__(self, outer,
+                 x, e, erel, cabs, crel,
+                 names = None,
+                 quiet=True):
+      # save poiner to calling class
+      self.outer = outer
+
+      # assume simple case w.o. cov.mat.
+      self.needs_covariance = False 
+
+      self.xNames = names # set parameter names
+      
+      nd = len(x)      
+      # store input data as numpy float arrays, ensure length nd if needed
+      self.x = np.asfarray(x)         # abscissa - "x values"
+      self.e = np.asfarray(e)       # independent uncertainties y
+      if self.e.ndim == 0:
+          self.e = self.e * np.ones(nd)
+      elif self.e.ndim == 2:
+          self.needs_covariance=True
+      if erel is not None:
+        self.erel = np.asfarray(erel) # independent relative uncertainties x
+      else:
+        self.erel = None
+      if cabs is not None:
+        self.cabs = np.asfarray(cabs) # correlated abolute uncertainties x
+        if self.cabs.ndim == 0:
+          self.cabs = self.cabs * np.ones(nd)
+      else:
+        self.cabs = None
+      if crel is not None:   
+        self.crel = np.asfarray(crel) # correlated relative uncertainties x
+      else:
+        self.crel = None
+      self.quiet = quiet      # no informative printout if True
+
+      self.nd = nd
+      self.model = None # no model defined yet
+      self.model_values = None
+
+      # set flags for steering of fit process in do_fit()
+      self.rebulildCov = None
+      self.has_rel_Errors = erel is not None or crel is not None
+      self.needs_covariance = self.needs_covariance or \
+        self.cabs is not None or self.crel is not None
+
+
+      # build (initial) covariance matrix (without x-errors)
+      if self.needs_covariance:
+        err2 = _build_CovMat(self.nd, self.e, self.erel,
+                             self.cabs, self.crel, self.x)
+      else:
+        err2 = _build_Err2(self.e, self.erel, self.x)
+
+      # initialize uncertainties and covariance matrix,
+      self._initialCov(err2)
+      # sets: 
+      #   self.covx: covariance matrix of x
+      #   self.covy: covariance matrix of y uncertainties
+      #   self.cov: full covariance matrix incl. projected x
+      #   self.iCov: inverse of covariance matrix
+      #   self.err2: array of squared uncertainties
+      #   self.iErr2: 1./self.err2
+      
+    def _initialCov(self, err2):
+      """Build initial (static) covariance matrix for y-errors
+      (for pre-fit) and calculate inverse matrix
+      """
+      if err2.ndim == 2:
+       # got a covariance matrix, need inverse
+        self.needs_covariance = True
+        self.cov = err2
+        self.iCov = linalg.inv(err2)
+        self.err2 = np.diagonal(err2) # squared diagonal elements
+      else:
+      # got independent uncertainties
+        self.err2 = err2
+        self.err2y = err2
+        self.iErr2 = 1./err2
+        self.cov = np.diag(err2)
+        self.iCov = np.diag(1./self.err2)
+      # do not rebuild covariance matrix in cost function
+      self.needs_dynamicErrors = False 
+
+    def init_dynamicErrors(self):
+      # method to switch on dynamic re-calculation of covariance matrix 
+      self.ref_toModel = self.outer.refModel
+      self.model = self.outer.costf.model
+     
+      self._staticCov = None
+      self._staticErr2 = None
+      self.iCov = None
+      self.iErr2 = None
+
+      # rebuild covariance matrix during fitting procedure
+      self.needs_dynamicErrors = True    # flag for cost function
+      self.final_call = False # flag for _rebuild_Cov: no storage of ycov 
+      
+      if self.needs_covariance:
+        # build static (=parameter-independent) part of covariance matrix      
+        if self.has_rel_Errors and self.ref_toModel:
+          # some y-errors are parameter-independent
+          self._staticCov = _build_CovMat(self.nd,
+                       self.e, eabscor = self.cabs )
+        else: 
+          # all y-errors are parameter-independent
+          self._staticCov = _build_CovMat(self.nd,
+                              self.e, erel=self.erel,
+                              eabscor = self.cabs, erelcor=self.crel,
+                                            data=self.x)
+        # build matrix of relative errors
+        if self.ref_toModel and self.has_rel_Errors:
+          self._covy0 = _build_CovMat(self.nd,
+                             erel=self.erel,
+                             erelcor=self.crel,
+                             data=np.ones(self.nd))
+        else:
+          self._covy0 = None
+
+      else: # no covariance needed, use simple math
+        # build static (=parameter-independent) part of covariance matrix      
+        if self.has_rel_Errors and self.ref_toModel:
+          # only independent y-errors do not depend on parameters
+          self._staticErr2 = _build_Err2(self.e)
+        else: 
+          # all y-errors are parameter-independent
+          self._staticErr2 = _build_Err2( self.e, self.erel, self.x)
+          
+
+    def _rebuild_Err2(self, mpar):
+      """
+      (Re-)calculate uncertaingies 
+      """
+      if self._staticErr2 is not None:
+        self.err2 = np.array(self._staticErr2, copy=True)
+      else:
+        self.err2 = np.zeros(self.nd)
+      if self.ref_toModel and self.has_rel_Errors:
+        _er = self.erel * self.model(self.x, *mpar)       
+        self.err2 += _er * _er
+        
+    def _rebuild_Cov(self, mpar):
+      """
+      (Re-)Build the covariance matrix from components
+      and caclulate its inverse
+      """
+     # start from pre-built parameter-independent part of Covariance Matrix
+      self.cov = np.array(self._staticCov, copy=True)
+
+     # add matrix of parameter-dependent y-uncertainties
+      if self._covy0 is not None:
+        _dat = self.model(self.x, *mpar)       
+        self.cov += self._covy0 * np.outer(_dat, _dat)
+
+    def get_Cov(self):
+      """return covariance matrix of data
+      """
+      if self.needs_covariance:
+        return self.cov
+      else:
+        if self.err2 is None:
+          return None
+        else:
+          return np.diag(self.err2)
+  
+    def get_iCov(self):
+      """return inverse of covariance matrix, as used in cost function
+      """
+      if self.needs_covariance:
+        return self.iCov
+      else:
+        return np.diag(1./self.err2)
+
+    def plot(self, num='Data and Model',
+                   figsize=(7.5, 6.5),                             
+                   data_label='data',
+                   plot_residual=False):
+      """return figure with data and uncertainties
+      """
+#    # get data
+      if plot_residual and self.model_values is not None:
+        x = self.x - self.model_values
+      else:  
+        x = self.x
+      e = self.get_Cov()
+      if e.ndim == 2:
+        e = np.sqrt(np.diagonal(e))
+      else:
+        e = np.sqrt(e)
+   # draw data
+      fig = plt.figure(num=num, figsize=figsize)
+      idx = np.linspace(0.5, len(x)-0.5, len(x))
+      plt.plot(idx, x, marker='x', linestyle='', color='grey', alpha=0.5)
+      plt.errorbar(idx, x, e, fmt=".", capsize=3.0, label=data_label)
+      plt.xlim(0., len(idx))
+      if self.xNames is not None:
+         plt.xticks(ticks=idx, labels=self.xNames)
+      else: 
+         plt.xticks(ticks=idx, labels=range(len(idx)))
+
+      return fig
+      
+  # define custom cost function for iminuit
+  class indexedCost:
+    """
+    Custom e_x_tended Least-SQuares cost function with 
+    dynamically updated covariance matrix and -2log(L) 
+    correction term for parameter-dependent uncertainties.
+
+    The default cost function is twice the negative logarithm 
+    of the likelihood of a Gaussian distribution for data points 
+    :math:`(x, y)` with a model function :math:`y=f(x, *p)` depending
+    on a set of parameters :math:`*p` and a possibly parameter-dependent
+    covariance matrix :math:`V(x, f(x, *p))` of the x and y data:
+
+    .. math:: 
+      -2\ln {\cal L} = \chi^2(x, V^{-1}, x(*p) \,) 
+      + \ln(\, \det( V(x, x(*p) ) \,)
+
+    In the absence of parameter-dependent components of the covariance
+    matrix, the last term is omitted and the cost function is identical
+    to the classical :math:`\chi^2`. 
+    For the evaluation of the cost function an efficient approach based
+    on the "Cholesky decomposition" of the covariance matrix in 
+    a product of a triangular matrix and its transposed is used:
+
+    .. math::
+       V = L L^T.    
+
+    The value of the cost function 
+
+    .. math::
+      \chi^2 = {r}\cdot (V^{-1}{r}) ~~with~~ r = x - x(*p)
+
+    is then calculated by solving the linear equation  
+
+   .. math::
+      V X = r, ~i.e.~ X=V^{-1} r ~and~ \chi^2= r \cdot X   
+
+   with the linear-equation solver *scipy.linalg.cho_solve(L,x)*
+   for Cholesky-decomposed matrices, thus avoiding the costy 
+   calculation of the inverse matrix.
+    
+
+   The determinant, if needed, is efficiently calculated by taking 
+   the product of the diagonal elements of the matrix L,
+
+    .. math::
+      \det(V) = 2 \, \prod L_{i,i}
+    
+    Input:
+
+    - outer: pointer to instance of calling class
+    - model: model function calulating the data x(\*par)
+    - use_neg2logL: use full -2log(L) instead of chi2 if True
+
+    __call__ method of this class is called by iminuit
+
+    Data members:
+
+    - ndof: degrees of freedom 
+    - nconstraints: number of parameter constraints
+    - gof: chi2-value (goodness of fit)
+    - use_neg2logL: usage of full 2*neg Log Likelihood
+    - quiet: no printout if True    
+
+    Methods:
+
+    - model(x, \*par)
+    """
+ 
+    def __init__(self, outer, 
+                 model,
+                 use_neg2logL=False):
+
+      from iminuit.util import make_func_code
+
+      # data object of type xyDataContainer
+      self.data = outer.data
+      if not isinstance(self.data, mnFit.xDataContainer):
+          print(" !!! mnFit.indexedCost: expecting data container of type 'mnFit.xDataContainer'")
+          sys.exit('!==! mnFit Error: no or wrong data object')
+      self.model = model
+      self.quiet = outer.quiet
+      # use -2 * log(L) of Gaussian instead of Chi2
+      #  (only different from Chi2 for parameter-dependent uncertainties)
+      self.use_neg2logL = use_neg2logL
+      
+      # set proper signature of model function for iminuit
+      self.pnams = outer.pnams
+      self.func_code = make_func_code(self.pnams)
+      self.npar = outer.npar
+
+      # take account of constraints 
+      self.constraints = outer.constraints
+      self.nconstraints = len(self.constraints)
+      self.ndof = len(self.data.x) - self.npar + self.nconstraints + outer.nfixed
+
+      # flag to control final actions in cost function
+      self.final_call = False
+
+
+    def __call__(self, *par):  
+      # called iteratively by minuit
+
+      # cost function is extended chi2:
+      #   add normalization term if uncertainties depend on model 
+
+      nlL2 = 0. # initialize -2*ln(L)
+      #  first, take into account possible parameter constraints  
+      if self.nconstraints:
+        for c in self.constraints:
+          p_id = c[0]
+          r = ( par[p_id] - c[1]) / c[2] 
+          nlL2 += r*r
+
+      # calculate residual of data wrt. model
+      model_values = self.model(self.data.x, *par)
+      _r = self.data.x - model_values
+
+      if self.data.needs_covariance:
+        #  check if matrix needs rebuilding
+        if not self.data.needs_dynamicErrors:
+         # static covariance, use its inverse
+          nlL2 += float(np.inner(np.matmul(_r, self.data.iCov), _r))
+          # identical to classical Chi2
+          self.gof = nlL2
+          
+        else: # dynamically rebuild covariance matrix
+          self.data._rebuild_Cov(par)
+          # use Cholesky decompositon to compute chi2 = _r.T (V^-1) _r 
+          L, is_lower = linalg.cho_factor(self.data.cov, check_finite=False)
+          nlL2 += np.inner(_r, linalg.cho_solve((L, is_lower), _r) )
+          # up to here, identical to classical Chi2
+          self.gof = nlL2                  
+        # take into account parameter-dependent normalisation term
+          if self.use_neg2logL:
+         #  fast calculation of determinant det(V) from Cholesky factor 
+            nlL2 += 2.*np.sum(np.log(np.diagonal(L) ) )
+
+      else:  # fast calculation for simple errors
+        # check if errors needs recalculating
+        if self.data.needs_dynamicErrors:
+          self.data._rebuild_Err2(par)
+          nlL2 += np.sum(_r * _r / self.data.err2)
+        else:
+          nlL2 += np.sum(_r * _r * self.data.iErr2)
+
+        # this is identical to classical Chi2
+        self.gof = nlL2
+        
+        # add parameter-dependent normalization term if needed and wanted
+        if self.data.needs_dynamicErrors and self.use_neg2logL:
+          nlL2 += np.sum(np.log(self.data.err2))
+
+      # provide model values to data object
+      self.data.model_values = model_values       
+
+      return nlL2
+
+
+  #
   # --- special code for histogram Fit
   #      
 
@@ -1797,7 +2408,6 @@ class mnFit():
     self.data = self.mlData
 
 
-
   def init_mnFit(self, userFunction, p0=None, 
                        constraints=None, fixPars=None, limits=None):
     """initialize fit object for simple minuit fit with
@@ -1983,7 +2593,7 @@ class mnFit():
     self.pnam2id = {
       self.pnams[i] : i for i in range(0,self.npar) } 
 
-    # proess and store parameter constraints (used in cost function)
+    # process and store parameter constraints (used in cost function)
     self.setConstraints = constraints    
     self.constraints = []
     if constraints is not None:
@@ -2365,6 +2975,7 @@ class mnFit():
     #    determine bin widths and scale factor
     xmin, xmax = plt.xlim()    
     xplt = np.linspace(xmin, xmax, 190)
+    xvals = xplt 
     if self.fit_type=='hist':
       # detemine local bin width
       bwidths = np.zeros(len(xplt))
@@ -2376,31 +2987,57 @@ class mnFit():
       sfac = cf.norm * bwidths
     elif self.fit_type=="xy" or self.fit_type=='ml':
       sfac = 1.
+    elif self.fit_type=="indexed":
+      sfac = 1.
+      xvals = cf.data.x
+      xplt = np.linspace(0.5, len(xvals)-0.5, len(xvals))
     else:
       print("!**! mnFit.plotModel: unknown fit type: ", self.fit_type)
       sfac = 1.
-    # plot model line
+      return
+    
+    # do we want model or residuals ?  
     if plot_residual:
       yplt = np.zeros(len(xplt))
     else:
-      yplt = cf.model(xplt, *pvals)
-    plt.plot(xplt, yplt*sfac, label=model_legend,
-             linestyle='dashed', alpha=0.7,
-             linewidth=2.5, color='darkorange')
+      yplt = cf.model(xvals, *pvals)
+
+    #  plot model line
+    if self.fit_type == "indexed":
+      plt.errorbar(xplt, yplt, fmt=' ', xerr=0.4, label=model_legend,
+                     alpha=0.7, elinewidth=2.5, color='darkorange')
+    else:
+      plt.plot(xplt, yplt*sfac, label=model_legend,
+             linestyle='dashed', linewidth=2.5,
+             alpha=0.7, color='darkorange')
     plt.xlabel(axis_labels[0], size='x-large')
     plt.ylabel(axis_labels[1], size='x-large')
     plt.grid()
-   # draw error band around model function
+
+    # draw error band around model function
     if plot_band:
-      DeltaF = self.getFunctionError(xplt, cf.model, pvals, pcov, fixedPars)
-      plt.fill_between(xplt, sfac*(yplt+DeltaF),
+      if self.fit_type != "indexed":
+        DeltaF = self.getFunctionError(xplt, cf.model, pvals, pcov, fixedPars)
+        plt.fill_between(xplt, sfac*(yplt+DeltaF),
                              sfac*(yplt-DeltaF),
                              alpha=0.3, color='darkkhaki', label='  $\pm 1 \sigma$')
-      plt.plot(xplt, sfac*(yplt+DeltaF), linewidth=1, 
+        plt.plot(xplt, sfac*(yplt+DeltaF), linewidth=1, 
                              alpha=0.4, color='darkgreen')
-      plt.plot(xplt, sfac*(yplt-DeltaF), linewidth=1,
+        plt.plot(xplt, sfac*(yplt-DeltaF), linewidth=1,
                              alpha=0.4, color='darkgreen')
-
+      else:
+        Delta = self.getFunctionError(xvals, cf.model, pvals, pcov, fixedPars)
+        plt.errorbar(xplt, yplt+Delta, fmt=' ', xerr=0.4,
+                     alpha=0.7, elinewidth=1.0, color='darkgreen')
+        plt.errorbar(xplt, yplt-Delta, fmt=' ', xerr=0.4,
+                     alpha=0.7, elinewidth=1., color='darkgreen')
+        for i in range(len(xplt)):
+           lbl = '$\pm 1 \sigma$' if i==0 else ''
+           plt.axhspan(yplt[i]-Delta[i], yplt[i]+Delta[i],
+                       xmin=(xplt[i]-0.4)/len(xplt),
+                       xmax=(xplt[i]+0.4)/len(xplt),
+                       alpha=0.3, color='darkkhaki', label=lbl) 
+       
   # display legend with some fit info
     fit_info = []
     #  1. parameter values and uncertainties
@@ -2633,8 +3270,6 @@ if __name__ == "__main__": # --- interface and example
 
     # set model to use in fit
     fitmodel=exp_model  # also try poly2_model !
-    # get keyword-arguments
-    mpardict = get_functionSignature(fitmodel)[1]
   
     # the data ...
     data_x = [0.0, 0.2, 0.4, 0.6, 0.8, 1., 1.2,
@@ -2689,6 +3324,50 @@ if __name__ == "__main__": # --- interface and example
     print(" correlations : \n", cor)
 
 
+  def example_indexedFit():
+  #
+  # *** Example of an application of phyFit.xFit() to fit indexed data
+  #
+  #     Coordinates in r-phi are averaged and transformed to cartesian 
+    
+    def cartesian_to_polar(data, x=1., y=1.):
+      # determine polar coordinats from cartesian (x,y)
+      nm = len(data)//2 # expect two arrays with measurements
+      r = np.sqrt(x*x + y*y) * np.ones(nm)
+      phi = np.arctan2(y, x) * np.ones(nm)
+      return np.concatenate( (r, phi) )
+
+    # example: (r, phi) of two space points in polar coordinates
+    pars = np.array([0.9, 0.87, 0.755, 0.790])
+    puncs = np.array([0.027, 0.023, 0.16, 0.13])
+
+    # perform fit to data with function xFit using class mnFit
+    resultDict = xFit(cartesian_to_polar, pars, s = puncs,
+                       srel=None, sabscor=None, srelcor=None,
+                       names=['r', 'r', r'$\varphi$', r'$\varphi$'],
+                      # p0=(1., 1.),     
+                       use_negLogL=True,
+                       plot=True,
+                       plot_band=True,
+                       plot_cor=True,
+                       showplots=False,
+                       quiet=False,
+                       axis_labels=['Index', 'x   \  x(*par)'], 
+                       data_legend = 'Polar Data',    
+                       model_legend = 'r-phi from x-y')
+    plt.suptitle("mnFit example: fit to indexed data",
+               size='xx-large', color='darkblue')
+    
+  # Print results 
+    pvals, perrs, cor, chi2, pnams = resultDict.values()
+    print('\n*==* xyFit Result:')
+    print(" parameter names:       ", pnams)
+    print(" chi2: {:.3g}".format(chi2))
+    print(" parameter values:      ", pvals)
+    print(" neg. parameter errors: ", perrs[:,0])
+    print(" pos. parameter errors: ", perrs[:,1])
+    print(" correlations : \n", cor)
+    
   def example_histogramFit():
   #
   # *** Histogram Fit: Example of an application of phyFit.hFit() 
@@ -2864,6 +3543,9 @@ if __name__ == "__main__": # --- interface and example
 
   print("*** xy fit example")
   example_xyFit()
+
+  print("*** indexed fit example")
+  example_indexedFit()
 
   print("\n\n*** histogram fit example")
   example_histogramFit()
