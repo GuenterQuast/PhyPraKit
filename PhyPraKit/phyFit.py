@@ -163,6 +163,8 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     * 2d np-array of float: parameter uncertainties [0]: neg. and [1]: pos. 
     * np-array: correlation matrix 
     * float: 2*negLog L, corresponding to \chi-square of fit a minimum
+
+    or, optionally, the mnFit instance.
   """
 
   ## from .phyFit import mnFit #! already contained in this file
@@ -248,21 +250,14 @@ def xFit(fitf, x, s = None, srel = None,
   """Wrapper function to fit an arbitrary function to data with
   independent and/or correlated absolute and/or relative uncertainties 
   with class mnFit. Uncertainties are assumed to be desribed by
-  a multivariate Gaussian distribution described by the covariance
-  matrix of the data {x}.
+  a multivariate Gaussian distribution, i.e. the covariance matrix of 
+  the data {x_i} is taken into account in the cost function.
 
   Correlated absolute and/or relative uncertainties of input data 
   are specified as floats (if all uncertainties are equal) or as 
   numpy-arrays of floats. The concept of independent or common 
   uncertainties of (groups) of values is used to construct the 
   full covariance matrix from different uncertainty components.
-  Independent uncertainties enter only in the diagonal, while correlated 
-  ones contribute to diagonal and off-diagonal elements of the covariance 
-  matrix. Values of 0. may be specified for data points not affected by a 
-  certain type of uncertainty. E.g. the array [0., 0., 0.5., 0.5] specifies
-  uncertainties only affecting the 3rd and 4th data value. Providing lists 
-  of such arrays permits the construction of arbitrary covariance matrices 
-  from independent and correlated uncertainties of (groups of) data points.
 
   Args:
     * fitf: model function to fit, arguments (float:x, float: \*args)
@@ -272,16 +267,16 @@ def xFit(fitf, x, s = None, srel = None,
     * sabscor: scalar or np-array; absolute, correlated error(s) 
     * srelcor: scalar or np-array; relative, correlated error(s) 
     * ref_to_model: relative errors w.r.t. model if True
-    * names: names for input data
+    * names: optional names for each input value 
     * p0: array-like, initial guess of parameters
     * use_negLogL:  use full -2ln(L)  
     * constraints: (nested) list(s) [name or id, value, error]
     * fix parameter(s) in fit: list of parameter names or indices
     * limits: (nested) list(s) [name or id, min, max] 
-    * plot: show data and model if True
+    * plot: show data points and model prediction if True
     * plot_cor: show profile likelihoods and confidence contours
-    * plot_band: plot uncertainty band around model function
-    * plot_residual: plot residuals w.r.t. model instead of model function
+    * plot_band: plot uncertainty band around model prediction
+    * plot_residual: plot residuals w.r.t. model instead of model prediction
     * showplots: show plots on screen
     * quiet: suppress printout
     * list of str: axis labels
@@ -295,6 +290,8 @@ def xFit(fitf, x, s = None, srel = None,
     * 2d np-array of float: parameter uncertainties [0]: neg. and [1]: pos. 
     * np-array: correlation matrix 
     * float: 2*negLog L, corresponding to \chi-square of fit a minimum
+
+    or, optionally, the mnFit instance.
   """
 
   ## from .phyFit import mnFit #! already contained in this file

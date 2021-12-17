@@ -66,14 +66,15 @@ def A0_readme():
     5. linear regression and function fitting:
 
       - linRegression()    linear regression, y=ax+b, with analytical formula
-      - odFit()            fit function with x and y errors (scipy ODR)
+      - odFit()            fit function with x and y errors (wit package *scipy* *ODR*)
       - xyFit()            fit with with correlated x and y errors,
         profile likelihood and contour lines (module phyFit) 
-      - hFit()             fit of a density to histogram data
-      - k2Fit()            fit function with (correlated) errors on x and y 
-      - hFit()             fit density to histogram data    
+      - xFit()             fit of parameters to indexed data x_i (module *phyFit*)
+      - hFit()             fit of a density to histogram data (module *phyFit*)
       - mFit()             fit of a user-defined cost function, or of a density 
-        to unbinned data
+        to unbinned data (module *phyFit*)
+      - k2Fit()            fit function with (correlated) errors on x and y  
+        with package kafe2
 
     6. simulated data with MC-method:
 
@@ -84,6 +85,7 @@ def A0_readme():
 
       - mFit()             unbinned ML fit with user-defined negLogL or PDF
       - hFit()             fit to binned histogram data
+      - xFit()             fit of parameters to indexed data x_i, with x_i=x_i(x_j, \*par)
       - xyFit()            fit to (x,y) data with y = f(x; \*par) 
 
   """
@@ -1664,6 +1666,12 @@ def mFit(*args, **kwargs):
   # print('Calling mFit() from package phyFit')
   from .phyFit import mFit 
   return mFit(*args, **kwargs)
+
+def xFit(*args, **kwargs):
+  """call xFit from .phyFit"""
+  # print('Calling xFit() from package phyFit')
+  from .phyFit import xFit 
+  return xFit(*args, **kwargs)
 
 
 ## ------- section 6: simulated data -------------------------
