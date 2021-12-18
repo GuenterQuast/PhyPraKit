@@ -23,13 +23,19 @@ if __name__ == "__main__": # --------------------------------------
       phi = np.arctan2(y, x) * np.ones(nm)
       return np.concatenate( (r, phi) )
 
-    # example: (r, phi) of two space points in polar coordinates
-    pars = np.array([0.9, 0.87, 0.755, 0.790])
-    puncs = np.array([0.027, 0.023, 0.16, 0.13])
+    #
+    # fit input example: (r, phi) of two space points in polar coordinates
+    p_vals = np.array([0.902, 0.873, 0.73, 0.79])
+    p_u    = np.array([0.,    0.,    0.16, 0.13])
+    p_ru   = np.array([0.015, 0.015, 0.,   0.  ])
+    p_cru  = np.array([0.01,  0.01,  0.,   0.  ])
 
+    #
     # perform fit to data with function xFit using class mnFit
-    resultDict = xFit(cartesian_to_polar, pars, s = puncs,
-                       srel=None, sabscor=None, srelcor=None,
+    resultDict = xFit(cartesian_to_polar, p_vals, s = p_u,
+                       srel=p_ru,
+                       sabscor=None,
+                       srelcor=p_cru,
                        names=['r', 'r', r'$\varphi$', r'$\varphi$'],
                       # p0=(1., 1.),     
                        use_negLogL=True,
