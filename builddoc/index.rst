@@ -268,9 +268,9 @@ oder::
 
         - linRegression()    lineare Regression, y=ax+b, mit analytische Formel
         - odFit()            Funktionsanpassung mit x- und y-Unsicherheiten (scipy ODR)
-        - xyFit()            Funktionsanpassung mit (korrelierten) x- und
-	  y-Unsicherheiten mit *phyFit*
-        - hFit()             Maximum-Likelihood-Anpassung einer
+        - xyFit()            Funktionsanpassung an Datenpunkte (x_i, y_i=f(x_i)) mit
+	  (korrelierten) x- und	y-Unsicherheiten mit *phyFit* 
+        - hFit()             maximum-likelihood-Anpassung einer
 	  Verteilungsdichte an Histogramm-Daten mit *phyFit*
         - mFit()             Anpassung einer Nutzerdefinierten Kostenfunktion oder einer
 	  Verteilungsdichte an ungebinnete Daten mit der maximum-likelood
@@ -278,10 +278,11 @@ oder::
 	- xFit()            Anpassung eines Modells an indizierte Daten
 	  x_i=x_i(x_j, \*par) mit *phyFit*
         - k2Fit()            Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten
-          mit dem Paket *kafe2*
+          mit dem Paket *kafe2* an Datenpunkte (x_i , y_i=f(x_i))
+
 
       6. Erzeugung simulierter Daten mit MC-Methode:
-s    
+    
         - smearData()          Addieren von zufälligen Unsicherheiten auf Eingabedaten
         - generateXYdata()     Erzeugen simulierter Datenpunkte (x+Delta_x, y+Delta_y)
 
