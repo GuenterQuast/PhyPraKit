@@ -270,12 +270,15 @@ oder::
         - odFit()            Funktionsanpassung mit x- und y-Unsicherheiten (scipy ODR)
         - xyFit()            Funktionsanpassung mit (korrelierten) x- und
 	  y-Unsicherheiten mit *phyFit*
+        - hFit()             Maximum-Likelihood-Anpassung einer
+	  Verteilungsdichte an Histogramm-Daten mit *phyFit*
+        - mFit()             Anpassung einer Nutzerdefinierten Kostenfunktion oder einer
+	  Verteilungsdichte an ungebinnete Daten mit der maximum-likelood
+	  Methode (mit *phyFit*)
+	- xFit()            Anpassung eines Modells an indizierte Daten
+	  x_i=x_i(x_j, \*par) mit *phyFit*
         - k2Fit()            Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten
           mit dem Paket *kafe2*
-        - hFit()             Maximum-Likelihood-Anpassung einer
-	  Verteilungsdichte an Histogramm-Daten
-        - mFit()             Anpassung einer Nutzerdefinierten Kostenfunktion, oder einer
-	  Verteilungsdichte an ungebinnete Daten mit der maximum-likelood Methode
 
       6. Erzeugung simulierter Daten mit MC-Methode:
 s    
@@ -362,6 +365,15 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     für die Minimierung ist der negative natürliche Logarithmus der vom
     Nutzer agegebenen Verteilungsdichte (oder, optional, deren Zweifaches).
 
+  * `test_xFit` ist ein Beispiel für eine Anpassung einer Modellvorhersage
+    an allgemeine Eingabedaten ("indizierte Daten" *x_1, ..., x_n*). Dabei
+    sind die x_i Funktionen der Parameter p_i einer Modellvorhersage, und ggf.
+    auch von Elementen x_j der Eingabedaten: x_i(x_j, \*par). In diesem
+    Beispiel werden zwei Messungen eines Ortes in Polarkoordinaten gemittelt
+    und in kartesische Koordinaten umgerechnet. Bei dieser nicht-linearen
+    Transformation weden sowohl die Zentralwerte als auch Konfidenzkonturen
+    korrekt bestimmt. 
+    
   * `test_Histogram.py` ist ein Beispiel zur Darstellung und 
     statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen) 
     in ein oder zwei Dimensionen.
@@ -424,7 +436,19 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     des CASSY-Systems im `.labx` -Format gespeicherten Dateien ein
     (Beispieldatei `GammaSpektra.labx`).
 
+  * `Beispiel_Multifit.py` illustiert die simultane Anpassung von Parametern
+    an mehrere, gleichartige Messreihen, die mit *kafe2* möglich ist.
+    Ein Anwendungsfall sind mehrere Messreihen mit der gleichen Apparatur,
+    um die Eigenschaften von Materialien in Proben mit unterschiedlicher
+    Geometrie zu bestimmen, wie z. B. die Elastizität oder den spezifischen
+    Widerstand an Proben mit unterschiedlichen Querschnitten und Längen.
+    Auf die Apparatur zurückzuführende Unsicherheiten sind in allen Messreihen
+    gleich, auch die interessierende Materialeigenschaft ist immer die
+    gleiche, lediglich die unterschiedlichen Gemoetrie-Parameter und die
+    jeweils bestimmten Werte der Messreihen haben eigene, unabhängige
+    Unsicherheiten.
 
+    
 Module Documentation 
 ====================
 
