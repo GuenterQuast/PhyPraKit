@@ -3055,7 +3055,7 @@ class mnFit():
         fit_info.append(txt.format(pn, v))
         
     #  2. goodness-of-fit
-    if self.fit_type=='xy':
+    if self.fit_type in ['xy', 'indexed']:
       fit_info.append(
         "$\\chi^2$/$n_\\mathrm{{dof}}$={:.1f}/{}".format(gof,ndof) + \
          ", p={:.1f}%".format(100*chi2prb) )
