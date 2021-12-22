@@ -31,6 +31,7 @@ python3 test_simplek2Fit.py
 python3 test_k2Fit.py
 python3 test_hFit.py
 python3 test_mlFit.py
+python3 test_xFit.py
 
 # toy data
 python3 test_generateData.py
@@ -46,6 +47,7 @@ python3 Beispiel_Drehpendel.py
 python3 Beispiel_GammaSpektroskopie.py
 python3 Beispiel_Hysterese.py
 python3 Beispiel_Wellenform.py
+python3 Beispiel_MultiFit.py
 
 rm -rf .kafe
 echo ""
