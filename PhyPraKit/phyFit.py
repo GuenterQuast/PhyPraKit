@@ -236,7 +236,8 @@ def xyFit(fitf, x, y, sx = None, sy = None,
 def xFit(fitf, x, s = None, srel = None, 
        sabscor = None, srelcor = None,               
        ref_to_model = True,
-       names = None, 
+       names = None,
+       model_kwargs = None,
        p0 = None, constraints = None, fixPars=None, limits=None,
        use_negLogL=True, 
        plot = True, plot_cor = False,
@@ -267,7 +268,8 @@ def xFit(fitf, x, s = None, srel = None,
     * sabscor: scalar or np-array; absolute, correlated error(s) 
     * srelcor: scalar or np-array; relative, correlated error(s) 
     * ref_to_model: relative errors w.r.t. model if True
-    * names: optional names for each input value 
+    * names: optional names for each input value
+    * model_kwargs: optional, fit parameters if not from model signature 
     * p0: array-like, initial guess of parameters
     * use_negLogL:  use full -2ln(L)  
     * constraints: (nested) list(s) [name or id, value, error]
@@ -316,7 +318,7 @@ def xFit(fitf, x, s = None, srel = None,
                        erel = srel, cabs = sabscor, crel = srelcor,
                        names = names)
    # pass model function, start parameter and possible constraints
-  indexedFit.init_fit(fitf, p0=p0,
+  indexedFit.init_fit(fitf, model_kwargs=model_kwargs, p0=p0,
                constraints=constraints,
                fixPars=fixPars,
                limits=limits)
@@ -1558,7 +1560,7 @@ class mnFit():
     self.iterateFit = self.xData.has_rel_Errors and self.refModel
 
 
-  def init_xFit(self, model, p0=None,
+  def init_xFit(self, model, model_kwargs=None, p0=None,
                  constraints=None,
                  fixPars=None,
                  limits=None):
@@ -1578,7 +1580,8 @@ class mnFit():
       sys.exit('mnFit Error: no data object')
 
     # get parameters of model function to set start values for fit
-    args, model_kwargs = get_functionSignature(model)
+    if model_kwargs is None:
+      args, model_kwargs = get_functionSignature(model)
 
     par = (model_kwargs, p0, constraints, fixPars, limits)
     self._setupFitParameters(*par) 
@@ -2662,8 +2665,8 @@ class mnFit():
       self.fixedParNams = []  
 
   def _setupMinuit(self, model_kwargs):
-
-    # create Minuit object (depends on Minuit version)
+    """create Minuit object (depends on Minuit version)
+    """
     if self.iminuit_version < '2':
       if self.quiet:
         print_level=0
@@ -2675,12 +2678,14 @@ class mnFit():
       if self.fixPars is not None:
         for i, pnam in enumerate(self.pnams):
           model_kwargs['fix_' + pnam] = self.fixedPars[i]          
-      self.minuit = Minuit(self.costf, 
+      self.minuit = Minuit(self.costf,
                            errordef=self.ErrDef,
                            print_level=print_level,
                            **model_kwargs )
     else:
-      self.minuit = Minuit(self.costf, **model_kwargs)  
+      self.minuit = Minuit(self.costf,
+                           *model_kwargs.values(),
+                           name=self.pnams )
       self.minuit.errordef = self.ErrDef
       if self.quiet:
         self.minuit.print_level = 0
@@ -2871,7 +2876,7 @@ class mnFit():
       self.migrad_ok = False
       print('*==* !!! fit with migrad failed')
       print(e)
-      exit(1)
+      sys.exit(1)
 
     # possibly, need to iterate
     if self.iterateFit:
@@ -2889,7 +2894,7 @@ class mnFit():
         self.migrad_ok = False
         print('*==* !!! iteration of fit with migrad failed')
         print(e)
-        exit(1)
+        sys.exit(1)
 
     # run profile likelihood scan to check for asymmetric errors
     if self.run_minos:
