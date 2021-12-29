@@ -104,6 +104,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
        xabscor = None, xrelcor = None,        
        yabscor = None, yrelcor = None,
        ref_to_model = True, 
+       model_kwargs = None,
        p0 = None, constraints = None, fixPars=None, limits=None,
        use_negLogL=True, 
        plot = True, plot_cor = False,
@@ -141,6 +142,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     * srely: scalar or np-array, relative uncertainties y
     * yabscor: scalar or np-array, absolute, correlated error(s) on y
     * yrelcor: scalar or np-array, relative, correlated error(s) on y
+    * model_kwargs: optional, fit parameters if not from model signature 
     * p0: array-like, initial guess of parameters
     * use_negLogL:  use full -2ln(L)  
     * constraints: (nested) list(s) [name or id, value, error]
@@ -191,7 +193,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
               cabsx = xabscor, crelx = xrelcor,
               cabsy = yabscor, crely = yrelcor)
    # pass model function, start parameter and possible constraints
-  Fit.init_fit(fitf, p0=p0,
+  Fit.init_fit(fitf, model_kwargs=model_kwargs, p0=p0,
                constraints=constraints,
                fixPars=fixPars,
                limits=limits)
@@ -361,6 +363,7 @@ def xFit(fitf, x, s = None, srel = None,
     return indexedFit.getResult()
 
 def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
+         model_kwargs = None,
          p0 = None, constraints = None,
          fixPars=None, limits=None,
          use_GaussApprox = False,
@@ -389,6 +392,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     * bin_contents:  
     * bin_edges: 
     * DeltaMu: shift mean (=mu) vs. variance (=lam), for Poisson: mu=lam
+    * model_kwargs: optional, fit parameters if not from model signature 
     * p0: array-like, initial guess of parameters
     * constraints: (nested) list(s) [name or id, value, error] 
     * limits: (nested) list(s) [name or id, min, max] 
@@ -427,7 +431,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
   # pass data and uncertainties to fit object
   Fit.init_data(bin_contents, bin_edges, DeltaMu)
    # pass model fuction, start parameter and possibe constraints
-  Fit.init_fit(fitf, p0=p0,
+  Fit.init_fit(fitf, model_kwargs=model_kwargs, p0=p0,
                constraints=constraints,
                fixPars=fixPars,
                limits=limits)
@@ -469,16 +473,18 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     #   parameter names
     return Fit.getResult()
 
-def mFit(ufcn, data = None, p0 = None, 
-          constraints = None, limits=None, fixPars=None,
-          neg2logL = True,
-          plot = False, plot_band = True,
-          plot_cor = False,
-          showplots = True, quiet = True,
-          axis_labels=['x', 'Density = f(x, *par)'],
-          data_legend = 'data',    
-          model_legend = 'model',
-          return_fitObject=False ) :
+def mFit(ufcn, data = None,
+         model_kwargs = None,
+         p0 = None, 
+         constraints = None, limits=None, fixPars=None,
+         neg2logL = True,
+         plot = False, plot_band = True,
+         plot_cor = False,
+         showplots = True, quiet = True,
+         axis_labels=['x', 'Density = f(x, *par)'],
+         data_legend = 'data',    
+         model_legend = 'model',
+         return_fitObject=False ) :
 
   """Wrapper function to directly fit a user-defined cost funtion
 
@@ -502,6 +508,7 @@ def mFit(ufcn, data = None, p0 = None,
         the set of parameters `par`. 
 
     * data, optional, array of floats: optional input data
+    * model_kwargs: optional, fit parameters if not from model signature 
     * p0: array-like, initial guess of parameters
     * constraints: (nested) list(s) [name or id, value, error] 
     * limits: (nested) list(s) [name or id, min, max] 
@@ -537,7 +544,7 @@ def mFit(ufcn, data = None, p0 = None,
   # initialze fit
   #  - with the user-supplied cost function cost(*pars) if no data given
   #  - with probability density pdf(x; *pars) if data (=x) provided 
-  uFit.init_fit(ufcn, p0 = p0,
+  uFit.init_fit(ufcn, model_kwargs=model_kwargs, p0=p0,
                 constraints = constraints,
                 fixPars = fixPars,
                 limits = limits)
@@ -977,7 +984,7 @@ class mnFit():
          self.xyData.has_rel_yErrors and self.refModel)
 
 
-  def init_xyFit(self, model, p0=None,
+  def init_xyFit(self, model, model_kwargs=None, p0=None,
                  constraints=None,
                  fixPars=None,
                  limits=None):
@@ -985,6 +992,7 @@ class mnFit():
 
     Args:
       - model: model function f(x; \*par)
+      - model_kwargs: optional, fit parameters if not from model signature 
       - p0: np-array of floats, initial parameter values 
       - constraints: (nested) list(s): [parameter name, value, uncertainty] 
         or [parameter index, value, uncertainty]
@@ -997,7 +1005,8 @@ class mnFit():
       sys.exit('mnFit Error: no data object')
 
     # get parameters of model function to set start values for fit
-    args, model_kwargs = get_functionSignature(model)
+    if model_kwargs is None:
+      args, model_kwargs = get_functionSignature(model)
 
     par = (model_kwargs, p0, constraints, fixPars, limits)
     self._setupFitParameters(*par) 
@@ -1568,6 +1577,7 @@ class mnFit():
 
     Args:
       - model: model function f(x; \*par)
+      - model_kwargs: optional, fit parameters if not from model signature 
       - p0: np-array of floats, initial parameter values 
       - constraints: (nested) list(s): [parameter name, value, uncertainty] 
         or [parameter index, value, uncertainty]
@@ -2027,7 +2037,7 @@ class mnFit():
                                quiet=self.quiet)
     self.data = self.hData
     
-  def init_hFit(self, model, p0=None,
+  def init_hFit(self, model, model_kwargs=None, p0=None,
                 constraints=None,
                 fixPars = None, 
                 limits=None):
@@ -2035,6 +2045,7 @@ class mnFit():
 
     Args:
       - model: model density function f(x; \*par)
+      - model_kwargs: optional, fit parameters if not from model signature 
       - p0: np-array of floats, initial parameter values 
       - constraints: (nested) list(s): [parameter name, value, uncertainty] 
         or [parameter index, value, uncertainty]
@@ -2048,7 +2059,8 @@ class mnFit():
       sys.exit('mnFit Error: no data object')
     
     # get parameters of model function to set start values for fit
-    args, model_kwargs = get_functionSignature(model)
+    if model_kwargs is None:
+      args, model_kwargs = get_functionSignature(model)
 
     par = (model_kwargs, p0, constraints, fixPars, limits)
     self._setupFitParameters(*par)
@@ -2408,7 +2420,7 @@ class mnFit():
     self.data = self.mlData
 
 
-  def init_mnFit(self, userFunction, p0=None, 
+  def init_mnFit(self, userFunction, model_kwargs=None, p0=None, 
                        constraints=None, fixPars=None, limits=None):
     """initialize fit object for simple minuit fit with
     * with user-supplied cost function or
@@ -2417,6 +2429,7 @@ class mnFit():
     Args:
       - costFunction: cost function or pdf 
       - p0: np-array of floats, initial parameter values 
+      - model_kwargs: optional, fit parameters if not from model signature 
       - parameter constraints: (nested) list(s): [parameter name, value, uncertainty] 
       - fix parameter(s) in fit: list of parameter names or indices
       - limits: (nested) list(s): [parameter name, min, max] or
@@ -2427,7 +2440,8 @@ class mnFit():
       sys.exit('mnFit Error: no data object')
 
     # get parameters of model function to set start values for fit
-    args, model_kwargs = get_functionSignature(userFunction)
+    if model_kwargs is None:
+      args, model_kwargs = get_functionSignature(userFunction)
 
     par = (model_kwargs, p0, constraints, fixPars, limits)
     self._setupFitParameters(*par) 
@@ -3260,7 +3274,7 @@ if __name__ == "__main__": # --- interface and example
   
   def example_xyFit():
   #
-  # *** Example of an application of phyFit.mFit()
+  # *** Example of an application of phyFit.xyFit()
   #
   # define the model function to fit
     def exp_model(x, A=1., x0=1.):
@@ -3426,8 +3440,8 @@ if __name__ == "__main__": # --- interface and example
   def example_userFit():
     """**unbinned ML fit** with user-defined cost function
 
-    This code illustrates usage of the wrapper function userFit() 
-    for  class **mnFit** 
+    This code illustrates usage of the wrapper function mFit()  
+    for  class **mnFit** user-defined cost function
     """  
 
     # generate Gaussian-distributed data
