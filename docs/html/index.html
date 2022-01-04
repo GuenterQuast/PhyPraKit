@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PhyPraKit Documentation &#8212; PhyPraKit 1.2.0rc documentation</title>
+    <title>PhyPraKit Documentation &#8212; PhyPraKit 1.2.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.0rc documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>  
@@ -41,7 +41,7 @@
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Version 1.2.0rc, Date 2021-06-30</p>
+<div><p>Version 1.2.1, Date 2022-01-04</p>
 </div></blockquote>
 <p><strong>PhyPraKit</strong> is a collection of python modules
 for data visualization and analysis in experimental laboratory
@@ -65,19 +65,18 @@ After downloading, execute:</p>
 <p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">.</span></code></p>
 <p>in the main directory of the <em>PhyPraKit</em> package (where <em>setup.py</em>
 is located) to install in user space.</p>
+<p>Comfortable installation via the PyPI Python Package Index
+is also possible by executing</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">PhyPraKit</span></code></p>
+</div></blockquote>
 <p>The installation via the <em>whl</em>-package provided
 in the subdirectory <cite>dist</cite> may alternatively be used:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">--no-cache</span> <span class="pre">PhyPraKit&lt;version&gt;.whl</span></code></p>
 </div></blockquote>
-<p>Installation via the PyPI Python Package Index is also possible
-by simply executing</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">PhyPraKit</span></code></p>
-</div></blockquote>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
+<p><em>python</em> scripts and <em>Jupyter</em> notebook versions illustrate common
+use cases of the package and provide examples of typical applications.</p>
 <p><strong>German Description:</strong></p>
 <p><strong>PhyPraKit</strong> ist eine Sammlung nützlicher Funktionen in der Sprache
 <cite>Python (&gt;=3.6, die meisten Module laufen auch noch mit der inzwischen
@@ -113,15 +112,12 @@ contrary, testing the validity of model hypothesis is of central importance
 before extracting any model parameters. Therefore, uncertainties must be
 understood, modeled correctly and incorporated in the fitting procedure.</p>
 <p><em>PhyPraKit</em> offers adapted interfaces to the fit modules in the package
-<em>scipy</em> (<em>optimize.curve_fit</em> and <em>ODR</em>) to perform fits with a test of
-the validity of the hypothesis. A very lean implementation, relying on
-the mimimization and uncertainty-analysis tool <em>MINUIT</em>, is also provided
+<em>scipy</em> (<em>optimize.curve_fit</em> and <em>ODR</em>) to perform fits including a test
+of the validity of the model hypothesis. A very lean implementation, relying
+on the mimimization and uncertainty-analysis tool <em>MINUIT</em>, is also provided
 in the sub-package <em>phyFit</em> for the above-mentioned use cases.
 <em>PhyPraKit</em> also contains a simplified interface to the very
 function-rich fitting package <em>kafe2</em>.</p>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
 <blockquote>
 <div><p><strong>German: Darstellung und Auswertung von Messdaten</strong></p>
 </div></blockquote>
@@ -271,14 +267,17 @@ Datensatzes</p></li>
 <div><ul class="simple">
 <li><p>linRegression()    lineare Regression, y=ax+b, mit analytische Formel</p></li>
 <li><p>odFit()            Funktionsanpassung mit x- und y-Unsicherheiten (scipy ODR)</p></li>
-<li><p>xyFit()            Funktionsanpassung mit (korrelierten) x- und
-y-Unsicherheiten mit <em>phyFit</em></p></li>
+<li><p>xyFit()            Funktionsanpassung an Datenpunkte (x_i, y_i=f(x_i)) mit
+(korrelierten) x- und y-Unsicherheiten mit <em>phyFit</em></p></li>
+<li><p>hFit()             maximum-likelihood-Anpassung einer
+Verteilungsdichte an Histogramm-Daten mit <em>phyFit</em></p></li>
+<li><p>mFit()             Anpassung einer Nutzerdefinierten Kostenfunktion oder einer
+Verteilungsdichte an ungebinnete Daten mit der maximum-likelood
+Methode (mit <em>phyFit</em>)</p></li>
+<li><p>xFit()            Anpassung eines Modells an indizierte Daten
+x_i=x_i(x_j, *par) mit <em>phyFit</em></p></li>
 <li><p>k2Fit()            Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten
-mit dem Paket <em>kafe2</em></p></li>
-<li><p>hFit()             Maximum-Likelihood-Anpassung einer
-Verteilungsdichte an Histogramm-Daten</p></li>
-<li><p>mFit()             Anpassung einer Nutzerdefinierten Kostenfunktion, oder einer
-Verteilungsdichte an ungebinnete Daten mit der maximum-likelood Methode</p></li>
+mit dem Paket <em>kafe2</em> an Datenpunkte (x_i , y_i=f(x_i))</p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="6">
@@ -291,7 +290,10 @@ Verteilungsdichte an ungebinnete Daten mit der maximum-likelood Methode</p></li>
 </ul>
 </div></blockquote>
 </div></blockquote>
-<p>Die folgenden <strong>Beispiele</strong> illustrieren die Anwendung:</p>
+<p>Die folgenden <strong>Beispiele</strong> dienen der Illustration der Anwendung der
+zahlreichen Funktionen.
+Eine direkt im Browser ausführbare Installation von <em>PhyPraKit</em> gibt es auf
+<a class="reference external" href="https://mybinder.org/v2/git/https%3A%2F%2Fgit.scc.kit.edu%2Fyh5078%2FPhyPraKit/master">mybinder.org</a>.</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><cite>test_readColumnData.py</cite> ist ein Beispiel zum
@@ -318,17 +320,17 @@ berechneter Fehlerfortpflanzung und korrekter Rundung von Größen
 mit Unsicherheit</p></li>
 <li><p><cite>test_linRegression.py</cite> ist eine einfachere Version mit
 <cite>python</cite>-Bordmitteln zur Anpassung einer Geraden an
-Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung.
+Messdaten mit Unsicherheiten in Ordinaten- und Abszissenrichtung.
 Korrelierte Unsicherheiten werden nicht unterstützt.</p></li>
 <li><p><cite>test_xyFit</cite> dient zur Anpassung einer beliebigen Funktion an
-Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit
-allen Messpunkten gemeinsamen (d. h. korrelierten) relativen oder
-absoluten systematischen Fehlern. Dazu wird das Paket imunit
+Messdaten mit Unsicherheiten in Ordinaten- und Abszissenrichtung
+und mit allen Messpunkten gemeinsamen (d. h. korrelierten) relativen
+oder absoluten systematischen Fehlern. Dazu wird das Paket <em>imunit</em>
 verwendet, das den am CERN entwickelten Minimierer MINUIT nutzt.
 Da die Kostenfunktion frei definiert und auch während der Anpassung
 dynamisch aktualisiert werden kann, ist die Implementierung von
 Parameter-abhängigen Unsicherheiten möglich. Ferner unterstützt
-iminuit die Erzeugung und Darstellung von Profil-Likelihood-Kurven
+<em>iminuit</em> die Erzeugung und Darstellung von Profil-Likelihood-Kurven
 und Konfidenzkonturen, die so mit <cite>xyFit</cite> ebenfalls dargestellt
 werden können.</p></li>
 <li><p><cite>test_k2Fit.py</cite> verwendet das funktionsreiche Anpassungspaket <em>kafe2</em>
@@ -353,6 +355,14 @@ berücksichtigen.</p></li>
 ungebinnte Daten mit der maximum-likelihood Methode. Die Kostenfunktion
 für die Minimierung ist der negative natürliche Logarithmus der vom
 Nutzer agegebenen Verteilungsdichte (oder, optional, deren Zweifaches).</p></li>
+<li><p><cite>test_xFit</cite> ist ein Beispiel für eine Anpassung einer Modellvorhersage
+an allgemeine Eingabedaten (“indizierte Daten” <em>x_1, …, x_n</em>). Dabei
+sind die x_i Funktionen der Parameter p_i einer Modellvorhersage, und ggf.
+auch von Elementen x_j der Eingabedaten: x_i(x_j, *par). In diesem
+Beispiel werden zwei Messungen eines Ortes in Polarkoordinaten gemittelt
+und in kartesische Koordinaten umgerechnet. Bei dieser nicht-linearen
+Transformation weden sowohl die Zentralwerte als auch Konfidenzkonturen
+korrekt bestimmt.</p></li>
 <li><p><cite>test_Histogram.py</cite> ist ein Beispiel zur Darstellung und
 statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen)
 in ein oder zwei Dimensionen.</p></li>
@@ -405,6 +415,26 @@ eine Suche nach charakteristischen Extrema. Die Zeitdifferenzen
 zwischen deren Auftreten im Muster werden bestimmt, als
 Häufgkeitsverteilung dargestellt und die Verteilungen statistisch
 ausgewertet.</p></li>
+<li><p><cite>Beispiel_Multifit.py</cite> illustiert die simultane Anpassung von Parametern
+an mehrere, gleichartige Messreihen, die mit <em>kafe2</em> möglich ist.
+Ein Anwendungsfall sind mehrere Messreihen mit der gleichen Apparatur,
+um die Eigenschaften von Materialien in Proben mit unterschiedlicher
+Geometrie zu bestimmen, wie z. B. die Elastizität oder den spezifischen
+Widerstand an Proben mit unterschiedlichen Querschnitten und Längen.
+Auf die Apparatur zurückzuführende Unsicherheiten sind in allen Messreihen
+gleich, auch die interessierende Materialeigenschaft ist immer die
+gleiche, lediglich die unterschiedlichen Gemoetrie-Parameter und die
+jeweils bestimmten Werte der Messreihen haben eigene, unabhängige
+Unsicherheiten.</p></li>
+<li><p><cite>Beispiel_GeomOptik.py</cite> zeigt, wie man mittels Parametertransformation
+die Einzelbrennweiten der beiden Linsen eines Zwei-Linsensystems
+aus der Systembrennweite und den Hauptebenenlagen bestimmen kann.
+Dabei wird neben der Transformation auf den neuen Parametersatz
+auch eine Mittelung über mehrere Messreihen durchgeführt, deren
+Ergebnisse ihrerseits aus Anpassungen gewonnen wurden. Die
+Paramtertransformation wird als Anpassungsproblem mit einer
+:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>chi^2`Kostenfunktion behandelt und so auch die Konfidenzkonturen
+der neuen Parameter bestimmt.</p></li>
 <li><p><cite>Beispiel_GammaSpektroskopie.py</cite> liest mit dem Vielkanalanalysator
 des CASSY-Systems im <cite>.labx</cite> -Format gespeicherten Dateien ein
 (Beispieldatei <cite>GammaSpektra.labx</cite>).</p></li>
@@ -501,14 +531,15 @@ functions of values <em>v</em> with uncertainties <em>u</em> with correct error 
 <blockquote>
 <div><ul class="simple">
 <li><p>linRegression()    linear regression, y=ax+b, with analytical formula</p></li>
-<li><p>odFit()            fit function with x and y errors (scipy ODR)</p></li>
+<li><p>odFit()            fit function with x and y errors (wit package <em>scipy</em> <em>ODR</em>)</p></li>
 <li><p>xyFit()            fit with with correlated x and y errors,
 profile likelihood and contour lines (module phyFit)</p></li>
-<li><p>hFit()             fit of a density to histogram data</p></li>
-<li><p>k2Fit()            fit function with (correlated) errors on x and y</p></li>
-<li><p>hFit()             fit density to histogram data</p></li>
+<li><p>xFit()             fit of parameters to indexed data x_i (module <em>phyFit</em>)</p></li>
+<li><p>hFit()             fit of a density to histogram data (module <em>phyFit</em>)</p></li>
 <li><p>mFit()             fit of a user-defined cost function, or of a density 
-to unbinned data</p></li>
+to unbinned data (module <em>phyFit</em>)</p></li>
+<li><p>k2Fit()            fit function with (correlated) errors on x and y  
+with package kafe2</p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="6">
@@ -518,6 +549,15 @@ to unbinned data</p></li>
 <div><ul class="simple">
 <li><p>smearData()          add random deviations to input data</p></li>
 <li><p>generateXYdata()     generate simulated data</p></li>
+</ul>
+</div></blockquote>
+<p>phyFit fitting package for binned and unbinned ML fits and ML fits to (x,y) data</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>mFit()             unbinned ML fit with user-defined negLogL or PDF</p></li>
+<li><p>hFit()             fit to binned histogram data</p></li>
+<li><p>xFit()             fit of parameters to indexed data x_i, with x_i=x_i(x_j, *par)</p></li>
+<li><p>xyFit()            fit to (x,y) data with y = f(x; *par)</p></li>
 </ul>
 </div></blockquote>
 </div></blockquote>
@@ -821,43 +861,8 @@ as arguments.</p>
 
 <dl class="py function">
 <dt id="PhyPraKit.hFit">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">hFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">bin_contents</span></em>, <em class="sig-param"><span class="n">bin_edges</span></em>, <em class="sig-param"><span class="n">DeltaMu</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_GaussApprox</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fit_density</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'counts/bin = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'Histogram Data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'Model'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.hFit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper function to fit a density distribution f(x, *par) 
-to binned data (histogram) with class mnFit</p>
-<p>The cost function is two times the negative log-likelihood of the Poisson 
-distribution, or - optionally - of the Gaussian approximation.</p>
-<p>Uncertainties are determined from the model values in order to avoid biases and to
-to take account of empty bins of an histogram. The default behaviour is to fit a
-normalised density; optionally, it is also possible to fit the number of bin entries.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><ul class="simple">
-<li><p>fitf: model function to fit, arguments (float:x, float: *args)</p></li>
-<li><p>bin_contents:</p></li>
-<li><p>bin_edges:</p></li>
-<li><p>DeltaMu: shift mean (=mu) vs. variance (=lam), for Poisson: mu=lam</p></li>
-<li><p>p0: array-like, initial guess of parameters</p></li>
-<li><p>constraints: (nested) list(s) [name or id, value, error]</p></li>
-<li><p>limits: (nested) list(s) [name or id, min, max]</p></li>
-<li><p>GaussApprox: Gaussian approximation instead of Poisson</p></li>
-<li><p>density: fit density (not number of events)</p></li>
-<li><p>plot: show data and model if True</p></li>
-<li><p>plot_cor: show profile likelihoods and confidence contours</p></li>
-<li><p>plot_band: plot uncertainty band around model function</p></li>
-<li><p>showplots: show plots on screen</p></li>
-<li><p>quiet: suppress printout</p></li>
-<li><p>axis_labes: list of tow strings, axis labels</p></li>
-<li><p>data_legend: legend entry for data</p></li>
-<li><p>model_legend: legend entry for model</p></li>
-</ul>
-</dd>
-<dt>Returns:</dt><dd><ul class="simple">
-<li><p>np-array of float: parameter values</p></li>
-<li><p>2d np-array of float: parameter uncertainties [0]: neg. and [1]: pos.</p></li>
-<li><p>np-array: correlation matrix</p></li>
-<li><p>float: 2*negLog L, corresponding to chi-square of fit a minimum</p></li>
-</ul>
-</dd>
-</dl>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">hFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.hFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>call hFit from .phyFit</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1020,39 +1025,8 @@ else use measured data</p></li>
 
 <dl class="py function">
 <dt id="PhyPraKit.mFit">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">mFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ufcn</span></em>, <em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">neg2logL</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'Density = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.mFit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper function to directly fit a user-defined cost funtion</p>
-<p>This is the simplest fit possible with the class mnFit. If no data is
-specified (data=None), a user-supplied cost function (ufcn) is minimized 
-and an estimation of the parameter uncertainties performed, assuming
-the cost function is a negative log-likelihood function (nlL of 2nLL).</p>
-<p>In case data is provided, the user function <cite>ufcn(data, *par)</cite> is 
-interpreted as a parameter-dependent probability density function, and
-the parameters are determined in an unbinned log-likelihood approach.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><ul class="simple">
-<li><p>ufcn: user-defined cost function or pdf to be minimized;</p>
-<ul>
-<li><p>ufcn(*par): the uncertainty estimation relies on this being a 
-negative log-likelihood function (‘nlL’); in this case, no data
-is to be provided, i.e. <cite>data=None</cite>.</p></li>
-<li><p>ufcn(x, *par): a probability density of the data <cite>x</cite> depending on
-the set of parameters <cite>par</cite>.</p></li>
-</ul>
-</li>
-<li><p>data, optional, array of floats: optional input data</p></li>
-<li><p>p0: array-like, initial guess of parameters</p></li>
-<li><p>constraints: (nested) list(s) [name or id, value, error]</p></li>
-<li><p>limits: (nested) list(s) [name or id, min, max]</p></li>
-<li><p>neg2logL: use 2 * nlL (corresponding to a least-squares-type cost)</p></li>
-<li><p>plot: show data and model if True</p></li>
-<li><p>plot_band: plot uncertainty band around model function</p></li>
-<li><p>plot_cor: plot likelihood profiles and confidence contours of parameters</p></li>
-<li><p>showplots: show plots on screen (can also be done by calling script)</p></li>
-<li><p>quiet: controls verbose output</p></li>
-</ul>
-</dd>
-</dl>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">mFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.mFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>call mFit from .phyFit</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1155,13 +1129,13 @@ by subtracting the mean</p>
 <dd><p>plot histograms and sctter plots of value pairs as array of axes</p>
 <p>Args:</p>
 <ul class="simple">
-<li><p>vals: 2d-Array [[v1_1, …], …, [vn_1, …]] of float, input data</p></li>
-<li><p>names: labels for variables v1 to vn</p></li>
+<li><p>vals: list of arrays [[v1_1, …], …, [vn_1, …]] of float, input data</p></li>
+<li><p>names: list of labels for variables v1 to vn</p></li>
 </ul>
 <p>Returns:</p>
 <ul class="simple">
 <li><p>figure</p></li>
-<li><p>axis: axis of first empty space in axarray (=[0,1])</p></li>
+<li><p>axarray: array of axes</p></li>
 </ul>
 </dd></dl>
 
@@ -1486,54 +1460,15 @@ to the diagonal elements of the covariance matrix</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="PhyPraKit.xFit">
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">xFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.xFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>call xFit from .phyFit</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="PhyPraKit.xyFit">
-<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">xyFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srelx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srely</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ref_to_model</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_negLogL</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'y = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.xyFit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fit an arbitrary function fitf(x, *par) to data points (x, y) 
-with independent and correlated absolute and/or relative errors on 
-x- and y- values with class mnFit from package phyFit (uses iminuit).</p>
-<p>Correlated absolute and/or relative uncertainties of input data 
-are specified as numpy-arrays of floats; they enter in the 
-diagonal and off-diagonal elements of the covariance matrix. 
-Values of 0. may be specified for data points not affected
-by a correlated uncertainty. E.g. the array [0., 0., 0.5., 0.5]
-results in a correlated uncertainty of 0.5 of the 3rd and 4th 
-data points. Providing lists of such arrays permits the construction
-of arbitrary covariance matrices from independent and correlated
-uncertainties of (groups of) data points.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><ul class="simple">
-<li><p>fitf: model function to fit, arguments (float:x, float: *args)</p></li>
-<li><p>x:  np-array, independent data</p></li>
-<li><p>y:  np-array, dependent data</p></li>
-<li><p>sx: scalar or 1d or 2d np-array , uncertainties on x data</p></li>
-<li><p>sy: scalar or 1d or 2d np-array , uncertainties on x data</p></li>
-<li><p>srelx: scalar or np-array, relative uncertainties x</p></li>
-<li><p>srely: scalar or np-array, relative uncertainties y</p></li>
-<li><p>yabscor: scalar or np-array, absolute, correlated error(s) on y</p></li>
-<li><p>yrelcor: scalar or np-array, relative, correlated error(s) on y</p></li>
-<li><p>p0: array-like, initial guess of parameters</p></li>
-<li><p>use_negLogL:  use full -2ln(L)</p></li>
-<li><p>constraints: (nested) list(s) [name or id, value, error]</p></li>
-<li><p>fix parameter(s) in fit: list of parameter names or indices</p></li>
-<li><p>limits: (nested) list(s) [name or id, min, max]</p></li>
-<li><p>plot: show data and model if True</p></li>
-<li><p>plot_cor: show profile likelihoods and confidence contours</p></li>
-<li><p>plot_band: plot uncertainty band around model function</p></li>
-<li><p>showplots: show plots on screen, default = False</p></li>
-<li><p>quiet: suppress printout</p></li>
-<li><p>list of str: axis labels</p></li>
-<li><p>str: legend for data</p></li>
-<li><p>str: legend for model</p></li>
-</ul>
-</dd>
-<dt>Returns:</dt><dd><ul class="simple">
-<li><p>np-array of float: parameter values</p></li>
-<li><p>2d np-array of float: parameter uncertainties [0]: neg. and [1]: pos.</p></li>
-<li><p>np-array: correlation matrix</p></li>
-<li><p>float: chi2  chi-square of fit a minimum</p></li>
-</ul>
-</dd>
-</dl>
+<code class="sig-prename descclassname">PhyPraKit.</code><code class="sig-name descname">xyFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.xyFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>call xyFit from .phyFit</p>
 </dd></dl>
 
 <span class="target" id="module-PhyPraKit.phyFit"></span><p>package phyFit.py</p>
@@ -1630,28 +1565,31 @@ and collects and displays the results.</p>
 
 <dl class="py function">
 <dt id="PhyPraKit.phyFit.hFit">
-<code class="sig-prename descclassname">PhyPraKit.phyFit.</code><code class="sig-name descname">hFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">bin_contents</span></em>, <em class="sig-param"><span class="n">bin_edges</span></em>, <em class="sig-param"><span class="n">DeltaMu</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_GaussApprox</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fit_density</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'counts/bin = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'Histogram Data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'Model'</span></em>, <em class="sig-param"><span class="n">return_fitObject</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.hFit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.phyFit.</code><code class="sig-name descname">hFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">bin_contents</span></em>, <em class="sig-param"><span class="n">bin_edges</span></em>, <em class="sig-param"><span class="n">DeltaMu</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_GaussApprox</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fit_density</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_residual</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'counts/bin = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'Histogram Data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'Model'</span></em>, <em class="sig-param"><span class="n">return_fitObject</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.hFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper function to fit a density distribution f(x, *par) 
 to binned data (histogram) with class mnFit</p>
 <p>The cost function is two times the negative log-likelihood of the Poisson 
 distribution, or - optionally - of the Gaussian approximation.</p>
-<p>Uncertainties are determined from the model values in order to avoid biases and to
-to take account of empty bins of an histogram. The default behaviour is to fit a
-normalised density; optionally, it is also possible to fit the number of bin entries.</p>
+<p>Uncertainties are determined from the model values in order to avoid biases 
+and to take account of empty bins of an histogram. The default behaviour is 
+to fit a normalised density; optionally, it is also possible to fit the 
+number of bin entries.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>fitf: model function to fit, arguments (float:x, float: *args)</p></li>
 <li><p>bin_contents:</p></li>
 <li><p>bin_edges:</p></li>
 <li><p>DeltaMu: shift mean (=mu) vs. variance (=lam), for Poisson: mu=lam</p></li>
+<li><p>model_kwargs: optional, fit parameters if not from model signature</p></li>
 <li><p>p0: array-like, initial guess of parameters</p></li>
 <li><p>constraints: (nested) list(s) [name or id, value, error]</p></li>
 <li><p>limits: (nested) list(s) [name or id, min, max]</p></li>
-<li><p>GaussApprox: Gaussian approximation instead of Poisson</p></li>
+<li><p>use_GaussApprox: Gaussian approximation instead of Poisson</p></li>
 <li><p>density: fit density (not number of events)</p></li>
 <li><p>plot: show data and model if True</p></li>
 <li><p>plot_cor: show profile likelihoods and confidence contours</p></li>
 <li><p>plot_band: plot uncertainty band around model function</p></li>
+<li><p>plot_residual: plot residuals w.r.t. model instead of model function</p></li>
 <li><p>showplots: show plots on screen</p></li>
 <li><p>quiet: suppress printout</p></li>
 <li><p>axis_labes: list of tow strings, axis labels</p></li>
@@ -1673,7 +1611,7 @@ to data members and methods</p></li>
 
 <dl class="py function">
 <dt id="PhyPraKit.phyFit.mFit">
-<code class="sig-prename descclassname">PhyPraKit.phyFit.</code><code class="sig-name descname">mFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ufcn</span></em>, <em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">neg2logL</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'Density = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em>, <em class="sig-param"><span class="n">return_fitObject</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mFit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">PhyPraKit.phyFit.</code><code class="sig-name descname">mFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ufcn</span></em>, <em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">neg2logL</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'Density = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em>, <em class="sig-param"><span class="n">return_fitObject</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper function to directly fit a user-defined cost funtion</p>
 <p>This is the simplest fit possible with the class mnFit. If no data is
 specified (data=None), a user-supplied cost function (ufcn) is minimized 
@@ -1694,6 +1632,7 @@ the set of parameters <cite>par</cite>.</p></li>
 </ul>
 </li>
 <li><p>data, optional, array of floats: optional input data</p></li>
+<li><p>model_kwargs: optional, fit parameters if not from model signature</p></li>
 <li><p>p0: array-like, initial guess of parameters</p></li>
 <li><p>constraints: (nested) list(s) [name or id, value, error]</p></li>
 <li><p>limits: (nested) list(s) [name or id, min, max]</p></li>
@@ -1734,6 +1673,8 @@ the minimizer and uncertainty-estimator <strong>iminuit</strong>.</p>
 <li><p>plot_Profile():     plot profile Likelihood for parameter</p></li>
 <li><p>plot_clContour():   plot confidence level contour for pair of parameters</p></li>
 <li><p>plot_nsigContour(): plot n-sigma contours for pair of parameters</p></li>
+<li><p>getProfile():       return profile likelihood of parameter pnam</p></li>
+<li><p>getContour():       return contour points of pair of parameters</p></li>
 </ul>
 <p>Sub-Classes:</p>
 <ul class="simple">
@@ -1815,6 +1756,25 @@ of user-supplied probability distribution</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt id="PhyPraKit.phyFit.mnFit.getContour">
+<code class="sig-name descname">getContour</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pnam1</span></em>, <em class="sig-param"><span class="n">pnam2</span></em>, <em class="sig-param"><span class="n">cl</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">npoints</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.getContour" title="Permalink to this definition">¶</a></dt>
+<dd><p>return profile likelihood contour of parameters pnam1 and pnam2</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>1st parameter name</p></li>
+<li><p>2nd parameter name</p></li>
+<li><p>confidence level</p></li>
+<li><p>number of points</p></li>
+</ul>
+</dd>
+<dt>Returns: </dt><dd><ul class="simple">
+<li><p>array of float (npoints * 2) contour points</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.getFunctionError">
 <em class="property">static </em><code class="sig-name descname">getFunctionError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">pvals</span></em>, <em class="sig-param"><span class="n">covp</span></em>, <em class="sig-param"><span class="n">fixedPars</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.getFunctionError" title="Permalink to this definition">¶</a></dt>
 <dd><p>determine error of model at x</p>
@@ -1837,12 +1797,12 @@ of user-supplied probability distribution</p></li>
 
 <dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.getProfile">
-<code class="sig-name descname">getProfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pnam</span></em>, <em class="sig-param"><span class="n">range</span><span class="o">=</span><span class="default_value">3.0</span></em>, <em class="sig-param"><span class="n">npvals</span><span class="o">=</span><span class="default_value">30</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.getProfile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getProfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pnam</span></em>, <em class="sig-param"><span class="n">range</span><span class="o">=</span><span class="default_value">3.0</span></em>, <em class="sig-param"><span class="n">npoints</span><span class="o">=</span><span class="default_value">30</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.getProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>return profile likelihood of parameter pnam</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>parameter name</p></li>
-<li><p>scan range in sigma</p></li>
+<li><p>scan range in sigma, are tuple with lower and upper value</p></li>
 <li><p>number of points</p></li>
 </ul>
 </dd>
@@ -1873,12 +1833,21 @@ offset to take into account corrections to the number of observed
 bin entries (e.g. due to background or efficiency corrections):
 x -&gt; x-deltaMu with deltaMu = mu - lambda, where mu is the mean
 of the shifted Poisson or Gauß distribution.</p>
+<p>The number of bin entries predicted by the model density is calculated
+by an approximate integral over the respective bin ranges using the
+Simpson rule.</p>
+<p>To judge the level of agreement of model density and histogram data, 
+a “goodness-of-fit” (<em>gof</em>) value is calulated as the likelihood-ratio of
+the model w.r.t. the data and the so-called “saturated model” describing 
+the data perfectly, i.e.  <span class="math notranslate nohighlight">\(cost_{sat}(x) = cost(x; \lambda=x)\)</span>.
+If the bin entries are sufficiently large, <em>gof</em> converges to the standard 
+<em>chi2</em> value.</p>
 <p>Input:</p>
 <ul class="simple">
 <li><p>outer: pointer to instance of calling class</p></li>
 <li><p>model: model function f(x, *par)</p></li>
 <li><p>use_GaussApprox, bool: use Gaussian approximation</p></li>
-<li><p>density, bool: fit a normalised density; if false, an overall
+<li><p>density, bool: fit a normalised density; if False, an overall
 normalisation must be provided in the model function</p></li>
 </ul>
 <p>Data members:</p>
@@ -1914,7 +1883,7 @@ Pois(x, lam) simeq Gauss(x, mu=lam, sigma^2=lam)</p>
 
 <dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.hCost.n2lLsPoisson">
-<em class="property">static </em><code class="sig-name descname">n2lLsPoisson</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xs</span></em>, <em class="sig-param"><span class="n">lam</span></em>, <em class="sig-param"><span class="n">mu</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.hCost.n2lLsPoisson" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">n2lLsPoisson</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xk</span></em>, <em class="sig-param"><span class="n">lam</span></em>, <em class="sig-param"><span class="n">mu</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.hCost.n2lLsPoisson" title="Permalink to this definition">¶</a></dt>
 <dd><p>2* neg. logarithm of generalized Poisson distribution: 
 shifted to new mean mu for real-valued xk        
 for lam=mu, the standard Poisson distribution is recovered
@@ -1968,10 +1937,70 @@ of the Poission likelihood</p>
 
 <dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.histDataContainer.plot">
-<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span><span class="o">=</span><span class="default_value">'histData and Model'</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">7.5, 6.5</span></em>, <em class="sig-param"><span class="n">data_label</span><span class="o">=</span><span class="default_value">'Binned data'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.histDataContainer.plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span><span class="o">=</span><span class="default_value">'histData and Model'</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">7.5, 6.5</span></em>, <em class="sig-param"><span class="n">data_label</span><span class="o">=</span><span class="default_value">'Binned data'</span></em>, <em class="sig-param"><span class="n">plot_residual</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.histDataContainer.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>return figure with histogram data and uncertainties</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py class">
+<dt id="PhyPraKit.phyFit.mnFit.indexedCost">
+<em class="property">class </em><code class="sig-name descname">indexedCost</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">outer</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">use_neg2logL</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.indexedCost" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Custom e_x_tended Least-SQuares cost function with 
+dynamically updated covariance matrix and -2log(L) 
+correction term for parameter-dependent uncertainties.</p>
+<p>The default cost function is twice the negative logarithm 
+of the likelihood of a Gaussian distribution for data points 
+<span class="math notranslate nohighlight">\((x, y)\)</span> with a model function <span class="math notranslate nohighlight">\(y=f(x, *p)\)</span> depending
+on a set of parameters <span class="math notranslate nohighlight">\(*p\)</span> and a possibly parameter-dependent
+covariance matrix <span class="math notranslate nohighlight">\(V(x, f(x, *p))\)</span> of the x and y data:</p>
+<div class="math notranslate nohighlight">
+\[-2\ln {\cal L} = \chi^2(x, V^{-1}, x(*p) \,) 
++ \ln(\, \det( V(x, x(*p) ) \,)\]</div>
+<p>In the absence of parameter-dependent components of the covariance
+matrix, the last term is omitted and the cost function is identical
+to the classical <span class="math notranslate nohighlight">\(\chi^2\)</span>. 
+For the evaluation of the cost function an efficient approach based
+on the “Cholesky decomposition” of the covariance matrix in 
+a product of a triangular matrix and its transposed is used:</p>
+<div class="math notranslate nohighlight">
+\[V = L L^T.    \]</div>
+<p>The value of the cost function</p>
+<div class="math notranslate nohighlight">
+\[\chi^2 = {r}\cdot (V^{-1}{r}) ~~with~~ r = x - x(*p)\]</div>
+<p>is then calculated by solving the linear equation</p>
+</div></blockquote>
+<div class="math notranslate nohighlight">
+\[V X = r, ~i.e.~ X=V^{-1} r ~and~ \chi^2= r \cdot X   \]</div>
+<p>with the linear-equation solver <em>scipy.linalg.cho_solve(L,x)</em>
+for Cholesky-decomposed matrices, thus avoiding the costy 
+calculation of the inverse matrix.</p>
+<p>The determinant, if needed, is efficiently calculated by taking 
+the product of the diagonal elements of the matrix L,</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\det(V) = 2 \, \prod L_{i,i}\]</div>
+<p>Input:</p>
+<ul class="simple">
+<li><p>outer: pointer to instance of calling class</p></li>
+<li><p>model: model function calulating the data x(*par)</p></li>
+<li><p>use_neg2logL: use full -2log(L) instead of chi2 if True</p></li>
+</ul>
+<p>__call__ method of this class is called by iminuit</p>
+<p>Data members:</p>
+<ul class="simple">
+<li><p>ndof: degrees of freedom</p></li>
+<li><p>nconstraints: number of parameter constraints</p></li>
+<li><p>gof: chi2-value (goodness of fit)</p></li>
+<li><p>use_neg2logL: usage of full 2*neg Log Likelihood</p></li>
+<li><p>quiet: no printout if True</p></li>
+</ul>
+<p>Methods:</p>
+<ul class="simple">
+<li><p>model(x, *par)</p></li>
+</ul>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py method">
@@ -1987,11 +2016,12 @@ of Poisson distribution</p>
 
 <dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.init_hFit">
-<code class="sig-name descname">init_hFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.init_hFit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">init_hFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">model_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.init_hFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize fit object</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>model: model density function f(x; *par)</p></li>
+<li><p>model_kwargs: optional, fit parameters if not from model signature</p></li>
 <li><p>p0: np-array of floats, initial parameter values</p></li>
 <li><p>constraints: (nested) list(s): [parameter name, value, uncertainty] 
 or [parameter index, value, uncertainty]</p></li>
@@ -2013,7 +2043,7 @@ or [parameter index, min, max]</p></li>
 
 <dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.init_mnFit">
-<code class="sig-name descname">init_mnFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">userFunction</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.init_mnFit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">init_mnFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">userFunction</span></em>, <em class="sig-param"><span class="n">model_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.init_mnFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize fit object for simple minuit fit with
 * with user-supplied cost function or
 * a probability density function for an unbinned neg. log-L fit</p>
@@ -2021,10 +2051,45 @@ or [parameter index, min, max]</p></li>
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>costFunction: cost function or pdf</p></li>
 <li><p>p0: np-array of floats, initial parameter values</p></li>
+<li><p>model_kwargs: optional, fit parameters if not from model signature</p></li>
 <li><p>parameter constraints: (nested) list(s): [parameter name, value, uncertainty]</p></li>
 <li><p>fix parameter(s) in fit: list of parameter names or indices</p></li>
 <li><p>limits: (nested) list(s): [parameter name, min, max] or
 [parameter index, min, max]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PhyPraKit.phyFit.mnFit.init_xData">
+<code class="sig-name descname">init_xData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">e</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">erel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cabs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">crel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">names</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.init_xData" title="Permalink to this definition">¶</a></dt>
+<dd><p>initialize data object</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>x:      data values</p></li>
+<li><p>s:      independent uncertainties x</p></li>
+<li><p>srel:   independent relative uncertainties x</p></li>
+<li><p>cabs:   correlated abolute uncertainties x</p></li>
+<li><p>crel:   correlated relative uncertainties x</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PhyPraKit.phyFit.mnFit.init_xFit">
+<code class="sig-name descname">init_xFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">model_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.init_xFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>initialize fit object</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>model: model function f(x; *par)</p></li>
+<li><p>model_kwargs: optional, fit parameters if not from model signature</p></li>
+<li><p>p0: np-array of floats, initial parameter values</p></li>
+<li><p>constraints: (nested) list(s): [parameter name, value, uncertainty] 
+or [parameter index, value, uncertainty]</p></li>
+<li><p>limits: (nested) list(s): [parameter name, min, max] 
+or [parameter index, min, max]</p></li>
 </ul>
 </dd>
 </dl>
@@ -2054,11 +2119,12 @@ or [parameter index, min, max]</p></li>
 
 <dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.init_xyFit">
-<code class="sig-name descname">init_xyFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.init_xyFit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">init_xyFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">model_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.init_xyFit" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize fit object</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>model: model function f(x; *par)</p></li>
+<li><p>model_kwargs: optional, fit parameters if not from model signature</p></li>
 <li><p>p0: np-array of floats, initial parameter values</p></li>
 <li><p>constraints: (nested) list(s): [parameter name, value, uncertainty] 
 or [parameter index, value, uncertainty]</p></li>
@@ -2078,12 +2144,10 @@ or [parameter index, min, max]</p></li>
 <li><p>x, array of floats: data</p></li>
 </ul>
 <p>Methods:</p>
-<ul class="simple">
-<li><p>plot(): return figure with representation of data</p></li>
-</ul>
+<p>-plot(): return figure with representation of data</p>
 <dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.mlDataContainer.plot">
-<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span><span class="o">=</span><span class="default_value">'indexed data'</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">7.5, 6.5</span></em>, <em class="sig-param"><span class="n">data_label</span><span class="o">=</span><span class="default_value">'Data'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.mlDataContainer.plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span><span class="o">=</span><span class="default_value">'indexed data'</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">7.5, 6.5</span></em>, <em class="sig-param"><span class="n">data_label</span><span class="o">=</span><span class="default_value">'Data'</span></em>, <em class="sig-param"><span class="n">plot_residual</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.mlDataContainer.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>return figure with histogram data and uncertainties</p>
 </dd></dl>
 
@@ -2131,7 +2195,7 @@ contour lines from iminuit object</p>
 
 <dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.plotModel">
-<code class="sig-name descname">plotModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'y = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'fit'</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.plotModel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plotModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'y = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'fit'</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_residual</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.plotModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot model function and data</p>
 <p>Uses iminuitObject, cost Function (and data object)</p>
 <dl class="simple">
@@ -2150,8 +2214,20 @@ contour lines from iminuit object</p>
 
 <dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.plot_Profile">
-<code class="sig-name descname">plot_Profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pnam</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.plot_Profile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot_Profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pnam</span></em>, <em class="sig-param"><span class="n">range</span><span class="o">=</span><span class="default_value">2.0</span></em>, <em class="sig-param"><span class="n">npoints</span><span class="o">=</span><span class="default_value">30</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.plot_Profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>plot profile likelihood of parameter pnam</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>parameter name</p></li>
+<li><p>scan range in sigma, are tuple with lower and upper value</p></li>
+<li><p>number of points</p></li>
+</ul>
+</dd>
+<dt>Returns: </dt><dd><ul class="simple">
+<li><p>matplotlib figure</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2199,6 +2275,21 @@ with confidence level(s) cl</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="PhyPraKit.phyFit.mnFit.set_xOptions">
+<code class="sig-name descname">set_xOptions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">relative_refers_to_model</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_minos</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_negLogL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.set_xOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define options for indexed fit</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>rel. errors refer to model else data</p></li>
+<li><p>run minos else don*t run minos</p></li>
+<li><p>use full neg2logL</p></li>
+<li><p>don*t provide printout else verbose printout</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.set_xyOptions">
 <code class="sig-name descname">set_xyOptions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">relative_refers_to_model</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_minos</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_negLogL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.set_xyOptions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define options for xy fit</p>
@@ -2214,35 +2305,95 @@ with confidence level(s) cl</p>
 </dd></dl>
 
 <dl class="py class">
+<dt id="PhyPraKit.phyFit.mnFit.xDataContainer">
+<em class="property">class </em><code class="sig-name descname">xDataContainer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">outer</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">e</span></em>, <em class="sig-param"><span class="n">erel</span></em>, <em class="sig-param"><span class="n">cabs</span></em>, <em class="sig-param"><span class="n">crel</span></em>, <em class="sig-param"><span class="n">names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.xDataContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle data and uncertainties and  
+build covariance matrices from components</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>outer:   pointer to instance of calling object</p></li>
+<li><p>x:       abscissa of data points (“x values”)</p></li>
+<li><p>e:       independent uncertainties</p></li>
+<li><p>erel:   independent relative uncertainties x</p></li>
+<li><p>cabs:   correlated abolute uncertainties x</p></li>
+<li><p>crel:   correlated relative uncertainties x</p></li>
+<li><p>quiet:   no informative printout if True</p></li>
+</ul>
+</dd>
+<dt>Public methods:</dt><dd><ul class="simple">
+<li><p>init_dynamicErrors():</p></li>
+<li><p>get_Cov(): final covariance matrix (incl. proj. x)</p></li>
+<li><p>get_iCov(): inverse covariance matrix</p></li>
+<li><p>plot(): provide a figure with representation of data</p></li>
+</ul>
+</dd>
+<dt>Data members:  </dt><dd><ul class="simple">
+<li><p>copy of all input arguments</p></li>
+<li><p>cov: covariance matrix</p></li>
+<li><p>iCov: inverse of covariance matrix</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="PhyPraKit.phyFit.mnFit.xDataContainer.get_Cov">
+<code class="sig-name descname">get_Cov</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.xDataContainer.get_Cov" title="Permalink to this definition">¶</a></dt>
+<dd><p>return covariance matrix of data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PhyPraKit.phyFit.mnFit.xDataContainer.get_iCov">
+<code class="sig-name descname">get_iCov</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.xDataContainer.get_iCov" title="Permalink to this definition">¶</a></dt>
+<dd><p>return inverse of covariance matrix, as used in cost function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PhyPraKit.phyFit.mnFit.xDataContainer.init_dynamicErrors">
+<code class="sig-name descname">init_dynamicErrors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.xDataContainer.init_dynamicErrors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="PhyPraKit.phyFit.mnFit.xDataContainer.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span><span class="o">=</span><span class="default_value">'Data and Model'</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">7.5, 6.5</span></em>, <em class="sig-param"><span class="n">data_label</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">plot_residual</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.xDataContainer.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>return figure with data and uncertainties</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="PhyPraKit.phyFit.mnFit.xLSqCost">
 <em class="property">class </em><code class="sig-name descname">xLSqCost</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">outer</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">use_neg2logL</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.xLSqCost" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>Custom e_x_tended Least-SQuares cost function with 
 dynamically updated covariance matrix and -2log(L) 
-correction term for parameter-dependent uncertainties</p>
-<p>For data points (x, y) with model f(x, *p) 
-and covariance matrix V(f(x,*p)
-the cost function is:</p>
+correction term for parameter-dependent uncertainties.</p>
+<p>The default cost function is twice the negative logarithm 
+of the likelihood of a Gaussian distribution for data points 
+<span class="math notranslate nohighlight">\((x, y)\)</span> with a model function <span class="math notranslate nohighlight">\(y=f(x, *p)\)</span> depending
+on a set of parameters <span class="math notranslate nohighlight">\(*p\)</span> and a possibly parameter-dependent
+covariance matrix <span class="math notranslate nohighlight">\(V(x, f(x, *p))\)</span> of the x and y data:</p>
 <div class="math notranslate nohighlight">
 \[-2\ln {\cal L} = \chi^2(y, V^{-1}, f(x, *p) \,) 
-+ \ln(\, \det( V(f(x, *p) ) \,)\]</div>
-<p>For uncertainties depending on the model parameters, a more
-efficient approach is used to calculate the likelihood, which
-uses the Cholesky decompostion of the covariance matrix into a
-product of a triangular matrix and its transposed</p>
++ \ln(\, \det( V(x, f(x, *p) ) \,)\]</div>
+<p>In the absence of parameter-dependent components of the covariance
+matrix, the last term is omitted and the cost function is identical
+to the classical <span class="math notranslate nohighlight">\(\chi^2\)</span>. 
+For the evaluation of the cost function an efficient approach based
+on the “Cholesky decomposition” of the covariance matrix in 
+a product of a triangular matrix and its transposed is used:</p>
 <div class="math notranslate nohighlight">
-\[V = L L^T,\]</div>
-<p>thus avoiding the costy calculation of the inverse matrix.</p>
+\[V = L L^T.    \]</div>
+<p>The value of the cost function</p>
 <div class="math notranslate nohighlight">
 \[\chi^2 = {r}\cdot (V^{-1}{r}) ~~with~~ r = y - f(x,*p)\]</div>
-<p>is obtained by solving the linear equation</p>
+<p>is then calculated by solving the linear equation</p>
 </div></blockquote>
 <div class="math notranslate nohighlight">
 \[V X = r, ~i.e.~ X=V^{-1} r ~and~ \chi^2= r \cdot X   \]</div>
-<p>with the effecient linear-equation solver <em>scipy.linalg.cho_solve(L,x)</em>
-for Cholesky-decomposed matrices.</p>
-<p>The determinant is efficiently calculated by taking the product 
-of the diagonal elements of the matrix L,</p>
+<p>with the linear-equation solver <em>scipy.linalg.cho_solve(L,x)</em>
+for Cholesky-decomposed matrices, thus avoiding the costy 
+calculation of the inverse matrix.</p>
+<p>The determinant, if needed, is efficiently calculated by taking 
+the product of the diagonal elements of the matrix L,</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
 \[\det(V) = 2 \, \prod L_{i,i}\]</div>
@@ -2271,7 +2422,7 @@ of the diagonal elements of the matrix L,</p>
 <dl class="py class">
 <dt id="PhyPraKit.phyFit.mnFit.xyDataContainer">
 <em class="property">class </em><code class="sig-name descname">xyDataContainer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">outer</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">ex</span></em>, <em class="sig-param"><span class="n">ey</span></em>, <em class="sig-param"><span class="n">erelx</span></em>, <em class="sig-param"><span class="n">erely</span></em>, <em class="sig-param"><span class="n">cabsx</span></em>, <em class="sig-param"><span class="n">crelx</span></em>, <em class="sig-param"><span class="n">cabsy</span></em>, <em class="sig-param"><span class="n">crely</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.xyDataContainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handle data and uncertainties, 
+<dd><p>Handle data and uncertainties and  
 build covariance matrices from components</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
@@ -2338,7 +2489,7 @@ build covariance matrices from components</p>
 
 <dl class="py method">
 <dt id="PhyPraKit.phyFit.mnFit.xyDataContainer.plot">
-<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span><span class="o">=</span><span class="default_value">'xyData and Model'</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">7.5, 6.5</span></em>, <em class="sig-param"><span class="n">data_label</span><span class="o">=</span><span class="default_value">'data'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.xyDataContainer.plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span><span class="o">=</span><span class="default_value">'xyData and Model'</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">7.5, 6.5</span></em>, <em class="sig-param"><span class="n">data_label</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">plot_residual</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.mnFit.xyDataContainer.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>return figure with xy data and uncertainties</p>
 </dd></dl>
 
@@ -2361,42 +2512,38 @@ build covariance matrices from components</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="PhyPraKit.phyFit.xyFit">
-<code class="sig-prename descclassname">PhyPraKit.phyFit.</code><code class="sig-name descname">xyFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srelx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srely</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ref_to_model</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_negLogL</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'y = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em>, <em class="sig-param"><span class="n">return_fitObject</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.xyFit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper function to fit an arbitrary function fitf(x, *par) 
-to data points (x, y) with independent and/or correlated absolute 
-and/or relative errors  on x- and/or y- values with class mnFit</p>
+<dt id="PhyPraKit.phyFit.xFit">
+<code class="sig-prename descclassname">PhyPraKit.phyFit.</code><code class="sig-name descname">xFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">s</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ref_to_model</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_negLogL</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_residual</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['Index', 'f(*x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em>, <em class="sig-param"><span class="n">return_fitObject</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.xFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function to fit an arbitrary function to data with
+independent and/or correlated absolute and/or relative uncertainties 
+with class mnFit. Uncertainties are assumed to be desribed by
+a multivariate Gaussian distribution, i.e. the covariance matrix of 
+the data {x_i} is taken into account in the cost function.</p>
 <p>Correlated absolute and/or relative uncertainties of input data 
 are specified as floats (if all uncertainties are equal) or as 
 numpy-arrays of floats. The concept of independent or common 
-uncertainties of (groups) of data points is used construct the 
-full covariance matrix from different uncertainty components.
-Independent uncertainties enter only in the diagonal, while correlated 
-ones contribute to diagonal and off-diagonal elements of the covariance 
-matrix. Values of 0. may be specified for data points not affected by a 
-certain type of uncertainty. E.g. the array [0., 0., 0.5., 0.5] specifies
-uncertainties only affecting the 3rd and 4th data points. Providing lists 
-of such arrays permits the construction of arbitrary covariance matrices 
-from independent and correlated uncertainties of (groups of) data points.</p>
-<dl class="simple">
+uncertainties of (groups) of values is used to construct the 
+full covariance matrix from different uncertainty components.</p>
+<dl>
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>fitf: model function to fit, arguments (float:x, float: *args)</p></li>
-<li><p>x:  np-array, independent data</p></li>
-<li><p>y:  np-array, dependent data</p></li>
-<li><p>sx: scalar or 1d or 2d np-array , uncertainties on x data</p></li>
-<li><p>sy: scalar or 1d or 2d np-array , uncertainties on x data</p></li>
-<li><p>srelx: scalar or np-array, relative uncertainties x</p></li>
-<li><p>srely: scalar or np-array, relative uncertainties y</p></li>
-<li><p>yabscor: scalar or np-array, absolute, correlated error(s) on y</p></li>
-<li><p>yrelcor: scalar or np-array, relative, correlated error(s) on y</p></li>
+<li><p>x:  np-array of data values</p></li>
+<li><p>s: scalar or 1d or 2d np-array with uncertainties</p></li>
+<li><p>srel: scalar or np-array; relative uncertainties</p></li>
+<li><p>sabscor: scalar or np-array; absolute, correlated error(s)</p></li>
+<li><p>srelcor: scalar or np-array; relative, correlated error(s)</p></li>
+<li><p>ref_to_model: relative errors w.r.t. model if True</p></li>
+<li><p>names: optional names for each input value</p></li>
+<li><p>model_kwargs: optional, fit parameters if not from model signature</p></li>
 <li><p>p0: array-like, initial guess of parameters</p></li>
 <li><p>use_negLogL:  use full -2ln(L)</p></li>
 <li><p>constraints: (nested) list(s) [name or id, value, error]</p></li>
 <li><p>fix parameter(s) in fit: list of parameter names or indices</p></li>
 <li><p>limits: (nested) list(s) [name or id, min, max]</p></li>
-<li><p>plot: show data and model if True</p></li>
+<li><p>plot: show data points and model prediction if True</p></li>
 <li><p>plot_cor: show profile likelihoods and confidence contours</p></li>
-<li><p>plot_band: plot uncertainty band around model function</p></li>
+<li><p>plot_band: plot uncertainty band around model prediction</p></li>
+<li><p>plot_residual: plot residuals w.r.t. model instead of model prediction</p></li>
 <li><p>showplots: show plots on screen</p></li>
 <li><p>quiet: suppress printout</p></li>
 <li><p>list of str: axis labels</p></li>
@@ -2412,6 +2559,66 @@ give access to data members and methods</p></li>
 <li><p>np-array: correlation matrix</p></li>
 <li><p>float: 2*negLog L, corresponding to chi-square of fit a minimum</p></li>
 </ul>
+<p>or, optionally, the mnFit instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="PhyPraKit.phyFit.xyFit">
+<code class="sig-prename descclassname">PhyPraKit.phyFit.</code><code class="sig-name descname">xyFit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitf</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sy</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srelx</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">srely</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yabscor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yrelcor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ref_to_model</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">model_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixPars</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_negLogL</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_cor</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">showplots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_band</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_residual</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">axis_labels</span><span class="o">=</span><span class="default_value">['x', 'y = f(x, *par)']</span></em>, <em class="sig-param"><span class="n">data_legend</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">model_legend</span><span class="o">=</span><span class="default_value">'model'</span></em>, <em class="sig-param"><span class="n">return_fitObject</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyFit.xyFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function to fit an arbitrary function fitf(x, *par) 
+to data points (x, y) with independent and/or correlated absolute 
+and/or relative uncertainites on x- and/or y- values with class mnFit.</p>
+<p>Correlated absolute and/or relative uncertainties of input data 
+are specified as floats (if all uncertainties are equal) or as 
+numpy-arrays of floats. The concept of independent or common 
+uncertainties of (groups) of data points is used to construct the 
+full covariance matrix from different uncertainty components.
+Independent uncertainties enter only in the diagonal, while correlated 
+ones contribute to diagonal and off-diagonal elements of the covariance 
+matrix. Values of 0. may be specified for data points not affected by a 
+certain type of uncertainty. E.g. the array [0., 0., 0.5., 0.5] specifies
+uncertainties only affecting the 3rd and 4th data points. Providing lists 
+of such arrays permits the construction of arbitrary covariance matrices 
+from independent and correlated uncertainties of (groups of) data points.</p>
+<dl>
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>fitf: model function to fit, arguments (float:x, float: *args)</p></li>
+<li><p>x:  np-array, independent data</p></li>
+<li><p>y:  np-array, dependent data</p></li>
+<li><p>sx: scalar or 1d or 2d np-array , uncertainties on x data</p></li>
+<li><p>sy: scalar or 1d or 2d np-array , uncertainties on x data</p></li>
+<li><p>srelx: scalar or np-array, relative uncertainties x</p></li>
+<li><p>srely: scalar or np-array, relative uncertainties y</p></li>
+<li><p>yabscor: scalar or np-array, absolute, correlated error(s) on y</p></li>
+<li><p>yrelcor: scalar or np-array, relative, correlated error(s) on y</p></li>
+<li><p>model_kwargs: optional, fit parameters if not from model signature</p></li>
+<li><p>p0: array-like, initial guess of parameters</p></li>
+<li><p>use_negLogL:  use full -2ln(L)</p></li>
+<li><p>constraints: (nested) list(s) [name or id, value, error]</p></li>
+<li><p>fix parameter(s) in fit: list of parameter names or indices</p></li>
+<li><p>limits: (nested) list(s) [name or id, min, max]</p></li>
+<li><p>plot: show data and model if True</p></li>
+<li><p>plot_cor: show profile likelihoods and confidence contours</p></li>
+<li><p>plot_band: plot uncertainty band around model function</p></li>
+<li><p>plot_residual: plot residuals w.r.t. model instead of model function</p></li>
+<li><p>showplots: show plots on screen</p></li>
+<li><p>quiet: suppress printout</p></li>
+<li><p>list of str: axis labels</p></li>
+<li><p>str: legend for data</p></li>
+<li><p>str: legend for model</p></li>
+<li><p>bool: for experts only, return instance of class mnFit to 
+give access to data members and methods</p></li>
+</ul>
+</dd>
+<dt>Returns:</dt><dd><ul class="simple">
+<li><p>np-array of float: parameter values</p></li>
+<li><p>2d np-array of float: parameter uncertainties [0]: neg. and [1]: pos.</p></li>
+<li><p>np-array: correlation matrix</p></li>
+<li><p>float: 2*negLog L, corresponding to chi-square of fit a minimum</p></li>
+</ul>
+<p>or, optionally, the mnFit instance.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2552,8 +2759,8 @@ im txt-Format am Beispiel des Hystereseversuchs</p>
 </dd>
 </dl>
 <span class="target" id="module-Beispiel_Wellenform"></span><dl class="simple">
-<dt>Beispiel_Wellenform.py </dt><dd><p>Einlesen von Daten aus dem mit PicoScope erstellten Dateien
-am Beispiel der akustischen Anregung eines Stabes</p>
+<dt>Beispiel_Wellenform.py </dt><dd><p>Einlesen von mit PicoScope erstellten Dateien am Beispiel
+der akustischen Anregung eines Stabes</p>
 <ul class="simple">
 <li><p>Fourier-Analyse des Signals</p></li>
 <li><p>Bestimmung der Resonanzfrequenz mittels Autokorrelation</p></li>
@@ -2622,7 +2829,7 @@ am Beispiel der Gamma-Spektroskopie</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.0rc documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>

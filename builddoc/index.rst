@@ -433,10 +433,6 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     Häufgkeitsverteilung dargestellt und die Verteilungen statistisch
     ausgewertet.
 
-  * `Beispiel_GammaSpektroskopie.py` liest mit dem Vielkanalanalysator
-    des CASSY-Systems im `.labx` -Format gespeicherten Dateien ein
-    (Beispieldatei `GammaSpektra.labx`).
-
   * `Beispiel_Multifit.py` illustiert die simultane Anpassung von Parametern
     an mehrere, gleichartige Messreihen, die mit *kafe2* möglich ist.
     Ein Anwendungsfall sind mehrere Messreihen mit der gleichen Apparatur,
@@ -448,6 +444,21 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     gleiche, lediglich die unterschiedlichen Gemoetrie-Parameter und die
     jeweils bestimmten Werte der Messreihen haben eigene, unabhängige
     Unsicherheiten.
+
+  * `Beispiel_GeomOptik.py` zeigt, wie man mittels Parametertransformation
+    die Einzelbrennweiten der beiden Linsen eines Zwei-Linsensystems
+    aus der Systembrennweite und den Hauptebenenlagen bestimmen kann.
+    Dabei wird neben der Transformation auf den neuen Parametersatz
+    auch eine Mittelung über mehrere Messreihen durchgeführt, deren
+    Ergebnisse ihrerseits aus Anpassungen gewonnen wurden. Die
+    Paramtertransformation wird als Anpassungsproblem mit einer
+    :math:`\chi^2`Kostenfunktion behandelt und so auch die Konfidenzkonturen
+    der neuen Parameter bestimmt. 
+  
+  * `Beispiel_GammaSpektroskopie.py` liest mit dem Vielkanalanalysator
+    des CASSY-Systems im `.labx` -Format gespeicherten Dateien ein
+    (Beispieldatei `GammaSpektra.labx`).
+
 
     
 Module Documentation 
