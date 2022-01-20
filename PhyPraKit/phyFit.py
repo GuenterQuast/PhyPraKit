@@ -3131,7 +3131,7 @@ class mnFit():
             axarr[jp, ip].axis('off')
           elif ip == jp:
            # plot profile
-            plt.sca(axarr[ip, ip])
+            plt.sca(axarr[ip, ip]) if npar!=1 else plt.sca(axarr)
             m.draw_mnprofile(fpnams[i], subtract_min=True)
             if (self.ErrDef == 1):
               ylabel='$\Delta (-2\ln\cal{L})$'
