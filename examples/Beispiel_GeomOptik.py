@@ -36,6 +36,7 @@ print("Kovarianzmatrizen:")
 for i in range(nm):
       print(cov[i])
 print("Linsenabstände:\n", d, " +/- ", unc_d)
+
       
 # form vector of input parameters      
 allp  = np.concatenate( (f, hu, hg, d) )
@@ -47,6 +48,8 @@ for i in range(nm):
         for k in range(3):
             allp_cov[j*nm+i, k*nm+i] = cov[i][j][k]        
     allp_cov[3*nm+i, 3*nm+i] = unc_d *unc_d         
+
+print("\n*==*: Fit with kafe2 \n")
 
 # construct an IndexedFit Container for kafe2
 iData = IndexedContainer(allp)
@@ -86,6 +89,8 @@ f1f2Fit.report()
 f1f2Plot = Plot(f1f2Fit)
 f1f2Plot.plot(residual=True)
 
+print("\n*==*: Fit with PhyPraKit.phyFit/xFit\n")
+
 # the same with PhyPraKit.phyFit.xFit
 from PhyPraKit.phyFit import xFit
 
@@ -117,7 +122,8 @@ print(" d:\n", d, "\n f\n",f, "\n hu\n", hu, "\n hg\n", hg)
 f1f2_result = xFit(_from_f1f2d, allp, s=allp_cov,
                   srel=None, sabscor=None, srelcor=None,
                   names=nm*['f'] + nm*['hu'] + nm*['hg'] + nm*['d'],
-                # p0=(1., 1.),     
+                   # p0=(10., 10., 10., 10.),
+                  dp0 = (2., 2., 1., 1.),
                 #  model_kwargs = mpardict,           
                   use_negLogL=True,
                   plot=True,

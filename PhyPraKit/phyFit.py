@@ -105,7 +105,8 @@ def xyFit(fitf, x, y, sx = None, sy = None,
        yabscor = None, yrelcor = None,
        ref_to_model = True, 
        model_kwargs = None,
-       p0 = None, constraints = None, fixPars=None, limits=None,
+       p0 = None, dp0 = None, constraints = None,         
+       fixPars=None, limits=None,
        use_negLogL=True, 
        plot = True, plot_cor = False,
        showplots = True, 
@@ -144,6 +145,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     * yrelcor: scalar or np-array, relative, correlated error(s) on y
     * model_kwargs: optional, fit parameters if not from model signature 
     * p0: array-like, initial guess of parameters
+    * dp0: array-like, initial guess of parameter uncertainties (optional)
     * use_negLogL:  use full -2ln(L)  
     * constraints: (nested) list(s) [name or id, value, error]
     * fix parameter(s) in fit: list of parameter names or indices
@@ -193,7 +195,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
               cabsx = xabscor, crelx = xrelcor,
               cabsy = yabscor, crely = yrelcor)
    # pass model function, start parameter and possible constraints
-  Fit.init_fit(fitf, model_kwargs=model_kwargs, p0=p0,
+  Fit.init_fit(fitf, model_kwargs=model_kwargs, p0=p0, dp0=dp0,
                constraints=constraints,
                fixPars=fixPars,
                limits=limits)
@@ -240,7 +242,8 @@ def xFit(fitf, x, s = None, srel = None,
        ref_to_model = True,
        names = None,
        model_kwargs = None,
-       p0 = None, constraints = None, fixPars=None, limits=None,
+       p0 = None, dp0 = None, constraints = None,
+       fixPars=None, limits=None,
        use_negLogL=True, 
        plot = True, plot_cor = False,
        showplots = True, 
@@ -273,6 +276,7 @@ def xFit(fitf, x, s = None, srel = None,
     * names: optional names for each input value
     * model_kwargs: optional, fit parameters if not from model signature 
     * p0: array-like, initial guess of parameters
+    * dp0: array-like, initial guess of parameter uncertainties (optional)
     * use_negLogL:  use full -2ln(L)  
     * constraints: (nested) list(s) [name or id, value, error]
     * fix parameter(s) in fit: list of parameter names or indices
@@ -320,7 +324,7 @@ def xFit(fitf, x, s = None, srel = None,
                        erel = srel, cabs = sabscor, crel = srelcor,
                        names = names)
    # pass model function, start parameter and possible constraints
-  indexedFit.init_fit(fitf, model_kwargs=model_kwargs, p0=p0,
+  indexedFit.init_fit(fitf, model_kwargs=model_kwargs, p0=p0, dp0=dp0, 
                constraints=constraints,
                fixPars=fixPars,
                limits=limits)
@@ -364,7 +368,7 @@ def xFit(fitf, x, s = None, srel = None,
 
 def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
          model_kwargs = None,
-         p0 = None, constraints = None,
+         p0 = None, dp0 = None, constraints = None,
          fixPars=None, limits=None,
          use_GaussApprox = False,
          fit_density = True,
@@ -394,6 +398,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     * DeltaMu: shift mean (=mu) vs. variance (=lam), for Poisson: mu=lam
     * model_kwargs: optional, fit parameters if not from model signature 
     * p0: array-like, initial guess of parameters
+    * dp0: array-like, initial guess of parameter uncertainties (optional)
     * constraints: (nested) list(s) [name or id, value, error] 
     * limits: (nested) list(s) [name or id, min, max] 
     * use_GaussApprox: Gaussian approximation instead of Poisson 
@@ -431,7 +436,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
   # pass data and uncertainties to fit object
   Fit.init_data(bin_contents, bin_edges, DeltaMu)
    # pass model fuction, start parameter and possibe constraints
-  Fit.init_fit(fitf, model_kwargs=model_kwargs, p0=p0,
+  Fit.init_fit(fitf, model_kwargs=model_kwargs, p0=p0, dp0=dp0,
                constraints=constraints,
                fixPars=fixPars,
                limits=limits)
@@ -475,7 +480,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
 
 def mFit(ufcn, data = None,
          model_kwargs = None,
-         p0 = None, 
+         p0 = None, dp0 = None, 
          constraints = None, limits=None, fixPars=None,
          neg2logL = True,
          plot = False, plot_band = True,
@@ -510,6 +515,7 @@ def mFit(ufcn, data = None,
     * data, optional, array of floats: optional input data
     * model_kwargs: optional, fit parameters if not from model signature 
     * p0: array-like, initial guess of parameters
+    * dp0: array-like, initial guess of parameter uncertainties (optional)
     * constraints: (nested) list(s) [name or id, value, error] 
     * limits: (nested) list(s) [name or id, min, max] 
     * neg2logL: use 2 * nlL (corresponding to a least-squares-type cost)
@@ -544,7 +550,7 @@ def mFit(ufcn, data = None,
   # initialze fit
   #  - with the user-supplied cost function cost(*pars) if no data given
   #  - with probability density pdf(x; *pars) if data (=x) provided 
-  uFit.init_fit(ufcn, model_kwargs=model_kwargs, p0=p0,
+  uFit.init_fit(ufcn, model_kwargs=model_kwargs, p0=p0, dp0=dp0, 
                 constraints = constraints,
                 fixPars = fixPars,
                 limits = limits)
@@ -984,7 +990,7 @@ class mnFit():
          self.xyData.has_rel_yErrors and self.refModel)
 
 
-  def init_xyFit(self, model, model_kwargs=None, p0=None,
+  def init_xyFit(self, model, model_kwargs=None, p0=None, dp0=None, 
                  constraints=None,
                  fixPars=None,
                  limits=None):
@@ -994,6 +1000,7 @@ class mnFit():
       - model: model function f(x; \*par)
       - model_kwargs: optional, fit parameters if not from model signature 
       - p0: np-array of floats, initial parameter values 
+      - dp0: array-like, initial guess of parameter uncertainties (optional)
       - constraints: (nested) list(s): [parameter name, value, uncertainty] 
         or [parameter index, value, uncertainty]
       - limits: (nested) list(s): [parameter name, min, max] 
@@ -1008,7 +1015,7 @@ class mnFit():
     if model_kwargs is None:
       args, model_kwargs = get_functionSignature(model)
 
-    par = (model_kwargs, p0, constraints, fixPars, limits)
+    par = (model_kwargs, p0, dp0, constraints, fixPars, limits)
     self._setupFitParameters(*par) 
 
     # create cost function
@@ -1569,7 +1576,7 @@ class mnFit():
     self.iterateFit = self.xData.has_rel_Errors and self.refModel
 
 
-  def init_xFit(self, model, model_kwargs=None, p0=None,
+  def init_xFit(self, model, model_kwargs=None, p0=None, dp0=None,
                  constraints=None,
                  fixPars=None,
                  limits=None):
@@ -1579,6 +1586,7 @@ class mnFit():
       - model: model function f(x; \*par)
       - model_kwargs: optional, fit parameters if not from model signature 
       - p0: np-array of floats, initial parameter values 
+      - dp0: array-like, initial guess of parameter uncertainties (optional)
       - constraints: (nested) list(s): [parameter name, value, uncertainty] 
         or [parameter index, value, uncertainty]
       - limits: (nested) list(s): [parameter name, min, max] 
@@ -1593,7 +1601,7 @@ class mnFit():
     if model_kwargs is None:
       args, model_kwargs = get_functionSignature(model)
 
-    par = (model_kwargs, p0, constraints, fixPars, limits)
+    par = (model_kwargs, p0, dp0, constraints, fixPars, limits)
     self._setupFitParameters(*par) 
 
     # create cost function
@@ -2037,7 +2045,7 @@ class mnFit():
                                quiet=self.quiet)
     self.data = self.hData
     
-  def init_hFit(self, model, model_kwargs=None, p0=None,
+  def init_hFit(self, model, model_kwargs=None, p0=None, dp0=None,
                 constraints=None,
                 fixPars = None, 
                 limits=None):
@@ -2047,6 +2055,7 @@ class mnFit():
       - model: model density function f(x; \*par)
       - model_kwargs: optional, fit parameters if not from model signature 
       - p0: np-array of floats, initial parameter values 
+      - dp0: array-like, initial guess of parameter uncertainties (optional)
       - constraints: (nested) list(s): [parameter name, value, uncertainty] 
         or [parameter index, value, uncertainty]
       - fix parameter(s) in fit: list of parameter names or indices
@@ -2062,7 +2071,7 @@ class mnFit():
     if model_kwargs is None:
       args, model_kwargs = get_functionSignature(model)
 
-    par = (model_kwargs, p0, constraints, fixPars, limits)
+    par = (model_kwargs, p0, dp0, constraints, fixPars, limits)
     self._setupFitParameters(*par)
 
     # create cost function
@@ -2420,7 +2429,7 @@ class mnFit():
     self.data = self.mlData
 
 
-  def init_mnFit(self, userFunction, model_kwargs=None, p0=None, 
+  def init_mnFit(self, userFunction, model_kwargs=None, p0=None, dp0=None,
                        constraints=None, fixPars=None, limits=None):
     """initialize fit object for simple minuit fit with
     * with user-supplied cost function or
@@ -2430,6 +2439,7 @@ class mnFit():
       - costFunction: cost function or pdf 
       - p0: np-array of floats, initial parameter values 
       - model_kwargs: optional, fit parameters if not from model signature 
+      - dp0: array-like, initial guess of parameter uncertainties (optional)
       - parameter constraints: (nested) list(s): [parameter name, value, uncertainty] 
       - fix parameter(s) in fit: list of parameter names or indices
       - limits: (nested) list(s): [parameter name, min, max] or
@@ -2443,7 +2453,7 @@ class mnFit():
     if model_kwargs is None:
       args, model_kwargs = get_functionSignature(userFunction)
 
-    par = (model_kwargs, p0, constraints, fixPars, limits)
+    par = (model_kwargs, p0, dp0, constraints, fixPars, limits)
     self._setupFitParameters(*par) 
 
     #set up cost function for iminuit
@@ -2596,7 +2606,7 @@ class mnFit():
  # --- common code for all fit types
  #
 
-  def _setupFitParameters(self, model_kwargs, p0, constraints, fixPars, limits):
+  def _setupFitParameters(self, model_kwargs, p0, dp0, constraints, fixPars, limits):
     """set up parameters needed for Minuit and cost function
     """
 
@@ -2629,6 +2639,9 @@ class mnFit():
       for i, pnam in enumerate(self.pnams):
         model_kwargs[pnam] = p0[i]    
 
+    # set initial uncertainties (optional)
+    self.dp0 = dp0
+    
     # store informations on parameter limits (used by minuit)
     self.setLimits = limits    
     self.limits = []
@@ -2686,6 +2699,9 @@ class mnFit():
         print_level=0
       else:
         print_level=1
+      if self.dp0 is not None:
+        for i, pnam in enumerate(self.pnams):
+          model_kwargs['error_' + pnam] = self.dp0[i]
       if self.setLimits is not None:
         for i, pnam in enumerate(self.pnams):
           model_kwargs['limit_' + pnam] = self.limits[i]
@@ -2703,6 +2719,8 @@ class mnFit():
       self.minuit.errordef = self.ErrDef
       if self.quiet:
         self.minuit.print_level = 0
+      if self.dp0 is not None:
+        self.minuit.errors = self.dp0
       if self.setLimits is not None:
         self.minuit.limits = self.limits
       if self.fixPars is not None:
