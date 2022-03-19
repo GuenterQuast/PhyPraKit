@@ -2,10 +2,8 @@
 **PhyPraKit**
 *************
 
-
-=====
 About
-=====
+-----
 
 PhyPraKit is a collection of python modules `(supporting python 2.7
 (deprecated) and python >=3.6)` for data visualization and analysis
@@ -55,6 +53,6 @@ PhyPraKit ist eine Sammlung nützlicher Funktionen in der Sprache
 zum Aufnehmen, zur Bearbeitung, Visualisierung  und  Auswertung
 von Daten in den physikalischen Praktika.
 Die Anwendung der verschiedenen Funktionen des Pakets
-werden jeweils durch knkrete Beispiele illustriert.
+werden jeweils durch konkrete Beispiele illustriert.
 
 [Dokumentation auf "Read the Docs"](https://readthedocs.org/projects/phyprakit/)
