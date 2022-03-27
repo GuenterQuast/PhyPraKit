@@ -29,6 +29,7 @@ python3 test_odFit.py
 python3 test_xyFit.py
 python3 test_simplek2Fit.py
 python3 test_k2Fit.py
+python3 test_k2hFit.py
 python3 test_hFit.py
 python3 test_mlFit.py
 python3 test_xFit.py
