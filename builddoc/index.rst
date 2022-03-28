@@ -349,6 +349,14 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     linearen Regression mit *kafe2* mit einer minimalen Anzahl eigener
     Codezeilen.
     
+  * `test_k2hFit.py` führt eine Anpassung einer Verteilungsdichte an
+    Histogrammdaten mit *kafe2* durch. Die Kostenfunktion ist das
+    zweifache der negativen log-Likelihood-Funktion der Poisson-Verteilung,
+    Poiss(k; lam), oder - optional - ihrer Annäherung durch eine
+    Gauß-Verteilung mit Gauss(x, mu=lam, sig**2=lam). Die Unsicherheiten
+    werden aus der Modellvorhersage bestimmt, um auch Bins mit wenigen oder
+    sogar null Einträgen korrekt zu behandeln.
+    
   * `test_hFit` illustriert die Anpassung einer Verteilungsdichte an
     histogrammierte Daten. Die Kostenfunktion für die Minimierung ist das
     zweifache der negativen log-Likelihood-Funktion der Poisson-Verteilung,
@@ -495,6 +503,10 @@ Module Documentation
 
 ..  automodule:: test_k2Fit
 
+..  automodule:: test_simplek2Fit
+
+..  automodule:: test_k2hFit
+		 		 
 ..  automodule:: test_generateData
 
 ..  automodule:: toyMC_Fit
