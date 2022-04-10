@@ -1,4 +1,5 @@
-initial beta version Oct. 2016
+
+	initial beta version Oct. 2016
 ==============================
 
 v1.0.0    May 2017
@@ -16,5 +17,6 @@ v1.2.0dev May 2021  new version:
 	added unibinned and binned ML fits to phyFit
 	added ipynb tutorial for nlL fits
 	changed k2fit return values from tuple to dict
-v1.2.0rc Jun 2021  release candidate:
-	support for iminuit <2.0 and kafe vers.1 removed
+1.2.0  support for iminuit <2.0 and kafe vers.1 removed
+1.2.1  extended functionality in phyFit (indexed, histogram and likelihood fits)
+1.2.2  added jupyter notebook examples; examples for multi-fit and indexed fit 
