@@ -87,6 +87,8 @@ f1f2Fit.do_fit()
 f1f2Fit.report()
 
 f1f2Plot = Plot(f1f2Fit)
+names = nm*['f'] + nm*['hu'] + nm*['hg'] + nm*['d']
+##f1f2Plot.x_ticks = names ## does not work yet !
 f1f2Plot.plot(residual=True)
 
 print("\n*==*: Fit with PhyPraKit.phyFit/xFit\n")
