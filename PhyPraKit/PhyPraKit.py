@@ -1725,8 +1725,8 @@ def k2hFit(fitf, data, bin_edges,
   # for fit with kafe2
   from kafe2 import HistContainer, Fit, Plot, ContoursProfiler
   from kafe2.fit.histogram import HistCostFunction_NegLogLikelihood
-##xx  from kafe2.fit._base.cost import CostFunction_GaussApproximation
-  from kafe2.fit.histogram import HistCostFunction_GaussApproximation
+  #! from kafe2.fit.histogram import HistCostFunction_GaussApproximation
+  from kafe2.fit._base.cost import CostFunction_GaussApproximation 
   
   # create a data container from input
   nbins = len(bin_edges)-1
@@ -1737,7 +1737,8 @@ def k2hFit(fitf, data, bin_edges,
   if use_GaussApprox:
     ##print('Gauss Approx. for histogram data not yet implemented - exiting!')
     hfit = Fit(hdat, fitf,
-                cost_function=HistCostFunction_GaussApproximation(
+                #! cost_function=HistCostFunction_GaussApproximation(
+                cost_function=CostFunction_GaussApproximation(
                   errors_to_use='pointwise') )
   else:   
      hfit = Fit(hdat, fitf,
