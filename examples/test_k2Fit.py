@@ -54,6 +54,7 @@ if __name__ == "__main__": # --------------------------------------
     yrelcor=None,        # correlated y rel.
     ref_to_model=True,   # reference of rel. uncert. to model
     p0=(0.5,-1.,1.),     # initial guess for parameter values
+    dp0= None            # initial guess for parameter uncertainties
     plot=True,           # generate result plot (see options below)  
     fit_info=True,       # suppress fit results in figure if False
     plot_band=True,      # suppress model uncertainty-band if False

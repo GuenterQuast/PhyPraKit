@@ -1440,7 +1440,7 @@ def odFit(fitf, x, y, sx=None, sy=None, p0=None):
 def k2Fit(func, x, y,
       sx=None, sy=None, srelx=None, srely=None, 
       xabscor=None, yabscor=None, xrelcor=None, yrelcor=None,
-      ref_to_model=True, constraints=None, p0=None, limits=None,
+      ref_to_model=True, constraints=None, p0=None, dp0=None, limits=None,
       plot=True, axis_labels=['x-data', 'y-data'], data_legend = 'data',
       model_expression=None, model_name=None, 
       model_legend = 'model', model_band = r'$\pm 1 \sigma$',           
@@ -1488,6 +1488,7 @@ def k2Fit(func, x, y,
       * ref_to_model, bool: refer relative errors to model if true,
         else use measured data
       * p0: array-like, initial guess of parameters
+      * dp0: array-like, initial guess of parameter uncertainties
       * parameter constraints: (name, value, uncertainty)
       * limits: (nested) list(s) (name, min, max) 
 
@@ -1592,7 +1593,11 @@ def k2Fit(func, x, y,
                      relative=True, reference=ref)
 
   # initialize and run fit
-  if p0 is not None: fit.set_all_parameter_values(p0)
+  if p0 is not None:
+    fit.set_all_parameter_values(p0)
+
+  if dp0 is not None:
+    fit.parameter_errors = dp0
 
   if constraints is not None:
     if not (isinstance(constraints[0], tuple) or isinstance(constraints[0], list)):
@@ -1652,7 +1657,7 @@ def k2Fit(func, x, y,
   return parv, parae, cor, chi2
 
 def k2hFit(fitf, data, bin_edges, 
-         p0 = None, constraints = None,
+           p0 = None, dp0 = None,  constraints = None,
          fixPars=None, limits=None,
          use_GaussApprox = False,
          plot = True, plot_cor = False,
@@ -1683,7 +1688,8 @@ def k2hFit(fitf, data, bin_edges,
 
     fit options
 
-      * p0: array-like, initial guess of parameters
+      * p0: array-like, initial guess of parameter values
+      * dp0: array-like, initial guess of parameter uncertainties
       * constraints: (nested) list(s) [name or id, value, error] 
       * limits: (nested) list(s) [name or id, min, max]
       * use_GaussApprox: Gaussian approximation instead of Poisson 
@@ -1747,7 +1753,11 @@ def k2hFit(fitf, data, bin_edges,
   hdat.axis_labels = axis_labels
 
   # initialize and run fit
-  if p0 is not None: hfit.set_all_parameter_values(p0)
+  if p0 is not None:
+    hfit.set_all_parameter_values(p0)
+
+  if dp0 is not None:
+    hfit.parameter_errors = dp0
 
   if constraints is not None:
     if not (isinstance(constraints[0], tuple) or isinstance(constraints[0], list)):

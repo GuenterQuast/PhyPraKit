@@ -57,7 +57,8 @@ if __name__ == "__main__": # --------------------------------------
 #
   parv, pare, cor, gof = k2hFit(model, SplusB_data, 
       be,             # bin bin edges
-      p0=None,        # initial guess for parameter values 
+      p0 = None,      # initial guess for parameter values 
+      dp0 = None,     # initial guess for parameter uncertainties 
    #  constraints=['name', val ,err ],   # constraints within errors
       limits=('s', 0., None),  #limits
       use_GaussApprox=False,   # Gaussian approximation does not work yet ...
