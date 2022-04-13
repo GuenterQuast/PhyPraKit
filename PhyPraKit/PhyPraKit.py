@@ -1658,18 +1658,18 @@ def k2Fit(func, x, y,
 
 def k2hFit(fitf, data, bin_edges, 
            p0 = None, dp0 = None,  constraints = None,
-         fixPars=None, limits=None,
-         use_GaussApprox = False,
-         plot = True, plot_cor = False,
-         showplots = True, plot_band=True, plot_residual=False,
-         quiet = True,
-         axis_labels=['x', 'counts/bin = f(x, *par)'],
-         data_legend = 'Histogram Data',    
-         model_legend = 'Model',
-         model_expression=None,
-         model_name=None, 
-         model_band = r'$\pm 1 \sigma$',           
-         fit_info=True, asym_parerrs=True):
+           fixPars=None, limits=None,
+           use_GaussApprox = False,
+           plot = True, plot_cor = False,
+           showplots = True, plot_band=True, plot_residual=False,
+           quiet = True,
+           axis_labels=['x', 'counts/bin = f(x, *par)'],
+           data_legend = 'Histogram Data',    
+           model_legend = 'Model',
+           model_expression=None,
+           model_name=None, 
+           model_band = r'$\pm 1 \sigma$',           
+           fit_info=True, asym_parerrs=True):
 
   
   """Wrapper function to fit a density distribution f(x, \*par) 
@@ -1725,8 +1725,7 @@ def k2hFit(fitf, data, bin_edges,
   # for fit with kafe2
   from kafe2 import HistContainer, Fit, Plot, ContoursProfiler
   from kafe2.fit.histogram import HistCostFunction_NegLogLikelihood
-  #! from kafe2.fit.histogram import HistCostFunction_GaussApproximation
-  from kafe2.fit._base.cost import CostFunction_GaussApproximation 
+  from kafe2.fit.histogram import HistCostFunction_GaussApproximation
   
   # create a data container from input
   nbins = len(bin_edges)-1
@@ -1805,7 +1804,7 @@ def k2hFit(fitf, data, bin_edges,
 ##    else:
 ##      kplot.customize('model_error_band', 'color', ['green'])
 ##      kplot.customize('model_error_band', 'label', [model_band])
-##      kplot.customize('model_error_band', 'alpha', [0.1])     
+##      kplot.customize('model_error_band', 'alpha', [0.1])
 
     # plot with defined options
     kplot.plot(fit_info=fit_info, residual=plot_residual,

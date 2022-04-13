@@ -5,7 +5,7 @@
 
 '''
 # Imports  #
-from kafe2 import IndexedContainer,Fit, Plot, ContoursProfiler
+from kafe2 import IndexedContainer, Fit, Plot, ContoursProfiler
 import numpy as np, matplotlib.pyplot as plt
 
 # the input data
@@ -23,7 +23,7 @@ cov = np.array([
         [[ 0.3255, -0.6464, -0.4029],
          [-0.6464,  1.3471,  0.8079],
          [-0.4029,  0.8079,  0.5033]] ])
-# - distances of the lenses
+# - Linsenabstand
 d = np.array([10.35, 18.50])
 #unc_d = 5. # very large error, d's effectively undefined
 unc_d = 0.1 # measured d's as constraint 
@@ -87,9 +87,9 @@ f1f2Fit.do_fit()
 f1f2Fit.report()
 
 f1f2Plot = Plot(f1f2Fit)
-names = nm*['f'] + nm*['hu'] + nm*['hg'] + nm*['d']
-##f1f2Plot.x_ticks = names ## does not work yet !
+##f1f2Plot.x_ticks = nm*['f'] + nm*['hu'] + nm*['hg'] + nm*['d'] # needs matplotlib >=3.5
 f1f2Plot.plot(residual=True)
+
 
 print("\n*==*: Fit with PhyPraKit.phyFit/xFit\n")
 
