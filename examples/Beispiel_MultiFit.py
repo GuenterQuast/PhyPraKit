@@ -1,10 +1,16 @@
-''' general example for fitting multiple distributions with kafe2
+#! /usr/bin/env python3
+"""Beispiel_MultiFit.py   
+   general example for fitting multiple distributions with kafe2
       - define models
       - set up data objects
       - set up fit objects
       - perform fit
       - show and save output
-'''
+
+.. moduleauthor:: Guenter Quast <g.quast@kit.edu>
+
+"""
+
 # Imports  #
 from kafe2 import XYContainer, Fit, MultiFit, Plot
 import numpy as np, matplotlib.pyplot as plt

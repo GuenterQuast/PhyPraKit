@@ -822,7 +822,7 @@ class mnFit():
         '!**! mnFit: invalid fit type ', fit_type, '- exiting!') 
     self.fit_type = fit_type
 
-    self.iminuit_version = iminuit_version
+    self.iminuit_version = str(iminuit_version)
 
     # counter for number of external constraints 
     self.nconstraints = 0
@@ -2736,15 +2736,15 @@ class mnFit():
     ndof = self.costf.ndof                  # degrees of freedom
     if self.iminuit_version < '2':
       parnames = m.values.keys()            # parameter names
-      parvals = np.array(m.values.values()) # best-fit values
-      parerrs = np.array(m.errors.values()) # parameter uncertainties
+      parvals = np.asarray(m.values.values()) # best-fit values
+      parerrs = np.asarray(m.errors.values()) # parameter uncertainties
       cov = np.array(m.matrix())            # cov. matrix of free parameters
     else:
     # vers. >=2.0 
       parnames = m.parameters       # parameter names
-      parvals = np.array(m.values)  # best-fit values
-      parerrs = np.array(m.errors)  # parameter uncertainties
-      cov = np.array(m.covariance)  # covariance matrix of all(!) parameters
+      parvals = np.asarray(m.values)  # best-fit values
+      parerrs = np.asarray(m.errors)  # parameter uncertainties
+      cov = np.asarray(m.covariance)  # covariance matrix of all(!) parameters
       # produce reduced covariance matrix for free parameters only
       if self.nfixed != 0:
         for i in range(len(parnames)-1, -1, -1): # start from largest index and work back

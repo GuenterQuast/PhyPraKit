@@ -460,7 +460,7 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     auch eine Mittelung über mehrere Messreihen durchgeführt, deren
     Ergebnisse ihrerseits aus Anpassungen gewonnen wurden. Die
     Paramtertransformation wird als Anpassungsproblem mit einer
-    :math:`\chi^2`Kostenfunktion behandelt und so auch die Konfidenzkonturen
+    :math:`\chi^2` Kostenfunktion behandelt und so auch die Konfidenzkonturen
     der neuen Parameter bestimmt. 
   
   * `Beispiel_GammaSpektroskopie.py` liest mit dem Vielkanalanalysator
@@ -501,6 +501,8 @@ Module Documentation
 
 ..  automodule:: test_xyFit
 
+..  automodule:: test_xFit
+
 ..  automodule:: test_k2Fit
 
 ..  automodule:: test_simplek2Fit
@@ -511,6 +513,8 @@ Module Documentation
 
 ..  automodule:: toyMC_Fit
 
+..  automodule:: Beispiel_MultiFit
+
 ..  automodule:: Beispiel_Diodenkennlinie
 
 ..  automodule:: Beispiel_Drehpendel
@@ -518,5 +522,7 @@ Module Documentation
 ..  automodule:: Beispiel_Hysterese
 
 ..  automodule:: Beispiel_Wellenform
+
+..  automodule:: Beispiel_GeomOptik
 
 ..  automodule:: Beispiel_GammaSpektroskopie
