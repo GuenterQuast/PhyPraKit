@@ -1660,6 +1660,7 @@ def k2hFit(fitf, data, bin_edges,
            p0 = None, dp0 = None,  constraints = None,
            fixPars=None, limits=None,
            use_GaussApprox = False,
+           fit_density = True,
            plot = True, plot_cor = False,
            showplots = True, plot_band=True, plot_residual=False,
            quiet = True,
@@ -1670,7 +1671,6 @@ def k2hFit(fitf, data, bin_edges,
            model_name=None, 
            model_band = r'$\pm 1 \sigma$',           
            fit_info=True, asym_parerrs=True):
-
   
   """Wrapper function to fit a density distribution f(x, \*par) 
   to binned data (histogram) with class mnFit 
@@ -1736,13 +1736,14 @@ def k2hFit(fitf, data, bin_edges,
   if use_GaussApprox:
     ##print('Gauss Approx. for histogram data not yet implemented - exiting!')
     hfit = Fit(hdat, fitf,
-                #! cost_function=HistCostFunction_GaussApproximation(
-                cost_function=CostFunction_GaussApproximation(
-                  errors_to_use='pointwise') )
+                cost_function=HistCostFunction_GaussApproximation(
+                  errors_to_use='pointwise'),
+                  density=fit_density )
   else:   
      hfit = Fit(hdat, fitf,
                 cost_function=HistCostFunction_NegLogLikelihood(
-                  data_point_distribution='poisson') )
+                  data_point_distribution='poisson'),
+                  density=fit_density )
   # text for labeling       
   hfit.assign_model_function_latex_name(model_name)
   hfit.assign_model_function_latex_expression(model_expression)

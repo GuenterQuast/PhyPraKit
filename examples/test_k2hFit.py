@@ -62,7 +62,7 @@ if __name__ == "__main__": # --------------------------------------
    #  constraints=['name', val ,err ],   # constraints within errors
       limits=('s', 0., None),  #limits
       use_GaussApprox=False,   # Gaussian approximation does not work yet ...
-      ## fit_density = True,      # fit density (not yet ...)
+      fit_density = True,      # fit a density (normalized to one)  
       plot=True,           # plot data and model
       plot_band=True,      # plot model confidence-band
       plot_residual=True,  # show residual w.r.t. model
