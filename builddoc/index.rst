@@ -293,6 +293,8 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
 `mybinder.org
 <https://mybinder.org/v2/git/https%3A%2F%2Fgit.scc.kit.edu%2Fyh5078%2FPhyPraKit/master>`_.
 
+  **Beispiele zur Anwendung der Module aus PhyPraKit**
+
   * `test_readColumnData.py` ist ein Beispiel zum
     Einlesen von Spalten aus Textdateien; die zugehörigen 
     *Metadaten* können ebenfalls an das Script übergeben 
@@ -400,6 +402,8 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     :math:`\chi^2`-Wahrscheinlichkeit überprüfen, die im Idealfall
     eine Rechteckverteilung im Intervall [0,1] sein sollte. 
 
+  **Komplexere Beispiele für konkrete Anwendungen in Praktika**
+  
   Die folgenden *python*-Skripte sind etwas komplexer und illustrieren 
   typische Anwendungsfälle der Module in `PhyPraKit`:
 
@@ -467,7 +471,31 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     des CASSY-Systems im `.labx` -Format gespeicherten Dateien ein
     (Beispieldatei `GammaSpektra.labx`).
 
+  **Anpassungen mit kafe2go**
+    
+  Die folgenden Dateien im Format der Datenbeschreigungssprache *yaml*
+  sind Beispiele zur Verwendung des Skripts *kafe2go* aus dem Paket
+  *kafe2*, mit dem Anpassungen von Modellen an Messdaten ganz ohne eigenen
+  *Python*-Code erstellt weden können. Ausgeführt wird die Anpassung durch
+  Eingabe von
+  
+  ``kafe2go [option] <yaml.datei>``
 
+  auf der Kommandozeile.
+
+  Für Nutzer von MS-Windows gibt es eine ausführbare Datei, `kafe2go.exe`.
+  Zur Anwendung wird eine der Beispieldateien mit Rechtsklick angewählt 
+  und mit der Anwendung `kafe2go.exe` geöffnet.
+  
+  * `kafe2go_simleFit.fit` zeigt die am Beispiel der Anpassung einer Parabel,
+    wie mit ganz wenigen Eingaben eine Anpassung durchfeführt werden kann.
+    
+  * `kafe2go_xyFit.fit` ist ein komplexeres Beispiel, das alle von *kafe2*
+    unterstützten Arten von Unsicherheiten (d.h. x/y, absolut/relativ und
+    unabhängig/korreliert) enthält; relative Unsicherheiten werden
+    dabei auf den Modellwert und nicht auf die Datenpunkte bezogen. 
+
+  
     
 Module Documentation 
 ====================
