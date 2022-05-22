@@ -473,7 +473,7 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
 
   **Anpassungen mit kafe2go**
     
-  Die folgenden Dateien im Format der Datenbeschreigungssprache *yaml*
+  Die folgenden Dateien im Format der Datenbeschreibungssprache *yaml*
   sind Beispiele zur Verwendung des Skripts *kafe2go* aus dem Paket
   *kafe2*, mit dem Anpassungen von Modellen an Messdaten ganz ohne eigenen
   *Python*-Code erstellt weden können. Ausgeführt wird die Anpassung durch
@@ -487,14 +487,13 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
   Zur Anwendung wird eine der Beispieldateien mit Rechtsklick angewählt 
   und mit der Anwendung `kafe2go.exe` geöffnet.
   
-  * `kafe2go_simleFit.fit` zeigt die am Beispiel der Anpassung einer Parabel,
-    wie mit ganz wenigen Eingaben eine Anpassung durchfeführt werden kann.
+  * `kafe2go_simleFit.fit` zeigt am Beispiel der Anpassung einer Parabel,
+    wie mit ganz wenigen Eingaben eine Anpassung durchgeführt werden kann.
     
   * `kafe2go_xyFit.fit` ist ein komplexeres Beispiel, das alle von *kafe2*
     unterstützten Arten von Unsicherheiten (d.h. x/y, absolut/relativ und
-    unabhängig/korreliert) enthält; relative Unsicherheiten werden
-    dabei auf den Modellwert und nicht auf die Datenpunkte bezogen. 
-
+    unabhängig/korreliert) enthält; relative Unsicherheiten werden dabei
+    auf den Modellwert und nicht auf die gemessenen Datenpunkte bezogen. 
   
     
 Module Documentation 
