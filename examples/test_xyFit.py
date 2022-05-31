@@ -2,7 +2,7 @@
 """test_xyFit.py
    Fitting example for x-y data with iminiut
 
-   Uses function PhyPraKit.xmFit, which in turn uses mnFit from phyFit
+   Uses function PhyPraKit.xyFit, which in turn uses mnFit from phyFit
 
    This is a rather complete example showing a fit to
    data with independent and correlated, absolute and 
