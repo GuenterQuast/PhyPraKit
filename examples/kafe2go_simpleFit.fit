@@ -20,6 +20,6 @@ y_label: ' y values'
 
 model_label: 'Parabolic Fit'
 model_function: |
-  def quadratic_model(x, a, b, c ):
+  def quadratic_model(x, a=0., b=1., c=0. ):
       # Our first model is a simple quadratic function
       return a * x*x + b*x + c
