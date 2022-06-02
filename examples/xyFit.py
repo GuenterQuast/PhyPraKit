@@ -40,10 +40,10 @@ def parse_code(code_string):
     for s in FORBIDDEN_TOKENS:
       contains_forbidden_token = False
       if code_string.find(s) >=0:
-        _e = "Encountered forbidden token '%s' in user-entered code" % (s)
+        _e = "!!! Encountered forbidden token '%s' in user-entered code" % (s)
         print(_e)
-        contains_forbidden = True
-      if(contains_forbidden_token):  raise ValueError(_e)          
+        contains_forbidden_token = True
+      if(contains_forbidden_token): sys.exit(1)           
 
     function_name=''  
     words_in_code = code_string.split()
@@ -55,7 +55,7 @@ def parse_code(code_string):
     if function_name is '':
         _e = "No function name in user entered code."         
         print(_e)
-        raise ValueError(_e)
+        sys.exit(1)
     return function_name, code_string 
   
 def decode_errorDict(edict):
