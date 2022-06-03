@@ -88,7 +88,7 @@ parametric_model:
 # model specification
 model_label: 'Exponential Fit'
 model_function: 
-  python_code: | 
+  python_code: |
     def exp_model(x, A=1., x0=1.):
       return A*np.exp(-x/x0)
 
