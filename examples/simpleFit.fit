@@ -1,5 +1,5 @@
-# kafe2go_fit.yml: example of a fit with kafe2go
-# -----------------------------------------------
+# kafe2go_fit.yml: example of a fit with kafe2go of xyFit.py
+# ----------------------------------------------------------
 #  execute via:
 #    kafe2go kafe2go_fit.fit
 
@@ -11,6 +11,7 @@
 label: 'Test Data'
 
 x_data: [.05,0.36,0.68,0.80,1.09,1.46,1.71,1.83,2.44,2.09,3.72,4.36,4.60]
+x_errors: 3%
 x_label: 'x values'
 
 y_data: [0.35,0.26,0.52,0.44,0.48,0.55,0.66,0.48,0.75,0.70,0.75,0.80,0.90]

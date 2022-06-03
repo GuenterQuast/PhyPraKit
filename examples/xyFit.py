@@ -57,7 +57,17 @@ def parse_code(code_string):
         print(_e)
         sys.exit(1)
     return function_name, code_string 
-  
+
+def decode_rel(e):
+  """Decode numbers with %-sign: interpreted as relative errors
+  """
+  if type(e) is type(''):
+    if '%' in e:
+      v = float(e[0:e.find('%')])/100.
+  else:
+      v = e
+  return v
+                
 def decode_errorDict(edict):
   """Decode dictionary with uncertainties
 
@@ -99,6 +109,17 @@ def decode_errorDict(edict):
       cor = 0.
     if 'error_value' in ed:
       e = ed['error_value']
+      if type(e) is type([]):
+        for i,v in enumerate(e):
+          if type(v) is type(''):  
+            if '%' in v:
+                rel = True
+                e[i]=decode_rel(v)
+      else:
+        if type(e) is type(''):  
+          if '%' in e:
+              rel = True
+              e=decode_rel(e)          
     else:
       e = None
     #    
@@ -190,10 +211,19 @@ if __name__ == "__main__": # --------------------------------------
   srelcorx = None
   if('x_errors') in fd:
     edict = fd['x_errors']
-    if type(edict) is not type([]):
-      sx= edict
-    elif type(edict[0]) is not type({}):
-      sx= edict
+    if type(edict) is not type([]):      # got a scalar, one error for all
+      if type(edict) is type(''):
+        if '%' in edict:
+          srelx=decode_rel(edict)
+      else:
+          sx = edict
+    elif type(edict[0]) is not type({}): # got an array of uncertainties
+      for i, v in enumerate(edict):
+          if type(v) is type(''):
+            edict[i]=decode_rel(v) 
+            srelx= edict
+          else:                          # more complex errors in dictionary 
+            sx = edict
     else:    
       sx, srelx, sabscorx, srelcorx = decode_errorDict(edict)
 
@@ -210,10 +240,19 @@ if __name__ == "__main__": # --------------------------------------
     except:
       print("!!! no y-errors found !")
       sys.exit(1)
-  if type(edict) is not type([]): # got a scalar, one error for all
-    sy= edict
+  if type(edict) is not type([]):      # got a scalar, one error for all
+    if type(edict) is type(''):
+      if '%' in edict:
+        srely=decode_rel(edict)
+      else:
+          sy = edict
   elif type(edict[0]) is not type({}): # got an array of uncertainties
-    sy= edict
+    for i, v in enumerate(edict):
+      if type(v) is type(''):
+        edict[i]=decode_rel(v) 
+        srely= edict
+      else:
+        sy = edict
   else:                                # more complex errors in dictionary 
     sy, srely, sabscory, srelcory = decode_errorDict(edict)
     

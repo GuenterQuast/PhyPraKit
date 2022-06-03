@@ -1,4 +1,4 @@
-# xyFit.fit: Beispiel-Datei für xy-Fit mit fit_from_file.py
+# xyFit.fit: Beispiel-Datei für xy-Fit mit xyFit.py
 
 # Illustrate fitting of an arbitrary function 
 # equivalent to the python example test_xyFit.py
@@ -44,8 +44,8 @@ x_errors:
 - error_value: [0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03]
   correlation_coefficient: 1.  
 # uncorrelated relative
-- error_value: 0.04    
-  relative: true
+- error_value: 4%    
+  ##  relative: true ! not needed here
 # correlated relative
 - error_value: 0.02
   correlation_coefficient: 1. 
