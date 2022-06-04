@@ -250,11 +250,9 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
 
   """Perform fit with data and model from yaml file 
 
-  Uses function PhyPraKit.phyfit.xyFit, a wrapper for phyFit.mnFit
-
-  This code performs fits to x-y data with 
-  independent and correlated, absolute and relative 
-  uncertainties in the x and y directions. 
+  Fit to x-y data with independent and correlated, absolute and relative 
+  uncertainties in the x and y directions read from dictionary. The
+  fitting procedure uses phyfit.xyFit().
 
   Args:
     * fd: fit input as a dictionary, extracted from a file in yaml format
@@ -266,6 +264,50 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
   Returns:
     * result dictionary
     * optionally: produces result plots 
+
+  **fit dictionary format:**
+
+  .. code-block:: yaml
+
+    label: <str data-set name>
+
+    x_label: <str name x-data>
+    x_data: [  list of float ]   
+
+    y_label: <str name y-data>  
+    y_data: [ list of float ]
+
+    x_errors: <float>, [list of floats], or {dictionary/ies}
+    y_errors:  <float>, [list of floats], or {dictionary/ies}
+
+    model_label: <str model name>
+    model_function: |
+      <Python code>
+
+    format of uncertainty dictionary: 
+    - error_value: <float> or [list of floats]
+    - correlation_coefficient: 0. or 1.
+    - relative: true or false
+    relative errors may be spcified as <float>%
+
+  simple example of *yaml* input:
+
+  .. code-block:: yaml
+
+    label: 'Test Data'
+
+    x_data: [.05,0.36,0.68,0.80,1.09,1.46,1.71,1.83,2.44,2.09,3.72,4.36,4.60]
+    x_errors: 3%
+    x_label: 'x values'
+
+    y_data: [0.35,0.26,0.52,0.44,0.48,0.55,0.66,0.48,0.75,0.70,0.75,0.80,0.90]
+    y_errors: [.06,.07,.05,.05,.07,.07,.09,.1,.11,.1,.11,.12,.1]
+    y_label: 'y values'
+
+    model_label: 'Parabolic Fit'
+    model_function: |
+      def quadratic_model(x, a=0., b=1., c=0. ):
+        return a * x*x + b*x + c
 
   .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
   """
