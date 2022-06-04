@@ -8,7 +8,7 @@ v1.0.2    Feb 2019  improved documentation and minor extensions
 v1.0.3    Aug 2019  added LaTeX example "ProtokollVorlage"
 v1.1.0    Mar 2020  support for kafe2 and additions to statistics analysis
 v1.1.1    Nov 2020  changed to GNU GPL
-v1.1.3rc1 Jan 2021  added dedicated fitting package, 
+v1.1.3rc1 Jan 2021  added dedicated fitting package,
                     added toy-MC example, propagatedError()
 v1.1.3rc2 Mar 2021  fitting package renamed to phyFit, english docu
 v1.1.3    Apr 2021  release for summer semester 21
@@ -19,4 +19,7 @@ v1.2.0dev May 2021  new version:
 	changed k2fit return values from tuple to dict
 1.2.0  support for iminuit <2.0 and kafe vers.1 removed
 1.2.1  extended functionality in phyFit (indexed, histogram and likelihood fits)
-1.2.2  added jupyter notebook examples; examples for multi-fit and indexed fit 
+1.2.2  added jupyter notebook examples; examples for multi-fit and indexed fit
+1.2.3  kafe2 version >=2.6, minor fixes
+       new examples for MultiFit and indexedFit and kafe2 histogram fit
+       support fit from input yaml-file for kafe2go and phyFit.xyFit_from_file()
