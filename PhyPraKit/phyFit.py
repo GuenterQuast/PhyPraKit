@@ -245,6 +245,7 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
                     plot=True,          # plot data and model
                     plot_band=True,     # plot model confidence-band
                     plot_cor=False,     # plot profiles likelihood and contours
+                    showplots = True,   # show plots on screen
                     quiet=True          # suppress informative printout
            ):
 
@@ -549,10 +550,11 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
       axis_labels=[x_label, y_label], 
       data_legend =  data_label,    
       model_legend = model_label, 
-      plot=True,          # plot data and model
-      plot_band=True,     # plot model confidence-band
-      plot_cor=False,     # plot profiles likelihood and contours
-      quiet=True          # suppress informative printout
+      plot=plot,            # plot data and model
+      plot_band=plot_band,  # plot model confidence-band
+      plot_cor=plot_cor,    # plot profiles likelihood and contours
+      showplots=showplots,  # plots to screen
+      quiet=quiet           # suppress informative printout
       )
   return rdict
    
