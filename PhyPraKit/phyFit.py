@@ -522,18 +522,21 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
   fitf_name, code = parse_code(code_str)    
 
 # print input and model
-  print('x-data:', data_x)
-  print('+/- abs', sx)
-  print('    rel', srelx)
-  print('   cabs', sabscorx)
-  print('   crel', srelcorx)
-  print('y-data:', data_y)
-  print('+/- abs', sy)
-  print('    rel', srely)
-  print('   cabs', sabscory)
-  print('   crel', srelcory)
-  print("\n*==* model to fit: %s" %(fitf_name))
-  print('%s' %(code) )    
+  if not quiet:
+    print('\n*==* xyFit_from_file:')
+    print('-- input data:')
+    print('x-data:', data_x)
+    print('+/- abs', sx)
+    print('    rel', srelx)
+    print('   cabs', sabscorx)
+    print('   crel', srelcorx)
+    print('y-data:', data_y)
+    print('+/- abs', sy)
+    print('    rel', srely)
+    print('   cabs', sabscory)
+    print('   crel', srelcory)
+    print('-- model to fit: %s' %(fitf_name))
+    print('%s' %(code) )    
 
   scope = dict()
   header= 'import numpy as np\n' + 'import scipy\n' 

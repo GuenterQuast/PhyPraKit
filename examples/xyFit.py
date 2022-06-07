@@ -20,7 +20,8 @@
      - output depending on options
 """
 
-from PhyPraKit.phyFit import xyFit_from_file                
+from PhyPraKit.phyFit import xyFit_from_file
+import pprint
 
 if __name__ == "__main__": # --------------------------------------  
   #
@@ -96,7 +97,7 @@ if __name__ == "__main__": # --------------------------------------
     sys.exit(1)
 
   print("*==*", sys.argv[0], "received valid yaml data for fit:")
-  # pprint.pprint(fd)
+  pprint.pprint(fd, compact=True)
 
   rdict = xyFit_from_file(fd,            # the input dictionary defining the fit 
                  plot=plt_flg,           # show plot of data and model
