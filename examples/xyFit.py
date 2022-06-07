@@ -103,7 +103,8 @@ if __name__ == "__main__": # --------------------------------------
                  plot_band=band_flg,     # plot model confidence-band
                  plot_cor=cont_flg,      # plot profiles likelihood and contours
                  showplots= show,        # show plots on screen 
-                 quiet=quiet_flg         # suppress informative printout
+                 quiet=quiet_flg,        # suppress informative printout
+                 return_fitObject=False
                  ) 
 
   # print results to illustrate how to use output

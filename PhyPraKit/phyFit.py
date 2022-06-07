@@ -246,7 +246,8 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
                     plot_band=True,     # plot model confidence-band
                     plot_cor=False,     # plot profiles likelihood and contours
                     showplots = True,   # show plots on screen
-                    quiet=True          # suppress informative printout
+                    quiet=True,         # suppress informative printout
+                    return_fitObject=False # 
            ):
 
   """Perform fit with data and model from yaml file 
@@ -261,6 +262,8 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
     * plot_cor: show profile likelihoods and confidence contours
     * plot_band: plot uncertainty band around model function
     * plot_residual: plot residuals w.r.t. model instead of model function
+    * showplots: show plots on screen - switch off if handled by calling process
+    * quiet: suppress informative printout
 
   Returns:
     * result dictionary
@@ -554,7 +557,8 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
       plot_band=plot_band,  # plot model confidence-band
       plot_cor=plot_cor,    # plot profiles likelihood and contours
       showplots=showplots,  # plots to screen
-      quiet=quiet           # suppress informative printout
+      quiet=quiet,           # suppress informative printout
+      return_fitObject=return_fitObject
       )
   return rdict
    
@@ -572,7 +576,7 @@ def xFit(fitf, x, s = None, srel = None,
        axis_labels=['Index', 'f(*x, *par)'],
        data_legend = 'data',    
        model_legend = 'model',
-       return_fitObject=False ) :
+       return_fitObject = False ):
   
   """Wrapper function to fit an arbitrary function to data with
   independent and/or correlated absolute and/or relative uncertainties 
