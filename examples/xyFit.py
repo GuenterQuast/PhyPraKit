@@ -21,7 +21,7 @@
 """
 
 from PhyPraKit.phyFit import xyFit_from_file
-import pprint
+from pprint import pprint
 
 if __name__ == "__main__": # --------------------------------------  
   #
@@ -30,7 +30,6 @@ if __name__ == "__main__": # --------------------------------------
 
   # package imports
   import sys, argparse, yaml, numpy as np, matplotlib.pyplot as plt
-
 
   # - - - Parse command-line arguments
   parser = argparse.ArgumentParser(description = \
@@ -97,8 +96,21 @@ if __name__ == "__main__": # --------------------------------------
     sys.exit(1)
 
   print("*==*", sys.argv[0], "received valid yaml data for fit:")
-  pprint.pprint(fd, compact=True)
-
+  if 'parametric_model' in fd: # for complex kafe2go format
+    pprint(fd, compact=True)
+  else:  # "nice" printout for simple xyFit format
+    for key in fd:
+      if type(fd[key]) is not type([]):     # got a scalar or string
+        print(key + ': ', fd[key])
+      elif type(fd[key][0]) is not type({}): # got list of scalars
+              print(key + ': ', fd[key])
+      else:  # got list of uncertainty dictionaries
+        print(key+':')
+        for d in fd[key]:
+          for k in d:
+            print('  '+ k +': ', d[k], end=' ') 
+          print()
+          
   rdict = xyFit_from_file(fd,            # the input dictionary defining the fit 
                  plot=plt_flg,           # show plot of data and model
                  plot_band=band_flg,     # plot model confidence-band

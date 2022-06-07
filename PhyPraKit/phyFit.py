@@ -377,10 +377,10 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
         typ = ed['type']
       else:
         typ = "simple"
-        if 'relative' in ed:
-          rel = ed['relative']
-        else:
-          rel = False   
+      if 'relative' in ed:
+        rel = ed['relative']
+      else:
+        rel = False   
       if 'correlation_coefficient' in ed:
         cor = ed['correlation_coefficient'] 
       else:
