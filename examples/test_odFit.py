@@ -1,12 +1,10 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 '''test_odFit
    test fitting an arbitrary fucntion with scipy odr, 
    with uncertainties in x and y 
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 '''
-
-from __future__ import print_function  # for python2.7 compatibility
 
 from PhyPraKit import generateXYdata, odFit
 import numpy as np, matplotlib.pyplot as plt

@@ -12,8 +12,6 @@
 
 """
 
-from __future__ import print_function  # for python2.7 compatibility
-
 # ---------------------------------------------------------------
 if __name__ == "__main__":
   import sys, numpy as np, matplotlib.pyplot as plt

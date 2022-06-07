@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
-'''test_labxParser.py
+"""test_labxParser.py
    read files in xml-format produced with the Leybold Cassy system  
    uses PhyPraPit.labxParser()
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
-'''
-
-from __future__ import print_function  # for python2.7 compatibility
+"""
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":

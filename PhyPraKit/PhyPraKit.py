@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 # module PhyPraKit.py, python3 version
-from __future__ import print_function  # for python2.7 compatibility
 def A0_readme():
   # name chosen to make sure sphinx puts this docstring at the top
   """Package PhyPraKit

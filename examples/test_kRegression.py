@@ -1,13 +1,11 @@
-#! /usr/bin/env python
-'''test_kRegression
+#! /usr/bin/env python3
+"""test_kRegression
    test linear regression with kafe using kFit from PhyPrakKit
    uncertainties in x and y and correlated 
    absolute and relative uncertainties
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
-'''
-
-from __future__ import print_function  # for python2.7 compatibility
+"""
 
 import kafe # must be imported first to set backend
 from PhyPraKit import generateXYdata, kFit

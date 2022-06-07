@@ -27,8 +27,6 @@
 
 """
 
-from __future__ import print_function  # for python2.7 compatibility
-
 # last changed: Nov. 16
 #  GQ 16-Nov-16: added more fit funtions for envelope
 #                peakfinder tuned to new version in PhyPraKit

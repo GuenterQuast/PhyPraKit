@@ -1,4 +1,4 @@
-# kafe2go_fit.yml: example of a fit with kafe2go of xyFit.py
+# kafe2go_fit.yml: example of a fit with kafe2go or xyFit.py
 # ----------------------------------------------------------
 #  execute via:
 #    kafe2go kafe2go_fit.fit

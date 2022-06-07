@@ -9,8 +9,6 @@
 
 """
 
-from __future__ import print_function  # for python2.7 compatibility
-
 # last changed: Nov. 16
 
 # -----------------------------------------------------------

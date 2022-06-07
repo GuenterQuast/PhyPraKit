@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 """test_generateData
    test generation of simulated data
    this simulates a measurement with given x-values with uncertainties;
@@ -10,8 +10,6 @@
 ..  moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 """
-
-from __future__ import print_function  # for python2.7 compatibility
 
 import numpy as np, matplotlib.pyplot as plt
 from PhyPraKit import generateXYdata
