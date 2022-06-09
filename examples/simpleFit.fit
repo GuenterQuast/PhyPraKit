@@ -1,7 +1,7 @@
-# kafe2go_fit.yml: example of a fit with kafe2go or xyFit.py
-# ----------------------------------------------------------
+# simpleFit.fit: example of a fit with kafe2go or xyFit.py
+# --------------------------------------------------------
 #  execute via:
-#    kafe2go kafe2go_fit.fit
+#    kafe2go simpleFit.fit
 
 # In this example a 2nd order polynomial
 # is fit to data points with uncertainties.
