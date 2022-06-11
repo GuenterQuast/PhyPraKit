@@ -20,7 +20,7 @@
      - output depending on options
 """
 
-from PhyPraKit.phyFit import xyFit_from_file
+from PhyPraKit.phyFit import xyFit_from_file, hFit_from_file
 from pprint import pprint
 
 if __name__ == "__main__": # --------------------------------------  
@@ -95,10 +95,14 @@ if __name__ == "__main__": # --------------------------------------
     print("!!! data file is empty!")
     sys.exit(1)
 
+  fitType = 'xy'
+  if 'type' in fd.keys():
+    fitType = fd['type']
   print("*==*", sys.argv[0], "received valid yaml data for fit:")
   if 'parametric_model' in fd: # for complex kafe2go format
     pprint(fd, compact=True)
   else:  # "nice" printout for simple xyFit format
+    print(' **  Type of Fit:', fitType)
     for key in fd:
       if type(fd[key]) is not type([]):     # got a scalar or string
         print(key + ': ', fd[key])
@@ -110,15 +114,23 @@ if __name__ == "__main__": # --------------------------------------
           for k in d:
             print('  '+ k +': ', d[k], end=' ') 
           print()
-          
-  rdict = xyFit_from_file(fd,            # the input dictionary defining the fit 
-                 plot=plt_flg,           # show plot of data and model
-                 plot_band=band_flg,     # plot model confidence-band
-                 plot_cor=cont_flg,      # plot profiles likelihood and contours
-                 showplots= show,        # show plots on screen 
-                 quiet=quiet_flg,        # suppress informative printout
-                 return_fitObject=False
-                 ) 
+
+  if fitType == 'xy':
+    fit = xyFit_from_file
+  elif fitType == 'histogram':
+    fit = hFit_from_file
+  else:
+    print('!!! unsupported type of fit:', fitType)
+    sys.exit(1)
+      
+  rdict = fit(fd,                     # the input dictionary defining the fit 
+              plot=plt_flg,           # show plot of data and model
+              plot_band=band_flg,     # plot model confidence-band
+              plot_cor=cont_flg,      # plot profiles likelihood and contours
+              showplots= show,        # show plots on screen 
+              quiet=quiet_flg,        # suppress informative printout
+              return_fitObject=False
+               ) 
 
   # print results to illustrate how to use output
   print('\n*==* Fit Result:')

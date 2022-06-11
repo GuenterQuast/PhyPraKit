@@ -542,7 +542,7 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
   header= 'import numpy as np\n' + 'import scipy\n' 
   exec(header + code, scope)
   
-# perform fit to data with function xyFit using mnFit class from phyFit
+# perform fit to data with function xyFit 
   rdict = xyFit(scope[fitf_name],
       data_x, data_y,    # data x and y coordinates
       sx=sx,             # indep x
@@ -806,6 +806,140 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     #   parameter names
     return Fit.getResult()
 
+def hFit_from_file(fd,           # dictionary defining fit input
+             plot=True,          # plot data and model
+             plot_band=True,     # plot model confidence-band
+             plot_cor=False,     # plot profiles likelihood and contours
+             showplots = True,   # show plots on screen
+             quiet=True,         # suppress informative printout
+             return_fitObject=False # 
+           ):
+
+  """Perform fit with data and model from yaml file 
+
+  Fit to x-y data with independent and correlated, absolute and relative 
+  uncertainties in the x and y directions read from dictionary. The
+  fitting procedure uses phyfit.xyFit().
+
+  Args:
+    * fd: fit input as a dictionary, extracted from a file in yaml format
+    * plot: show data and model if True
+    * plot_cor: show profile likelihoods and confidence contours
+    * plot_band: plot uncertainty band around model function
+    * plot_residual: plot residuals w.r.t. model instead of model function
+    * showplots: show plots on screen - switch off if handled by calling process
+    * quiet: suppress informative printout
+
+  Returns:
+    * result dictionary
+    * optionally: produces result plots 
+  """
+
+  ## from .phyFit import hFit #! already contained in this file
+
+  # helper function
+  def parse_code(code_string):
+    """Watch out for "dangerous" commands in Python code and extract function name
+
+      Args: 
+       - user-defined code
+      Returns:
+       - function name
+       - code
+    """
+
+    FORBIDDEN_TOKENS = ['import', 'exec', 'global', 'execfile']
+
+    for s in FORBIDDEN_TOKENS:
+      contains_forbidden_token = False
+      if code_string.find(s) >=0:
+        _e = "!!! Encountered forbidden token '%s' in user-entered code" % (s)
+        print(_e)
+        contains_forbidden_token = True
+      if(contains_forbidden_token): sys.exit(1)           
+
+    function_name=''  
+    words_in_code = code_string.split()
+    for i, w in enumerate(words_in_code):
+      if w == 'def':
+        fn = words_in_code[i+1]
+        function_name=fn[0:fn.find( '(' )]
+        break
+    if function_name is '':
+        _e = "No function name in user entered code."         
+        print(_e)
+        sys.exit(1)
+    return function_name, code_string 
+
+  # End helper function 
+  
+  # Extract information from input dictionary   
+  if 'label' in fd:
+    data_label = fd['label']
+  else:
+    data_label = 'data'
+
+# - data
+  hdata = fd['raw_data']
+  bins = 10
+  if 'n_bins' in fd:
+    bins = fd['n_bins']
+  if 'bin_edges' in fd:
+    bins = fd['bin_edges']
+  bin_range = None
+  if 'bin_range' in fd:
+    bin_range = fd['bin_range']
+
+  if 'x_label' in fd:
+    x_label = fd['x_label']
+  else:
+    x_label = 'x'
+  if 'y_label' in fd:
+    y_label = fd['y_label']
+  else:
+    y_label = 'y'
+    
+# - model name and python code
+  if 'model_label' in fd:
+    model_label = fd['model_label']
+  else:
+    model_label = 'model'
+  try:
+    code_str = fd['model_density_function']['python_code']
+  except:
+    try:
+      code_str = fd['model_density_function']
+    except:
+      try:
+        code_str = fd['model_function']
+      except:
+        print("!!! no code to fit found !")
+      sys.exit(1)
+  fitf_name, code = parse_code(code_str)    
+
+  bin_contents, bin_edges = np.histogram(hdata, bins=bins,  range=bin_range)
+  
+  # execute definition of model function
+  scope = dict()
+  header= 'import numpy as np\n' + 'import scipy\n' 
+  exec(header + code, scope)
+
+  # perform fit to data with function hFit 
+  rdict = hFit(scope[fitf_name],
+         bin_contents, bin_edges,
+         plot = plot,
+         plot_cor = plot_cor,
+         plot_band=plot_band,
+         quiet = quiet,
+         showplots = showplots,
+         axis_labels=[x_label, y_label],
+         data_legend = data_label,    
+         model_legend = model_label,
+         return_fitObject=return_fitObject
+         ) 
+  return rdict
+
+  
 def mFit(ufcn, data = None,
          model_kwargs = None,
          p0 = None, dp0 = None, 
