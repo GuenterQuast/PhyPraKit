@@ -815,11 +815,7 @@ def hFit_from_file(fd,           # dictionary defining fit input
              return_fitObject=False # 
            ):
 
-  """Perform fit with data and model from yaml file 
-
-  Fit to x-y data with independent and correlated, absolute and relative 
-  uncertainties in the x and y directions read from dictionary. The
-  fitting procedure uses phyfit.xyFit().
+  """Binned log-likelihood fit to histogram data with input from yaml file with phyfit.hFit()
 
   Args:
     * fd: fit input as a dictionary, extracted from a file in yaml format
@@ -833,6 +829,32 @@ def hFit_from_file(fd,           # dictionary defining fit input
   Returns:
     * result dictionary
     * optionally: produces result plots 
+
+  simple example of *yaml* input:
+
+  .. code-block:: yaml
+
+    # Example of a fit to histogram data
+    type: histogram
+
+    label: example data
+    x_label: 'h' 
+    y_label: 'pdf(h)'
+
+    # data:
+    raw_data: [ 79.83,79.63,79.68,79.82,80.81,79.97,79.68,80.32,79.69,79.18,
+            80.04,79.80,79.98,80.15,79.77,80.30,80.18,80.25,79.88,80.02 ]
+
+    n_bins: 15
+    bin_range: [79., 81.]
+    # alternatively an array for the bin edges can be specified
+    #bin_edges: [79., 79.5, 80, 80.5, 81.]
+
+    model_density_function: |
+      def normal_distribution(x, mu=80., sigma=1.):
+        return np.exp(-0.5*((x - mu)/sigma)** 2)/np.sqrt(2.*np.pi*sigma** 2)
+
+  .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
   """
 
   ## from .phyFit import hFit #! already contained in this file

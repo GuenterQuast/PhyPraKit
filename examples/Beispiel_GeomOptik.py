@@ -1,7 +1,7 @@
-"""Beispiel_GeomOptik.py  
-   Parameter transformation in Geometrical Optics:
-      - determine f1, f2 and d of a two-lense system
-        from system focal widhts f and postions h1 and h2 of princpal planes 
+"""Beispiel_GeomOptik.py 
+  Parameter transformation in Geometrical Optics:
+     - determine f1, f2 and d of a two-lense system
+       from system focal widhts f and postions h1 and h2 of princpal planes 
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 

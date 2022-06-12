@@ -1,23 +1,29 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# script xyFit.py
+"""**run_phyFit.py**
 
-"""Perform fit with data and model from yaml file 
+   Perform fit with data and model from yaml file 
 
-    Uses function PhyPraKit.phyfit.xyFit, a wrapper for phyFit.mnFit
+   Uses functions xyFit and hFit from PhyPraKit.phyFit
 
-    This code performs fits to x-y data with 
-    independent and correlated, absolute and relative 
-    uncertainties in the x and y directions. 
+   This code performs fits 
 
-    usage:
-      ./xyFit.py [options] <input file name>
+      - to x-y data with independent and correlated, absolute 
+        and relative uncertainties in the x and y directions 
+ 
+      - and to histogram data with a binned likelihood fit.
 
-      ./xyFit.py --help for help
+   usage:
+
+      ./run_phyFit.py [options] <input file name>
+
+      ./run_phyFit.py --help for help
+
 
    Input:
-     - input file in yaml format
-     - output depending on options
+
+      - input file in yaml format
+      - output depending on options
+
 """
 
 from PhyPraKit.phyFit import xyFit_from_file, hFit_from_file
@@ -115,6 +121,7 @@ if __name__ == "__main__": # --------------------------------------
             print('  '+ k +': ', d[k], end=' ') 
           print()
 
+# select appropriate wrapper
   if fitType == 'xy':
     fit = xyFit_from_file
   elif fitType == 'histogram':
@@ -122,7 +129,8 @@ if __name__ == "__main__": # --------------------------------------
   else:
     print('!!! unsupported type of fit:', fitType)
     sys.exit(1)
-      
+
+# run fit    
   rdict = fit(fd,                     # the input dictionary defining the fit 
               plot=plt_flg,           # show plot of data and model
               plot_band=band_flg,     # plot model confidence-band
@@ -132,7 +140,7 @@ if __name__ == "__main__": # --------------------------------------
               return_fitObject=False
                ) 
 
-  # print results to illustrate how to use output
+# print results to illustrate how to use output
   print('\n*==* Fit Result:')
   pvals, perrs, cor, chi2, pnams= rdict.values()
   print(" chi2: {:.3g}".format(chi2))

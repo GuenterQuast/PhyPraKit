@@ -471,11 +471,33 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     des CASSY-Systems im `.labx` -Format gespeicherten Dateien ein
     (Beispieldatei `GammaSpektra.labx`).
 
+  **Anpassungen mit run_phyFit.py**
+  
+  Die notwendigen Informationen zur Durchführung von Anpassungen könen
+  auch als Date angegeben werden, die in der einfachen
+  Datenbeschreibungssprache *yaml* erstellt wurden. 
+
+  Zur Ausführung dient die Eingabe von
+  
+  ``python3 run_phyFit.py [option] <yaml.datei>``
+
+  auf der Kommandozeile.
+
+  * `simleFit.fit` zeigt am Beispiel der Anpassung einer Parabel,
+    wie mit ganz wenigen Eingaben eine Anpassung durchgeführt werden kann.
+    
+  * `xyFit.fit` ist ein komplexeres Beispiel, das alle *phyFit*
+    unterstützten Arten von Unsicherheiten (d.h. x/y, absolut/relativ und
+    unabhängig/korreliert) enthält; relative Unsicherheiten werden dabei
+    auf den Modellwert und nicht auf die gemessenen Datenpunkte bezogen. 
+
+  * `hFit.fit` zeigt die Anpassung einer Gaußverteilug an histogrammierte
+    Daten.
+    
   **Anpassungen mit kafe2go**
     
-  Die folgenden Dateien im Format der Datenbeschreibungssprache *yaml*
-  sind Beispiele zur Verwendung des Skripts *kafe2go* aus dem Paket
-  *kafe2*, mit dem Anpassungen von Modellen an Messdaten ganz ohne eigenen
+  Alternativ kann auch das Skript *kafe2go* aus dem Paket *kafe2*, verwendet
+  werden, mit dem ebenfalls Anpassungen von Modellen an Messdaten ohne eigenen
   *Python*-Code erstellt weden können. Ausgeführt wird die Anpassung durch
   Eingabe von
   
@@ -553,3 +575,6 @@ Module Documentation
 ..  automodule:: Beispiel_GeomOptik
 
 ..  automodule:: Beispiel_GammaSpektroskopie
+
+..  automodule:: run_phyFit
+		 

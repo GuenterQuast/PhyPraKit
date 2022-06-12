@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Beispiel_GammaSpektroskopie.py 
-   Darstellung der Daten aus einer im CASSY labx-Format gespeicherten Datei
-   am Beispiel der Gamma-Spektroskopie
+"""Beispiel_GammaSpektroskopie.py  
+  Darstellung der Daten aus einer im CASSY labx-Format gespeicherten Datei
+  am Beispiel der Gamma-Spektroskopie
 
-   * Einlesen der Daten im .labx-Format
+  * Einlesen der Daten im .labx-Format
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
