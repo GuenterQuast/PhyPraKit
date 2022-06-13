@@ -20,6 +20,6 @@ v1.2.0dev May 2021  new version:
 1.2.0  support for iminuit <2.0 and kafe vers.1 removed
 1.2.1  extended functionality in phyFit (indexed, histogram and likelihood fits)
 1.2.2  added jupyter notebook examples; examples for multi-fit and indexed fit
-1.2.3  kafe2 version >=2.6, minor fixes
        new examples for MultiFit and indexedFit and kafe2 histogram fit
-       support fit from input yaml-file for kafe2go and phyFit.xyFit_from_file()
+1.2.3  kafe2 version >=2.6, python2 support dropped;
+       fits from input yaml-file with kafe2go and run_phyFit.py

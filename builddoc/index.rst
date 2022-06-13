@@ -483,7 +483,7 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
 
   auf der Kommandozeile.
 
-  * `simleFit.fit` zeigt am Beispiel der Anpassung einer Parabel,
+  * `simpleFit.fit` zeigt am Beispiel der Anpassung einer Parabel,
     wie mit ganz wenigen Eingaben eine Anpassung durchgeführt werden kann.
     
   * `xyFit.fit` ist ein komplexeres Beispiel, das alle *phyFit*
