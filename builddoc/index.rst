@@ -471,10 +471,55 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     des CASSY-Systems im `.labx` -Format gespeicherten Dateien ein
     (Beispieldatei `GammaSpektra.labx`).
 
-  **Anpassungen mit run_phyFit.py**
+    
+  **Daten darstellen mit dem Skript plotData.py**
+
+  Mitunter ist eine einfache und unkomplizierte Darstellung von Daten
+  erwünscht, ohne speziellen *Python*-Code zu erstellen. Damit das
+  funktioniert, müssen die Daten in einem Standardformat vorliegen.
+  Dazu empfiehlt sich die Datenbeschreibungssprache *yaml*, mit der
+  auch die notwendigen "Meta-Daten" wie Titel, Art des Datensatzes und
+  der auf der x- und y-Achse darzustellenden Daten angegeben werden
+  können. Die Daten und deren Unsicherheiten werden als Liste von durch
+  Kommata getrennten Dezimalzahlen (mit Dezimalpunkt!) angegeben.
+
+  Die Beispieldatei 'data.yaml' erläutert das unterstützte einfache
+  Datenformat.
+
+  .. code-block:: yaml
+
+     title: <title of plot>
+     x_label: <label for x-axis>
+     y_label: <label for y-axis>
+
+     label: <name of data set>
+     x_data: [ x1, x2, ... , xn]
+     y_data: [ y1, y2, ... , yn ]
+     x_errors: x-uncertainty or [ex1, ex2, ..., exn]
+     y_errors: y-uncertainty or [ey1, ey2, ..., eyn]
+
+     Bei Eingabe von mehreren Datensätzen werden diese getrennt durch
+     ...
+     ---  
+     label: <name of 2nd data set>
+     x_data: [ 2nd set of x values ]
+     y_data: [ 2nd set of y values ]
+     x_errors: x-uncertainty or [x-uncertainties]
+     y_errors: y-uncertainty or [y-uncertainties]
+
+  Zur Ausführung dient die Eingabe von
   
-  Die notwendigen Informationen zur Durchführung von Anpassungen könen
-  auch als Date angegeben werden, die in der einfachen
+  ``python3 plotData.py [option] <yaml.datei>``
+
+  auf der Kommandozeile.
+  ``python3 plotData.py -h`` gibt die unterstützen Optionen aus. 
+
+
+ 
+  **Einfache Anpassungen mit run_phyFit.py**
+  
+  Die notwendigen Informationen zur Durchführung von Anpassungen
+  können ebenfalls als Datei angegeben werden, die in der
   Datenbeschreibungssprache *yaml* erstellt wurden. 
 
   Zur Ausführung dient die Eingabe von
@@ -577,4 +622,6 @@ Module Documentation
 ..  automodule:: Beispiel_GammaSpektroskopie
 
 ..  automodule:: run_phyFit
+
+..  automodule:: plotData
 		 

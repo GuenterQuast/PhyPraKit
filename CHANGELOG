@@ -22,4 +22,5 @@ v1.2.0dev May 2021  new version:
 1.2.2  added jupyter notebook examples; examples for multi-fit and indexed fit
        new examples for MultiFit and indexedFit and kafe2 histogram fit
 1.2.3  kafe2 version >=2.6, python2 support dropped;
+       added script plotData.py for simple plotting of data in yaml format,
        fits from input yaml-file with kafe2go and run_phyFit.py
