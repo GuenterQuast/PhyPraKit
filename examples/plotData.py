@@ -177,14 +177,13 @@ def plot_hist_from_yaml(d):
      ---   
   """
   # trick to generate a global variable for accumulated statistics
-  global statinfo
-  try: statinfo
-  except NameError: statinfo = None
-  if statinfo is None:  statinfo = []
-
   import numpy as np, matplotlib.pyplot as plt
   from PhyPraKit import histstat
-  
+
+  global statinfo
+  try: statinfo
+  except NameError: statinfo = []
+
   def plot(bconts, bedges, title=None,
            label='histogram', x_label = 'x', y_label = 'y',
            grid=True, statistics=True):
