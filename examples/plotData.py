@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """**plotData.py** [options] <input file name>
 
-  Plot (several) data set(s) with error bars in x- and y- directions from
-  file in yaml format
+  Plot (several) data set(s) with error bars in x- and y- directions 
+  or histograms from file in yaml format
 
   usage: 
 
@@ -16,7 +16,7 @@
 
     - figure
  
-  yaml-format:
+  yaml-format for (x-y) data:
 
   .. code-block:: yaml
 
@@ -33,6 +33,26 @@
      several input sets to be separated by 
      ...
      ---   
+
+  yaml-format for histogram:
+
+  .. code-block:: yaml
+
+     title: <title of plot>
+     x_label: <label for x-axis>
+     y_label: <label for y-axis>
+
+     label: <name of data set>
+     raw_data: [x1, ... , xn]
+     # define binning
+     n_bins: n
+     bin_range: [x_min, x_max]
+     #   alternatively: 
+     # bin edges: [e0, ..., en]
+
+     several input sets to be separated by 
+     ...
+     ---   
 """
 
 def plot_xy_from_yaml(d):
@@ -45,7 +65,25 @@ def plot_xy_from_yaml(d):
      Output: 
 
          matplotlib figure
-  """
+
+  yaml-format of input:
+
+  .. code-block:: yaml
+
+     title: <title of plot>
+     x_label: <label for x-axis>
+     y_label: <label for y-axis>
+
+     label: <name of data set>
+     x_data: [ x values ]
+     y_data: [ y values ]
+     x_errors: x-uncertainty or [x-uncertainties]
+     y_errors: y-uncertainty or [y-uncertainties]
+
+     several input sets to be separated by 
+     ...
+     ---   
+ """
 
   import numpy as np, matplotlib.pyplot as plt
 
@@ -107,9 +145,6 @@ def plot_xy_from_yaml(d):
              label=data_label, x_label = x_label, y_label = y_label,
              marker='x', color='grey')
 
-
-statinfo = []
-
 def plot_hist_from_yaml(d):
   """plot histogram data from yaml file
 
@@ -120,7 +155,32 @@ def plot_hist_from_yaml(d):
      Output: 
 
          matplotlib figure
+
+  yaml-format of input:
+
+  .. code-block:: yaml
+
+     title: <title of plot>
+     x_label: <label for x-axis>
+     y_label: <label for y-axis>
+
+     label: <name of data set>
+     raw_data: [x1, ... , xn]
+     # define binning
+     n_bins: n
+     bin_range: [x_min, x_max]
+     #   alternatively: 
+     # bin edges: [e0, ..., e_n]
+
+     several input sets to be separated by 
+     ...
+     ---   
   """
+  # trick to generate a global variable for accumulated statistics
+  global statinfo
+  try: statinfo
+  except NameError: statinfo = None
+  if statinfo is None:  statinfo = []
 
   import numpy as np, matplotlib.pyplot as plt
   from PhyPraKit import histstat
@@ -137,7 +197,7 @@ def plot_hist_from_yaml(d):
     w = 0.9*(be[1:] - be[:-1])
     
     plt.bar(bedges[:-1],bconts,
-            align='edge', width = w, alpha=0.66,
+            align='edge', width = w, alpha=0.5,
 #            facecolor='cadetblue',
             edgecolor='grey', 
             label = label)

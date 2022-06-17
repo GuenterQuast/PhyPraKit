@@ -293,7 +293,7 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
 `mybinder.org
 <https://mybinder.org/v2/git/https%3A%2F%2Fgit.scc.kit.edu%2Fyh5078%2FPhyPraKit/master>`_.
 
-  **Beispiele zur Anwendung der Module aus PhyPraKit**
+**Beispiele zur Anwendung der Module aus PhyPraKit**
 
   * `test_readColumnData.py` ist ein Beispiel zum
     Einlesen von Spalten aus Textdateien; die zugehörigen 
@@ -402,7 +402,7 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     :math:`\chi^2`-Wahrscheinlichkeit überprüfen, die im Idealfall
     eine Rechteckverteilung im Intervall [0,1] sein sollte. 
 
-  **Komplexere Beispiele für konkrete Anwendungen in Praktika**
+**Komplexere Beispiele für konkrete Anwendungen in Praktika**
   
   Die folgenden *python*-Skripte sind etwas komplexer und illustrieren 
   typische Anwendungsfälle der Module in `PhyPraKit`:
@@ -472,7 +472,7 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     (Beispieldatei `GammaSpektra.labx`).
 
     
-  **Daten darstellen mit dem Skript plotData.py**
+**Daten darstellen mit dem Skript plotData.py**
 
   Mitunter ist eine einfache und unkomplizierte Darstellung von Daten
   erwünscht, ohne speziellen *Python*-Code zu erstellen. Damit das
@@ -483,9 +483,12 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
   können. Die Daten und deren Unsicherheiten werden als Liste von durch
   Kommata getrennten Dezimalzahlen (mit Dezimalpunkt!) angegeben.
 
-  Die Beispieldatei 'data.yaml' erläutert das unterstützte einfache
-  Datenformat.
+  Das Skript *plotData.py* unterstützt die Darstellun von Datenpunkten
+  (x,y) mit Unsicherheiten und Histogramme. Die Beispieldateien 'data.yaml'
+  und hData.yaml erläutern das unterstützte einfache Datenformat.
 
+  Für (x,y)-Daten:
+  
   .. code-block:: yaml
 
      title: <title of plot>
@@ -507,6 +510,27 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
      x_errors: x-uncertainty or [x-uncertainties]
      y_errors: y-uncertainty or [y-uncertainties]
 
+     
+  und für Histogrammdaten:
+
+  .. code-block:: yaml
+
+    title: <title of plot>
+    x_label: <label for x-axis>
+    y_label: <label for y-axis>
+    label: <name of data set>
+    raw_data: [x1, ... , xn]
+    # define binning
+    n_bins: n
+    bin_range: [x_min, x_max]
+    #   alternatively: 
+    # bin edges: [e0, ..., en]
+
+    # wie oben ist Eingabe von mehreren Datensätzen möglich, getrennt durch
+    ...
+    ---  
+
+    
   Zur Ausführung dient die Eingabe von
   
   ``python3 plotData.py [option] <yaml.datei>``
@@ -516,7 +540,7 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
 
 
  
-  **Einfache Anpassungen mit run_phyFit.py**
+**Einfache Anpassungen mit run_phyFit.py**
   
   Die notwendigen Informationen zur Durchführung von Anpassungen
   können ebenfalls als Datei angegeben werden, die in der
@@ -539,7 +563,7 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
   * `hFit.fit` zeigt die Anpassung einer Gaußverteilug an histogrammierte
     Daten.
     
-  **Anpassungen mit kafe2go**
+**Anpassungen mit kafe2go**
     
   Alternativ kann auch das Skript *kafe2go* aus dem Paket *kafe2*, verwendet
   werden, mit dem ebenfalls Anpassungen von Modellen an Messdaten ohne eigenen
