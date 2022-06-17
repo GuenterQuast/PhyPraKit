@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""plotData.py [options] <input file name>
+"""**plotData.py** [options] <input file name>
 
-   Plot (several) data set(s) with error bars in x- and y- directions from
-   file in yaml format
+  Plot (several) data set(s) with error bars in x- and y- directions from
+  file in yaml format
 
-   usage: 
+  usage: 
 
-     ./plotData.py [options] <input file name>
+    ./plotData.py [options] <input file name>
 
   Input: 
 
@@ -35,20 +35,27 @@
      ---   
 """
 
-from pprint import pprint
-import numpy as np, matplotlib.pyplot as plt
-import sys, yaml
+def plot_xy_from_yaml(d):
+  """plot (xy) data from yaml file
 
-def ymlplot(d):
-  """plot data from yaml file
+     Input: 
+
+         dictionary from yaml input
+     
+     Output: 
+
+         matplotlib figure
   """
 
+  import numpy as np, matplotlib.pyplot as plt
+
   def plot(x, y, ex, ey, title=None,
-           label='data', x_label = 'x', y_label = 'y'):
-    """return figure with xy data and uncertainties
+           label='data', x_label = 'x', y_label = 'y',
+           marker='x', color='grey'):
+    """return figure with (x,y) data and uncertainties
     """
     # draw data
-    plt.plot(x, y, marker='x', linestyle='', color='grey', alpha=0.5)
+    plt.plot(x, y, marker=marker, linestyle='', color=color, alpha=0.5)
     if (ex is not None) and (ey is not None):
       plt.errorbar(x, y, xerr=ex, yerr=ey, fmt='.', label=label)
     elif ey is not None:
@@ -97,11 +104,104 @@ def ymlplot(d):
     y_label = None
     
   fig = plot(x_dat, y_dat, x_err, y_err, title=title,
-         label=data_label, x_label = x_label, y_label = y_label)
+             label=data_label, x_label = x_label, y_label = y_label,
+             marker='x', color='grey')
 
+
+statinfo = []
+
+def plot_hist_from_yaml(d):
+  """plot histogram data from yaml file
+
+     Input: 
+
+         dictionary from yaml input
+     
+     Output: 
+
+         matplotlib figure
+  """
+
+  import numpy as np, matplotlib.pyplot as plt
+  from PhyPraKit import histstat
+  
+  def plot(bconts, bedges, title=None,
+           label='histogram', x_label = 'x', y_label = 'y',
+           grid=True, statistics=True):
+    """return figure with histogram data
+    """
+    # global variable for statistics information
+    global statinfo
+
+    # draw data
+    w = 0.9*(be[1:] - be[:-1])
+    
+    plt.bar(bedges[:-1],bconts,
+            align='edge', width = w, alpha=0.66,
+#            facecolor='cadetblue',
+            edgecolor='grey', 
+            label = label)
+    
+    # get statistical information
+    if statistics:
+      mean, sigma, sigma_m = histstat(bconts, bedges, pr=False)
+      if len(statinfo) == 0:
+        statinfo.append('Statistics:')
+      else:      
+        statinfo.append('  - - - - - - - ')
+      statinfo.append('  $<>$:  {:.3g}'.format(mean))
+      statinfo.append('     $\sigma$   : {:.3g}'.format(sigma))
+    plt.legend(loc='best', title="\n".join(statinfo))
+    
+    if x_label is not None: plt.xlabel(x_label, size='x-large')
+    if y_label is not None: plt.ylabel(y_label, size='x-large')
+    if title is not None:
+      plt.title(title, size='xx-large')
+    if grid: plt.grid()
+    return plt.gcf()
+  # -- end plot function 
+
+  # get data
+  hdata = d['raw_data']
+  bins = 10
+  if 'n_bins' in d:
+    bins = d['n_bins']
+  if 'bin_edges' in d:
+    bins = d['bin_edges']
+  bin_range = None
+  if 'bin_range' in d:
+    bin_range = d['bin_range']
+
+  if 'title' in d:
+    title = d['title']
+  else:
+    title = None
+
+  if 'label' in d:
+    data_label = d['label']
+  else:
+    data_label = None
+  
+  if 'x_label' in d:
+    x_label = d['x_label']
+  else:
+    x_label = 'x'
+  if 'y_label' in d:
+    y_label = d['y_label']
+  else:
+    y_label = 'y'
+
+  bc, be = np.histogram(hdata, bins=bins,  range=bin_range)
+  
+  fig = plot(bc, be, title=title,
+             label=data_label, x_label = x_label, y_label = y_label,
+             grid=True)
+
+  
 if __name__ == "__main__": # --------------------------------------  
 
-  import argparse
+  import sys, yaml, argparse, matplotlib.pyplot as plt
+
 
   # - - - Parse command-line arguments
   parser = argparse.ArgumentParser(usage=__doc__)
@@ -137,15 +237,33 @@ if __name__ == "__main__": # --------------------------------------
     print(str(exception))
     sys.exit(1)
     
+  data_type = 'xy'
+  ddata = []
+  for d in ymldata:
+    if 'type' in d:
+      data_type = d['type']
+    ddata.append(d)
+
   # create a figure
-  num = 'plotData'
+  if data_type == 'xy':
+     fignam = 'plotxyData'
+  elif data_type == 'histogram':
+     fignam = 'plothistData'
+  else:
+     print('!!! invalid data type', data_type)
+     sys.exit(1)
+
+  # create figure
   figsize = (7.5, 6.5)
-  figure = plt.figure(num=num, figsize=figsize)
+  figure = plt.figure(num=fignam, figsize=figsize)
 
   # decode yaml input and plot data for each yaml file
-  for d in ymldata:
-    ymlplot(d)
-  f.close()
+  for d in ddata:
+    if data_type == 'xy':
+      plot_xy_from_yaml(d)
+    elif data_type == 'histogram':
+      plot_hist_from_yaml(d)
+    f.close()
 
   # output to file or screen
   if (sav_flg):

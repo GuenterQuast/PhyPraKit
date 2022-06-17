@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""**run_phyFit.py**
+"""**run_phyFit.py** [options] <input file name>
 
    Perform fit with data and model from yaml file 
 
