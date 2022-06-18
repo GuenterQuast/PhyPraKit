@@ -53,6 +53,17 @@
      several input sets to be separated by 
      ...
      ---   
+
+  In case a model function is also supplied, it is overlayed in the 
+  output graph. The corresponding *yaml* block looks as follows:
+
+  .. code-block:: yaml
+
+    # optional model specification
+    model_label: <model name>
+    model_function: |
+    <Python code of model function>
+
 """
 
 def plot_xy_from_yaml(d):
@@ -83,7 +94,17 @@ def plot_xy_from_yaml(d):
      several input sets to be separated by 
      ...
      ---   
- """
+
+  In case a model function is also supplied, it is overlayed in the 
+  output graph. The corresponding *yaml* block looks as follows:
+
+  .. code-block:: yaml
+
+    # optional model specification
+    model_label: <model name>
+    model_function: |
+    <Python code of model function>
+  """
 
   import numpy as np, matplotlib.pyplot as plt
   from PhyPraKit import check_function_code

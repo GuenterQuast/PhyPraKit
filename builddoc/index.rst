@@ -539,6 +539,17 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
   ``python3 plotData.py -h`` gibt die unterstützen Optionen aus. 
 
 
+  Wenn in der *yaml*-Datei eine Modellfunktion angeben ist,
+  wird sie in der Grafik ebenfalls angezeigt.
+  Der *yaml*-Block dazu sieht folgendermaßen aus:
+
+  .. code-block:: yaml
+
+    # optional model specification
+    model_label: <model name>
+    model_function: |
+    <Python code of model function>
+  
  
 **Einfache Anpassungen mit run_phyFit.py**
   
