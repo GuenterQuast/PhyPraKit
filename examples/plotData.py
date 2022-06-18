@@ -225,10 +225,10 @@ def plot_hist_from_yaml(d):
      ...
      ---   
   """
-  # trick to generate a global variable for accumulated statistics
   import numpy as np, matplotlib.pyplot as plt
-  from PhyPraKit import histstat
+  from PhyPraKit import histstat, check_function_code
 
+  # trick to generate a global variable for accumulated statistics
   global statinfo
   try: statinfo
   except NameError: statinfo = []
@@ -259,7 +259,6 @@ def plot_hist_from_yaml(d):
         statinfo.append('  - - - - - - - ')
       statinfo.append('  $<>$:  {:.3g}'.format(mean))
       statinfo.append('     $\sigma$   : {:.3g}'.format(sigma))
-    plt.legend(loc='best', title="\n".join(statinfo))
     
     if x_label is not None: plt.xlabel(x_label, size='x-large')
     if y_label is not None: plt.ylabel(y_label, size='x-large')
@@ -305,7 +304,35 @@ def plot_hist_from_yaml(d):
              label=data_label, x_label = x_label, y_label = y_label,
              grid=True)
 
-  
+  # check if model function supplied
+  if 'model_density_function' in d :
+    code_str = None
+    if 'model_label' in d:
+      model_label = d['model_label']
+    else:
+       model_label = ''
+    try:
+      code_str = d['model_density_function']['python_code']
+    except:
+      try:
+        code_str = d['model_density_function']
+      except:
+        pass      
+    if code_str is not None:
+      # check and execute provide model code
+      functionName, code = check_function_code(code_str)
+      scope = dict()
+      header= 'import numpy as np\n' + 'import scipy\n' 
+      exec(header + code, scope)
+      # plot function 
+      xp = np.linspace(be[0],be[-1], 113)
+      sfac = bc.sum() * (be[1]-be[0])
+      plt.plot(xp, sfac*scope[functionName](xp) , '-', label=model_label)
+
+# finally, plot legend of all shown graphs
+  plt.legend(loc='best', title="\n".join(statinfo))
+
+
 if __name__ == "__main__": # --------------------------------------  
 
   import sys, yaml, argparse, matplotlib.pyplot as plt
