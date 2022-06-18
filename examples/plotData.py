@@ -86,8 +86,9 @@ def plot_xy_from_yaml(d):
  """
 
   import numpy as np, matplotlib.pyplot as plt
-
-  def plot(x, y, ex, ey, title=None,
+  from PhyPraKit import check_function_code
+  
+  def plot_xy(x, y, ex, ey, title=None,
            label='data', x_label = 'x', y_label = 'y',
            marker='x', color='grey'):
     """return figure with (x,y) data and uncertainties
@@ -103,7 +104,6 @@ def plot_xy_from_yaml(d):
     else:      
       plt.errorbar(x, y, ey, fmt=".", label=label)
 
-    plt.legend()
     if x_label is not None: plt.xlabel(x_label, size='x-large')
     if y_label is not None: plt.ylabel(y_label, size='x-large')
     if title is not None:
@@ -140,10 +140,38 @@ def plot_xy_from_yaml(d):
     y_label = d['y_label']
   else:
     y_label = None
-    
-  fig = plot(x_dat, y_dat, x_err, y_err, title=title,
+
+  fig = plot_xy(x_dat, y_dat, x_err, y_err, title=title,
              label=data_label, x_label = x_label, y_label = y_label,
              marker='x', color='grey')
+
+  # check if model function supplied
+  if 'model_function' in d:
+    code_str = None
+    if 'model_label' in d:
+      model_label = d['model_label']
+    else:
+       model_label = ''
+    try:
+      code_str = d['model_function']['python_code']
+    except:
+      try:
+        code_str = d['model_function']
+      except:
+        pass      
+    if code_str is not None:
+      # check and execute provide model code
+      functionName, code = check_function_code(code_str)
+      scope = dict()
+      header= 'import numpy as np\n' + 'import scipy\n' 
+      exec(header + code, scope)
+      # plot function 
+      xp = np.linspace(min(x_dat), max(x_dat), 113)
+      plt.plot(xp, scope[functionName](xp) , '-', label=model_label)
+
+# finally, plot legend of all shown graphs      
+  plt.legend(loc='best')
+
 
 def plot_hist_from_yaml(d):
   """plot histogram data from yaml file
@@ -184,7 +212,7 @@ def plot_hist_from_yaml(d):
   try: statinfo
   except NameError: statinfo = []
 
-  def plot(bconts, bedges, title=None,
+  def plot_hist(bconts, bedges, title=None,
            label='histogram', x_label = 'x', y_label = 'y',
            grid=True, statistics=True):
     """return figure with histogram data
@@ -252,7 +280,7 @@ def plot_hist_from_yaml(d):
 
   bc, be = np.histogram(hdata, bins=bins,  range=bin_range)
   
-  fig = plot(bc, be, title=title,
+  fig = plot_hist(bc, be, title=title,
              label=data_label, x_label = x_label, y_label = y_label,
              grid=True)
 

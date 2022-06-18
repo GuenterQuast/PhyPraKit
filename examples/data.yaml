@@ -13,13 +13,13 @@ y_data: [ 1.149, 0.712, 0.803, 0.464, 0.398, 0.355, 0.148,
           0.328, 0.181, 0.140, 0.0651, 0.005, -0.005, 0.116 ]
 y_errors: 0.07
 
-# model specification
-model_label: 'Exponential Fit'
+# optional model specification
+model_label: 'Exponential'
 model_function: |
     def exp_model(x, A=1., x0=1.):
       return A*np.exp(-x/x0)
 
-# end input
+# end input 1
 ...
 
 # begin 2nd data set
@@ -31,3 +31,10 @@ y_data: [ 0.428, 0.281, 0.240, 0.0351, 0.1, 0.05, 0.116,
           0.6, 0.712, 0.803, 0.464, 0.398, 0.355, 0.148]
 y_errors: 0.07
 
+# optional model specification
+model_label: 'Sinus'
+model_function: |
+    def wawe(x, A=0.4, omega=2.7, phi=-3.14, b=0.4):
+      return A*np.sin(omega*x+phi)+b
+
+# end input 

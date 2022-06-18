@@ -316,6 +316,7 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
   .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
   """
 
+  from PhyPraKit import check_function_code
   ## from .phyFit import xyFit #! already contained in this file
 
   # -- define some helper fuctions
@@ -432,39 +433,6 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
      # -- end for 
     return s, srel, sabscor, srelcor  
 
-  def parse_code(code_string):
-    """Watch out for "dangerous" commands in Python code and extract function name
-
-      Args: 
-       - user-defined code
-      Returns:
-       - function name
-       - code
-    """
-
-    FORBIDDEN_TOKENS = ['import', 'exec', 'global', 'execfile']
-
-    for s in FORBIDDEN_TOKENS:
-      contains_forbidden_token = False
-      if code_string.find(s) >=0:
-        _e = "!!! Encountered forbidden token '%s' in user-entered code" % (s)
-        print(_e)
-        contains_forbidden_token = True
-      if(contains_forbidden_token): sys.exit(1)           
-
-    function_name=''  
-    words_in_code = code_string.split()
-    for i, w in enumerate(words_in_code):
-      if w == 'def':
-        fn = words_in_code[i+1]
-        function_name=fn[0:fn.find( '(' )]
-        break
-    if function_name is '':
-        _e = "No function name in user entered code."         
-        print(_e)
-        sys.exit(1)
-    return function_name, code_string 
-
 # --- end helper functions 
 
   # Extract information from input dictionary   
@@ -519,7 +487,7 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
     except:
       print("!!! no code to fit found !")
       sys.exit(1)
-  fitf_name, code = parse_code(code_str)    
+  fitf_name, code = check_function_code(code_str)    
 
 # print input and model
   if not quiet:
@@ -857,44 +825,9 @@ def hFit_from_file(fd,           # dictionary defining fit input
   .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
   """
 
+  from PhyPraKit import check_function_code
   ## from .phyFit import hFit #! already contained in this file
 
-  # helper function
-  def parse_code(code_string):
-    """Watch out for "dangerous" commands in Python code and extract function name
-
-      Args: 
-       - user-defined code
-      Returns:
-       - function name
-       - code
-    """
-
-    FORBIDDEN_TOKENS = ['import', 'exec', 'global', 'execfile']
-
-    for s in FORBIDDEN_TOKENS:
-      contains_forbidden_token = False
-      if code_string.find(s) >=0:
-        _e = "!!! Encountered forbidden token '%s' in user-entered code" % (s)
-        print(_e)
-        contains_forbidden_token = True
-      if(contains_forbidden_token): sys.exit(1)           
-
-    function_name=''  
-    words_in_code = code_string.split()
-    for i, w in enumerate(words_in_code):
-      if w == 'def':
-        fn = words_in_code[i+1]
-        function_name=fn[0:fn.find( '(' )]
-        break
-    if function_name is '':
-        _e = "No function name in user entered code."         
-        print(_e)
-        sys.exit(1)
-    return function_name, code_string 
-
-  # End helper function 
-  
   # Extract information from input dictionary   
   if 'label' in fd:
     data_label = fd['label']
@@ -937,7 +870,7 @@ def hFit_from_file(fd,           # dictionary defining fit input
       except:
         print("!!! no code to fit found !")
       sys.exit(1)
-  fitf_name, code = parse_code(code_str)    
+  fitf_name, code = check_function_code(code_str)    
 
   bin_contents, bin_edges = np.histogram(hdata, bins=bins,  range=bin_range)
   

@@ -8,7 +8,7 @@ def A0_readme():
 
   contains the following functions:
 
-    1. Data input:
+    1. Data input/output:
 
       - readColumnData() read data and meta-data from text file
       - readCSV()        read data in csv-format from file with header
@@ -88,6 +88,9 @@ def A0_readme():
       - hFit()             fit to binned histogram data
       - xFit()             fit of parameters to indexed data x_i, with x_i=x_i(x_j, \*par)
       - xyFit()            fit to (x,y) data with y = f(x; \*par) 
+
+    7. helper functions
+
 
   """
   # print the above docstring if called
@@ -1936,3 +1939,41 @@ def generateXYdata(xdata, model, sx, sy, mpar=None,
   ydata = smearData(ytrue, sy, srel=srely, abscor=yabscor, relcor=yrelcor) 
 
   return xtrue, ytrue, ydata
+
+
+## ------- section 7: frequently used helper functions --------------------
+
+def check_function_code(code_string):
+  """Check Python code before using it in exec() command
+    
+   Watch out for "dangerous" actions
+
+    Args: 
+     - user-defined code
+    Returns:
+     - function name
+     - code
+  """
+
+  FORBIDDEN_TOKENS = ['import', 'exec', 'global', 'execfile']
+
+  for s in FORBIDDEN_TOKENS:
+    contains_forbidden_token = False
+    if code_string.find(s) >=0:
+      _e = "!!! Encountered forbidden token '%s' in user-entered code" % (s)
+      print(_e)
+      contains_forbidden_token = True
+    if(contains_forbidden_token): sys.exit(1)           
+
+  function_name=''  
+  words_in_code = code_string.split()
+  for i, w in enumerate(words_in_code):
+    if w == 'def':
+      fn = words_in_code[i+1]
+      function_name=fn[0:fn.find( '(' )]
+      break
+  if function_name is '':
+      _e = "No function name in user entered code."         
+      print(_e)
+      sys.exit(1)
+  return function_name, code_string 
