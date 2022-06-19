@@ -266,7 +266,10 @@ def readtxt(file, nlhead=1, delim='\t'):
         if delim != chr(i) : l=l.replace(chr(i),'') 
       if l=='': continue        # skip empty lines
         # replace German decimal comma (if not CSV format)
-      if delim != ',' : filtline=l.replace(',', '.') 
+      if delim != ',' :
+        filtline=l.replace(',', '.')
+      else:
+        filtline=l
 
       yield filtline           # pass filtered line to loadtxt()
 #   -- end specialCharFilter
