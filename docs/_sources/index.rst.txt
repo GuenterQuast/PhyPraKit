@@ -268,14 +268,18 @@ oder::
 
         - linRegression()    lineare Regression, y=ax+b, mit analytische Formel
         - odFit()            Funktionsanpassung mit x- und y-Unsicherheiten (scipy ODR)
-        - xyFit()            Funktionsanpassung mit (korrelierten) x- und
-	  y-Unsicherheiten mit *phyFit*
+        - xyFit()            Funktionsanpassung an Datenpunkte (x_i, y_i=f(x_i)) mit
+	  (korrelierten) x- und	y-Unsicherheiten mit *phyFit* 
+        - hFit()             maximum-likelihood-Anpassung einer
+	  Verteilungsdichte an Histogramm-Daten mit *phyFit*
+        - mFit()             Anpassung einer Nutzerdefinierten Kostenfunktion oder einer
+	  Verteilungsdichte an ungebinnete Daten mit der maximum-likelood
+	  Methode (mit *phyFit*)
+	- xFit()            Anpassung eines Modells an indizierte Daten
+	  x_i=x_i(x_j, \*par) mit *phyFit*
         - k2Fit()            Funktionsanpassung mit (korrelierten) x- und y-Unsicherheiten
-          mit dem Paket *kafe2*
-        - hFit()             Maximum-Likelihood-Anpassung einer
-	  Verteilungsdichte an Histogramm-Daten
-        - mFit()             Anpassung einer Nutzerdefinierten Kostenfunktion, oder einer
-	  Verteilungsdichte an ungebinnete Daten mit der maximum-likelood Methode
+          mit dem Paket *kafe2* an Datenpunkte (x_i , y_i=f(x_i))
+
 
       6. Erzeugung simulierter Daten mit MC-Methode:
     
@@ -288,6 +292,8 @@ zahlreichen Funktionen.
 Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf 
 `mybinder.org
 <https://mybinder.org/v2/git/https%3A%2F%2Fgit.scc.kit.edu%2Fyh5078%2FPhyPraKit/master>`_.
+
+**Beispiele zur Anwendung der Module aus PhyPraKit**
 
   * `test_readColumnData.py` ist ein Beispiel zum
     Einlesen von Spalten aus Textdateien; die zugehörigen 
@@ -321,18 +327,18 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     
   * `test_linRegression.py` ist eine einfachere Version mit
     `python`-Bordmitteln zur Anpassung einer Geraden an
-    Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung. 
+    Messdaten mit Unsicherheiten in Ordinaten- und Abszissenrichtung. 
     Korrelierte Unsicherheiten werden nicht unterstützt.
     
   * `test_xyFit` dient zur Anpassung einer beliebigen Funktion an
-    Messdaten mit Fehlern in Ordinaten- und Abszissenrichtung und mit
-    allen Messpunkten gemeinsamen (d. h. korrelierten) relativen oder
-    absoluten systematischen Fehlern. Dazu wird das Paket imunit
+    Messdaten mit Unsicherheiten in Ordinaten- und Abszissenrichtung
+    und mit allen Messpunkten gemeinsamen (d. h. korrelierten) relativen
+    oder absoluten systematischen Fehlern. Dazu wird das Paket *imunit*
     verwendet, das den am CERN entwickelten Minimierer MINUIT nutzt.
     Da die Kostenfunktion frei definiert und auch während der Anpassung
     dynamisch aktualisiert werden kann, ist die Implementierung von
     Parameter-abhängigen Unsicherheiten möglich. Ferner unterstützt
-    iminuit die Erzeugung und Darstellung von Profil-Likelihood-Kurven
+    *iminuit* die Erzeugung und Darstellung von Profil-Likelihood-Kurven
     und Konfidenzkonturen, die so mit `xyFit` ebenfalls dargestellt
     werden können.
     
@@ -344,6 +350,14 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
   * `test_simplek2Fit.py` illustriert die Durchführung einer einfachen
     linearen Regression mit *kafe2* mit einer minimalen Anzahl eigener
     Codezeilen.
+    
+  * `test_k2hFit.py` führt eine Anpassung einer Verteilungsdichte an
+    Histogrammdaten mit *kafe2* durch. Die Kostenfunktion ist das
+    zweifache der negativen log-Likelihood-Funktion der Poisson-Verteilung,
+    Poiss(k; lam), oder - optional - ihrer Annäherung durch eine
+    Gauß-Verteilung mit Gauss(x, mu=lam, sig**2=lam). Die Unsicherheiten
+    werden aus der Modellvorhersage bestimmt, um auch Bins mit wenigen oder
+    sogar null Einträgen korrekt zu behandeln.
     
   * `test_hFit` illustriert die Anpassung einer Verteilungsdichte an
     histogrammierte Daten. Die Kostenfunktion für die Minimierung ist das
@@ -362,6 +376,15 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     für die Minimierung ist der negative natürliche Logarithmus der vom
     Nutzer agegebenen Verteilungsdichte (oder, optional, deren Zweifaches).
 
+  * `test_xFit` ist ein Beispiel für eine Anpassung einer Modellvorhersage
+    an allgemeine Eingabedaten ("indizierte Daten" *x_1, ..., x_n*). Dabei
+    sind die x_i Funktionen der Parameter p_i einer Modellvorhersage, und ggf.
+    auch von Elementen x_j der Eingabedaten: x_i(x_j, \*par). In diesem
+    Beispiel werden zwei Messungen eines Ortes in Polarkoordinaten gemittelt
+    und in kartesische Koordinaten umgerechnet. Bei dieser nicht-linearen
+    Transformation weden sowohl die Zentralwerte als auch Konfidenzkonturen
+    korrekt bestimmt. 
+    
   * `test_Histogram.py` ist ein Beispiel zur Darstellung und 
     statistischen Auswertung von Häufigkeitsverteilungen (Histogrammen) 
     in ein oder zwei Dimensionen.
@@ -379,6 +402,8 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     :math:`\chi^2`-Wahrscheinlichkeit überprüfen, die im Idealfall
     eine Rechteckverteilung im Intervall [0,1] sein sollte. 
 
+**Komplexere Beispiele für konkrete Anwendungen in Praktika**
+  
   Die folgenden *python*-Skripte sind etwas komplexer und illustrieren 
   typische Anwendungsfälle der Module in `PhyPraKit`:
 
@@ -420,11 +445,166 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     Häufgkeitsverteilung dargestellt und die Verteilungen statistisch
     ausgewertet.
 
+  * `Beispiel_Multifit.py` illustiert die simultane Anpassung von Parametern
+    an mehrere, gleichartige Messreihen, die mit *kafe2* möglich ist.
+    Ein Anwendungsfall sind mehrere Messreihen mit der gleichen Apparatur,
+    um die Eigenschaften von Materialien in Proben mit unterschiedlicher
+    Geometrie zu bestimmen, wie z. B. die Elastizität oder den spezifischen
+    Widerstand an Proben mit unterschiedlichen Querschnitten und Längen.
+    Auf die Apparatur zurückzuführende Unsicherheiten sind in allen Messreihen
+    gleich, auch die interessierende Materialeigenschaft ist immer die
+    gleiche, lediglich die unterschiedlichen Gemoetrie-Parameter und die
+    jeweils bestimmten Werte der Messreihen haben eigene, unabhängige
+    Unsicherheiten.
+
+  * `Beispiel_GeomOptik.py` zeigt, wie man mittels Parametertransformation
+    die Einzelbrennweiten der beiden Linsen eines Zwei-Linsensystems
+    aus der Systembrennweite und den Hauptebenenlagen bestimmen kann.
+    Dabei wird neben der Transformation auf den neuen Parametersatz
+    auch eine Mittelung über mehrere Messreihen durchgeführt, deren
+    Ergebnisse ihrerseits aus Anpassungen gewonnen wurden. Die
+    Paramtertransformation wird als Anpassungsproblem mit einer
+    :math:`\chi^2` Kostenfunktion behandelt und so auch die Konfidenzkonturen
+    der neuen Parameter bestimmt. 
+  
   * `Beispiel_GammaSpektroskopie.py` liest mit dem Vielkanalanalysator
     des CASSY-Systems im `.labx` -Format gespeicherten Dateien ein
     (Beispieldatei `GammaSpektra.labx`).
 
+    
+**Daten darstellen mit dem Skript plotData.py**
 
+  Mitunter ist eine einfache und unkomplizierte Darstellung von Daten
+  erwünscht, ohne speziellen *Python*-Code zu erstellen. Damit das
+  funktioniert, müssen die Daten in einem Standardformat vorliegen.
+  Dazu empfiehlt sich die Datenbeschreibungssprache *yaml*, mit der
+  auch die notwendigen "Meta-Daten" wie Titel, Art des Datensatzes und
+  der auf der x- und y-Achse darzustellenden Daten angegeben werden
+  können. Die Daten und deren Unsicherheiten werden als Liste von durch
+  Kommata getrennten Dezimalzahlen (mit Dezimalpunkt!) angegeben.
+
+  Das Skript *plotData.py* unterstützt die Darstellun von Datenpunkten
+  (x,y) mit Unsicherheiten und Histogramme. Die Beispieldateien 'data.yaml'
+  und hData.yaml erläutern das unterstützte einfache Datenformat.
+
+  Für (x,y)-Daten:
+  
+  .. code-block:: yaml
+
+     title: <title of plot>
+     x_label: <label for x-axis>
+     y_label: <label for y-axis>
+
+     label: <name of data set>
+     x_data: [ x1, x2, ... , xn]
+     y_data: [ y1, y2, ... , yn ]
+     x_errors: x-uncertainty or [ex1, ex2, ..., exn]
+     y_errors: y-uncertainty or [ey1, ey2, ..., eyn]
+
+     Bei Eingabe von mehreren Datensätzen werden diese getrennt durch
+     ...
+     ---  
+     label: <name of 2nd data set>
+     x_data: [ 2nd set of x values ]
+     y_data: [ 2nd set of y values ]
+     x_errors: x-uncertainty or [x-uncertainties]
+     y_errors: y-uncertainty or [y-uncertainties]
+
+     
+  und für Histogrammdaten:
+
+  .. code-block:: yaml
+
+    title: <title of plot>
+    x_label: <label for x-axis>
+    y_label: <label for y-axis>
+    label: <name of data set>
+    raw_data: [x1, ... , xn]
+    # define binning
+    n_bins: n
+    bin_range: [x_min, x_max]
+    #   alternatively: 
+    # bin edges: [e0, ..., en]
+
+    # wie oben ist Eingabe von mehreren Datensätzen möglich, getrennt durch
+    ...
+    ---  
+
+    
+  Zur Ausführung dient die Eingabe von
+  
+  ``python3 plotData.py [option] <yaml.datei>``
+
+  auf der Kommandozeile.
+  ``python3 plotData.py -h`` gibt die unterstützen Optionen aus. 
+
+
+  Wenn in der *yaml*-Datei eine Modellfunktion angeben ist,
+  wird sie in der Grafik ebenfalls angezeigt.
+  Der *yaml*-Block dazu sieht folgendermaßen aus:
+
+  .. code-block:: yaml
+
+    # optional model specification
+    model_label: <model name>
+    model_function: |
+    <Python code of model function>
+  
+ 
+**Einfache Anpassungen mit run_phyFit.py**
+  
+  Die notwendigen Informationen zur Durchführung von Anpassungen
+  können ebenfalls als Datei angegeben werden, die in der
+  Datenbeschreibungssprache *yaml* erstellt wurden. 
+
+  Zur Ausführung dient die Eingabe von
+  
+  ``python3 run_phyFit.py [option] <yaml.datei>``
+
+  auf der Kommandozeile.
+
+  * `simpleFit.fit` zeigt am Beispiel der Anpassung einer Parabel,
+    wie mit ganz wenigen Eingaben eine Anpassung durchgeführt werden kann.
+    
+  * `xyFit.fit` ist ein komplexeres Beispiel, das alle *phyFit*
+    unterstützten Arten von Unsicherheiten (d.h. x/y, absolut/relativ und
+    unabhängig/korreliert) enthält; relative Unsicherheiten werden dabei
+    auf den Modellwert und nicht auf die gemessenen Datenpunkte bezogen. 
+
+  * `hFit.fit` zeigt die Anpassung einer Gaußverteilug an histogrammierte
+    Daten.
+    
+**Anpassungen mit kafe2go**
+    
+  Alternativ kann auch das Skript *kafe2go* aus dem Paket *kafe2*, verwendet
+  werden, mit dem ebenfalls Anpassungen von Modellen an Messdaten ohne eigenen
+  *Python*-Code erstellt weden können. Ausgeführt wird die Anpassung durch
+  Eingabe von
+  
+  ``kafe2go [option] <yaml.datei>``
+
+  auf der Kommandozeile.
+
+  Für Nutzer von MS-Windows gibt es eine ausführbare Datei, `kafe2go.exe`.
+  Zur Anwendung wird eine der Beispieldateien mit Rechtsklick angewählt 
+  und mit der Anwendung `kafe2go.exe` geöffnet.
+  
+  * `kafe2go_simleFit.fit` zeigt am Beispiel der Anpassung einer Parabel,
+    wie mit ganz wenigen Eingaben eine Anpassung durchgeführt werden kann.
+    
+  * `kafe2go_xyFit.fit` ist ein komplexeres Beispiel, das alle von *kafe2*
+    unterstützten Arten von Unsicherheiten (d.h. x/y, absolut/relativ und
+    unabhängig/korreliert) enthält; relative Unsicherheiten werden dabei
+    auf den Modellwert und nicht auf die gemessenen Datenpunkte bezogen. 
+  
+**Konversion aus csv-Format nach yaml**
+
+  Mit dem Programm _csv2yml.py_ können Daten im (spaltenweise organisierten)
+  *csv*-Format in einen *yaml*-Datenblock konveriert werden, den man dann
+  direkt mit Hilfe eines Text-Editors in eine *yaml*-Datei einfügen kann. 
+  
+
+  
 Module Documentation 
 ====================
 
@@ -457,11 +637,19 @@ Module Documentation
 
 ..  automodule:: test_xyFit
 
+..  automodule:: test_xFit
+
 ..  automodule:: test_k2Fit
 
+..  automodule:: test_simplek2Fit
+
+..  automodule:: test_k2hFit
+		 		 
 ..  automodule:: test_generateData
 
 ..  automodule:: toyMC_Fit
+
+..  automodule:: Beispiel_MultiFit
 
 ..  automodule:: Beispiel_Diodenkennlinie
 
@@ -471,4 +659,12 @@ Module Documentation
 
 ..  automodule:: Beispiel_Wellenform
 
+..  automodule:: Beispiel_GeomOptik
+
 ..  automodule:: Beispiel_GammaSpektroskopie
+
+..  automodule:: run_phyFit
+
+..  automodule:: plotData
+
+..  automodule:: csv2yml

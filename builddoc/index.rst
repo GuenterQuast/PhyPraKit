@@ -597,7 +597,14 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     unabhängig/korreliert) enthält; relative Unsicherheiten werden dabei
     auf den Modellwert und nicht auf die gemessenen Datenpunkte bezogen. 
   
-    
+**Konversion aus csv-Format nach yaml**
+
+  Mit dem Programm _csv2yml.py_ können Daten im (spaltenweise organisierten)
+  *csv*-Format in einen *yaml*-Datenblock konveriert werden, den man dann
+  direkt mit Hilfe eines Text-Editors in eine *yaml*-Datei einfügen kann. 
+  
+
+  
 Module Documentation 
 ====================
 
@@ -659,4 +666,5 @@ Module Documentation
 ..  automodule:: run_phyFit
 
 ..  automodule:: plotData
-		 
+
+..  automodule:: csv2yml
