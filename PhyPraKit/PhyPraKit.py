@@ -2067,13 +2067,21 @@ def plot_xy_from_yaml(d):
   else:
     x_label = None
   if 'x_errors' in d:
-    x_err = list(map(float, d['x_errors']))
+    e = d['x_errors']
+    if type(e) is type([]):
+      x_err = list(map(float, e))
+    else:
+      x_err = float(e)
   else:
     x_err = None
 
   y_dat = list(map(float, d['y_data']))
   if 'y_errors' in d:
-    y_err = list(map(float, d['y_errors']))
+    e = d['y_errors']
+    if type(e) is type([]):
+      y_err = list(map(float, e))
+    else:
+      y_err = float(e)
   else:
     y_err = None
   if 'y_label' in d:
