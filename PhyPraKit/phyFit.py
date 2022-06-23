@@ -442,8 +442,8 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
     data_label = 'data'
 
 # - data
-  data_x= fd['x_data']
-  data_y = fd['y_data']
+  data_x = list(map(float, fd['x_data']))
+  data_y = list(mape(float, fd['y_data'])
   if 'x_label' in fd:
     x_label = fd['x_label']
   else:
@@ -835,7 +835,7 @@ def hFit_from_file(fd,           # dictionary defining fit input
     data_label = 'data'
 
 # - data
-  hdata = fd['raw_data']
+  hdata = list(map(float(fd['raw_data']))
   bins = 10
   if 'n_bins' in fd:
     bins = fd['n_bins']

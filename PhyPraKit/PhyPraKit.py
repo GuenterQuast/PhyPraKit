@@ -2061,19 +2061,19 @@ def plot_xy_from_yaml(d):
   else:
     data_label = None
 
-  x_dat = d['x_data']
+  x_dat = list(map(float, d['x_data']))
   if 'x_label' in d:
     x_label = d['x_label']
   else:
     x_label = None
   if 'x_errors' in d:
-    x_err = d['x_errors']
+    x_err = list(map(float, d['x_errors']))
   else:
     x_err = None
 
-  y_dat = d['y_data']
+  y_dat = list(map(float, d['y_data']))
   if 'y_errors' in d:
-    y_err = d['y_errors']
+    y_err = list(map(float, d['y_errors']))
   else:
     y_err = None
   if 'y_label' in d:
@@ -2184,7 +2184,7 @@ def csv2yaml(file, nlhead=1, delim='\t'):
   #print(" --> number of columns", Ncol)
   #print(" --> number of data points", Nlin)
 
-  # interpret strings header[0] as keys
+  # interpret strings in header[0] as keys
   keys = hlines[0].split(delim)
   Nkey = len(keys)
   if Nkey != Ncol:
@@ -2276,7 +2276,7 @@ def plot_hist_from_yaml(d):
   # -- end plot function 
 
   # get data
-  hdata = d['raw_data']
+  hdata = list(map(float, d['raw_data']))
   bins = 10
   if 'n_bins' in d:
     bins = d['n_bins']
