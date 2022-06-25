@@ -473,8 +473,15 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     (Beispieldatei `GammaSpektra.labx`).
 
 
+**Stand-alone Tools für Standard-Aufgaben:**    
+
 Für Standardaufgaben gibt es einige Python-Programme im Verzeichnis
-`PhyPraKit/tools/`, die als stand-alone Anwendungen gedacht sind.
+`PhyPraKit/tools/`, die als stand-alone Anwendungen gedacht sind. Die
+Programme sind auch Teil des Installationspakets und können von allen
+Stellen im Dateisystem aus als Modul aufgerufen werden, wenn *PhyPraKit*
+als *Python*-Paket installiert ist:
+
+  `python3 -m PhyPraKit.<ToolName> [Optionen] <Eingabedatei>`
     
 **Daten darstellen mit dem Skript plotData.py**
 
