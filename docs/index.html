@@ -40,7 +40,7 @@
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Version 1.2.3b0, Date 2022-06-20</p>
+<div><p>Version 1.2.3b0, Date 2022-06-25</p>
 </div></blockquote>
 <p><strong>PhyPraKit</strong> is a collection of python modules
 for data visualization and analysis in experimental laboratory
@@ -170,8 +170,8 @@ sowie Tutorials für verschiedene Aspekte der statistischen
 Datenauswertung mit Beispielen zum Einsatz von Modulen aus
 <em>PhyPraKit</em> bereit gestellt.</p>
 </div>
-<div class="section" id="dokumentation-der-beispiele">
-<h2>Dokumentation der Beispiele<a class="headerlink" href="#dokumentation-der-beispiele" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dokumentation-der-module-und-beispiele">
+<h2>Dokumentation der Module und Beispiele<a class="headerlink" href="#dokumentation-der-module-und-beispiele" title="Permalink to this headline">¶</a></h2>
 <p><strong>`PhyPraKit.py`</strong> ist ein Paket mit nützlichen Hilfsfunktionen
 zum import in eigene Beispiele mittels:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">PhyPraKit</span> <span class="k">as</span> <span class="nn">ppk</span>
@@ -289,9 +289,9 @@ mit dem Paket <em>kafe2</em> an Datenpunkte (x_i , y_i=f(x_i))</p></li>
 </ul>
 </div></blockquote>
 </div></blockquote>
-<p>Die folgenden <strong>Beispiele</strong> dienen der Illustration der Anwendung der
-zahlreichen Funktionen.
-Eine direkt im Browser ausführbare Installation von <em>PhyPraKit</em> gibt es auf
+<p>Die folgenden <strong>Beispiele</strong> im Unterverzeichnis <cite>PhyPraKit/examples/</cite>
+dienen der Illustration der Anwendung der zahlreichen Funktionen.</p>
+<p>Eine direkt im Browser ausführbare Installation von <em>PhyPraKit</em> gibt es auf
 <a class="reference external" href="https://mybinder.org/v2/git/https%3A%2F%2Fgit.scc.kit.edu%2Fyh5078%2FPhyPraKit/master">mybinder.org</a>.</p>
 <p><strong>Beispiele zur Anwendung der Module aus PhyPraKit</strong></p>
 <blockquote>
@@ -449,6 +449,15 @@ der neuen Parameter bestimmt.</p></li>
 des CASSY-Systems im <cite>.labx</cite> -Format gespeicherten Dateien ein
 (Beispieldatei <cite>GammaSpektra.labx</cite>).</p></li>
 </ul>
+</div></blockquote>
+<p><strong>Stand-alone Tools für Standard-Aufgaben:</strong></p>
+<p>Für Standardaufgaben gibt es einige Python-Programme im Verzeichnis
+<cite>PhyPraKit/tools/</cite>, die als stand-alone Anwendungen gedacht sind. Die
+Programme sind auch Teil des Installationspakets und können von allen
+Stellen im Dateisystem aus als Modul aufgerufen werden, wenn <em>PhyPraKit</em>
+als <em>Python</em>-Paket installiert ist:</p>
+<blockquote>
+<div><p><cite>python3 -m PhyPraKit.&lt;ToolName&gt; [Optionen] &lt;Eingabedatei&gt;</cite></p>
 </div></blockquote>
 <p><strong>Daten darstellen mit dem Skript plotData.py</strong></p>
 <blockquote>
@@ -3316,9 +3325,26 @@ output graph. The corresponding <em>yaml</em> block looks as follows:</p>
 <span class="l l-Scalar l-Scalar-Plain">&lt;Python code of model function&gt;</span>
 </pre></div>
 </div>
-<span class="target" id="module-csv2yml"></span><dl class="simple">
-<dt>csv2yml.py </dt><dd><p>uses csv2yaml to read floating-point column-data in very general .txt 
-formats and writes an output block in yaml format</p>
+<span class="target" id="module-csv2yml"></span><dl>
+<dt>csv2yml.py </dt><dd><p>read floating-point column-data in very general .txt  formats 
+and write an output block in yaml format</p>
+<p>keys taken from 1st header line</p>
+<p>Usage:</p>
+<blockquote>
+<div><p>./cvs2yml [options] &lt;input file name&gt;</p>
+</div></blockquote>
+<p>Input:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>file name</p></li>
+</ul>
+</div></blockquote>
+<p>Output:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>yaml data block</p></li>
+</ul>
+</div></blockquote>
 </dd>
 </dl>
 </div>
@@ -3340,7 +3366,7 @@ formats and writes an output block in yaml format</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#visualization-and-analysis-of-measurement-data"><strong>Visualization and Analysis of Measurement Data</strong></a></li>
-<li><a class="reference internal" href="#dokumentation-der-beispiele">Dokumentation der Beispiele</a></li>
+<li><a class="reference internal" href="#dokumentation-der-module-und-beispiele">Dokumentation der Module und Beispiele</a></li>
 <li><a class="reference internal" href="#module-PhyPraKit">Module Documentation</a></li>
 </ul>
 </li>

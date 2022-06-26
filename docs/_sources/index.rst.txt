@@ -188,8 +188,8 @@ Datenauswertung mit Beispielen zum Einsatz von Modulen aus
 *PhyPraKit* bereit gestellt.
 
 
-Dokumentation der Beispiele
-===========================
+Dokumentation der Module und Beispiele
+======================================
 
 **`PhyPraKit.py`** ist ein Paket mit nützlichen Hilfsfunktionen
 zum import in eigene Beispiele mittels::
@@ -287,8 +287,9 @@ oder::
         - generateXYdata()     Erzeugen simulierter Datenpunkte (x+Delta_x, y+Delta_y)
 
 
-Die folgenden **Beispiele** dienen der Illustration der Anwendung der
-zahlreichen Funktionen. 
+Die folgenden **Beispiele** im Unterverzeichnis `PhyPraKit/examples/`
+dienen der Illustration der Anwendung der zahlreichen Funktionen. 
+
 Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf 
 `mybinder.org
 <https://mybinder.org/v2/git/https%3A%2F%2Fgit.scc.kit.edu%2Fyh5078%2FPhyPraKit/master>`_.
@@ -471,6 +472,16 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     des CASSY-Systems im `.labx` -Format gespeicherten Dateien ein
     (Beispieldatei `GammaSpektra.labx`).
 
+
+**Stand-alone Tools für Standard-Aufgaben:**    
+
+Für Standardaufgaben gibt es einige Python-Programme im Verzeichnis
+`PhyPraKit/tools/`, die als stand-alone Anwendungen gedacht sind. Die
+Programme sind auch Teil des Installationspakets und können von allen
+Stellen im Dateisystem aus als Modul aufgerufen werden, wenn *PhyPraKit*
+als *Python*-Paket installiert ist:
+
+  `python3 -m PhyPraKit.<ToolName> [Optionen] <Eingabedatei>`
     
 **Daten darstellen mit dem Skript plotData.py**
 
