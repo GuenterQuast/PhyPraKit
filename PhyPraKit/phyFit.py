@@ -58,7 +58,7 @@
   It is also possible to run a fit without the need to provide own
   Python code. In this case, the data, uncertainties and the model
   are read from a file in yaml format and passed to the function 
-  xyFit_from_file() as a dictionary. 
+  xyFit_from_yaml() as a dictionary. 
 
   The implementation of the fitting procedure in this package is 
   - intentionally - rather minimalistic, and it is meant to 
@@ -241,7 +241,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     #   parameter names
     return Fit.getResult()
 
-def xyFit_from_file(fd,                 # dictionary definig fit input
+def xyFit_from_yaml(fd,                 # dictionary definig fit input
                     plot=True,          # plot data and model
                     plot_band=True,     # plot model confidence-band
                     plot_cor=False,     # plot profiles likelihood and contours
@@ -443,7 +443,7 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
 
 # - data
   data_x = list(map(float, fd['x_data']))
-  data_y = list(mape(float, fd['y_data']))
+  data_y = list(map(float, fd['y_data']))
   if 'x_label' in fd:
     x_label = fd['x_label']
   else:
@@ -491,7 +491,7 @@ def xyFit_from_file(fd,                 # dictionary definig fit input
 
 # print input and model
   if not quiet:
-    print('\n*==* xyFit_from_file:')
+    print('\n*==* xyFit_from_yaml:')
     print('-- input data:')
     print('x-data:', data_x)
     print('+/- abs', sx)
@@ -774,7 +774,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     #   parameter names
     return Fit.getResult()
 
-def hFit_from_file(fd,           # dictionary defining fit input
+def hFit_from_yaml(fd,           # dictionary defining fit input
              plot=True,          # plot data and model
              plot_band=True,     # plot model confidence-band
              plot_cor=False,     # plot profiles likelihood and contours
@@ -3459,8 +3459,8 @@ class mnFit():
                      alpha=0.7, elinewidth=2.5, color='darkorange')
     else:
       plt.plot(xplt, yplt*sfac, label=model_legend,
-             linestyle='dashed', linewidth=2.5,
-             alpha=0.7, color='darkorange')
+             linestyle='dashed', linewidth=2.5, alpha = 0.7)
+   ##          color='darkorange')
     plt.xlabel(axis_labels[0], size='x-large')
     plt.ylabel(axis_labels[1], size='x-large')
     plt.grid()
@@ -3489,8 +3489,11 @@ class mnFit():
                        xmax=(xplt[i]+0.4)/len(xplt),
                        alpha=0.3, color='darkkhaki', label=lbl) 
        
-  # display legend with some fit info
-    fit_info = []
+  # display legend with fit info 
+    global fit_info
+    try: fit_info
+    except NameError: fit_info = []
+
     #  1. parameter values and uncertainties
     pe = 2   # number of significant digits of uncertainty
     if self.minosResult is not None and self.minos_ok:

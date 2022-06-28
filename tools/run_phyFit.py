@@ -26,12 +26,12 @@
 
 """
 
-from PhyPraKit.phyFit import xyFit_from_file, hFit_from_file
+from PhyPraKit.phyFit import xyFit_from_yaml, hFit_from_yaml
 from pprint import pprint
 
 if __name__ == "__main__": # --------------------------------------  
   #
-  # xyFit.py: Example of an application of PhyPraKit.phyFit.xyFit_from_file()
+  # xyFit.py: Example of an application of PhyPraKit.phyFit.xyFit_from_yaml()
   #
 
   # package imports
@@ -80,76 +80,80 @@ if __name__ == "__main__": # --------------------------------------
   cont_flg=args.contour
   band_flg=not args.noband
   pltfmt=args.format
-  if sav_flg:
-    show = False
-  else:
-    show = True
 
   #  - - - End: Parse command-line arguments
     
-  # open and read input yaml file    
+  # open and read input yaml file
+  f = open(fname, 'r')
   try:
-    with open(fname) as f:
-      fd = yaml.load(f, Loader=yaml.Loader)
+    ymldata = yaml.load_all(f, Loader=yaml.Loader)
   except (OSError, yaml.YAMLError) as exception:
     print('!!! failed to read configuration file ' + fname)
     print(str(exception))
     sys.exit(1)
       
-  # another check
-  if len(fd.keys()) == 0:
-    print("!!! data file is empty!")
-    sys.exit(1)
-
   fitType = 'xy'
-  if 'type' in fd.keys():
-    fitType = fd['type']
-  print("*==*", sys.argv[0], "received valid yaml data for fit:")
-  if 'parametric_model' in fd: # for complex kafe2go format
-    pprint(fd, compact=True)
-  else:  # "nice" printout for simple xyFit format
-    print(' **  Type of Fit:', fitType)
-    for key in fd:
-      if type(fd[key]) is not type([]):     # got a scalar or string
-        print(key + ': ', fd[key])
-      elif type(fd[key][0]) is not type({}): # got list of scalars
-              print(key + ': ', fd[key])
-      else:  # got list of uncertainty dictionaries
-        print(key+':')
-        for d in fd[key]:
-          for k in d:
-            print('  '+ k +': ', d[k], end=' ') 
-          print()
+  ddata = []
+  for d in ymldata:
+    if 'type' in d:
+      fit_type = d['type']
+    ddata.append(d)
+  f.close()
 
-# select appropriate wrapper
+  # select appropriate wrapper
   if fitType == 'xy':
-    fit = xyFit_from_file
+    fit = xyFit_from_yaml
   elif fitType == 'histogram':
-    fit = hFit_from_file
+    fit = hFit_from_yaml
   else:
     print('!!! unsupported type of fit:', fitType)
     sys.exit(1)
 
-# run fit    
-  rdict = fit(fd,                     # the input dictionary defining the fit 
+  for fd in ddata:  
+    if 'type' in fd.keys():
+      fitType = fd['type']
+    print("*==*", sys.argv[0], "received valid yaml data for fit:")
+    if 'parametric_model' in fd: # for complex kafe2go format
+      pprint(fd, compact=True)
+    else:  # "nice" printout for simple xyFit format
+      print(' **  Type of Fit:', fitType)
+      for key in fd:
+        if type(fd[key]) is not type([]):     # got a scalar or string
+          print(key + ': ', fd[key])
+        elif type(fd[key][0]) is not type({}): # got list of scalars
+              print(key + ': ', fd[key])
+        else:  # got list of uncertainty dictionaries
+          print(key+':')
+          for d in fd[key]:
+            for k in d:
+              print('  '+ k +': ', d[k], end=' ') 
+            print()
+  # run fit    
+    rdict = fit(fd,                     # the input dictionary defining the fit 
               plot=plt_flg,           # show plot of data and model
               plot_band=band_flg,     # plot model confidence-band
               plot_cor=cont_flg,      # plot profiles likelihood and contours
-              showplots= show,        # show plots on screen 
+              showplots= False,        # show plots on screen 
               quiet=quiet_flg,        # suppress informative printout
               return_fitObject=False
                ) 
 
-# print results to illustrate how to use output
-  print('\n*==* Fit Result:')
-  pvals, perrs, cor, chi2, pnams= rdict.values()
-  print(" chi2: {:.3g}".format(chi2))
-  print(" parameter names:       ", pnams)
-  print(" parameter values:      ", pvals)
-  np.set_printoptions(precision=3)
-  print(" neg. parameter errors: ", perrs[:,0])
-  print(" pos. parameter errors: ", perrs[:,1])
-  print(" correlation matrix : \n", cor)
+  # print results to illustrate how to use output
+    print('\n*==* Fit Result:')
+    pvals, perrs, cor, chi2, pnams= rdict.values()
+    print(" chi2: {:.3g}".format(chi2))
+    print(" parameter names:       ", pnams)
+    print(" parameter values:      ", pvals)
+    np.set_printoptions(precision=3)
+    print(" neg. parameter errors: ", perrs[:,0])
+    print(" pos. parameter errors: ", perrs[:,1])
+    print(" correlation matrix : \n", cor)
+
+    if store_result:
+      outfile = fname.split('.')[0]+'.result'
+      with open(outfile, 'a') as outf:
+        for key in rdict:
+          print("{}\n".format(key), rdict[key], file=outf)
 
   if (sav_flg):
     # save all figures to file(s)
@@ -160,9 +164,7 @@ if __name__ == "__main__": # --------------------------------------
       plt.savefig( (fname.split('.')[0] + '%s.' + pltfmt) %(tag))
       n_fig += 1
       tag = '_'+str(n_fig)
+  else:
+    # show on screen
+    plt.show()
     
-  if store_result:
-    outfile = fname.split('.')[0]+'.result'
-    with open(outfile, 'w') as outf:
-      for key in rdict:
-        print("{}\n".format(key), rdict[key], file=outf)
