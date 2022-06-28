@@ -2075,21 +2075,24 @@ def plot_xy_from_yaml(d):
   else:
     x_err = None
 
-  y_dat = list(map(float, d['y_data']))
-  if 'y_errors' in d:
-    e = d['y_errors']
-    if type(e) is type([]):
-      y_err = list(map(float, e))
+  if 'y_data' in d:  
+    y_dat = list(map(float, d['y_data']))
+    if 'y_errors' in d:
+      e = d['y_errors']
+      if type(e) is type([]):
+        y_err = list(map(float, e))
+      else:
+        y_err = float(e)
     else:
-      y_err = float(e)
-  else:
-    y_err = None
+      y_err = None
+  
   if 'y_label' in d:
     y_label = d['y_label']
   else:
     y_label = None
 
-  fig = plot_xy(x_dat, y_dat, x_err, y_err, title=title,
+  if 'y_data' in d:
+    fig = plot_xy(x_dat, y_dat, x_err, y_err, title=title,
              label=data_label, x_label = x_label, y_label = y_label,
              marker='x', color='grey')
 
@@ -2284,16 +2287,21 @@ def plot_hist_from_yaml(d):
   # -- end plot function 
 
   # get data
-  hdata = list(map(float, d['raw_data']))
+  if 'raw_data' in d:
+    hdata = list(map(float, d['raw_data']))
   bins = 10
   if 'n_bins' in d:
     bins = d['n_bins']
   if 'bin_edges' in d:
     bins = d['bin_edges']
+    xmn = bins[0]
+    xmx = bins[-1]
   bin_range = None
   if 'bin_range' in d:
     bin_range = d['bin_range']
-
+    xmn = bin_range[0]
+    xmx = bin_range[-1]
+    
   if 'title' in d:
     title = d['title']
   else:
@@ -2313,12 +2321,17 @@ def plot_hist_from_yaml(d):
   else:
     y_label = 'y'
 
-  bc, be = np.histogram(hdata, bins=bins,  range=bin_range)
-  
-  fig = plot_hist(bc, be, title=title,
+  if 'raw_data' in d:
+    bc, be = np.histogram(hdata, bins=bins,  range=bin_range)  
+    fig = plot_hist(bc, be, title=title,
              label=data_label, x_label = x_label, y_label = y_label,
              grid=True)
-
+    xmn = be[0]
+    xmx = be[-1]
+    sfac = bc.sum() * (be[1]-be[0])
+  else:
+    sfac = 1. 
+    
   # check if model function supplied
   if 'model_density_function' in d :
     code_str = None
@@ -2340,8 +2353,8 @@ def plot_hist_from_yaml(d):
       header= 'import numpy as np\n' + 'import scipy\n' 
       exec(header + code, scope)
       # plot function 
-      xp = np.linspace(be[0],be[-1], 113)
-      sfac = bc.sum() * (be[1]-be[0])
+      xp = np.linspace(xmn, xmx, 113)
+      ## sfac = bc.sum() * (be[1]-be[0])
       plt.plot(xp, sfac*scope[functionName](xp) , '-', label=model_label)
 
 # finally, plot legend of all shown graphs
