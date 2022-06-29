@@ -561,7 +561,11 @@ als *Python*-Paket installiert ist:
     model_function: |
     <Python code of model function>
   
- 
+  Es ist auch möglich, nur die Modellfunktion anzuzeigen, wenn keine
+  Daten (`y_data` oder `raw_data`) angegeben werden. Minimale Daten
+  zu den `x`-Werten (`x_data` oder `bin_range`) werden aber dennoch
+  benötigt, um den Wertebereich auf der *x*-Achse festzulegen. 
+    
 **Einfache Anpassungen mit run_phyFit.py**
   
   Die notwendigen Informationen zur Durchführung von Anpassungen
