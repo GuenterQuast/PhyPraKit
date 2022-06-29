@@ -64,6 +64,10 @@
     model_function: |
     <Python code of model function>
 
+  If no `y_data` or `raw_data` keys are provided, only the model function 
+  is shown. Note that minimalistic `x_data` and `bin_range` or `bin_edges`
+  information must be given to define the x-range of the graph. 
+
 """
 
 from PhyPraKit import plot_xy_from_yaml,plot_hist_from_yaml
