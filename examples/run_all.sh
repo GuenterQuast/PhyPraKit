@@ -33,7 +33,6 @@ python3 test_k2hFit.py
 python3 test_hFit.py
 python3 test_mlFit.py
 python3 test_xFit.py
-python3 run_phyFit.py xyFit.fit
 
 # toy data
 python3 test_generateData.py
