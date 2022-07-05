@@ -80,8 +80,8 @@ if __name__ == "__main__": # --------------------------------------
   # - - - Parse command-line arguments
   parser = argparse.ArgumentParser(usage=__doc__)
 
-  parser.add_argument('filename', type=str,
-      help="name of fit input file in yaml format")
+  parser.add_argument('filename', type=str, nargs='+',
+      help="name(s) of fit input file(s) in yaml format")
   parser.add_argument('-s', '--saveplot', 
       action='store_const', const=True, default=False,
       help="save plot(s) in file(s)")
@@ -98,25 +98,26 @@ if __name__ == "__main__": # --------------------------------------
 
   # collect input from ArgumentParser
   args = parser.parse_args()
-  fnam = args.filename
+  fnams = args.filename
   sav_flg = args.saveplot
   pltfmt = args.format
   plt_flg = not args.noplot
 
-  f = open(fnam,'r')
-  try:
-    ymldata = yaml.load_all(f, Loader=yaml.Loader)
-  except (OSError, yaml.YAMLError) as exception:
-    print('!!! failed to read configuration file ' + fname)
-    print(str(exception))
-    sys.exit(1)
-    
-  data_type = 'xy'
   ddata = []
-  for d in ymldata:
-    if 'type' in d:
-      data_type = d['type']
-    ddata.append(d)
+  for fnam in fnams:
+    f = open(fnam,'r')
+    try:
+      ymldata = yaml.load_all(f, Loader=yaml.Loader)
+    except (OSError, yaml.YAMLError) as exception:
+      print('!!! failed to read configuration file ' + fname)
+      print(str(exception))
+      sys.exit(1)
+    
+    data_type = 'xy'
+    for d in ymldata:
+      if 'type' in d:
+        data_type = d['type']
+      ddata.append(d)
 
   # create a figure
   if data_type == 'xy':
