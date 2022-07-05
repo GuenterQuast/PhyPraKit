@@ -455,7 +455,7 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
     
 # - uncertainties
 #   x errors
-  if('x_errors') in fd:
+  if 'x_errors' in fd:
     sx, srelx, sabscorx, srelcorx = decode_uDict(fd['x_errors'])
   else:
     sx = None
@@ -473,7 +473,17 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
       print("!!! no y-errors found !")
       sys.exit(1)  # must have uncertainties in y !
   sy, srely, sabscory, srelcory = decode_uDict(uDict)
-          
+
+# constraints
+  constraints = None
+  if 'parameter_constraints' in fd:
+    constraints =  []
+    for pnam in fd['parameter_constraints']:
+      vu_dict = fd['parameter_constraints'][pnam]
+      v = vu_dict['value']
+      u = vu_dict['uncertainty']
+      constraints.append([pnam, v, u ])
+      
 # - model name and python code
   if 'model_label' in fd:
     model_label = fd['model_label']
@@ -503,6 +513,8 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
     print('    rel', srely)
     print('   cabs', sabscory)
     print('   crel', srelcory)
+    if constraints is not None:
+      print('  paramter constraints:', constraints)
     print('-- model to fit: %s' %(fitf_name))
     print('%s' %(code) )    
 
@@ -521,6 +533,7 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
       xrelcor=srelcorx,   # correlated rel. x
       yabscor=sabscory,   # correlated y
       yrelcor=srelcory,   # correlated rel. y
+      constraints = constraints, # parameter constraints
       axis_labels=[x_label, y_label], 
       data_legend =  data_label,    
       model_legend = model_label, 
@@ -853,7 +866,17 @@ def hFit_from_yaml(fd,           # dictionary defining fit input
     y_label = fd['y_label']
   else:
     y_label = 'y'
-    
+
+# constraints
+  constraints = None
+  if 'parameter_constraints' in fd:
+    constraints =  []
+    for pnam in fd['parameter_constraints']:
+      vu_dict = fd['parameter_constraints'][pnam]
+      v = vu_dict['value']
+      u = vu_dict['uncertainty']
+      constraints.append([pnam, v, u ])
+        
 # - model name and python code
   if 'model_label' in fd:
     model_label = fd['model_label']
@@ -882,6 +905,7 @@ def hFit_from_yaml(fd,           # dictionary defining fit input
   # perform fit to data with function hFit 
   rdict = hFit(scope[fitf_name],
          bin_contents, bin_edges,
+         constraints = constraints,      
          plot = plot,
          plot_cor = plot_cor,
          plot_band=plot_band,

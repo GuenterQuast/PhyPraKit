@@ -123,7 +123,7 @@ if __name__ == "__main__": # --------------------------------------
   # - - - Parse command-line arguments
   parser = argparse.ArgumentParser(description = \
     "Perform a fit with PhyPraKit.phyFit package driven by input file")
-  parser = argparse.ArgumentParser(usage=__doc__)
+  # parser = argparse.ArgumentParser(usage=__doc__)
 
   parser.add_argument('filename', type=str,
       help="name of fit input file in yaml format")
@@ -179,10 +179,10 @@ if __name__ == "__main__": # --------------------------------------
   ddata = []
   for d in ymldata:
     if 'type' in d:
-      fit_type = d['type']
+      fitType = d['type']
     ddata.append(d)
   f.close()
-
+  
   # select appropriate wrapper
   if fitType == 'xy':
     fit = xyFit_from_yaml
