@@ -30,9 +30,16 @@
      x_errors: x-uncertainty or [x-uncertainties]
      y_errors: y-uncertainty or [y-uncertainties]
 
-     several input sets to be separated by 
-     ...
-     ---   
+  *Remark*: more than one input data sets are also possible. 
+  Data sets and models can be overlayed in one plot if option 
+  `showplots = False` ist specified. Either provide more than
+  one input file, or use yaml syntax, as shown here:
+
+  .. code-block:: yaml
+
+    # several input sets to be separated by 
+    ...
+    ---   
 
   yaml-format for histogram:
 
@@ -54,7 +61,7 @@
      ...
      ---   
 
-  In case a model function is also supplied, it is overlayed in the 
+  In case a model function is supplied, it is overlayed in the 
   output graph. The corresponding *yaml* block looks as follows:
 
   .. code-block:: yaml
@@ -62,7 +69,7 @@
     # optional model specification
     model_label: <model name>
     model_function: |
-    <Python code of model function>
+      <Python code of model function>
 
   If no `y_data` or `raw_data` keys are provided, only the model function 
   is shown. Note that minimalistic `x_data` and `bin_range` or `bin_edges`

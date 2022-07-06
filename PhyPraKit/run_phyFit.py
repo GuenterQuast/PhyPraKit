@@ -43,6 +43,12 @@
     x_errors: <float>, [list of floats], or {dictionary/ies}
     y_errors:  <float>, [list of floats], or {dictionary/ies}
 
+    # optionally, add Gaussian constraints on parameters
+    parameter_constraints: 
+      <parameter name>:
+        value: <value>
+        uncertaintiy: <value>
+
     model_label: <str model name>
     model_function: |
       <Python code>
@@ -53,6 +59,7 @@
     - relative: true or false
     relative errors may be spcified as <float>%
 
+  
   Simple example of *yaml* input:
 
   .. code-block:: yaml
@@ -100,7 +107,8 @@
 
   *Remark*: more than one input data sets are also possible. 
   Data sets and models can be overlayed in one plot if option 
-  `showplots = False` ist specified.
+  `showplots = False` ist specified. Either provide more than
+  one input file, or use yaml syntax, as shown here:
 
   .. code-block:: yaml
 
