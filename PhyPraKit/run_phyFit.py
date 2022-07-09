@@ -137,7 +137,7 @@ if __name__ == "__main__": # --------------------------------------
       help="name(s) of fit input file(s) in yaml format")
   parser.add_argument('-v', '--verbose', 
       action='store_const', const=True, default=False,
-      help="suppress ouput of plots on screen")
+      help="suppress printout to screen")
   parser.add_argument('-r', '--result_to_file', 
       action='store_const', const=True, default=False,
       help="store results to file")
