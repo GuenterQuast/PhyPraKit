@@ -105,18 +105,18 @@ if __name__ == "__main__": # --------------------------------------
 
   # collect input from ArgumentParser
   args = parser.parse_args()
-  fnams = args.filename
+  fnames = args.filename
   sav_flg = args.saveplot
   pltfmt = args.format
   plt_flg = not args.noplot
 
   ddata = []
-  for fnam in fnams:
+  for fnam in fnames:
     f = open(fnam,'r')
     try:
       ymldata = yaml.load_all(f, Loader=yaml.Loader)
     except (OSError, yaml.YAMLError) as exception:
-      print('!!! failed to read configuration file ' + fname)
+      print('!!! failed to read configuration file ' + fnam)
       print(str(exception))
       sys.exit(1)
     
@@ -149,7 +149,7 @@ if __name__ == "__main__": # --------------------------------------
 
   # output to file or screen
   if (sav_flg):
-    plt.savefig( (fnam.split('.')[0] + '.'+pltfmt) )
+    plt.savefig( (fnames[0].split('.')[0] + '.'+pltfmt) )
   # show plot on screen
   if plt_flg:
     plt.show()

@@ -163,7 +163,7 @@ if __name__ == "__main__": # --------------------------------------
 
   # collect input from ArgumentParser
   args = parser.parse_args()
-  fname=args.filename
+  fnames=args.filename
   quiet_flg = not args.verbose
   store_result = args.result_to_file
   plt_flg= not args.noplot
@@ -176,12 +176,12 @@ if __name__ == "__main__": # --------------------------------------
 
   ddata = []
   # open and read input yaml file
-  for fnam in fname:
+  for fnam in fnames:
     f = open(fnam, 'r')
     try:
       ymldata = yaml.load_all(f, Loader=yaml.Loader)
     except (OSError, yaml.YAMLError) as exception:
-      print('!!! failed to read configuration file ' + fname)
+      print('!!! failed to read configuration file ' + fnam)
       print(str(exception))
       sys.exit(1)
       
@@ -242,7 +242,7 @@ if __name__ == "__main__": # --------------------------------------
     print(" correlation matrix : \n", cor)
 
     if store_result:
-      outfile = fname.split('.')[0]+'.result'
+      outfile = fnames[0].split('.')[0]+'.result'
       with open(outfile, 'a') as outf:
         for key in rdict:
           print("{}\n".format(key), rdict[key], file=outf)
@@ -253,7 +253,7 @@ if __name__ == "__main__": # --------------------------------------
     tag = ''
     for n in plt.get_fignums():
       plt.figure(n)      
-      plt.savefig( (fname.split('.')[0] + '%s.' + pltfmt) %(tag))
+      plt.savefig( (fnames[0].split('.')[0] + '%s.' + pltfmt) %(tag))
       n_fig += 1
       tag = '_'+str(n_fig)
   else:
