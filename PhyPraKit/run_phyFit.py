@@ -126,7 +126,7 @@ if __name__ == "__main__": # --------------------------------------
   #
 
   # package imports
-  import sys, argparse, yaml, numpy as np, matplotlib.pyplot as plt
+  import os, sys, argparse, yaml, numpy as np, matplotlib.pyplot as plt
 
   # - - - Parse command-line arguments
   parser = argparse.ArgumentParser(description = \
@@ -137,7 +137,7 @@ if __name__ == "__main__": # --------------------------------------
       help="name(s) of fit input file(s) in yaml format")
   parser.add_argument('-v', '--verbose', 
       action='store_const', const=True, default=False,
-      help="suppress printout to screen")
+      help="full printout to screen")
   parser.add_argument('-r', '--result_to_file', 
       action='store_const', const=True, default=False,
       help="store results to file")
@@ -159,6 +159,8 @@ if __name__ == "__main__": # --------------------------------------
 
   if len(sys.argv)==1:  # print help message if no input given
     parser.print_help()
+    if os.name == 'nt':
+      _ = input('\n      ==> type <ret> to end > ')
     sys.exit(1)
 
   # collect input from ArgumentParser
@@ -183,6 +185,8 @@ if __name__ == "__main__": # --------------------------------------
     except (OSError, yaml.YAMLError) as exception:
       print('!!! failed to read configuration file ' + fnam)
       print(str(exception))
+      if os.name == 'nt':
+        _ = input('\n      ==> type <ret> to end > ')
       sys.exit(1)
       
     fitType = 'xy'
@@ -260,3 +264,5 @@ if __name__ == "__main__": # --------------------------------------
     # show on screen
     plt.show()
     
+  if os.name == 'nt':
+    _ = input('\n      ==> type <ret> to end > ')

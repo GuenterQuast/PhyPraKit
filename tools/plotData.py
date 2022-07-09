@@ -81,8 +81,7 @@ from PhyPraKit import plot_xy_from_yaml,plot_hist_from_yaml
 
 if __name__ == "__main__": # --------------------------------------  
 
-  import sys, yaml, argparse, matplotlib.pyplot as plt
-
+  import os, sys, yaml, argparse, matplotlib.pyplot as plt
 
   # - - - Parse command-line arguments
   parser = argparse.ArgumentParser(usage=__doc__)
@@ -101,6 +100,8 @@ if __name__ == "__main__": # --------------------------------------
   
   if len(sys.argv)==1:  # print help message if no input given
     parser.print_help()
+    if os.name == 'nt':
+      _ = input('\n      ==> type <ret> to end > ')
     sys.exit(1)
 
   # collect input from ArgumentParser
@@ -118,6 +119,8 @@ if __name__ == "__main__": # --------------------------------------
     except (OSError, yaml.YAMLError) as exception:
       print('!!! failed to read configuration file ' + fnam)
       print(str(exception))
+      if os.name == 'nt':
+        _ = input('\n      ==> type <ret> to end > ')
       sys.exit(1)
     
     data_type = 'xy'
@@ -153,3 +156,6 @@ if __name__ == "__main__": # --------------------------------------
   # show plot on screen
   if plt_flg:
     plt.show()
+
+  if os.name == 'nt':
+    _ = input('\n      ==> type <ret> to end > ')
