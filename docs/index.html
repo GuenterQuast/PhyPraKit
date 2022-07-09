@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PhyPraKit Documentation &#8212; PhyPraKit 1.2.3b1 documentation</title>
+    <title>PhyPraKit Documentation &#8212; PhyPraKit 1.2.3rc1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.3b1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.3rc1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>  
@@ -40,7 +40,7 @@
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Version 1.2.3b1, Date 2022-06-30</p>
+<div><p>Version 1.2.3rc1, Date 2022-07-09</p>
 </div></blockquote>
 <p><strong>PhyPraKit</strong> is a collection of python modules
 for data visualization and analysis in experimental laboratory
@@ -3285,6 +3285,12 @@ and relative uncertainties in the x and y directions</p></li>
 <span class="nt">x_errors</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;float&gt;, [list of floats], or {dictionary/ies}</span>
 <span class="nt">y_errors</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">&lt;float&gt;, [list of floats], or {dictionary/ies}</span>
 
+<span class="c1"># optionally, add Gaussian constraints on parameters</span>
+<span class="nt">parameter_constraints</span><span class="p">:</span> 
+  <span class="nt">&lt;parameter name&gt;</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;value&gt;</span>
+    <span class="nt">uncertaintiy</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;value&gt;</span>
+
 <span class="nt">model_label</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;str model name&gt;</span>
 <span class="nt">model_function</span><span class="p">:</span> <span class="p p-Indicator">|</span>
   <span class="no">&lt;Python code&gt;</span>
@@ -3337,7 +3343,8 @@ and relative uncertainties in the x and y directions</p></li>
 </div>
 <p><em>Remark</em>: more than one input data sets are also possible. 
 Data sets and models can be overlayed in one plot if option 
-<cite>showplots = False</cite> ist specified.</p>
+<cite>showplots = False</cite> ist specified. Either provide more than
+one input file, or use yaml syntax, as shown here:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># several input sets to be separated by </span>
 <span class="nn">...</span>
 <span class="nn">---</span>   
@@ -3372,8 +3379,13 @@ or histograms from file in yaml format</p>
 <span class="nt">y_data</span><span class="p">:</span> <span class="p p-Indicator">[</span> <span class="nv">y values</span> <span class="p p-Indicator">]</span>
 <span class="nt">x_errors</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x-uncertainty or [x-uncertainties]</span>
 <span class="nt">y_errors</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y-uncertainty or [y-uncertainties]</span>
-
-<span class="l l-Scalar l-Scalar-Plain">several input sets to be separated by</span> 
+</pre></div>
+</div>
+<p><em>Remark</em>: more than one input data sets are also possible. 
+Data sets and models can be overlayed in one plot if option 
+<cite>showplots = False</cite> ist specified. Either provide more than
+one input file, or use yaml syntax, as shown here:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># several input sets to be separated by </span>
 <span class="nn">...</span>
 <span class="nn">---</span>   
 </pre></div>
@@ -3396,12 +3408,12 @@ or histograms from file in yaml format</p>
 <span class="nn">---</span>   
 </pre></div>
 </div>
-<p>In case a model function is also supplied, it is overlayed in the 
+<p>In case a model function is supplied, it is overlayed in the 
 output graph. The corresponding <em>yaml</em> block looks as follows:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># optional model specification</span>
 <span class="nt">model_label</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;model name&gt;</span>
 <span class="nt">model_function</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-<span class="l l-Scalar l-Scalar-Plain">&lt;Python code of model function&gt;</span>
+  <span class="no">&lt;Python code of model function&gt;</span>
 </pre></div>
 </div>
 <p>If no <cite>y_data</cite> or <cite>raw_data</cite> keys are provided, only the model function 
@@ -3485,7 +3497,7 @@ and write an output block in yaml format</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.3b1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.3rc1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>
