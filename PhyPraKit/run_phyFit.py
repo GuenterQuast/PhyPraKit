@@ -124,8 +124,7 @@ from pprint import pprint
 def wexit(code):
   # keep Python window open on MS Windows 
   import os, sys
-  if True:
-#  if os.name == 'nt':
+  if os.name == 'nt':
     _ = input('\n      ==> type <ret> to end > ')
   sys.exit(code)
 
