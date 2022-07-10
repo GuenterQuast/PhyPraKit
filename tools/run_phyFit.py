@@ -120,6 +120,15 @@
 from PhyPraKit.phyFit import xyFit_from_yaml, hFit_from_yaml
 from pprint import pprint
 
+# --- helper function
+def wexit(code):
+  # keep Python window open on MS Windows 
+  import os, sys
+  if True:
+#  if os.name == 'nt':
+    _ = input('\n      ==> type <ret> to end > ')
+  sys.exit(code)
+
 if __name__ == "__main__": # --------------------------------------  
   #
   # xyFit.py: Example of an application of PhyPraKit.phyFit.xyFit_from_yaml()
@@ -159,9 +168,7 @@ if __name__ == "__main__": # --------------------------------------
 
   if len(sys.argv)==1:  # print help message if no input given
     parser.print_help()
-    if os.name == 'nt':
-      _ = input('\n      ==> type <ret> to end > ')
-    sys.exit(1)
+    wexit(1)
 
   # collect input from ArgumentParser
   args = parser.parse_args()
@@ -185,9 +192,7 @@ if __name__ == "__main__": # --------------------------------------
     except (OSError, yaml.YAMLError) as exception:
       print('!!! failed to read configuration file ' + fnam)
       print(str(exception))
-      if os.name == 'nt':
-        _ = input('\n      ==> type <ret> to end > ')
-      sys.exit(1)
+      wexit(1)
       
     fitType = 'xy'
     for d in ymldata:
@@ -203,7 +208,7 @@ if __name__ == "__main__": # --------------------------------------
     fit = hFit_from_yaml
   else:
     print('!!! unsupported type of fit:', fitType)
-    sys.exit(1)
+    wexit(1)
 
   for fd in ddata:  
     if 'type' in fd.keys():
@@ -263,6 +268,5 @@ if __name__ == "__main__": # --------------------------------------
   else:
     # show on screen
     plt.show()
-    
-  if os.name == 'nt':
-    _ = input('\n      ==> type <ret> to end > ')
+
+  wexit(0)  

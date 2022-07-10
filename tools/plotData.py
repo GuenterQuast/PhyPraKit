@@ -79,6 +79,14 @@
 
 from PhyPraKit import plot_xy_from_yaml,plot_hist_from_yaml
 
+# --- helper function
+def wexit(code):
+  # keep Python window open on MS Windows 
+  import os, sys
+  if os.name == 'nt':
+    _ = input('\n      ==> type <ret> to end > ')
+  sys.exit(code)
+
 if __name__ == "__main__": # --------------------------------------  
 
   import os, sys, yaml, argparse, matplotlib.pyplot as plt
@@ -87,7 +95,7 @@ if __name__ == "__main__": # --------------------------------------
   parser = argparse.ArgumentParser(usage=__doc__)
 
   parser.add_argument('filename', type=str, nargs='+',
-      help="name(s) of fit input file(s) in yaml format")
+      help="name(s) of input file(s) in yaml format")
   parser.add_argument('-s', '--saveplot', 
       action='store_const', const=True, default=False,
       help="save plot(s) in file(s)")
@@ -100,9 +108,7 @@ if __name__ == "__main__": # --------------------------------------
   
   if len(sys.argv)==1:  # print help message if no input given
     parser.print_help()
-    if os.name == 'nt':
-      _ = input('\n      ==> type <ret> to end > ')
-    sys.exit(1)
+    wexit(1)
 
   # collect input from ArgumentParser
   args = parser.parse_args()
@@ -119,9 +125,7 @@ if __name__ == "__main__": # --------------------------------------
     except (OSError, yaml.YAMLError) as exception:
       print('!!! failed to read configuration file ' + fnam)
       print(str(exception))
-      if os.name == 'nt':
-        _ = input('\n      ==> type <ret> to end > ')
-      sys.exit(1)
+      wexit(1)
     
     data_type = 'xy'
     for d in ymldata:
@@ -136,7 +140,7 @@ if __name__ == "__main__": # --------------------------------------
      fignam = 'plothistData'
   else:
      print('!!! invalid data type', data_type)
-     sys.exit(1)
+     wexit(1)
 
   # create figure
   figsize = (7.5, 6.5)
@@ -157,5 +161,4 @@ if __name__ == "__main__": # --------------------------------------
   if plt_flg:
     plt.show()
 
-  if os.name == 'nt':
-    _ = input('\n      ==> type <ret> to end > ')
+  wexit(0)
