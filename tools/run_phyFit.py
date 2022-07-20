@@ -252,18 +252,21 @@ if __name__ == "__main__": # --------------------------------------
     print(" correlation matrix : \n", cor)
 
     if store_result:
-      outfile = fnames[0].split('.')[0]+'.result'
+      outfile = (fnames[0].split('.')[0]+ '.result')
       with open(outfile, 'a') as outf:
         for key in rdict:
           print("{}\n".format(key), rdict[key], file=outf)
+      print(' -> result saved to file ', outfile)
 
   if (sav_flg):
     # save all figures to file(s)
     n_fig = 0
     tag = ''
     for n in plt.get_fignums():
-      plt.figure(n)      
-      plt.savefig( (fnames[0].split('.')[0] + '%s.' + pltfmt) %(tag))
+      plt.figure(n)
+      oname = (fnames[0].split('.')[0] + '%s.' + pltfmt) %(tag)
+      plt.savefig( oname)
+      print(' -> figure saved to file ', oname)
       n_fig += 1
       tag = '_'+str(n_fig)
   else:

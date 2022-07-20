@@ -158,7 +158,9 @@ if __name__ == "__main__": # --------------------------------------
 
   # output to file or screen
   if (sav_flg):
-    plt.savefig( (fnames[0].split('.')[0] + '.'+pltfmt) )
+    oname = fnames[0].split('.')[0] + '.'+pltfmt
+    plt.savefig( oname )
+    print('  -> graph saved to file ', oname) 
   # show plot on screen
   if plt_flg:
     plt.show()
