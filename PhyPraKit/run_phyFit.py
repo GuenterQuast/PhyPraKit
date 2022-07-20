@@ -135,6 +135,8 @@ if __name__ == "__main__": # --------------------------------------
 
   # package imports
   import os, sys, argparse, yaml, numpy as np, matplotlib.pyplot as plt
+  if os.name == 'nt': # interactive mode on windows if error occurs
+    os.environ['PYTHONINSPECT']='x'
 
   # - - - Parse command-line arguments
   parser = argparse.ArgumentParser(description = \

@@ -90,6 +90,8 @@ def wexit(code):
 if __name__ == "__main__": # --------------------------------------  
 
   import os, sys, yaml, argparse, matplotlib.pyplot as plt
+  if os.name == 'nt': # interactive mode on windows if error occurs
+    os.environ['PYTHONINSPECT']='x'
 
   # - - - Parse command-line arguments
   parser = argparse.ArgumentParser(usage=__doc__)

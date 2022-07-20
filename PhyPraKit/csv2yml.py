@@ -24,8 +24,10 @@
 
 if __name__ == "__main__": # -------------------------------------------
 
-  import sys, yaml, argparse
+  import sys, os, yaml, argparse
   from PhyPraKit import csv2yaml
+  if os.name == 'nt': # interactive mode on windows if error occurs
+    os.environ['PYTHONINSPECT']='x'
 
   # - - - Parse command-line arguments
   # parser = argparse.ArgumentParser(usage=__doc__)
@@ -51,7 +53,7 @@ if __name__ == "__main__": # -------------------------------------------
   
   if len(sys.argv)==1:  # print help message if no input given
     parser.print_help()
-    sys.exit(1)
+    raise ValueError('!!! not input given -exit !')
 
   # collect input from ArgumentParser
   args = parser.parse_args()

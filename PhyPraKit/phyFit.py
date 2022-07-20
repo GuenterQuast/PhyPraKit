@@ -470,8 +470,7 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
     try:
       uDict = fd['y_errors']
     except:
-      print("!!! no y-errors found !")
-      sys.exit(1)  # must have uncertainties in y !
+      raise ValueError("!!! no y-errors found !") # must have y uncertainties 
   sy, srely, sabscory, srelcory = decode_uDict(uDict)
 
 # constraints
@@ -495,8 +494,7 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
     try:
       code_str = fd['model_function']
     except:
-      print("!!! no code to fit found !")
-      sys.exit(1)
+      raise ValueError("!!! no code to fit found !") 
   fitf_name, code = check_function_code(code_str)    
 
 # print input and model
@@ -891,8 +889,7 @@ def hFit_from_yaml(fd,           # dictionary defining fit input
       try:
         code_str = fd['model_function']
       except:
-        print("!!! no code to fit found !")
-      sys.exit(1)
+        raise ValueError("!!! no code to fit found !") 
   fitf_name, code = check_function_code(code_str)    
 
   bin_contents, bin_edges = np.histogram(hdata, bins=bins,  range=bin_range)
@@ -1259,8 +1256,8 @@ class mnFit():
     """
 
     if fit_type not in ['xy', 'indexed', 'hist', 'user', 'ml']:
-      sys.exit(
-        '!**! mnFit: invalid fit type ', fit_type, '- exiting!') 
+      raise ValueError(
+        '!**! mnFit: invalid fit type ' + fit_type + ' - exiting!') 
     self.fit_type = fit_type
 
     self.iminuit_version = str(iminuit_version)
@@ -1339,8 +1336,8 @@ class mnFit():
     elif self.fit_type == 'user':
       print("!**! mnFit: not data object to be definded for fit_type 'user'" )
     else:
-      print("!**! unknown type of Fit ", self.fit_type)
-      sys.exit('mnFit Error: invalid fit type')
+      raise ValueError(
+        "!**! unknown type of Fit " + self.fit_type)
     
   def setOptions(self, *args, **kwargs):
     if self.fit_type == 'xy':
@@ -1352,8 +1349,8 @@ class mnFit():
     elif self.fit_type == 'user' or self.fit_type == 'ml':
       self.set_mnOptions(*args, **kwargs)
     else:
-      print("!**! unknown type of Fit ", self.fit_type)
-      sys.exit('mnFit Error: invalid fit type')    
+      raise ValueError(
+        "!**! unknown type of Fit " + self.fit_type)
 
   def init_fit(self, *args, **kwargs):
     if self.fit_type == 'xy':
@@ -1365,8 +1362,8 @@ class mnFit():
     elif self.fit_type == 'user' or self.fit_type == 'ml':
       self.init_mnFit(*args, **kwargs)
     else:
-      print("!**! unknown type of Fit ", self.fit_type)
-      sys.exit('mnFit Error: invalid fit type')
+      raise ValueError(
+        "!**! unknown type of Fit " + self.fit_type)
 
   #
   # --- special code for xy Fit
@@ -1448,9 +1445,9 @@ class mnFit():
         or [parameter index, min, max]
     """
 
-    if self.xyData is None: 
-      print(' !!! mnFit.init_xyFit: no data object defined - call init_data()')
-      sys.exit('mnFit Error: no data object')
+    if self.xyData is None:
+      raise ValueError(
+        ' !!! mnFit.init_xyFit: no data object defined - call init_data()')
 
     # get parameters of model function to set start values for fit
     if model_kwargs is None:
@@ -1879,8 +1876,8 @@ class mnFit():
       # data object of type xyDataContainer
       self.data = outer.data
       if not isinstance(self.data, mnFit.xyDataContainer):
-          print(" !!! mnFit.xLSqCost: expecting data container of type 'mnFit.xyDataContainer'")
-          sys.exit('!==! mnFit Error: no or wrong data object')
+        raise ValueError(
+          " !!! mnFit.xLSqCost: expecting data container of type 'mnFit.xyDataContainer'")
       self.model = model
       self.quiet = outer.quiet
       # use -2 * log(L) of Gaussian instead of Chi2
@@ -2035,8 +2032,8 @@ class mnFit():
     """
 
     if self.xData is None: 
-      print(' !!! mnFit.init_xFit: no data object defined - call init_data()')
-      sys.exit('mnFit Error: no data object')
+      raise ValueError(
+        ' !!! mnFit.init_xFit: no data object defined - call init_data()')
 
     # get parameters of model function to set start values for fit
     if model_kwargs is None:
@@ -2357,8 +2354,8 @@ class mnFit():
       # data object of type xyDataContainer
       self.data = outer.data
       if not isinstance(self.data, mnFit.xDataContainer):
-          print(" !!! mnFit.indexedCost: expecting data container of type 'mnFit.xDataContainer'")
-          sys.exit('!==! mnFit Error: no or wrong data object')
+        raise ValueError(
+          " !!! mnFit.indexedCost: expecting data container of type 'mnFit.xDataContainer'")
       self.model = model
       self.quiet = outer.quiet
       # use -2 * log(L) of Gaussian instead of Chi2
@@ -2505,8 +2502,8 @@ class mnFit():
     """
 
     if self.hData is None: 
-      print(' !!! mnFit.init_hFit: no data object defined - call init_data()')
-      sys.exit('mnFit Error: no data object')
+      raise ValueError(
+        ' !!! mnFit.init_hFit: no data object defined - call init_data()')
     
     # get parameters of model function to set start values for fit
     if model_kwargs is None:
@@ -2739,8 +2736,8 @@ class mnFit():
       # data object of type histDataContainter
       self.data = outer.hData
       if not isinstance(self.data, mnFit.histDataContainer):
-        print(" !!! mnFit.hCost: expecting data container of type 'histDataContainer'")
-        sys.exit('!==! mnFit Error: no or wrong data object')
+        raise ValueError(
+          " !!! mnFit.hCost: expecting data container of type 'histDataContainer'")
       
       self.model = model
       self.density = density
@@ -2887,8 +2884,8 @@ class mnFit():
         [parameter index, min, max]
     """
     if self.data is None and self.fit_type != "user":
-      print(' !!! mnFit.init_mnFit: no data object defined - call init_data()')
-      sys.exit('mnFit Error: no data object')
+      raise ValueError(
+        ' !!! mnFit.init_mnFit: no data object defined - call init_data()')
 
     # get parameters of model function to set start values for fit
     if model_kwargs is None:
@@ -2998,8 +2995,8 @@ class mnFit():
           print("*==* mnFit.mnCost: fit with user-supplied cost function'")          
       else:
         if not isinstance(self.data, mnFit.mlDataContainer):
-          print(" !!! mnFit.mnCost: expecting data container of type 'mlDataContainer'")
-          sys.exit('!==! mnFit Error: no or wrong data object')      
+          raise ValueError(
+            " !!! mnFit.mnCost: expecting data container of type 'mlDataContainer'")
         self.model = userFunction
         self.cost = self.nlLcost
         if not self.quiet:
@@ -3267,8 +3264,8 @@ class mnFit():
     if self.ResultDictionary is not None:
       return self.ResultDictionary
     else:
-      print(" !!! mnFit.getResult: no results available - run fit first")
-      sys.exit('!==! mnFit Error: results requested before successful fit') 
+      raise RuntimeError(
+        " !!! mnFit.getResult: no results available - run fit first")
        
   @staticmethod
   def getFunctionError(x, model, pvals, covp, fixedPars):
@@ -3319,11 +3316,11 @@ class mnFit():
     """perform all necessary steps of fit sequence
     """
     if self.data is None and self.fit_type != "user":
-      print(' !!! mnFit: no data object defined - call init_data()')
-      sys.exit('mnFit Error: no data object')
+      raise ValueError(
+        ' !!! mnFit: no data object defined - call init_data()')
     if self.costf is None:
-      print(' !!! mnFit: no fit object defined - call init_fit()')
-      sys.exit('mnFit Error: no fit object')
+      raise RuntimeError(
+        '!!! mnFit: no fit object defined - call init_fit()')
     
     # summarize options
     if not self.quiet:
@@ -3347,9 +3344,9 @@ class mnFit():
       self.migrad_ok = True
     except Exception as e:
       self.migrad_ok = False
-      print('*==* !!! fit with migrad failed')
       print(e)
-      sys.exit(1)
+      raise RuntimeError(
+        '*==* !!! fit with migrad failed')
 
     # possibly, need to iterate
     if self.iterateFit:
@@ -3365,9 +3362,9 @@ class mnFit():
         self.migrad_ok = True
       except Exception as e:
         self.migrad_ok = False
-        print('*==* !!! iteration of fit with migrad failed')
         print(e)
-        sys.exit(1)
+        raise RuntimeError(
+          '*==* !!! iteration of fit with migrad failed')
 
     # run profile likelihood scan to check for asymmetric errors
     if self.run_minos:

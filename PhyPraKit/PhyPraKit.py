@@ -1968,9 +1968,9 @@ def check_function_code(code_string):
     contains_forbidden_token = False
     if code_string.find(s) >=0:
       _e = "!!! Encountered forbidden token '%s' in user-entered code" % (s)
-      print(_e)
       contains_forbidden_token = True
-    if(contains_forbidden_token): sys.exit(1)           
+    if(contains_forbidden_token):
+      raise ValueError(e)
 
   function_name=''  
   words_in_code = code_string.split()
@@ -1980,9 +1980,8 @@ def check_function_code(code_string):
       function_name=fn[0:fn.find( '(' )]
       break
   if function_name is '':
-      _e = "No function name in user entered code."         
-      print(_e)
-      sys.exit(1)
+      raise ValueError(
+        "No function name in user entered code.")         
   return function_name, code_string 
 
 def plot_xy_from_yaml(d):
@@ -2199,9 +2198,9 @@ def csv2yaml(file, nlhead=1, delim='\t'):
   keys = hlines[0].split(delim)
   Nkey = len(keys)
   if Nkey != Ncol:
-    print("!!! number of keys{} not equal number of columns - exit")
     print('Nkey=', Nkey, ' Ncol=', Ncol)
-    sys.exit(1)  
+    raise ValueError(
+      "!!! number of keys{} not equal number of columns - exit")
 
   # construct string in yaml format
   #   transpose list with number strings
