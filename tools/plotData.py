@@ -94,7 +94,9 @@ if __name__ == "__main__": # --------------------------------------
     os.environ['PYTHONINSPECT']='x'
 
   # - - - Parse command-line arguments
-  parser = argparse.ArgumentParser(usage=__doc__)
+  parser = argparse.ArgumentParser(description = \
+   "Plot data with error bars or a histrogram from file in yaml format")
+  # parser = argparse.ArgumentParser(usage=__doc__)
 
   parser.add_argument('filename', type=str, nargs='+',
       help="name(s) of input file(s) in yaml format")
@@ -109,7 +111,8 @@ if __name__ == "__main__": # --------------------------------------
       help="suppress ouput of plots on screen")
   
   if len(sys.argv)==1:  # print help message if no input given
-    parser.print_help()
+    parser.print_help()    
+    print(" \n !!! no input file given - exiting \n")
     wexit(1)
 
   # collect input from ArgumentParser

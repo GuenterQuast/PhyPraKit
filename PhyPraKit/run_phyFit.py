@@ -169,6 +169,7 @@ if __name__ == "__main__": # --------------------------------------
 
   if len(sys.argv)==1:  # print help message if no input given
     parser.print_help()
+    print(" \n !!! no input file given - exiting \n")
     wexit(1)
 
   # collect input from ArgumentParser
