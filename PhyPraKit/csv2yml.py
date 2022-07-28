@@ -31,10 +31,11 @@ if __name__ == "__main__": # -------------------------------------------
 
   # - - - Parse command-line arguments
   # parser = argparse.ArgumentParser(usage=__doc__)
-  parser = argparse.ArgumentParser(usage="cvs2yml [options] <input file name>")
+  parser = argparse.ArgumentParser(
+    description="convert csv to yaml format")
 
   parser.add_argument('filename', type=str,
-      help="name of fit input file in csv format")
+      help="name of input file in csv format")
   parser.add_argument('-s', '--save', 
       action='store_const', const=True, default=False,
       help="save result in file")
