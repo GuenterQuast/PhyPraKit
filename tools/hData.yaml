@@ -2,7 +2,7 @@
 type: histogram
 
 label: Beispieldaten
-x_label: 'Höhe h'
+x_label: 'Höhe h (cm)'
 y_label: 'Verteilungsdichte f(h)'
 
 # Daten:
