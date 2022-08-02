@@ -294,6 +294,13 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
     - relative: true or false
     relative errors may be spcified as <float>%
 
+    parameter_constraints:
+      <name1>:
+        value: <v>
+        uncertainty <u>
+      <name2>:
+        ...
+
   simple example of *yaml* input:
 
   .. code-block:: yaml
