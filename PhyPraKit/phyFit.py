@@ -294,6 +294,11 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
     - relative: true or false
     relative errors may be spcified as <float>%
 
+    fix_parameters:
+      - <name1> 
+      - <name2>
+        ...
+     
     parameter_constraints:
       <name1>:
         value: <v>
@@ -480,6 +485,13 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
       raise ValueError("!!! no y-errors found !") # must have y uncertainties 
   sy, srely, sabscory, srelcory = decode_uDict(uDict)
 
+# fix paramerters
+  fixedPars = None
+  if 'fix_parameters' in fd:
+    fixedPars = []
+    for pnam in fd['fix_parameters']:
+      fixedPars.append(pnam)
+  
 # constraints
   constraints = None
   if 'parameter_constraints' in fd:
@@ -529,16 +541,17 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
   
 # perform fit to data with function xyFit 
   rdict = xyFit(scope[fitf_name],
-      data_x, data_y,    # data x and y coordinates
-      sx=sx,             # indep x
-      sy=sy,             # indel y
-      srelx=srelx,       # indep. rel. x
-      srely=srely,       # indep. rel. y
-      xabscor=sabscorx,   # correlated x
-      xrelcor=srelcorx,   # correlated rel. x
-      yabscor=sabscory,   # correlated y
-      yrelcor=srelcory,   # correlated rel. y
+      data_x, data_y,      # data x and y coordinates
+      sx=sx,               # indep x
+      sy=sy,               # indep y
+      srelx=srelx,         # indep. rel. x
+      srely=srely,         # indep. rel. y
+      xabscor=sabscorx,    # correlated x
+      xrelcor=srelcorx,    # correlated rel. x
+      yabscor=sabscory,    # correlated y
+      yrelcor=srelcory,    # correlated rel. y
       constraints = constraints, # parameter constraints
+      fixPars = fixedPars, # fixed parameters
       axis_labels=[x_label, y_label], 
       data_legend =  data_label,    
       model_legend = model_label, 
@@ -872,6 +885,13 @@ def hFit_from_yaml(fd,           # dictionary defining fit input
   else:
     y_label = 'y'
 
+# fix paramerters
+  fixedPars = None
+  if 'fix_parameters' in fd:
+    fixedPars = []
+    for pnam in fd['fix_parameters']:
+      fixedPars.append(pnam)
+  
 # constraints
   constraints = None
   if 'parameter_constraints' in fd:
@@ -909,6 +929,7 @@ def hFit_from_yaml(fd,           # dictionary defining fit input
   # perform fit to data with function hFit 
   rdict = hFit(scope[fitf_name],
          bin_contents, bin_edges,
+         fixPars = fixedPars,
          constraints = constraints,      
          plot = plot,
          plot_cor = plot_cor,
