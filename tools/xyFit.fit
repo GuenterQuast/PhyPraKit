@@ -1,4 +1,4 @@
-# xyFit.fit: Beispiel-Datei für xy-Fit mit xyFit.py
+# xyFit.fit: Beispiel-Datei für xy-Fit mit run_phyFit.py
 
 # Illustrate fitting of an arbitrary function 
 # equivalent to the python example test_xyFit.py
@@ -25,7 +25,7 @@
 
 # To run this example, simply type
 #
-#     > fit_from_file xyFit.fit
+#     > run_phyFit.py xyFit.fit
 #
 # or, on MS Windows,
 #           right-klick on  kafe2g_xyFit.fit and open with kafe2go.exe

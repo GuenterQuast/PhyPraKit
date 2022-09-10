@@ -1,4 +1,11 @@
 # Beispiel einer Anpassung an ein Histogram 
+
+# To run this example, simply type
+#
+#     > run_phyFit.py hFit.fit
+# or
+#     > kafe2go hFit.fit
+
 type: histogram
 
 label: Beispieldaten
