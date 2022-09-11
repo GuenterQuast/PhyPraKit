@@ -2,6 +2,8 @@
 # -----------------------------------------------
 #  execute via:
 #    kafe2go kafe2go_fit.fit
+# or 
+#    run_phyFit.py kafe2go_fit.fit
 
 # In this example a 2nd order polynomial
 # is fit to data points with uncertainties.

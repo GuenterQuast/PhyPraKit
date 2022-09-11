@@ -477,12 +477,12 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
 
 Für Standardaufgaben gibt es einige Python-Programme im Verzeichnis
 `PhyPraKit/tools/`, die als stand-alone Anwendungen gedacht sind. Die
-Programme sind auch Teil des Installationspakets und können von allen
-Stellen im Dateisystem aus als Modul aufgerufen werden, wenn *PhyPraKit*
-als *Python*-Paket installiert ist:
+Programme sind auch Teil des Installationspakets und werden im Bereich
+der ausführbaren Skripe abgelegt. Sie können von allen Stellen im
+Dateisystem aus aufgerufen werden, wenn das entsprechende Verzeichnis
+im der Suchliste des Betriebssystems aufgeführt ist. Im Normalfall
+wird dies bei der *Python*-Installation erledigt. 
 
-  `python3 -m PhyPraKit.<ToolName> [Optionen] <Eingabedatei>`
-    
 **Daten darstellen mit dem Skript plotData.py**
 
   Mitunter ist eine einfache und unkomplizierte Darstellung von Daten
@@ -599,10 +599,6 @@ als *Python*-Paket installiert ist:
   ``kafe2go [option] <yaml.datei>``
 
   auf der Kommandozeile.
-
-  Für Nutzer von MS-Windows gibt es eine ausführbare Datei, `kafe2go.exe`.
-  Zur Anwendung wird eine der Beispieldateien mit Rechtsklick angewählt 
-  und mit der Anwendung `kafe2go.exe` geöffnet.
   
   * `kafe2go_simleFit.fit` zeigt am Beispiel der Anpassung einer Parabel,
     wie mit ganz wenigen Eingaben eine Anpassung durchgeführt werden kann.
@@ -612,13 +608,16 @@ als *Python*-Paket installiert ist:
     unabhängig/korreliert) enthält; relative Unsicherheiten werden dabei
     auf den Modellwert und nicht auf die gemessenen Datenpunkte bezogen. 
   
-**Konversion aus csv-Format nach yaml**
+**Konversion vom csv-Format nach yaml**
 
-  Mit dem Programm _csv2yml.py_ können Daten im (spaltenweise organisierten)
+  Mit dem Programm *csv2yml.py* können Daten im (spaltenweise organisierten)
   *csv*-Format in einen *yaml*-Datenblock konveriert werden, den man dann
-  direkt mit Hilfe eines Text-Editors in eine *yaml*-Datei einfügen kann. 
+  direkt mit Hilfe eines Text-Editors in eine *yaml*-Datei einfügen kann.
+  Auch die in Programmen wie MS-Excel standardmäßig vorgesehne Darstellung
+  von Dezimalstellen mit Dezimalkomma wird bei der Konversion in das in
+  allen wissenschaftlichen Programmen übliche Dezimalformat mit Dezimalpunkt
+  konvertiert. 
   
-
   
 Module Documentation 
 ====================
