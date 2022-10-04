@@ -1535,7 +1535,7 @@ def k2Fit(func, x, y,
   dat.axis_labels = axis_labels
 
   # - add all error sources  
-  if sy is None:
+  if sy is None and srely is None:
     sy=np.ones(len(y))
     print('\n!**! No y-errors given, all assumed to be 1.0\n',
           '-> consider scaling of parameter errors with sqrt(chi^2/Ndf)\n')

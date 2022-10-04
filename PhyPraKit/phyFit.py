@@ -178,7 +178,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
   ## from .phyFit import mnFit #! already contained in this file
 
   # ... check if errors are provided ...
-  if sy is None:
+  if sy is None and srely is None:
     sy = np.ones(len(y))
     print('\n!**! No y-errors given, all assumed to be 1.0\n',
           '-> consider scaling of parameter errors with sqrt(chi^2/Ndf)\n')
@@ -1597,7 +1597,6 @@ class mnFit():
       self.needs_covariance = self.needs_covariance or \
         self.cabsx is not None or self.crelx is not None or \
         self.cabsy is not None or self.crely is not None 
-
 
       # build (initial) covariance matrix (without x-errors)
       if self.needs_covariance:
