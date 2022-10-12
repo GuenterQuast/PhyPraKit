@@ -1537,6 +1537,7 @@ class mnFit():
 
       nd = len(x)      
       # store input data as numpy float arrays, ensure length nd if needed
+      self.dlength = nd
       self.x = np.asfarray(x)         # abscissa - "x values"
       self.y = np.asfarray(y)         # ordinate - "y values"
       if ex is not None:
@@ -2113,7 +2114,7 @@ class mnFit():
 
       self.xNames = names # set parameter names
       
-      nd = len(x)      
+      nd = len(x)
       # store input data as numpy float arrays, ensure length nd if needed
       self.x = np.asfarray(x)         # abscissa - "x values"
       self.e = np.asfarray(e)       # independent uncertainties y
@@ -2138,6 +2139,7 @@ class mnFit():
       self.quiet = quiet      # no informative printout if True
 
       self.nd = nd
+      self.dlength = nd
       self.model = None # no model defined yet
       self.model_values = None
 
@@ -2589,6 +2591,7 @@ class mnFit():
       self.outer = outer
       self.contents = bin_contents
       self.nbins=len(bin_contents)
+      self.dlength = self.nbins
       self.Ntot = np.sum(bin_contents)
       self.edges = bin_edges
       if DeltaMu is None:
@@ -2971,6 +2974,8 @@ class mnFit():
       """
 
       self.x = np.asarray(x)
+      self.dlength = len(self.x)
+
       
     def plot(self, num='indexed data',
                    figsize=(7.5, 6.5),                             
@@ -3430,6 +3435,8 @@ class mnFit():
       * list of str: axis labels
       * str: legend for data
       * str: legend for model 
+      * plot_band: plot model confidence band if True
+      * plot_residual: plot residual w.r.t. model if True
 
     Returns:
       * matplotlib figure
@@ -3439,6 +3446,7 @@ class mnFit():
     m = self.minuit  # minuit object
     cf = self.costf  # cost function object
     d = cf.data
+    npts = max(190, d.dlength) # number of points for model function
     
   # retrieve fit results
     pnams = self.ParameterNames
@@ -3472,8 +3480,8 @@ class mnFit():
   # overlay model function
     # histogram fit provides normalised distribution,
     #    determine bin widths and scale factor
-    xmin, xmax = plt.xlim()    
-    xplt = np.linspace(xmin, xmax, 190)
+    xmin, xmax = plt.xlim()
+    xplt = np.linspace(xmin, xmax, npts)
     xvals = xplt 
     if self.fit_type=='hist':
       # detemine local bin width
