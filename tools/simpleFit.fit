@@ -1,5 +1,5 @@
-# simpleFit.fit: example of a fit with kafe2go or xyFit.py
-# --------------------------------------------------------
+# simpleFit.fit: example of a fit with kafe2go or run_phyFit.py
+# -------------------------------------------------------------
 #  execute via:
 #    kafe2go simpleFit.fit
 # or

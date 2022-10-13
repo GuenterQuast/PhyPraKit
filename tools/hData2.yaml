@@ -1,0 +1,32 @@
+# Darstellung von zwei Histogrammen mit plotData.py
+
+type: histogram
+
+title: "Daten aus Datei 'hData2.yaml'"
+x_label: 'Höhe h'
+y_label: 'Verteilungsdichte f(h)'
+
+label: Beispieldaten
+# Daten:
+raw_data: [ 79.83,79.63,79.68,79.82,80.81,79.97,79.68,80.32,79.69,79.3,
+            79.4,79.80,79.98,80.15,79.77,80.30,80.18,80.25,79.88,80.02 ]    
+n_bins: 20
+bin_range: [79., 81.]
+# alternatively an array for the bin edges can be specified
+#bin_edges: [79., 79.5, 80, 80.5, 81.]
+
+...
+---
+
+label: Beispiel2
+raw_data: [ 79.8,79.6,79.6,79.8,79.9,79.6,80.3,79.6,79.1, 80.1,79.9,80.3,
+            80.1,80.2,79.8,80.0, 79.3,80.5,80.6,79.9,79.6,80.3,79.6,79.2]
+n_bins: 20
+bin_range: [79., 81.]
+# alternatively an array for the bin edges can be specified
+#bin_edges: [79., 79.5, 80, 80.5, 81.]
+
+model_label: Gauss-Verteilung
+model_density_function: |
+  def normal_distribution(x, mu=79.9, sigma=0.346):
+    return np.exp(-0.5 *((x-mu)/sigma)**2)/np.sqrt(2.*np.pi*sigma**2)

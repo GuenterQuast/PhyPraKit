@@ -1,13 +1,12 @@
-# Anpassung an ein Histogram mit run_phyFit.py oder Darstellung mit plotData.py
+# Darstellung einer Verteilungsdichte mit plotData.py 
+
 type: histogram
 
 label: Beispieldaten
-x_label: 'Höhe h (cm)'
+x_label: 'Höhe h'
 y_label: 'Verteilungsdichte f(h)'
 
 # Daten:
-raw_data: [ 79.83,79.63,79.68,79.82,80.81,79.97,79.68,80.32,79.69,79.18,
-            80.04,79.80,79.98,80.15,79.77,80.30,80.18,80.25,79.88,80.02 ]
 
 n_bins: 20
 bin_range: [79., 81.]

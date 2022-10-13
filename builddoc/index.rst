@@ -600,8 +600,8 @@ wird dies bei der *Python*-Installation erledigt.
 
   auf der Kommandozeile.
   
-  * `kafe2go_simleFit.fit` zeigt am Beispiel der Anpassung einer Parabel,
-    wie mit ganz wenigen Eingaben eine Anpassung durchgeführt werden kann.
+  * `simleFit.fit` zeigt am Beispiel der Anpassung einer Parabel, wie
+    mit ganz wenigen Eingaben eine Anpassung durchgeführt werden kann.
     
   * `kafe2go_xyFit.fit` ist ein komplexeres Beispiel, das alle von *kafe2*
     unterstützten Arten von Unsicherheiten (d.h. x/y, absolut/relativ und
