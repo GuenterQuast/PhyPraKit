@@ -2141,6 +2141,8 @@ def csv2yaml(file, nlhead=1, delim='\t'):
   
   # --------------------------------------------------------------------
 
+  import yaml
+  
   # -- helper function to filter input lines
   def specialCharFilter(f, delim):
     """a generator to filter lines read from file
@@ -2204,10 +2206,15 @@ def csv2yaml(file, nlhead=1, delim='\t'):
 
   # construct string in yaml format
   #   transpose list with number strings
-  dlinesT = [[row[i] for row in dlines] for i in range(Ncol)]
+  dlinesT = [[float(row[i]) for row in dlines] for i in range(Ncol)]
+#  dlinesT = [[row[i] for row in dlines] for i in range(Ncol)]
   ylines=[]
   for i, k in enumerate(keys):
-    yl = "{0}: [{1}]".format(k.strip(), ','.join(dlinesT[i]))
+    #yl = "{0}: [{1}]".format(k.strip(), ','.join(dlinesT[i]))
+    yl = yaml.dump({ k.strip() : dlinesT[i] },
+                     default_flow_style=True ) # arrays as [ ... ]
+    yl = yl.replace('{','')  # remove { and }
+    yl = yl.replace('}','')
     ylines.append(yl)
   return hlines, ylines
 
