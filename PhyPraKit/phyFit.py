@@ -3446,7 +3446,7 @@ class mnFit():
     m = self.minuit  # minuit object
     cf = self.costf  # cost function object
     d = cf.data
-    npts = max(190, 3*d.dlength) # number of points for model function
+    npts = max(190, 5*d.dlength) # number of points for model function
     
   # retrieve fit results
     pnams = self.ParameterNames
