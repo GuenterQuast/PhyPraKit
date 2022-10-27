@@ -20,7 +20,8 @@ setup(
     license='GNU Public Licence',
     description='Tools for data visualisation and analysis in Physics Lab Courses',
     long_description=README,
-    scripts=['tools/run_phyFit.py', 'tools/plotData.py', 'tools/csv2yml.py'],
+    scripts=['tools/run_phyFit.py', 'tools/plotData.py',
+             'tools/csv2yml.py', 'tools/plotCSV.py' ],
     classifiers=[
     'Development Status :: 5 - Production/Stable',
     #    'Development Status :: 4 - Beta',

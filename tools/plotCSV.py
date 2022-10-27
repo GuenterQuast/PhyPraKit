@@ -43,7 +43,7 @@ if __name__ == "__main__":
     "plot contents of CSV file")
 
   parser.add_argument('filename', type=str, nargs='+',
-      help="name(s) of fit input file(s) in csv format")
+      help="name of csv file")
   parser.add_argument('-v', '--verbose', 
       action='store_const', const=True, default=False,
       help="full printout to screen")
