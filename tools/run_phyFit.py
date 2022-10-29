@@ -232,12 +232,13 @@ if __name__ == "__main__": # --------------------------------------
               print('  '+ k +': ', d[k], end=' ') 
             print()
   # run fit    
-    rdict = fit(fd,                     # the input dictionary defining the fit 
-              plot=plt_flg,           # show plot of data and model
-              plot_band=band_flg,     # plot model confidence-band
-              plot_cor=cont_flg,      # plot profiles likelihood and contours
-              showplots= False,        # show plots on screen 
-              quiet=quiet_flg,        # suppress informative printout
+    rdict = fit(fd,                 # the input dictionary defining the fit 
+              plot=plt_flg,         # show plot of data and model
+              plot_band=band_flg,   # plot model confidence-band
+              plot_cor=cont_flg,    # plot profiles likelihood and contours
+              showplots= False,     # show plots on screen
+              same_plot = True,     # overlay fit info for multiple data sets
+              quiet=quiet_flg,      # suppress informative printout
               return_fitObject=False
                ) 
 

@@ -115,6 +115,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
        plot = True, plot_cor = False,
        showplots = True, 
        plot_band=True, plot_residual=False, quiet = True,
+       same_plot = False,    
        axis_labels=['x', 'y = f(x, *par)'],
        data_legend = 'data',    
        model_legend = 'model',
@@ -159,6 +160,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     * plot_band: plot uncertainty band around model function
     * plot_residual: plot residuals w.r.t. model instead of model function
     * showplots: show plots on screen
+    * same_plot: overlay fit info from previoius call(s)
     * quiet: suppress printout
     * list of str: axis labels
     * str: legend for data
@@ -219,6 +221,7 @@ def xyFit(fitf, x, y, sx = None, sy = None,
                  data_legend=data_legend,
                  model_legend=model_legend,
                  plot_band=plot_band,
+                 same_plot = same_plot,
                  plot_residual=plot_residual)
 
   # figure with visual representation of covariances
@@ -246,6 +249,7 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
                     plot_band=True,     # plot model confidence-band
                     plot_cor=False,     # plot profiles likelihood and contours
                     showplots = True,   # show plots on screen
+                    same_plot = False,  # overlay fit info from previoius call(s)
                     quiet=True,         # suppress informative printout
                     return_fitObject=False # 
            ):
@@ -555,10 +559,11 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
       axis_labels=[x_label, y_label], 
       data_legend =  data_label,    
       model_legend = model_label, 
-      plot=plot,            # plot data and model
-      plot_band=plot_band,  # plot model confidence-band
-      plot_cor=plot_cor,    # plot profiles likelihood and contours
-      showplots=showplots,  # plots to screen
+      plot=plot,             # plot data and model
+      plot_band=plot_band,   # plot model confidence-band
+      plot_cor=plot_cor,     # plot profiles likelihood and contours
+      showplots=showplots,   # plots to screen
+      same_plot = same_plot, # overlay fit info from previoius call(s)
       quiet=quiet,           # suppress informative printout
       return_fitObject=return_fitObject
       )
@@ -575,6 +580,7 @@ def xFit(fitf, x, s = None, srel = None,
        plot = True, plot_cor = False,
        showplots = True, 
        plot_band=True, plot_residual=False, quiet = True,
+       same_plot = False,    # overlay fit info from previoius call(s)
        axis_labels=['Index', 'f(*x, *par)'],
        data_legend = 'data',    
        model_legend = 'model',
@@ -613,6 +619,7 @@ def xFit(fitf, x, s = None, srel = None,
     * plot_band: plot uncertainty band around model prediction
     * plot_residual: plot residuals w.r.t. model instead of model prediction
     * showplots: show plots on screen
+    * same_plot: overlay fit info from previous call(s)
     * quiet: suppress printout
     * list of str: axis labels
     * str: legend for data
@@ -671,6 +678,7 @@ def xFit(fitf, x, s = None, srel = None,
                  data_legend=data_legend,
                  model_legend=model_legend,
                  plot_band=plot_band,
+                 same_plot = same_plot,
                  plot_residual=plot_residual)
 
   # figure with visual representation of covariances
@@ -701,6 +709,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
          fit_density = True,
          plot = True, plot_cor = False,
          showplots = True, plot_band=True, plot_residual=False,
+         same_plot = False,    # overlay fit info from previoius call(s)
          quiet = True,
          axis_labels=['x', 'counts/bin = f(x, *par)'],
          data_legend = 'Histogram Data',    
@@ -733,6 +742,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
     * plot: show data and model if True
     * plot_cor: show profile likelihoods and confidence contours
     * plot_band: plot uncertainty band around model function
+    * same_plot: overlay fit info from previous call(s)
     * plot_residual: plot residuals w.r.t. model instead of model function
     * showplots: show plots on screen
     * quiet: suppress printout
@@ -783,6 +793,7 @@ def hFit(fitf, bin_contents, bin_edges, DeltaMu=None,
                  data_legend=data_legend,
                  model_legend=model_legend,
                  plot_band=plot_band,
+                 same_plot = same_plot,
                  plot_residual=plot_residual)
 
   # figure with visual representation of covariances
@@ -810,6 +821,7 @@ def hFit_from_yaml(fd,           # dictionary defining fit input
              plot_band=True,     # plot model confidence-band
              plot_cor=False,     # plot profiles likelihood and contours
              showplots = True,   # show plots on screen
+             same_plot = True,   # overlay fit info from previoius call(s)
              quiet=True,         # suppress informative printout
              return_fitObject=False # 
            ):
@@ -934,6 +946,7 @@ def hFit_from_yaml(fd,           # dictionary defining fit input
          plot = plot,
          plot_cor = plot_cor,
          plot_band=plot_band,
+         same_plot = same_plot,
          quiet = quiet,
          showplots = showplots,
          axis_labels=[x_label, y_label],
@@ -952,6 +965,7 @@ def mFit(ufcn, data = None,
          plot = False, plot_band = True,
          plot_cor = False,
          showplots = True, quiet = True,
+         same_plot = False,
          axis_labels=['x', 'Density = f(x, *par)'],
          data_legend = 'data',    
          model_legend = 'model',
@@ -1035,7 +1049,8 @@ def mFit(ufcn, data = None,
     fig = uFit.plotModel(axis_labels=axis_labels,
                  data_legend=data_legend,
                  model_legend=model_legend,
-                      plot_band=plot_band)
+                 plot_band=plot_band,
+                 same_plot=same_plot)
   # figure with visual representation of covariances
   #    profile likelihood scan and confidence contours
   if plot_cor:
@@ -3425,6 +3440,7 @@ class mnFit():
                 data_legend = 'data',    
                 model_legend = 'fit',
                 plot_band=True,
+                same_plot= False,
                 plot_residual=False): 
     """
     Plot model function and data 
@@ -3436,6 +3452,7 @@ class mnFit():
       * str: legend for data
       * str: legend for model 
       * plot_band: plot model confidence band if True
+      * same_plot: accumulate fit results from previous call if True
       * plot_residual: plot residual w.r.t. model if True
 
     Returns:
@@ -3547,8 +3564,11 @@ class mnFit():
        
   # display legend with fit info 
     global fit_info
-    try: fit_info
-    except NameError: fit_info = []
+    if same_plot:
+      try: fit_info
+      except NameError: fit_info = []
+    else:
+      fit_info = []      
 
     #  1. parameter values and uncertainties
     pe = 2   # number of significant digits of uncertainty
