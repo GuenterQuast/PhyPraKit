@@ -237,7 +237,7 @@ if __name__ == "__main__": # --------------------------------------
               plot_band=band_flg,   # plot model confidence-band
               plot_cor=cont_flg,    # plot profiles likelihood and contours
               showplots= False,     # show plots on screen
-              same_plot = True,     # overlay fit info for multiple data sets
+            #!  same_plot = True,     # overlay fit info for multiple data sets
               quiet=quiet_flg,      # suppress informative printout
               return_fitObject=False
                ) 
