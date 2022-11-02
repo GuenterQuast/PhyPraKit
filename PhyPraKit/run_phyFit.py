@@ -212,7 +212,7 @@ if __name__ == "__main__": # --------------------------------------
     print('!!! unsupported type of fit:', fitType)
     wexit(1)
 
-  for fd in ddata:  
+  for count, fd in enumerate(ddata):  
     if 'type' in fd.keys():
       fitType = fd['type']
     print("*==*", sys.argv[0], "received valid yaml data for fit:")
@@ -231,13 +231,15 @@ if __name__ == "__main__": # --------------------------------------
             for k in d:
               print('  '+ k +': ', d[k], end=' ') 
             print()
-  # run fit    
-    rdict = fit(fd,                     # the input dictionary defining the fit 
-              plot=plt_flg,           # show plot of data and model
-              plot_band=band_flg,     # plot model confidence-band
-              plot_cor=cont_flg,      # plot profiles likelihood and contours
-              showplots= False,        # show plots on screen 
-              quiet=quiet_flg,        # suppress informative printout
+  # run fit
+    same = True if count > 0 else False
+    rdict = fit(fd,                 # the input dictionary defining the fit 
+              plot=plt_flg,         # show plot of data and model
+              plot_band=band_flg,   # plot model confidence-band
+              plot_cor=cont_flg,    # plot profiles likelihood and contours
+              showplots= False,     # show plots on screen
+              same_plot = same,     # overlay fit info for multiple data sets
+              quiet=quiet_flg,      # suppress informative printout
               return_fitObject=False
                ) 
 
