@@ -542,9 +542,15 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
   scope = dict()
   header= 'import numpy as np\n' + 'import scipy\n' 
   exec(header + code, scope)
-  
+  fitf = scope[fitf_name]
+  # check user-provided code
+  try:
+    y = fitf(np.asarray(data_x))
+  except Exception as e:
+    raise ValueError("!!! model code not valid ! \n" + str(e)) 
+
 # perform fit to data with function xyFit 
-  rdict = xyFit(scope[fitf_name],
+  rdict = xyFit(fitf,
       data_x, data_y,      # data x and y coordinates
       sx=sx,               # indep x
       sy=sy,               # indep y
@@ -937,22 +943,28 @@ def hFit_from_yaml(fd,           # dictionary defining fit input
   scope = dict()
   header= 'import numpy as np\n' + 'import scipy\n' 
   exec(header + code, scope)
-
+  fitf = scope[fitf_name]
+  # check user-provided code
+  try:
+    y = fitf(np.asarray(bin_edges))
+  except Exception as e:
+    raise ValueError("!!! model code not valid ! \n" + str(e)) 
+  
   # perform fit to data with function hFit 
-  rdict = hFit(scope[fitf_name],
-         bin_contents, bin_edges,
-         fixPars = fixedPars,
-         constraints = constraints,      
-         plot = plot,
-         plot_cor = plot_cor,
-         plot_band=plot_band,
-         same_plot = same_plot,
-         quiet = quiet,
-         showplots = showplots,
-         axis_labels=[x_label, y_label],
-         data_legend = data_label,    
-         model_legend = model_label,
-         return_fitObject=return_fitObject
+  rdict = hFit(fitf,
+          bin_contents, bin_edges,
+          fixPars = fixedPars,
+          constraints = constraints,      
+          plot = plot,
+          plot_cor = plot_cor,
+          plot_band=plot_band,
+          same_plot = same_plot,
+          quiet = quiet,
+          showplots = showplots,
+          axis_labels=[x_label, y_label],
+          data_legend = data_label,    
+          model_legend = model_label,
+          return_fitObject=return_fitObject
          ) 
   return rdict
 

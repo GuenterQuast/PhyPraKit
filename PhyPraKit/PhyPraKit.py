@@ -1979,7 +1979,7 @@ def check_function_code(code_string):
       fn = words_in_code[i+1]
       function_name=fn[0:fn.find( '(' )]
       break
-  if function_name is '':
+  if function_name == '':
       raise ValueError(
         "No function name in user entered code.")         
   return function_name, code_string 
@@ -2110,7 +2110,7 @@ def plot_xy_from_yaml(d):
       except:
         pass      
     if code_str is not None:
-      # check and execute provide model code
+      # check and execute provided model code
       functionName, code = check_function_code(code_str)
       scope = dict()
       header= 'import numpy as np\n' + 'import scipy\n' 
