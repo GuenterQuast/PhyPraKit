@@ -4,7 +4,6 @@
    uses PhyPraKkt.readtxt() to read floating-point column-data in csv format 
    and provides a smoothed and resampled version
 
-
   usage: 
 
     ./plotCSV.py [options] <input file name>
@@ -49,6 +48,9 @@ if __name__ == "__main__":
   parser.add_argument('-n', '--noplot', 
       action='store_const', const=True, default=False,
       help="suppress figure")
+  parser.add_argument('-r', '--resample', 
+      action='store_const', const=True, default=False,
+      help="down-sampling of smoothed data")
   parser.add_argument('-s', '--separator',
       type=str, default=',',
       help="character used as field separator ")
@@ -67,14 +69,15 @@ if __name__ == "__main__":
   # collect input from ArgumentParser
   args = parser.parse_args()
   fname = args.filename[0]
-  noplot = args.noplot
   delim = args.separator       # field separator: , or \t, or \_ or ; etc.
   nHlines = args.Headerlines   # number of header lines
+  downsample = args.resample     # down-sampling of smoothed data
+  noplot = args.noplot
   nW = args.WindowSize # size of window for sliding average and resampling
   # print(args)
   
   # end parsing input ------------------------------------------
-  
+
   # read data from file in .txt format
   hlines, rawdata = readtxt(fname, delim=delim, nlhead=nHlines)
   nColumns = rawdata.shape[0]
@@ -89,11 +92,12 @@ if __name__ == "__main__":
   #  - parameters nav and nr to adjust to given problem !
   nav = nW   # window width 
   nr = nW    # resampling factor
-  x = resample(rawdata[0], n=nr)
+  x = resample(rawdata[0], n=nr) if downsample else rawdata[0]
   data = np.zeros((nColumns, len(x)), dtype=np.float)
   data[0]= x
   for i in range(1, nColumns):
-    data[i] = resample(meanFilter(rawdata[i], width=nav), n=nr)   
+    d= meanFilter(rawdata[i], width=nav)
+    data[i] = resample(d, n=nr) if downsample else d   
   nc = data.shape[0]
   nr = data.shape[1]
   print(" --> smoothed data") 
