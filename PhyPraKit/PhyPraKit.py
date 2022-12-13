@@ -130,6 +130,11 @@ def A0_readme():
 #                      in odFit, kFit and k2Fit
 #   08-Jan-21    GQ  added fit example with iminuit
 #   06-May-21    GQ  new version 1.2.0dev; removed kafe and old iminuit
+#   02-Oct-21    GQ  v1.2.0: phyFit functions xyFit, hFit, mFit and xFit fully integrated 
+#   05-Jan-22    GQ  examples for parameter transformation using phyFit/xFit()
+#   13-Apr-22    GQ  drop python2 support 
+#   10-Nov-22    GQ  added stand-alone tools in sub-dir tools/
+#   13-Dec-22    GQ  added delim option to readPicoscope()
 # ---------------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
@@ -294,7 +299,7 @@ def readtxt(file, nlhead=1, delim='\t'):
   return hlines, data
 
 
-def readPicoScope(file, prlevel=0):
+def readPicoScope(file, delim=',', prlevel=0):
   """
   read Data exported from PicoScope in .txt or .csv format
   
@@ -316,7 +321,7 @@ def readPicoScope(file, prlevel=0):
   line3=f.readline()  # this is an empty line in PicoScope data
 
   if file.split('.')[-1]=="csv":
-    delim=','
+    delim = delim
   else:  
     delim='\t'
 

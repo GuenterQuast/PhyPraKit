@@ -34,7 +34,7 @@ if __name__ == "__main__":
       '     processing file ' + fname)) 
 
   # read data from PicoScope
-  units, data = readPicoScope(fname)
+  units, data = readPicoScope(fname, delim=',')
   ic = len(data)
   print("  --> %i columns recieved"%ic)
   print("      units", units, end=' ') 
