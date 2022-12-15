@@ -134,8 +134,8 @@ def A0_readme():
 #   05-Jan-22    GQ  examples for parameter transformation using phyFit/xFit()
 #   13-Apr-22    GQ  drop python2 support 
 #   10-Nov-22    GQ  added stand-alone tools in sub-dir tools/
-#   13-Dec-22    GQ  added delim option to readPicoscope()
-# ---------------------------------------------------------------------------
+#   13-Dec-22    GQ  added delim option to readPicoscope(); also replace decimal ','
+# ----------------------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
 from scipy import stats
@@ -302,6 +302,7 @@ def readtxt(file, nlhead=1, delim='\t'):
 def readPicoScope(file, delim=',', prlevel=0):
   """
   read Data exported from PicoScope in .txt or .csv format
+  use readtxt() to replace ',' in Geman decimal format 
   
   Args:
     * file: string, file name 
@@ -314,20 +315,19 @@ def readPicoScope(file, delim=',', prlevel=0):
   """
 # --------------------------------------------------------------------
 #        special treatment to skip/analyze first three lines
-  f = open(file, 'r')
-  line1=f.readline().strip() # remove leading and trailing white space chars
-  line2=f.readline().strip()
-  units=line2         # contains the units
-  line3=f.readline()  # this is an empty line in PicoScope data
-
   if file.split('.')[-1]=="csv":
     delim = delim
   else:  
     delim='\t'
 
-  units=units.split(delim)
-  nc=len(units)
-  data = np.loadtxt(f, dtype=np.float32, delimiter=delim, unpack=True)
+  # read from file with filter for German decimal ','  
+  with open(file, 'r') as f:
+    hlines, data = readtxt(f, nlhead=3, delim=delim)
+
+  # extract units from 2nd header line (specific for PicoScope)  
+  units=hlines[1].strip().split(delim)
+  nc = len(units)
+
   if prlevel: 
     print("*==* readPicoScope: %i columns found:"%nc)
     if prlevel>1:
@@ -339,7 +339,6 @@ def readPicoScope(file, delim=',', prlevel=0):
     exit(1)
   else:  
     return units, data
-
   
 def readCassy(file, prlevel=0):
   """read Data exported from Cassy in .txt format
