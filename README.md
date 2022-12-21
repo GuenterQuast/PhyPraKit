@@ -21,7 +21,7 @@ Created by:
 Installation:
 -------------
 
-To use PhyPraKit, it is sufficient to place the the directory
+To use PhyPraKit, it is sufficient to place the directory
 `PhyPraKit` and all the files in it in the same directory as the
 python scripts importing it.
 
