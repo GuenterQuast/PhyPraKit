@@ -15,12 +15,15 @@
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
+   last modified:
+   27-Dec-22 GQ used meanFilter() for smoothing
+
 """
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":
   import numpy as np, matplotlib.pyplot as plt
-  from PhyPraKit import readPicoScope, resample
+  from PhyPraKit import readPicoScope, resample, meanFilter
   from scipy import signal
   from scipy import interpolate
   import sys
@@ -50,8 +53,8 @@ if __name__ == "__main__":
   if l > 400:
     nr = int(l/150)
     print(('** resampling by factor ', nr))
-    vI, t = resample(vI, t, n=nr)  
-    vB = resample(vB, n=nr)  
+    vI, t = resample(meanFilter(vI, width=nr), t, n=nr)  
+    vB = resample(meanFilter(vB, width=nr) , n=nr)  
  
 
   print('** spline interpolation') 
