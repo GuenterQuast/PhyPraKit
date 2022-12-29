@@ -135,6 +135,7 @@ def A0_readme():
 #   13-Apr-22    GQ  drop python2 support 
 #   10-Nov-22    GQ  added stand-alone tools in sub-dir tools/
 #   13-Dec-22    GQ  added delim option to readPicoscope(); also replace decimal ','
+#   27-Dec-22    GQ  fixed border problem for indices <w and >l-w) in meanFilter()
 # ----------------------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
@@ -804,9 +805,9 @@ def meanFilter(a, width=5):
   apply a sliding average to smoothen data, 
 
   method:
-    value at index i and int(width/2) neighbours are averaged
-    to from the new value at index i
-
+    value at index i and w=int(width/2) neighbours are averaged
+    to from the new value at index i; averages over smaller 
+    ranges are taken at borders for indices <w or >l-w-1 
     Args:
       * a: np-array of values
       * width: int, number of points to average over
@@ -818,9 +819,11 @@ def meanFilter(a, width=5):
 # -----------------------------------------------
   l=len(a)
   av = np.zeros(l) 
-  k=int(width/2)
-  for i in range(k, l-k+1):
-    av[i]= sum(a[i-k:i+k+1])/(2*k+1)
+  w=int(width/2)
+  for i in range(0, l):
+    km = min(i, w)
+    kp = min(l-i-1, w)
+    av[i]= sum(a[i-km:i+kp+1])/(km+kp+1)
 
   return av
 
