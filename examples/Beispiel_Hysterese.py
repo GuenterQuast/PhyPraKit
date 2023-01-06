@@ -16,12 +16,11 @@
    * Integration der Spline-Funktionen
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
-
-   last modified:
-   30-Dec-22 GQ used meanFilter() for smoothing;
-                inserted option to calibrate axes, improved graphics 
-
 """
+
+#   last modified:
+#   30-Dec-22 GQ used meanFilter() for smoothing;
+#                inserted option to calibrate axes, improved graphics 
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":
