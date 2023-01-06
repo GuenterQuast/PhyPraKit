@@ -1,17 +1,12 @@
-"""
-
-.. moduleauthor:: Guenter Quast <guenter.quast@online.de>
+"""**PhyPraKit**  
+   a collection of tools for data handling, visualisation and analysis 
+   in Physics Lab Courses, recommended for "Physikalisches Praktikum am KIT"
 
 .. module PhyPraKit   
    :synopsis: a collection of tools for data analysis
      recommended for "Physikalisches Praktikum am KIT"
 
-.. moduleauthor:: Guenter Quast <g.quast@kit.edu>
-
-**PhyPraKit**  
-    a collection of tools for data handling, visualisation and analysis 
-    in Physics Lab Courses, recommended for "Physikalisches Praktikum am KIT"
-
+.. moduleauthor:: Guenter Quast <guenter.quast@online.de>
 """
 
 
