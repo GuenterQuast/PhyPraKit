@@ -808,13 +808,14 @@ def meanFilter(a, width=5):
     value at index i and w=int(width/2) neighbours are averaged
     to from the new value at index i; averages over smaller 
     ranges are taken at borders for indices <w or >l-w-1 
-    Args:
-      * a: np-array of values
-      * width: int, number of points to average over
-        (if width is an even number, width+1 is used)
+
+  Args:
+    * a: np-array of values
+    * width: int, number of points to average over
+      (if width is an even number, width+1 is used)
  
-    Returns:
-      * av  smoothed signal curve
+  Returns:
+    * av  smoothed signal curve
   '''
 # -----------------------------------------------
   l=len(a)
