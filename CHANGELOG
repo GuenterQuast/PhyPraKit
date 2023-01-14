@@ -24,3 +24,6 @@ v1.2.0dev May 2021  new version:
 1.2.3  kafe2 version >=2.6, python2 support dropped;
        added script plotData.py for simple plotting of data in yaml format,
        fits from input yaml-file with kafe2go and run_phyFit.py
+1.2.4  Oct. 2022 release with a few fixes
+1.2.4.post-230114 Post-release fixes: imporved example scripts, fix to
+	PhyPraKit.meanFilter()

@@ -136,6 +136,7 @@ def A0_readme():
 #   10-Nov-22    GQ  added stand-alone tools in sub-dir tools/
 #   13-Dec-22    GQ  added delim option to readPicoscope(); also replace decimal ','
 #   27-Dec-22    GQ  fixed border problem for indices <w and >l-w) in meanFilter()
+#                    changed to faster algorithm using numpy.cumsum()
 # ----------------------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
@@ -819,13 +820,24 @@ def meanFilter(a, width=5):
   '''
 # -----------------------------------------------
   l=len(a)
-  av = np.zeros(l) 
   w=int(width/2)
+
+  # slow (explicit) algorithm using inernal loop
+  #av0 = np.empty(l) 
+  #for i in range(0, l):
+  #  km = min(i, w)
+  #  kp = min(l-i-1, w)
+  #  av0[i]= sum(a[i-km:i+kp+1])/(km+kp+1)
+    
+  # fast (vectorized) approach using cumulative sum
+  cs = np.empty(l+1) # cumulative sum of array with leading zero
+  cs[1:] = np.cumsum(a)
+  cs[0] = 0.
+  av = np.empty(l) 
   for i in range(0, l):
     km = min(i, w)
     kp = min(l-i-1, w)
-    av[i]= sum(a[i-km:i+kp+1])/(km+kp+1)
-
+    av[i] = (cs[i+kp+1] - cs[i-km]) / (km+kp+1)
   return av
 
 def resample(a, t=None, n=11):
