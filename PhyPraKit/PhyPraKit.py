@@ -2142,7 +2142,7 @@ def plot_xy_from_yaml(d):
 # finally, plot legend of all shown graphs      
   plt.legend(loc='best')
 
-def csv2yaml(file, nlhead=1, delim='\t'):
+def csv2yaml(file, nlhead=1, delim='\t', keyline=0):
   """read floating point data in general csv format and convert to yaml  
 
   skip header lines, replace decimal comma, remove special characters,
@@ -2217,7 +2217,7 @@ def csv2yaml(file, nlhead=1, delim='\t'):
   #print(" --> number of data points", Nlin)
 
   # interpret strings in header[0] as keys
-  keys = hlines[0].split(delim)
+  keys = hlines[keyline].split(delim)
   Nkey = len(keys)
   if Nkey != Ncol:
     print('Nkey=', Nkey, ' Ncol=', Ncol)

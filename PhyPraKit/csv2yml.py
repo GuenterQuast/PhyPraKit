@@ -51,6 +51,9 @@ if __name__ == "__main__": # -------------------------------------------
   parser.add_argument('-n','--header_lines', 
                       type=int, default=1,
            help="numer of header lines, default=1")
+  parser.add_argument('-k','--key_line', 
+                      type=int, default=0,
+           help="header line containing keys, default=0")
   
   if len(sys.argv)==1:  # print help message if no input given
     parser.print_help()
@@ -61,6 +64,7 @@ if __name__ == "__main__": # -------------------------------------------
   fnam = args.filename
 
   nlhead = args.header_lines
+  l_key = args.key_line  
   delim = args.delimiter
   showHeader = args.Header
   sav_flg = args.save
@@ -70,7 +74,7 @@ if __name__ == "__main__": # -------------------------------------------
   # ---- end argument parsing -------------------
   
   f = open(fnam, 'r') 
-  hlines, ylines = csv2yaml(f, nlhead, delim)
+  hlines, ylines = csv2yaml(f, nlhead, delim, l_key)
 
   if not quiet:
     print('-->', fnam, 'to yaml', end='')
