@@ -988,7 +988,7 @@ def mFit(ufcn, data = None,
   This is the simplest fit possible with the class mnFit. If no data is
   specified (data=None), a user-supplied cost function (ufcn) is minimized 
   and an estimation of the parameter uncertainties performed, assuming
-  the cost function is a negative log-likelihood function (nlL of 2nLL).
+  the cost function is a negative log-likelihood function (nlL or 2nLL).
   
   In case data is provided, the user function `ufcn(data, *par)` is 
   interpreted as a parameter-dependent probability density function, and
