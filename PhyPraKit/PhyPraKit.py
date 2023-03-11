@@ -1779,7 +1779,7 @@ def k2hFit(fitf, data, bin_edges,
   hfit.model_label = model_legend
 
   # - provide text for labeling ...      
-  hdat.label = data_legend
+  #!hdat.label = data_legend #!! this does not work for HistContainer
   hdat.axis_labels = axis_labels
 
   # initialize and run fit
