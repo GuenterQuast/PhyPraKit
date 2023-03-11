@@ -1833,6 +1833,8 @@ def k2hFit(fitf, data, bin_edges,
     kplot.customize('data', 'marker', ['o'])
     kplot.customize('data', 'markersize', [6])
     kplot.customize('data', 'color', ['darkblue'])
+    kplot.customize('data', 'label', data_legend)
+    
 ## the following not (yet) defined for kafe2 Histogram Fit     
 ##    kplot.customize('model_line', 'color', ['darkorange'])
 ##    kplot.customize('model_line', 'linestyle', ['--'])
