@@ -1795,6 +1795,13 @@ def k2hFit(fitf, data, bin_edges,
     for c in constraints:
       hfit.add_parameter_constraint(*c)
 
+  if fixPars is not None:
+    if isinstance(fixPars[1], list):
+      for fx in fixPars:
+        hfit.fix_parameter(fx[0], fx[1])          
+    else: 
+      hfit.limit_parameter(fixPars[0], fixPars[1])          
+          
   if limits is not None:
     if isinstance(limits[1], list):
       for l in limits:
