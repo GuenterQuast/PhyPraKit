@@ -1779,8 +1779,8 @@ def k2hFit(fitf, data, bin_edges,
   hfit.model_label = model_legend
 
   # - provide text for labeling ...      
-  #!hdat.label = data_legend #!! this does not work for HistContainer
-  hdat.axis_labels = axis_labels
+  #! hdat.label = data_legend # !! this does not work for HistContainer
+  #! hdat.axis_labels = axis_labels # !! this does not work for HistContainer
 
   # initialize and run fit
   if p0 is not None:
@@ -1830,11 +1830,12 @@ def k2hFit(fitf, data, bin_edges,
    # plot data, uncertainties, model line and model uncertainties
     kplot=Plot(hfit)
     # set some 'nice' options
+    kplot.x_label = axis_labels[0]   
+    kplot.y_label = axis_labels[1]   
     kplot.customize('data', 'marker', ['o'])
     kplot.customize('data', 'markersize', [6])
     kplot.customize('data', 'color', ['darkblue'])
     kplot.customize('data', 'label', data_legend)
-    
 ## the following not (yet) defined for kafe2 Histogram Fit     
 ##    kplot.customize('model_line', 'color', ['darkorange'])
 ##    kplot.customize('model_line', 'linestyle', ['--'])
