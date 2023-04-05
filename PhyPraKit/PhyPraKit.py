@@ -1824,7 +1824,7 @@ def k2hFit(fitf, data, bin_edges,
     parae = np.array(list(zip(-pare, pare)))
 
   if not quiet:
-    hfit.report(asymmetric_parameter_errors=True)
+    hfit.report(asymmetric_parameter_errors=asym_parerrs)
 
   if plot:
    # plot data, uncertainties, model line and model uncertainties
@@ -1848,7 +1848,7 @@ def k2hFit(fitf, data, bin_edges,
 
     # plot with defined options
     kplot.plot(fit_info=fit_info, residual=plot_residual,
-               asymmetric_parameter_errors=True)
+               asymmetric_parameter_errors=asym_parerrs)
 
     if plot_cor:
       cpf = ContoursProfiler(hfit)
