@@ -1926,8 +1926,6 @@ class mnFit():
                  model,
                  use_neg2logL=False):
 
-      from iminuit.util import make_func_code
-
       # data object of type xyDataContainer
       self.data = outer.data
       if not isinstance(self.data, mnFit.xyDataContainer):
@@ -1941,7 +1939,6 @@ class mnFit():
       
       # set proper signature of model function for iminuit
       self.pnams = outer.pnams
-      self.func_code = make_func_code(self.pnams)
       self.npar = outer.npar
       
       # take account of constraints 
@@ -2405,8 +2402,6 @@ class mnFit():
                  model,
                  use_neg2logL=False):
 
-      from iminuit.util import make_func_code
-
       # data object of type xyDataContainer
       self.data = outer.data
       if not isinstance(self.data, mnFit.xDataContainer):
@@ -2420,7 +2415,6 @@ class mnFit():
       
       # set proper signature of model function for iminuit
       self.pnams = outer.pnams
-      self.func_code = make_func_code(self.pnams)
       self.npar = outer.npar
 
       # take account of constraints 
@@ -2788,7 +2782,6 @@ class mnFit():
     def __init__(self, outer, 
                  model,
                  use_GaussApprox=False, density= True):
-      from iminuit.util import make_func_code
 
       # data object of type histDataContainter
       self.data = outer.hData
@@ -2803,7 +2796,6 @@ class mnFit():
       
       # set proper signature of model function for iminuit
       self.pnams = outer.pnams
-      self.func_code = make_func_code(self.pnams)
       self.npar = outer.npar
  
       self.constraints = outer.constraints
@@ -3044,7 +3036,6 @@ class mnFit():
     
     def __init__(self, outer, 
                  userFunction):
-      from iminuit.util import make_func_code
 
       self.quiet = outer.quiet
       self.data = outer.data
@@ -3069,7 +3060,6 @@ class mnFit():
       
       # set proper signature of model function for iminuit
       self.pnams = outer.pnams
-      self.func_code = make_func_code(self.pnams)
       self.npar = outer.npar
 
       # for this kind of fit, some input and ouput quantities are not known
