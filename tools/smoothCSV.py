@@ -6,7 +6,7 @@
 
   usage: 
 
-    ./plotCSV.py [options] <input file name>
+    ./smoothCSV.py [options] <input file name>
 
   Input: 
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
   nav = nW   # window width 
   nr = nW    # resampling factor
   x = resample(rawdata[0], n=nr) if downsample else rawdata[0]
-  data = np.zeros((nColumns, len(x)), dtype=np.float)
+  data = np.zeros((nColumns, len(x)), dtype=np.float32)
   data[0]= x
   for i in range(1, nColumns):
     d= meanFilter(rawdata[i], width=nav)
