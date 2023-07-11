@@ -29,8 +29,13 @@ setup(
     # that you indicate whether you support Python 2, Python 3 or both.
     'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
     ],
-    setup_requires=[\
+    install_requires=[\
         "NumPy >= 1.19",
         "SciPy >= 1.5",
         "matplotlib >= 3",
