@@ -47,13 +47,11 @@ dependencies = [
     "kafe2",
     "uncertainties" ]
 
-[project.scripts]
-run_phyFit = 'PhyPraKit:run_phyFit.py'
-plot_Data =  'PhyPraKit:plotData.py'
-csv2yml =    'PhyPraKit:csv2yml.py'
-plotCSV =    'PhyPraKit:plotCSV.py' 
-smoothCSV =  'PhyPraKit:smoothCSV.py'
-
+[tool.setuptools]
+script-files = [
+    "tools/run_phyFit.py", "tools/plotData.py",
+    "tools/csv2yml.py", "tools/plotCSV.py" , "tools/smoothCSV.py"]
+  
 [tool.setuptools.packages.find]
 include = ["PhyPraKit*"]
 
