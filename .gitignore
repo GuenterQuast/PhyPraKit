@@ -38,4 +38,4 @@ doc/latex/*.out
 doc/latex/*.toc
 doc/latex/*.aux
 doc/latex/*.log
-doc/latex/kafe~.pdf
+.pdm-python
