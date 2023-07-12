@@ -27,3 +27,6 @@ v1.2.0dev May 2021  new version:
 1.2.4  Oct. 2022 release with a few fixes
 1.2.4.post-230114 Post-release fixes: imporved example scripts, fix to
 	PhyPraKit.meanFilter()
+1.2.5 Apr. 23 some small fixes
+      Jul 23  changed setup to pyproject.toml
+      
