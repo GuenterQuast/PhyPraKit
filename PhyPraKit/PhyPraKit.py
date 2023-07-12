@@ -137,6 +137,8 @@ def A0_readme():
 #   13-Dec-22    GQ  added delim option to readPicoscope(); also replace decimal ','
 #   27-Dec-22    GQ  fixed border problem for indices <w and >l-w) in meanFilter()
 #                    changed to faster algorithm using numpy.cumsum()
+#   11-Apr-23    GQ  some fixes, release tag 1.2.5
+#   12-Jul-23    GQ  setup via pyproject.toml
 # ----------------------------------------------------------------------------------
 
 import numpy as np, matplotlib.pyplot as plt
