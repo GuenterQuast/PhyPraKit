@@ -1,12 +1,11 @@
-#!/usr/bin/python3
-# module PhyPraKit.py, python3 version
-def A0_readme():
-  # name chosen to make sure sphinx puts this docstring at the top
-  """Package PhyPraKit
+"""**package phyTools**
 
-  **PhyPraKit**  for Data Handling, Visualisation and Analysis
+   Collection of tools for data handling, visualisation and analysis 
+   in Physics Lab Courses, recommended for "Physikalisches Praktikum am KIT"
 
-  contains the following functions:
+   Author: Guenter Quast, initial version Aug. 2017, updated July 2023
+
+  phyTools contains the following functions:
 
     1. Data input/output:
 
@@ -97,9 +96,7 @@ def A0_readme():
       - plot_hist_from_yaml()    plot histogram data from yaml file
 
   """
-  # print the above docstring if called
-  print(A0_readme.__doc__)
-  
+
 # Author:       G. Quast   Dec. 2015
 # dependencies: PYTHON v2.7 or >v3.5, numpy, matplotlib.pyplot 
 #

@@ -1,8 +1,8 @@
-"""package phyFit.py
+"""**package phyFit**
   
   Physics Fitting with `iminiut` [https://iminuit.readthedocs.ios/en/stable/]
 
-  Author: Guenter Quast, initial version Jan. 2021, updated Jun. 2021
+  Author: Guenter Quast, initial version Jan. 2021, updated July 2023
 
   Requirements: 
    - Python >= 3.6
