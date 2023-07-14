@@ -1,10 +1,16 @@
 # xyFit.fit: Beispiel-Datei für xy-Fit mit run_phyFit.py
 
-# Illustrate fitting of an arbitrary function 
-# equivalent to the python example test_xyFit.py
+#!!!
+#  this version does not yet run with kafe2go, which does not assume defaults
+#   therefore needs full specification of all tpyes of uncertainties
+#   -> see example kafe2go_xyFit.py <-
+#!!!      
 
-# This example demonstrates some special features of the kafe2 package and
-# of kafe2go, in particular how to specify all supported types of uncertainties:
+# Illustrate fitting of an arbitrary function 
+#   equivalent to the python example test_xyFit.py
+
+# This example demonstrates some special features of the phyFit package,
+#  in particular how to specify all supported types of uncertainties:
 #
 #   - correlated errors for x and y data  
 #   - relative errors with reference to model
@@ -27,8 +33,6 @@
 #
 #     > run_phyFit.py xyFit.fit
 #
-# or, on MS Windows,
-#           right-klick on  kafe2g_xyFit.fit and open with kafe2go.exe
 
 # ---------------------------------------------------------------
 
@@ -44,8 +48,11 @@ x_errors:
 - error_value: [0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03,0.03]
   correlation_coefficient: 1.  
 # uncorrelated relative
-- error_value: 4%    
-  ##  relative: true ! not needed here
+- error_value: 0.04    
+  relative: true
+  ## alternative for phyFit.py:
+  ## - error_value: 4% 
+  
 # correlated relative
 - error_value: 0.02
   correlation_coefficient: 1. 

@@ -1,7 +1,7 @@
 # xyFit.fit: Beispiel xy-Fit mit kafe2go
 
 # Illustrate fitting of an arbitrary function with kafe2go
-# equivalent to the python example test_k2Fit.py
+#    equivalent to the python example test_k2Fit.py
 
 # This example demonstrates some special features of the kafe2 package and
 # of kafe2go, in particular how to specify all supported types of uncertainties:
@@ -28,7 +28,13 @@
 #     > kafe2go kafe2go_xyFit.fit
 #
 # or, on MS Windows,
-#           right-klick on  kafe2g_xyFit.fit and open with kafe2go.exe
+#           right-klick on  kafe2go_xyFit.fit and open with kafe2go
+#
+# This script also runs with run_phyFit.py:
+#
+#     > run_phyFit.py kafe2go_xyFit.fit
+#
+
 
 # ---------------------------------------------------------------
 
