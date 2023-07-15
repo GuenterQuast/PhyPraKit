@@ -60,7 +60,10 @@ if __name__ == "__main__":
   parser.add_argument('-w', '--WindowSize',
       type=int, default = 10,
       help="window size")
-  
+  parser.add_argument('-k','--key_line', 
+      type=int, default=0,
+      help="header line containing keys, default=0")
+
   if len(sys.argv)==1:  # print help message if no input given
     parser.print_help()
     print(" \n !!! no input file given - exiting \n")
@@ -71,7 +74,8 @@ if __name__ == "__main__":
   fname = args.filename[0]
   delim = args.separator       # field separator: , or \t, or \_ or ; etc.
   nHlines = args.Headerlines   # number of header lines
-  downsample = args.resample     # down-sampling of smoothed data
+  l_key = args.key_line        # line containing keys 
+  downsample = args.resample   # down-sampling of smoothed data
   noplot = args.noplot
   nW = args.WindowSize # size of window for sliding average and resampling
   # print(args)
@@ -82,7 +86,7 @@ if __name__ == "__main__":
   hlines, rawdata = readtxt(fname, delim=delim, nlhead=nHlines)
   nColumns = rawdata.shape[0]
   nRows = rawdata.shape[1]
-  keys = hlines[0].split(delim)[:]
+  keys = hlines[l_key].split(delim)[:]
   # output to terminal
   print(hlines)
   print(" --> number of columns", nColumns)

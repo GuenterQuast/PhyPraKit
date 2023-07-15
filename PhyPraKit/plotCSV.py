@@ -53,7 +53,10 @@ if __name__ == "__main__":
   parser.add_argument('-H', '--Headerlines',
       type=int, default = 1,
       help="number of header lines")
-  
+  parser.add_argument('-k','--key_line', 
+      type=int, default=0,
+      help="header line containing keys, default=0")
+
   if len(sys.argv)==1:  # print help message if no input given
     parser.print_help()
     print(" \n !!! no input file given - exiting \n")
@@ -63,8 +66,9 @@ if __name__ == "__main__":
   args = parser.parse_args()
   fname = args.filename[0]
   quiet_flg = not args.verbose
-  separator = args.separator    # field separator: , or \t, or \_ or ; etc.
+  separator = args.separator   # field separator: , or \t, or \_ or ; etc.
   nHlines = args.Headerlines   # number of header lines 
+  l_key = args.key_line        # line containing keys  
   # print(args)
   
   # end parsing input ------------------------------------------
@@ -73,7 +77,7 @@ if __name__ == "__main__":
   hlines, data = readtxt(fname, delim=separator, nlhead=nHlines)
   nColumns = data.shape[0]
   nRows = data.shape[1]
-  keys = hlines[0].split(separator)[:]
+  keys = hlines[l_key].split(separator)[:]
   # output to terminal
   print(hlines)
   print(" --> number of columns", nColumns)
