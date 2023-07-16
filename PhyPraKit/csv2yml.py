@@ -22,7 +22,7 @@
 
 """
 
-def csv2yaml():  
+def csv2yml():  
   import sys, os, yaml, argparse
   from PhyPraKit import csv2yaml
   if os.name == 'nt': # interactive mode on windows if error occurs
@@ -98,4 +98,4 @@ def csv2yaml():
     print('   -> yaml saved in file',ymlfn)
     
 if __name__ == "__main__": # -------------------------------------------
-  csv2yaml()
+  csv2yml()

@@ -22,6 +22,6 @@
 
 """
 
-from PhyPraKit.csv2yaml import csv2yaml
+from PhyPraKit.csv2yml import csv2yml
 if __name__ == "__main__": # -------------------------------------------
-  csv2yaml()  
+  csv2yml()  
