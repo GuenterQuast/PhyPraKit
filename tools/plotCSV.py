@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 """plotCSV.py 
-   uses PhyPraKkt.readtxt() to read floating-point column-data in csv format 
+   uses PhyPraKit.readtxt() to read floating-point column-data in csv format
+
+   replaces decimal comma by dot if needed. 
 
 
   usage: 
