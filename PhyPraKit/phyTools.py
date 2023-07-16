@@ -2055,6 +2055,7 @@ def plot_xy_from_yaml(d):
 
   import numpy as np, matplotlib.pyplot as plt
   from PhyPraKit import check_function_code
+  from .phyFit import decode_uDict
   
   def plot_xy(x, y, ex, ey, title=None,
            label='data', x_label = 'x', y_label = 'y',
@@ -2095,23 +2096,38 @@ def plot_xy_from_yaml(d):
   else:
     x_label = None
   if 'x_errors' in d:
-    e = d['x_errors']
-    if type(e) is type([]):
-      x_err = list(map(float, e))
-    else:
-      x_err = float(e)
+      sx, srelx, sabscorx, srelcorx = decode_uDict(d['x_errors'])
+      if sx is None: sx = 0.
+      if srelx is None: srelx = 0.
+      if sabscorx is None: sabscorx = 0.
+      if srelcorx is None: srelcorx = 0.
+      x_err = np.sqrt(np.asarray(sx)**2 + np.asarray(sabscorx)**2
+                      + (np.asarray(srelx)*np.asarray(x_dat))**2
+                      + (np.asarray(srelcorx)*np.asarray(x_dat))**2 )
   else:
     x_err = None
 
   if 'y_data' in d:  
     y_dat = list(map(float, d['y_data']))
-    if 'y_errors' in d:
-      e = d['y_errors']
-      if type(e) is type([]):
-        y_err = list(map(float, e))
-      else:
-        y_err = float(e)
-    else:
+    #  y errors
+    uyDict = None
+    try:      # look at to two different places
+      uyDict = d['parametric_model']['y_errors']
+    except:
+      try:
+        uyDict = d['y_errors']
+      except:
+        pass
+    if uyDict is not None:
+      sy, srely, sabscory, srelcory = decode_uDict(uyDict)
+      if sy is None: sx = 0.
+      if srely is None: srely = 0.
+      if sabscory is None: sabscory = 0.
+      if srelcory is None: srelcory = 0.
+      y_err = np.sqrt(np.asarray(sy)**2 + np.asarray(sabscory)**2
+                      + (np.asarray(srely)*np.asarray(y_dat))**2
+                      + (np.asarray(srelcory)*np.asarray(y_dat))**2)
+    else:      
       y_err = None
   
   if 'y_label' in d:

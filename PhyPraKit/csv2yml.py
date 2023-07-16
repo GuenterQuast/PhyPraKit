@@ -22,8 +22,7 @@
 
 """
 
-if __name__ == "__main__": # -------------------------------------------
-
+def csv2yaml():  
   import sys, os, yaml, argparse
   from PhyPraKit import csv2yaml
   if os.name == 'nt': # interactive mode on windows if error occurs
@@ -96,4 +95,7 @@ if __name__ == "__main__": # -------------------------------------------
     with open(ymlfn, 'w') as f:
      for l in ylines:
        print(l, file=f)
-    print('   -> yaml saved in file',ymlfn) 
+    print('   -> yaml saved in file',ymlfn)
+    
+if __name__ == "__main__": # -------------------------------------------
+  csv2yaml()

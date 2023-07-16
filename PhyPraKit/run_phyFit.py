@@ -128,7 +128,7 @@ def wexit(code):
     _ = input('\n      ==> type <ret> to end > ')
   sys.exit(code)
 
-if __name__ == "__main__": # --------------------------------------  
+def run_phyFit():
   #
   # xyFit.py: Example of an application of PhyPraKit.phyFit.xyFit_from_yaml()
   #
@@ -139,41 +139,41 @@ if __name__ == "__main__": # --------------------------------------
     os.environ['PYTHONINSPECT']='x'
 
   # - - - Parse command-line arguments
-  parser = argparse.ArgumentParser(description = \
+  _parser = argparse.ArgumentParser(description = \
     "Perform a fit with PhyPraKit.phyFit package driven by input file")
-  # parser = argparse.ArgumentParser(usage=__doc__)
+  # _parser = argparse.ArgumentParser(usage=__doc__)
 
-  parser.add_argument('filename', type=str, nargs='+',
+  _parser.add_argument('filename', type=str, nargs='+',
       help="name(s) of fit input file(s) in yaml format")
-  parser.add_argument('-v', '--verbose', 
+  _parser.add_argument('-v', '--verbose', 
       action='store_const', const=True, default=False,
       help="full printout to screen")
-  parser.add_argument('-r', '--result_to_file', 
+  _parser.add_argument('-r', '--result_to_file', 
       action='store_const', const=True, default=False,
       help="store results to file")
-  parser.add_argument('-n', '--noplot', 
+  _parser.add_argument('-n', '--noplot', 
       action='store_const', const=True, default=False,
       help="suppress ouput of plots on screen")
-  parser.add_argument('-s', '--saveplot', 
+  _parser.add_argument('-s', '--saveplot', 
       action='store_const', const=True, default=False,
       help="save plot(s) in file(s)")
-  parser.add_argument('-c', '--contour', 
+  _parser.add_argument('-c', '--contour', 
       action='store_const', const=True, default=False,
       help="plot contours and profiles")
-  parser.add_argument('--noband', 
+  _parser.add_argument('--noband', 
       action='store_const', const=True, default=False,
       help="suppress 1-sigma band around function")
-  parser.add_argument('-f','--format', 
+  _parser.add_argument('-f','--format', 
       type=str, default='pdf',
       help="graphics output format, default=pdf")
 
   if len(sys.argv)==1:  # print help message if no input given
-    parser.print_help()
+    _parser.print_help()
     print(" \n !!! no input file given - exiting \n")
     wexit(1)
 
   # collect input from ArgumentParser
-  args = parser.parse_args()
+  args = _parser.parse_args()
   fnames=args.filename
   quiet_flg = not args.verbose
   store_result = args.result_to_file
@@ -277,3 +277,8 @@ if __name__ == "__main__": # --------------------------------------
     plt.show()
 
   wexit(0)  
+
+if __name__ == "__main__": # --------------------------------------  
+  run_phyFit()
+
+  

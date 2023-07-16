@@ -244,99 +244,8 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     #   parameter names
     return Fit.getResult()
 
-def xyFit_from_yaml(fd,                 # dictionary definig fit input
-                    plot=True,          # plot data and model
-                    plot_band=True,     # plot model confidence-band
-                    plot_cor=False,     # plot profiles likelihood and contours
-                    showplots = True,   # show plots on screen
-                    same_plot = False,  # overlay fit info from previoius call(s)
-                    quiet=True,         # suppress informative printout
-                    return_fitObject=False # 
-           ):
-
-  """Perform fit with data and model from yaml file 
-
-  Fit to x-y data with independent and correlated, absolute and relative 
-  uncertainties in the x and y directions read from dictionary. The
-  fitting procedure uses phyfit.xyFit().
-
-  Args:
-    * fd: fit input as a dictionary, extracted from a file in yaml format
-    * plot: show data and model if True
-    * plot_cor: show profile likelihoods and confidence contours
-    * plot_band: plot uncertainty band around model function
-    * plot_residual: plot residuals w.r.t. model instead of model function
-    * showplots: show plots on screen - switch off if handled by calling process
-    * quiet: suppress informative printout
-
-  Returns:
-    * result dictionary
-    * optionally: produces result plots 
-
-  **fit dictionary format:**
-
-  .. code-block:: yaml
-
-    label: <str data-set name>
-
-    x_label: <str name x-data>
-    x_data: [  list of float ]   
-
-    y_label: <str name y-data>  
-    y_data: [ list of float ]
-
-    x_errors: <float>, [list of floats], or {dictionary/ies}
-    y_errors:  <float>, [list of floats], or {dictionary/ies}
-
-    model_label: <str model name>
-    model_function: |
-      <Python code>
-
-    format of uncertainty dictionary: 
-    - error_value: <float> or [list of floats]
-    - correlation_coefficient: 0. or 1.
-    - relative: true or false
-    relative errors may be spcified as <float>%
-
-    fix_parameters:
-      - <name1> 
-      - <name2>
-        ...
-     
-    parameter_constraints:
-      <name1>:
-        value: <v>
-        uncertainty <u>
-      <name2>:
-        ...
-
-  simple example of *yaml* input:
-
-  .. code-block:: yaml
-
-    label: 'Test Data'
-
-    x_data: [.05,0.36,0.68,0.80,1.09,1.46,1.71,1.83,2.44,2.09,3.72,4.36,4.60]
-    x_errors: 3%
-    x_label: 'x values'
-
-    y_data: [0.35,0.26,0.52,0.44,0.48,0.55,0.66,0.48,0.75,0.70,0.75,0.80,0.90]
-    y_errors: [.06,.07,.05,.05,.07,.07,.09,.1,.11,.1,.11,.12,.1]
-    y_label: 'y values'
-
-    model_label: 'Parabolic Fit'
-    model_function: |
-      def quadratic_model(x, a=0., b=1., c=0. ):
-        return a * x*x + b*x + c
-
-  .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
-  """
-
-  from PhyPraKit import check_function_code
-  ## from .phyFit import xyFit #! already contained in this file
-
-  # -- define some helper fuctions
-  def decode_uDict(uDict):
+# -- define a helper fuctions
+def decode_uDict(uDict):
     """Decode dictionary with uncertainties
 
       yaml format:
@@ -449,7 +358,99 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
      # -- end for 
     return s, srel, sabscor, srelcor  
 
-# --- end helper functions 
+# --- end function decode_uDict
+
+def xyFit_from_yaml(fd,                 # dictionary definig fit input
+                    plot=True,          # plot data and model
+                    plot_band=True,     # plot model confidence-band
+                    plot_cor=False,     # plot profiles likelihood and contours
+                    showplots = True,   # show plots on screen
+                    same_plot = False,  # overlay fit info from previoius call(s)
+                    quiet=True,         # suppress informative printout
+                    return_fitObject=False # 
+           ):
+
+  """Perform fit with data and model from yaml file 
+
+  Fit to x-y data with independent and correlated, absolute and relative 
+  uncertainties in the x and y directions read from dictionary. The
+  fitting procedure uses phyfit.xyFit().
+
+  Args:
+    * fd: fit input as a dictionary, extracted from a file in yaml format
+    * plot: show data and model if True
+    * plot_cor: show profile likelihoods and confidence contours
+    * plot_band: plot uncertainty band around model function
+    * plot_residual: plot residuals w.r.t. model instead of model function
+    * showplots: show plots on screen - switch off if handled by calling process
+    * quiet: suppress informative printout
+
+  Returns:
+    * result dictionary
+    * optionally: produces result plots 
+
+  **fit dictionary format:**
+
+  .. code-block:: yaml
+
+    label: <str data-set name>
+
+    x_label: <str name x-data>
+    x_data: [  list of float ]   
+
+    y_label: <str name y-data>  
+    y_data: [ list of float ]
+
+    x_errors: <float>, [list of floats], or {dictionary/ies}
+    y_errors:  <float>, [list of floats], or {dictionary/ies}
+
+    model_label: <str model name>
+    model_function: |
+      <Python code>
+
+    format of uncertainty dictionary: 
+    - error_value: <float> or [list of floats]
+    - correlation_coefficient: 0. or 1.
+    - relative: true or false
+    relative errors may be spcified as <float>%
+
+    fix_parameters:
+      - <name1> 
+      - <name2>
+        ...
+     
+    parameter_constraints:
+      <name1>:
+        value: <v>
+        uncertainty <u>
+      <name2>:
+        ...
+
+  simple example of *yaml* input:
+
+  .. code-block:: yaml
+
+    label: 'Test Data'
+
+    x_data: [.05,0.36,0.68,0.80,1.09,1.46,1.71,1.83,2.44,2.09,3.72,4.36,4.60]
+    x_errors: 3%
+    x_label: 'x values'
+
+    y_data: [0.35,0.26,0.52,0.44,0.48,0.55,0.66,0.48,0.75,0.70,0.75,0.80,0.90]
+    y_errors: [.06,.07,.05,.05,.07,.07,.09,.1,.11,.1,.11,.12,.1]
+    y_label: 'y values'
+
+    model_label: 'Parabolic Fit'
+    model_function: |
+      def quadratic_model(x, a=0., b=1., c=0. ):
+        return a * x*x + b*x + c
+
+  .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
+  """
+
+  from PhyPraKit import check_function_code
+  ## from .phyFit import xyFit #! already contained in this file
+  ## from .phyFit import decode_uDict #! already contained in this file
 
   # Extract information from input dictionary   
   if 'label' in fd:

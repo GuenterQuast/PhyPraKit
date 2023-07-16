@@ -37,7 +37,7 @@ def wexit(code):
     _ = input('\n      ==> type <ret> to end > ')
   sys.exit(code)
 
-if __name__ == "__main__":
+def plotCSV():
   import sys, argparse, numpy as np, matplotlib.pyplot as plt
 
     # - - - Parse command-line arguments
@@ -104,3 +104,6 @@ if __name__ == "__main__":
     ax.grid()
  
   plt.show()
+
+if __name__ == "__main__":
+  plotCSV()
