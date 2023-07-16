@@ -47,7 +47,7 @@ def csv2yml():
   parser.add_argument('-d','--delimiter', 
                       type=str, default=',',
            help="delimiter, default=','")
-  parser.add_argument('-n','--header_lines', 
+  parser.add_argument('-H','--Headerlines', 
                       type=int, default=1,
            help="numer of header lines, default=1")
   parser.add_argument('-k','--key_line', 
