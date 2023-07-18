@@ -302,7 +302,11 @@ def decode_uDict(uDict):
       if 'type' in ed:
         typ = ed['type']
       else:
-        typ = "simple"
+        typ = 'simple'
+      # type 'matrix' only supported by kafe2go
+      if typ != 'simple':
+        raise ValueError("!!! only type: simple supported presently !") 
+
       if 'relative' in ed:
         rel = ed['relative']
       else:
@@ -311,6 +315,7 @@ def decode_uDict(uDict):
         cor = ed['correlation_coefficient'] 
       else:
         cor = 0.
+
       if 'error_value' in ed:
         e = ed['error_value']
         if type(e) is type([]):
@@ -377,7 +382,7 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
   fitting procedure uses phyfit.xyFit().
 
   Args:
-    * fd: fit input as a dictionary, extracted from a file in yaml format
+    * fd: fit input as a dictionray, extracted from a file in yaml format
     * plot: show data and model if True
     * plot_cor: show profile likelihoods and confidence contours
     * plot_band: plot uncertainty band around model function
