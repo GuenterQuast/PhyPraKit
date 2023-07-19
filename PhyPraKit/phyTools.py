@@ -372,13 +372,14 @@ def readCassy(file, prlevel=0):
   return tags, data
 
 
-def labxParser(file, prlevel=1):
-  """read files in xml-format produced with Leybold CASSY
+def labxParser(file, prlevel=1, unzip=False):
+  """read files in xml-format or zipped xml-format produced with Leybold CASSY
    
   Args:
      * file:  input data in .labx format
      * prlevel: control printout level, 0=no printout
- 
+     * unzip:   unpack file prior to decoding if True
+
   Returns:
      * list of strings: tags of measurement vectors
      * 2d list:         measurement vectors read from file 
@@ -389,11 +390,17 @@ def labxParser(file, prlevel=1):
 #  30-Oct-16  initial version
 # changes :
 # --------------------------------------------------------------------
-  import xml.etree.ElementTree as ET
+  from xml.etree import ElementTree
   import numpy as np, matplotlib.pyplot as plt
-  import sys
+  import sys, zipfile
 
-  root = ET.parse(file).getroot()
+  if unzip:
+    with zipfile.ZipFile(file, 'r') as zf:
+      f = zf.open('data.xml')                  # this is the default name in CassyLab
+      root = ElementTree.parse(f).getroot()
+  else:
+    root = ElementTree.parse(file).getroot()
+
   if root.tag != 'cassylab':
     print(" !!! only cassylab supported - exiting (1) !")
     sys.exit(1)    
