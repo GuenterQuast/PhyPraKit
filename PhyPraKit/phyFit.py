@@ -337,29 +337,25 @@ def decode_uDict(uDict):
         if s is None:
           s = e
         else:
-          s = [s]
-          s.append(e)
+          raise ValueError("!!! only one entry for independent uncertainties allowed!") 
       elif cor == 0. and rel:
         # independent relative error
         if srel is None:
           srel = e
         else:
-          srel = [srel]
-          srel.append(e)
+          raise ValueError("!!! only one entry for relative uncertainties allowed!") 
       elif cor !=0 and not rel:
         # correlated absolute error
         if sabscor is None:
           sabscor = e
         else:
-          sabscor = [sabscor]
-          sabscor.append(e)
+          raise ValueError("!!! only one entry for correlated absolute uncertainties allowed!") 
       elif cor !=0 and rel:
         # correlated relative error
         if srelcor is None:
           srelcor = e
         else:
-          srelcor = [srelcor]
-          srelcor.append(e)
+          raise ValueError("!!! only one entry for correlated relative uncertainties allowed!") 
      # -- end for 
     return s, srel, sabscor, srelcor  
 
