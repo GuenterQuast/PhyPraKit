@@ -388,7 +388,7 @@ def labxParser(file, prlevel=1, unzip=False):
 # dependencies: xml.etree.ElementTree
 #
 #  30-Oct-16  initial version
-# changes :
+# changes : 20-Jul-23 support of zipped format
 # --------------------------------------------------------------------
   from xml.etree import ElementTree
   import numpy as np, matplotlib.pyplot as plt
