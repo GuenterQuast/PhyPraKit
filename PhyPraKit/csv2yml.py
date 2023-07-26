@@ -22,8 +22,7 @@
 
 """
 
-if __name__ == "__main__": # -------------------------------------------
-
+def csv2yml():  
   import sys, os, yaml, argparse
   from PhyPraKit import csv2yaml
   if os.name == 'nt': # interactive mode on windows if error occurs
@@ -48,7 +47,7 @@ if __name__ == "__main__": # -------------------------------------------
   parser.add_argument('-d','--delimiter', 
                       type=str, default=',',
            help="delimiter, default=','")
-  parser.add_argument('-n','--header_lines', 
+  parser.add_argument('-n','--headerlines', 
                       type=int, default=1,
            help="numer of header lines, default=1")
   parser.add_argument('-k','--key_line', 
@@ -63,7 +62,7 @@ if __name__ == "__main__": # -------------------------------------------
   args = parser.parse_args()
   fnam = args.filename
 
-  nlhead = args.header_lines
+  nlhead = args.headerlines
   l_key = args.key_line  
   delim = args.delimiter
   showHeader = args.Header
@@ -96,4 +95,7 @@ if __name__ == "__main__": # -------------------------------------------
     with open(ymlfn, 'w') as f:
      for l in ylines:
        print(l, file=f)
-    print('   -> yaml saved in file',ymlfn) 
+    print('   -> yaml saved in file',ymlfn)
+    
+if __name__ == "__main__": # -------------------------------------------
+  csv2yml()

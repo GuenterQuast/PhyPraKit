@@ -1,8 +1,8 @@
-"""package phyFit.py
+"""**package phyFit**
   
   Physics Fitting with `iminiut` [https://iminuit.readthedocs.ios/en/stable/]
 
-  Author: Guenter Quast, initial version Jan. 2021, updated Jun. 2021
+  Author: Guenter Quast, initial version Jan. 2021, updated July 2023
 
   Requirements: 
    - Python >= 3.6
@@ -244,6 +244,123 @@ def xyFit(fitf, x, y, sx = None, sy = None,
     #   parameter names
     return Fit.getResult()
 
+# -- define a helper fuctions
+def decode_uDict(uDict):
+    """Decode dictionary with uncertainties
+
+      yaml format:
+      y-errors:
+      - type:                     "simple" or "matrix"
+        error_value:              number or array
+        correlation_coefficient:  0. or 1.
+        relative:                 false or true
+
+      Args:
+        - uDict : dictionary with uncertainties
+     
+      Returns:  
+        - s       # independent errors
+        - srel    # independent relative errors
+        - sabscor # correlated absolute errors
+        - srelcor # correlated relative errors
+    """
+  
+    def decode_rel(e):
+      """Decode numbers with %-sign: interpreted as relative errors
+      """
+      if type(e) is type(''):
+        if '%' in e:
+          v = float(e[0:e.find('%')])/100.
+      else:
+          v = e
+      return v
+
+    s = None        # independent errors
+    srel = None     # independent relative errors
+    sabscor = None  # correlated absolute errors
+    srelcor = None  # correlated relative errors
+
+    if type(uDict) is not type([]):      # got a scalar, one error for all
+      if type(uDict) is type(''):
+        if '%' in uDict:
+          srel=decode_rel(uDict)
+      else:
+        s = uDict
+      return s, srel, sabscor, srelcor
+
+    if type(uDict[0]) is not type({}): # array of uncertainties, one for each data point
+      for i, v in enumerate(uDict):
+        if type(v) is type(''):
+          uDict[i]=decode_rel(v) 
+          srel= uDict
+        else:                          
+          s = uDict
+      return s, srel, sabscor, srelcor
+        
+    # else decode complex error dictionary
+    for ed in uDict:
+      if 'type' in ed:
+        typ = ed['type']
+      else:
+        typ = 'simple'
+      # type 'matrix' only supported by kafe2go
+      if typ != 'simple':
+        raise ValueError("!!! only type: simple supported presently !") 
+
+      if 'relative' in ed:
+        rel = ed['relative']
+      else:
+        rel = False   
+      if 'correlation_coefficient' in ed:
+        cor = ed['correlation_coefficient'] 
+      else:
+        cor = 0.
+
+      if 'error_value' in ed:
+        e = ed['error_value']
+        if type(e) is type([]):
+          for i,v in enumerate(e):
+            if type(v) is type(''):  
+              if '%' in v:
+                rel = True
+                e[i]=decode_rel(v)
+        else:
+          if type(e) is type(''):  
+            if '%' in e:
+              rel = True
+              e=decode_rel(e)          
+      else:
+        e = None
+     #    
+      if cor == 0. and not rel:
+        # independent absolute error
+        if s is None:
+          s = e
+        else:
+          raise ValueError("!!! only one entry for independent uncertainties allowed!") 
+      elif cor == 0. and rel:
+        # independent relative error
+        if srel is None:
+          srel = e
+        else:
+          raise ValueError("!!! only one entry for relative uncertainties allowed!") 
+      elif cor !=0 and not rel:
+        # correlated absolute error
+        if sabscor is None:
+          sabscor = e
+        else:
+          raise ValueError("!!! only one entry for correlated absolute uncertainties allowed!") 
+      elif cor !=0 and rel:
+        # correlated relative error
+        if srelcor is None:
+          srelcor = e
+        else:
+          raise ValueError("!!! only one entry for correlated relative uncertainties allowed!") 
+     # -- end for 
+    return s, srel, sabscor, srelcor  
+
+# --- end function decode_uDict
+
 def xyFit_from_yaml(fd,                 # dictionary definig fit input
                     plot=True,          # plot data and model
                     plot_band=True,     # plot model confidence-band
@@ -261,7 +378,7 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
   fitting procedure uses phyfit.xyFit().
 
   Args:
-    * fd: fit input as a dictionary, extracted from a file in yaml format
+    * fd: fit input as a dictionray, extracted from a file in yaml format
     * plot: show data and model if True
     * plot_cor: show profile likelihoods and confidence contours
     * plot_band: plot uncertainty band around model function
@@ -334,122 +451,7 @@ def xyFit_from_yaml(fd,                 # dictionary definig fit input
 
   from PhyPraKit import check_function_code
   ## from .phyFit import xyFit #! already contained in this file
-
-  # -- define some helper fuctions
-  def decode_uDict(uDict):
-    """Decode dictionary with uncertainties
-
-      yaml format:
-      y-errors:
-      - type:                     "simple" or "matrix"
-        error_value:              number or array
-        correlation_coefficient:  0. or 1.
-        relative:                 false or true
-
-      Args:
-        - uDict : dictionary with uncertainties
-     
-      Returns:  
-        - s       # independent errors
-        - srel    # independent relative errors
-        - sabscor # correlated absolute errors
-        - srelcor # correlated relative errors
-    """
-  
-    def decode_rel(e):
-      """Decode numbers with %-sign: interpreted as relative errors
-      """
-      if type(e) is type(''):
-        if '%' in e:
-          v = float(e[0:e.find('%')])/100.
-      else:
-          v = e
-      return v
-
-    s = None        # independent errors
-    srel = None     # independent relative errors
-    sabscor = None  # correlated absolute errors
-    srelcor = None  # correlated relative errors
-
-    if type(uDict) is not type([]):      # got a scalar, one error for all
-      if type(uDict) is type(''):
-        if '%' in uDict:
-          srel=decode_rel(uDict)
-      else:
-        s = uDict
-      return s, srel, sabscor, srelcor
-
-    if type(uDict[0]) is not type({}): # array of uncertainties, one for each data point
-      for i, v in enumerate(uDict):
-        if type(v) is type(''):
-          uDict[i]=decode_rel(v) 
-          srel= uDict
-        else:                          
-          s = uDict
-      return s, srel, sabscor, srelcor
-        
-    # else decode complex error dictionary
-    for ed in uDict:
-      if 'type' in ed:
-        typ = ed['type']
-      else:
-        typ = "simple"
-      if 'relative' in ed:
-        rel = ed['relative']
-      else:
-        rel = False   
-      if 'correlation_coefficient' in ed:
-        cor = ed['correlation_coefficient'] 
-      else:
-        cor = 0.
-      if 'error_value' in ed:
-        e = ed['error_value']
-        if type(e) is type([]):
-          for i,v in enumerate(e):
-            if type(v) is type(''):  
-              if '%' in v:
-                rel = True
-                e[i]=decode_rel(v)
-        else:
-          if type(e) is type(''):  
-            if '%' in e:
-              rel = True
-              e=decode_rel(e)          
-      else:
-        e = None
-     #    
-      if cor == 0. and not rel:
-        # independent absolute error
-        if s is None:
-          s = e
-        else:
-          s = [s]
-          s.append(e)
-      elif cor == 0. and rel:
-        # independent relative error
-        if srel is None:
-          srel = e
-        else:
-          srel = [srel]
-          srel.append(e)
-      elif cor !=0 and not rel:
-        # correlated absolute error
-        if sabscor is None:
-          sabscor = e
-        else:
-          sabscor = [sabscor]
-          sabscor.append(e)
-      elif cor !=0 and rel:
-        # correlated relative error
-        if srelcor is None:
-          srelcor = e
-        else:
-          srelcor = [srelcor]
-          srelcor.append(e)
-     # -- end for 
-    return s, srel, sabscor, srelcor  
-
-# --- end helper functions 
+  ## from .phyFit import decode_uDict #! already contained in this file
 
   # Extract information from input dictionary   
   if 'label' in fd:

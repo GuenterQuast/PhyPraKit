@@ -3,7 +3,7 @@
   Darstellung der Daten aus einer im CASSY labx-Format gespeicherten Datei
   am Beispiel der Gamma-Spektroskopie
 
-  * Einlesen der Daten im .labx-Format
+  * Einlesen der Daten im .labx oger gezippten .labx-Format
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
@@ -22,12 +22,15 @@ if __name__ == "__main__":
   from scipy import interpolate
   from scipy import signal
 
+  unzip = False
   # check for / read command line arguments
-  if len(sys.argv)==2:
-    fname = sys.argv[1]
+  if len(sys.argv)>=2:
+    fname = sys.argv[1]     # file name
+    if len(sys.argv)==3:    # 0: do not unzip, 1: unzip in input file
+      unzip = sys.argv[2]    
   else:
     fname="GammaSpektra.labx"
-  names, values = labxParser(fname, prlevel=0)
+  names, values = labxParser(fname, prlevel=0, unzip=unzip)
 
 # 
   k = []

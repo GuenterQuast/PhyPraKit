@@ -2,6 +2,11 @@
    a collection of tools for data handling, visualisation and analysis 
    in Physics Lab Courses, recommended for "Physikalisches Praktikum am KIT"
 
+   Sub-modules phyTools and phyFit
+
+   type help(PhyPraKit.phyTools) or help(PhyPraKit.phyFit) for
+   an overview of the functionality.
+
 .. module PhyPraKit   
    :synopsis: a collection of tools for data analysis
      recommended for "Physikalisches Praktikum am KIT"
@@ -13,10 +18,11 @@
 from . import _version_info
 
 # Import main components
-from .PhyPraKit import *
+from .phyTools import *
+from .phyFit import *
 
-_version_suffix = ''  # for suffixes such as 'rc' or 'beta' or 'alpha'
+_version_suffix = 'rc0'  # for suffixes such as 'rc' or 'beta' or 'alpha'
 __version__ = _version_info._get_version_string()
 __version__ += _version_suffix
 
-__all__ = ['PhyPraKit', 'phyFit']
+__all__ = ['phyTools', 'phyFit']

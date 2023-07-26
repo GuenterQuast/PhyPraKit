@@ -87,8 +87,7 @@ def wexit(code):
     _ = input('\n      ==> type <ret> to end > ')
   sys.exit(code)
 
-if __name__ == "__main__": # --------------------------------------  
-
+def plotData():
   import os, sys, yaml, argparse, matplotlib.pyplot as plt
   if os.name == 'nt': # interactive mode on windows if error occurs
     os.environ['PYTHONINSPECT']='x'
@@ -169,3 +168,6 @@ if __name__ == "__main__": # --------------------------------------
     plt.show()
 
   wexit(0)
+  
+if __name__ == "__main__": # --------------------------------------  
+  plotData()

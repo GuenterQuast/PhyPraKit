@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.distutils.bdist_wheel]
+universal = false
+
+[project]
+name = "PhyPraKit"
+dynamic = ["version"]
+description = "Tools for data visualisation and analysis in Physics Lab Courses"
+authors = [
+    {name = "Guenter Quast", email = "Guenter.Quast@online.de"},
+]
+
+keywords = ["karlsruhe", "data", "analysis", "visualization", "lab", "laboratory", 
+            "education", "university", "students", "physics"]
+
+requires-python = ">=3.6"
+readme = "README.md"
+license = {text = "MIT BSD 2-Clause License"}
+
+classifiers = [
+    "License :: OSI Approved :: MIT BSD 2-Clause License",
+    "Development Status :: 5 - stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Data Acquisition",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11" ]
+
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "scipy",
+    "pandas",
+    "iminuit",
+    "kafe2",
+    "uncertainties" ]
+
+[tool.setuptools]
+script-files = [
+    "tools/run_phyFit.py", "tools/plotData.py",
+    "tools/csv2yml.py", "tools/plotCSV.py" , "tools/smoothCSV.py"]
+  
+[tool.setuptools.packages.find]
+include = ["PhyPraKit*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "PhyPraKit.__version__"}
+
