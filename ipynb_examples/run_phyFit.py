@@ -119,5 +119,5 @@
 
 from PhyPraKit.run_phyFit import run_phyFit
 
-if __name__ == "__main__": # --------------------------------------  
-  run_phyFit()
+if __name__ == "__main__":  # --------------------------------------
+    run_phyFit()

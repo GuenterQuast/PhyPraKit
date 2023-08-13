@@ -77,97 +77,118 @@
 
 """
 
-from PhyPraKit import plot_xy_from_yaml,plot_hist_from_yaml
+from PhyPraKit import plot_xy_from_yaml, plot_hist_from_yaml
+
 
 # --- helper function
 def wexit(code):
-  # keep Python window open on MS Windows 
-  import os, sys
-  if os.name == 'nt':
-    _ = input('\n      ==> type <ret> to end > ')
-  sys.exit(code)
+    # keep Python window open on MS Windows
+    import os, sys
+
+    if os.name == "nt":
+        _ = input("\n      ==> type <ret> to end > ")
+    sys.exit(code)
+
 
 def plotData():
-  import os, sys, yaml, argparse, matplotlib.pyplot as plt
-  if os.name == 'nt': # interactive mode on windows if error occurs
-    os.environ['PYTHONINSPECT']='x'
+    import os, sys, yaml, argparse, matplotlib.pyplot as plt
 
-  # - - - Parse command-line arguments
-  parser = argparse.ArgumentParser(description = \
-   "Plot data with error bars or a histrogram from file in yaml format")
-  # parser = argparse.ArgumentParser(usage=__doc__)
+    if os.name == "nt":  # interactive mode on windows if error occurs
+        os.environ["PYTHONINSPECT"] = "x"
 
-  parser.add_argument('filename', type=str, nargs='+',
-      help="name(s) of input file(s) in yaml format")
-  parser.add_argument('-s', '--saveplot', 
-      action='store_const', const=True, default=False,
-      help="save plot(s) in file(s)")
-  parser.add_argument('-f','--format', 
-      type=str, default='pdf',
-      help="graphics output format, default=pdf")
-  parser.add_argument('-n', '--noplot', 
-      action='store_const', const=True, default=False,
-      help="suppress ouput of plots on screen")
-  
-  if len(sys.argv)==1:  # print help message if no input given
-    parser.print_help()    
-    print(" \n !!! no input file given - exiting \n")
-    wexit(1)
+    # - - - Parse command-line arguments
+    parser = argparse.ArgumentParser(
+        description="Plot data with error bars or a histrogram from file in yaml format"
+    )
+    # parser = argparse.ArgumentParser(usage=__doc__)
 
-  # collect input from ArgumentParser
-  args = parser.parse_args()
-  fnames = args.filename
-  sav_flg = args.saveplot
-  pltfmt = args.format
-  plt_flg = not args.noplot
+    parser.add_argument(
+        "filename", type=str, nargs="+", help="name(s) of input file(s) in yaml format"
+    )
+    parser.add_argument(
+        "-s",
+        "--saveplot",
+        action="store_const",
+        const=True,
+        default=False,
+        help="save plot(s) in file(s)",
+    )
+    parser.add_argument(
+        "-f",
+        "--format",
+        type=str,
+        default="pdf",
+        help="graphics output format, default=pdf",
+    )
+    parser.add_argument(
+        "-n",
+        "--noplot",
+        action="store_const",
+        const=True,
+        default=False,
+        help="suppress ouput of plots on screen",
+    )
 
-  ddata = []
-  for fnam in fnames:
-    f = open(fnam,'r')
-    try:
-      ymldata = yaml.load_all(f, Loader=yaml.Loader)
-    except (OSError, yaml.YAMLError) as exception:
-      print('!!! failed to read configuration file ' + fnam)
-      print(str(exception))
-      wexit(1)
-    
-    data_type = 'xy'
-    for d in ymldata:
-      if 'type' in d:
-        data_type = d['type']
-      ddata.append(d)
+    if len(sys.argv) == 1:  # print help message if no input given
+        parser.print_help()
+        print(" \n !!! no input file given - exiting \n")
+        wexit(1)
 
-  # create a figure
-  if data_type == 'xy':
-     fignam = 'plotxyData'
-  elif data_type == 'histogram':
-     fignam = 'plothistData'
-  else:
-     print('!!! invalid data type', data_type)
-     wexit(1)
+    # collect input from ArgumentParser
+    args = parser.parse_args()
+    fnames = args.filename
+    sav_flg = args.saveplot
+    pltfmt = args.format
+    plt_flg = not args.noplot
 
-  # create figure
-  figsize = (7.5, 6.5)
-  figure = plt.figure(num=fignam, figsize=figsize)
+    ddata = []
+    for fnam in fnames:
+        f = open(fnam, "r")
+        try:
+            ymldata = yaml.load_all(f, Loader=yaml.Loader)
+        except (OSError, yaml.YAMLError) as exception:
+            print("!!! failed to read configuration file " + fnam)
+            print(str(exception))
+            wexit(1)
 
-  # decode yaml input and plot data for each yaml file
-  for d in ddata:
-    if data_type == 'xy':
-      plot_xy_from_yaml(d)
-    elif data_type == 'histogram':
-      plot_hist_from_yaml(d)
-    f.close()
+        data_type = "xy"
+        for d in ymldata:
+            if "type" in d:
+                data_type = d["type"]
+            ddata.append(d)
 
-  # output to file or screen
-  if (sav_flg):
-    oname = fnames[0].split('.')[0] + '.'+pltfmt
-    plt.savefig( oname )
-    print('  -> graph saved to file ', oname) 
-  # show plot on screen
-  if plt_flg:
-    plt.show()
+    # create a figure
+    if data_type == "xy":
+        fignam = "plotxyData"
+    elif data_type == "histogram":
+        fignam = "plothistData"
+    else:
+        print("!!! invalid data type", data_type)
+        wexit(1)
 
-  wexit(0)
-  
-if __name__ == "__main__": # --------------------------------------  
-  plotData()
+    # create figure
+    figsize = (7.5, 6.5)
+    figure = plt.figure(num=fignam, figsize=figsize)
+
+    # decode yaml input and plot data for each yaml file
+    for d in ddata:
+        if data_type == "xy":
+            plot_xy_from_yaml(d)
+        elif data_type == "histogram":
+            plot_hist_from_yaml(d)
+        f.close()
+
+    # output to file or screen
+    if sav_flg:
+        oname = fnames[0].split(".")[0] + "." + pltfmt
+        plt.savefig(oname)
+        print("  -> graph saved to file ", oname)
+    # show plot on screen
+    if plt_flg:
+        plt.show()
+
+    wexit(0)
+
+
+if __name__ == "__main__":  # --------------------------------------
+    plotData()

@@ -21,8 +21,8 @@ from . import _version_info
 from .phyTools import *
 from .phyFit import *
 
-_version_suffix = 'rc0'  # for suffixes such as 'rc' or 'beta' or 'alpha'
+_version_suffix = "rc0"  # for suffixes such as 'rc' or 'beta' or 'alpha'
 __version__ = _version_info._get_version_string()
 __version__ += _version_suffix
 
-__all__ = ['phyTools', 'phyFit']
+__all__ = ["phyTools", "phyFit"]

@@ -29,5 +29,6 @@
 """
 
 from PhyPraKit.smoothCSV import smoothCSV
+
 if __name__ == "__main__":
-  smoothCSV()
+    smoothCSV()

@@ -23,5 +23,6 @@
 """
 
 from PhyPraKit.csv2yml import csv2yml
-if __name__ == "__main__": # -------------------------------------------
-  csv2yml()  
+
+if __name__ == "__main__":  # -------------------------------------------
+    csv2yml()

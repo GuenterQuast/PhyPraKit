@@ -120,165 +120,207 @@
 from PhyPraKit.phyFit import xyFit_from_yaml, hFit_from_yaml
 from pprint import pprint
 
+
 # --- helper function
 def wexit(code):
-  # keep Python window open on MS Windows 
-  import os, sys
-  if os.name == 'nt':
-    _ = input('\n      ==> type <ret> to end > ')
-  sys.exit(code)
+    # keep Python window open on MS Windows
+    import os, sys
+
+    if os.name == "nt":
+        _ = input("\n      ==> type <ret> to end > ")
+    sys.exit(code)
+
 
 def run_phyFit():
-  #
-  # xyFit.py: Example of an application of PhyPraKit.phyFit.xyFit_from_yaml()
-  #
+    #
+    # xyFit.py: Example of an application of PhyPraKit.phyFit.xyFit_from_yaml()
+    #
 
-  # package imports
-  import os, sys, argparse, yaml, numpy as np, matplotlib.pyplot as plt
-  if os.name == 'nt': # interactive mode on windows if error occurs
-    os.environ['PYTHONINSPECT']='x'
+    # package imports
+    import os, sys, argparse, yaml, numpy as np, matplotlib.pyplot as plt
 
-  # - - - Parse command-line arguments
-  _parser = argparse.ArgumentParser(description = \
-    "Perform a fit with PhyPraKit.phyFit package driven by input file")
-  # _parser = argparse.ArgumentParser(usage=__doc__)
+    if os.name == "nt":  # interactive mode on windows if error occurs
+        os.environ["PYTHONINSPECT"] = "x"
 
-  _parser.add_argument('filename', type=str, nargs='+',
-      help="name(s) of fit input file(s) in yaml format")
-  _parser.add_argument('-v', '--verbose', 
-      action='store_const', const=True, default=False,
-      help="full printout to screen")
-  _parser.add_argument('-r', '--result_to_file', 
-      action='store_const', const=True, default=False,
-      help="store results to file")
-  _parser.add_argument('-n', '--noplot', 
-      action='store_const', const=True, default=False,
-      help="suppress ouput of plots on screen")
-  _parser.add_argument('-s', '--saveplot', 
-      action='store_const', const=True, default=False,
-      help="save plot(s) in file(s)")
-  _parser.add_argument('-c', '--contour', 
-      action='store_const', const=True, default=False,
-      help="plot contours and profiles")
-  _parser.add_argument('--noband', 
-      action='store_const', const=True, default=False,
-      help="suppress 1-sigma band around function")
-  _parser.add_argument('-f','--format', 
-      type=str, default='pdf',
-      help="graphics output format, default=pdf")
+    # - - - Parse command-line arguments
+    _parser = argparse.ArgumentParser(
+        description="Perform a fit with PhyPraKit.phyFit package driven by input file"
+    )
+    # _parser = argparse.ArgumentParser(usage=__doc__)
 
-  if len(sys.argv)==1:  # print help message if no input given
-    _parser.print_help()
-    print(" \n !!! no input file given - exiting \n")
-    wexit(1)
+    _parser.add_argument(
+        "filename",
+        type=str,
+        nargs="+",
+        help="name(s) of fit input file(s) in yaml format",
+    )
+    _parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_const",
+        const=True,
+        default=False,
+        help="full printout to screen",
+    )
+    _parser.add_argument(
+        "-r",
+        "--result_to_file",
+        action="store_const",
+        const=True,
+        default=False,
+        help="store results to file",
+    )
+    _parser.add_argument(
+        "-n",
+        "--noplot",
+        action="store_const",
+        const=True,
+        default=False,
+        help="suppress ouput of plots on screen",
+    )
+    _parser.add_argument(
+        "-s",
+        "--saveplot",
+        action="store_const",
+        const=True,
+        default=False,
+        help="save plot(s) in file(s)",
+    )
+    _parser.add_argument(
+        "-c",
+        "--contour",
+        action="store_const",
+        const=True,
+        default=False,
+        help="plot contours and profiles",
+    )
+    _parser.add_argument(
+        "--noband",
+        action="store_const",
+        const=True,
+        default=False,
+        help="suppress 1-sigma band around function",
+    )
+    _parser.add_argument(
+        "-f",
+        "--format",
+        type=str,
+        default="pdf",
+        help="graphics output format, default=pdf",
+    )
 
-  # collect input from ArgumentParser
-  args = _parser.parse_args()
-  fnames=args.filename
-  quiet_flg = not args.verbose
-  store_result = args.result_to_file
-  plt_flg= not args.noplot
-  sav_flg=args.saveplot
-  cont_flg=args.contour
-  band_flg=not args.noband
-  pltfmt=args.format
+    if len(sys.argv) == 1:  # print help message if no input given
+        _parser.print_help()
+        print(" \n !!! no input file given - exiting \n")
+        wexit(1)
 
-  #  - - - End: Parse command-line arguments
+    # collect input from ArgumentParser
+    args = _parser.parse_args()
+    fnames = args.filename
+    quiet_flg = not args.verbose
+    store_result = args.result_to_file
+    plt_flg = not args.noplot
+    sav_flg = args.saveplot
+    cont_flg = args.contour
+    band_flg = not args.noband
+    pltfmt = args.format
 
-  ddata = []
-  # open and read input yaml file
-  for fnam in fnames:
-    f = open(fnam, 'r')
-    try:
-      ymldata = yaml.load_all(f, Loader=yaml.Loader)
-    except (OSError, yaml.YAMLError) as exception:
-      print('!!! failed to read configuration file ' + fnam)
-      print(str(exception))
-      wexit(1)
-      
-    fitType = 'xy'
-    for d in ymldata:
-      if 'type' in d:
-        fitType = d['type']
-      ddata.append(d)
-    f.close()
-  
-  # select appropriate wrapper
-  if fitType == 'xy':
-    fit = xyFit_from_yaml
-  elif fitType == 'histogram':
-    fit = hFit_from_yaml
-  else:
-    print('!!! unsupported type of fit:', fitType)
-    wexit(1)
+    #  - - - End: Parse command-line arguments
 
-  for count, fd in enumerate(ddata):  
-    if 'type' in fd.keys():
-      fitType = fd['type']
-    print("*==*", sys.argv[0], "received valid yaml data for fit:")
-    if 'parametric_model' in fd: # for complex kafe2go format
-      pprint(fd, compact=True)
-    else:  # "nice" printout for simple xyFit format
-      print(' **  Type of Fit:', fitType)
-      for key in fd:
-        if type(fd[key]) is not type([]):     # got a scalar or string
-          print(key + ': ', fd[key])
-        elif type(fd[key][0]) is not type({}): # got list of scalars
-              print(key + ': ', fd[key])
-        else:  # got list of uncertainty dictionaries
-          print(key+':')
-          for d in fd[key]:
-            for k in d:
-              print('  '+ k +': ', d[k], end=' ') 
-            print()
-  # run fit
-    same = True if count > 0 else False
-    rdict = fit(fd,                 # the input dictionary defining the fit 
-              plot=plt_flg,         # show plot of data and model
-              plot_band=band_flg,   # plot model confidence-band
-              plot_cor=cont_flg,    # plot profiles likelihood and contours
-              showplots= False,     # show plots on screen
-              same_plot = same,     # overlay fit info for multiple data sets
-              quiet=quiet_flg,      # suppress informative printout
-              return_fitObject=False
-               ) 
+    ddata = []
+    # open and read input yaml file
+    for fnam in fnames:
+        f = open(fnam, "r")
+        try:
+            ymldata = yaml.load_all(f, Loader=yaml.Loader)
+        except (OSError, yaml.YAMLError) as exception:
+            print("!!! failed to read configuration file " + fnam)
+            print(str(exception))
+            wexit(1)
 
-  # print results to illustrate how to use output
-    print('\n*==* Fit Result:')
-    pvals, perrs, cor, chi2, pnams= rdict.values()
-    print(" chi2: {:.3g}".format(chi2))
-    print(" parameter names:       ", pnams)
-    print(" parameter values:      ", pvals)
-    np.set_printoptions(precision=3)
-    print(" neg. parameter errors: ", perrs[:,0])
-    print(" pos. parameter errors: ", perrs[:,1])
-    print(" correlation matrix : \n", cor)
+        fitType = "xy"
+        for d in ymldata:
+            if "type" in d:
+                fitType = d["type"]
+            ddata.append(d)
+        f.close()
 
-    if store_result:
-      outfile = (fnames[0].split('.')[0]+ '.result')
-      with open(outfile, 'a') as outf:
-        for key in rdict:
-          print("{}\n".format(key), rdict[key], file=outf)
-      print(' -> result saved to file ', outfile)
+    # select appropriate wrapper
+    if fitType == "xy":
+        fit = xyFit_from_yaml
+    elif fitType == "histogram":
+        fit = hFit_from_yaml
+    else:
+        print("!!! unsupported type of fit:", fitType)
+        wexit(1)
 
-  if (sav_flg):
-    # save all figures to file(s)
-    n_fig = 0
-    tag = ''
-    for n in plt.get_fignums():
-      plt.figure(n)
-      oname = (fnames[0].split('.')[0] + '%s.' + pltfmt) %(tag)
-      plt.savefig( oname)
-      print(' -> figure saved to file ', oname)
-      n_fig += 1
-      tag = '_'+str(n_fig)
-  else:
-    # show on screen
-    plt.show()
+    for count, fd in enumerate(ddata):
+        if "type" in fd.keys():
+            fitType = fd["type"]
+        print("*==*", sys.argv[0], "received valid yaml data for fit:")
+        if "parametric_model" in fd:  # for complex kafe2go format
+            pprint(fd, compact=True)
+        else:  # "nice" printout for simple xyFit format
+            print(" **  Type of Fit:", fitType)
+            for key in fd:
+                if type(fd[key]) is not type([]):  # got a scalar or string
+                    print(key + ": ", fd[key])
+                elif type(fd[key][0]) is not type({}):  # got list of scalars
+                    print(key + ": ", fd[key])
+                else:  # got list of uncertainty dictionaries
+                    print(key + ":")
+                    for d in fd[key]:
+                        for k in d:
+                            print("  " + k + ": ", d[k], end=" ")
+                        print()
+        # run fit
+        same = True if count > 0 else False
+        rdict = fit(
+            fd,  # the input dictionary defining the fit
+            plot=plt_flg,  # show plot of data and model
+            plot_band=band_flg,  # plot model confidence-band
+            plot_cor=cont_flg,  # plot profiles likelihood and contours
+            showplots=False,  # show plots on screen
+            same_plot=same,  # overlay fit info for multiple data sets
+            quiet=quiet_flg,  # suppress informative printout
+            return_fitObject=False,
+        )
 
-  wexit(0)  
+        # print results to illustrate how to use output
+        print("\n*==* Fit Result:")
+        pvals, perrs, cor, chi2, pnams = rdict.values()
+        print(" chi2: {:.3g}".format(chi2))
+        print(" parameter names:       ", pnams)
+        print(" parameter values:      ", pvals)
+        np.set_printoptions(precision=3)
+        print(" neg. parameter errors: ", perrs[:, 0])
+        print(" pos. parameter errors: ", perrs[:, 1])
+        print(" correlation matrix : \n", cor)
 
-if __name__ == "__main__": # --------------------------------------  
-  run_phyFit()
+        if store_result:
+            outfile = fnames[0].split(".")[0] + ".result"
+            with open(outfile, "a") as outf:
+                for key in rdict:
+                    print("{}\n".format(key), rdict[key], file=outf)
+            print(" -> result saved to file ", outfile)
 
-  
+    if sav_flg:
+        # save all figures to file(s)
+        n_fig = 0
+        tag = ""
+        for n in plt.get_fignums():
+            plt.figure(n)
+            oname = (fnames[0].split(".")[0] + "%s." + pltfmt) % (tag)
+            plt.savefig(oname)
+            print(" -> figure saved to file ", oname)
+            n_fig += 1
+            tag = "_" + str(n_fig)
+    else:
+        # show on screen
+        plt.show()
+
+    wexit(0)
+
+
+if __name__ == "__main__":  # --------------------------------------
+    run_phyFit()

@@ -28,5 +28,6 @@
 """
 
 from PhyPraKit.plotCSV import plotCSV
-if __name__ == "__main__": # --------------------------------------  
-  plotCSV()
+
+if __name__ == "__main__":  # --------------------------------------
+    plotCSV()

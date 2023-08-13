@@ -79,5 +79,5 @@
 
 from PhyPraKit.plotData import plotData
 
-if __name__ == "__main__": # --------------------------------------  
-  plotData()
+if __name__ == "__main__":  # --------------------------------------
+    plotData()
