@@ -18,16 +18,16 @@ def genXYdata(isize, function):
     return function(size=isize)
 
 
-#def gen2dgaus(size=10000, mux=5.0, sigx=10.0, muy=20.0, sigy=3.0, rho=0.15):
-#    # generate two arrays with pairs of correlated gaussian numbers
-#    u = np.random.randn(size)
-#    x = mux + sigx * u  # gauss, with mean mux and sigma sigx
-#    v = np.random.randn(size)
-#    y = muy + sigy * (rho * u + np.sqrt(1.0 - rho**2) * v)
-#    return x, y
+def gen2dgauss(size=10000, mux=5.0, sigx=10.0, muy=20.0, sigy=3.0, rho=0.15):
+    # generate two arrays with pairs of correlated gaussian numbers
+    u = np.random.randn(size)
+    x = mux + sigx * u  # gauss, with mean mux and sigma sigx
+    v = np.random.randn(size)
+    y = muy + sigy * (rho * u + np.sqrt(1.0 - rho**2) * v)
+    return x, y
 
 
-def gen2dgaus(size=10000, mu=5.0, sig=1.0, tau=1.0, rho=0.1):
+def gen2d(size=10000, mu=5.0, sig=1.0, tau=1.0, rho=0.1):
     # generate two arrays with pairs random numbers,
     #  gauss in y , exp. in x, correlated
     x = -tau * np.log(np.random.rand(size))
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     # demonstrate usage of histogram functionality in package PhyPraKit
 
     fig = plt.figure(1, figsize=(10.0, 10.0))
-    x, y = genXYdata(10000, gen2dgaus)
+    x, y = genXYdata(10000, gen2d)
     nbinsx = 20
     nbinsy = 25
 
