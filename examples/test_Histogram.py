@@ -18,13 +18,13 @@ def genXYdata(isize, function):
     return function(size=isize)
 
 
-def gen2dgaus(size=10000, mux=5.0, sigx=10.0, muy=20.0, sigy=3.0, rho=0.15):
-    # generate two arrays with pairs of correlated gaussian numbers
-    u = np.random.randn(size)
-    x = mux + sigx * u  # gauss, with mean mux and sigma sigx
-    v = np.random.randn(size)
-    y = muy + sigy * (rho * u + np.sqrt(1.0 - rho**2) * v)
-    return x, y
+#def gen2dgaus(size=10000, mux=5.0, sigx=10.0, muy=20.0, sigy=3.0, rho=0.15):
+#    # generate two arrays with pairs of correlated gaussian numbers
+#    u = np.random.randn(size)
+#    x = mux + sigx * u  # gauss, with mean mux and sigma sigx
+#    v = np.random.randn(size)
+#    y = muy + sigy * (rho * u + np.sqrt(1.0 - rho**2) * v)
+#    return x, y
 
 
 def gen2dgaus(size=10000, mu=5.0, sig=1.0, tau=1.0, rho=0.1):
