@@ -297,10 +297,10 @@ def decode_uDict(uDict):
 
     Returns:
 
-    - s       # independent errors
-    - srel    # independent relative errors
-    - sabscor # correlated absolute errors
-    - srelcor # correlated relative errors
+    - s:        independent errors
+    - srel:     independent relative errors
+    - sabscor:  correlated absolute errors
+    - srelcor:  correlated relative errors
     """
 
     def decode_rel(e):
