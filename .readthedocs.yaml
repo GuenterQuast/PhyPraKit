@@ -16,7 +16,7 @@ build:
 
   tools:
 
-    python: "3.11"
+    python: "3.9"
 
     # You can also specify other tool versions:
 
@@ -44,9 +44,9 @@ sphinx:
 
 # Optionally build your docs in additional formats such as PDF and ePub
 
-# formats:
+formats:
 
-#    - pdf
+    - pdf
 
 #    - epub
 
