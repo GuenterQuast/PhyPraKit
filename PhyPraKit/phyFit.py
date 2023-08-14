@@ -283,20 +283,24 @@ def decode_uDict(uDict):
     """Decode dictionary with uncertainties
 
     yaml format:
+
     y-errors:
+
     - type:                     "simple" or "matrix"
       error_value:              number or array
       correlation_coefficient:  0. or 1.
       relative:                 false or true
 
     Args:
-      - uDict : dictionary with uncertainties
+
+    - uDict : dictionary with uncertainties
 
     Returns:
-      - s       # independent errors
-      - srel    # independent relative errors
-      - sabscor # correlated absolute errors
-      - srelcor # correlated relative errors
+
+    - s       # independent errors
+    - srel    # independent relative errors
+    - sabscor # correlated absolute errors
+    - srelcor # correlated relative errors
     """
 
     def decode_rel(e):
