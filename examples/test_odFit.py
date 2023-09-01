@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 """test_odFit
-   test fitting an arbitrary fucntion with scipy odr, 
-   with uncertainties in x and y 
+   test and illustrate fitting an arbitrary function with scipy odr, 
+   with uncertainties in x and y directions
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
