@@ -626,6 +626,10 @@ Module Documentation
      :imported-members:
      :members:
 
+
+..  automodule:: PhyPraKit.phyTools
+     :members:
+
 ..  automodule:: PhyPraKit.phyFit
      :members:
 	
