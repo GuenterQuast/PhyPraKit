@@ -15,6 +15,10 @@
 
    * Integration der Spline-Funktionen
 
+   Usage: python3 Beispiel_Hysterese.py <file_name> <separator>
+
+   Note that ; as separator  must be escaped with preceeding backslash
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
 
@@ -31,10 +35,16 @@ if __name__ == "__main__":
     import sys
 
     # check for / read command line arguments
-    if len(sys.argv) == 2:
+    if len(sys.argv) >= 2:
         fname = sys.argv[1]
     else:
         fname = "Hysterese.csv"
+
+    if len(sys.argv) == 3:
+        delimiter = sys.argv[2]
+    else:
+        delimiter = ','
+
     print(
         (
             "\n*==* script " + sys.argv[0] + " executing \n",
@@ -42,8 +52,10 @@ if __name__ == "__main__":
         )
     )
 
+    print(delimiter)
+    
     # read data from PicoScope
-    units, data = readPicoScope(fname, delim=",")
+    units, data = readPicoScope(fname, delim=delimiter)
     ic = len(data)
     print("  --> %i columns recieved" % ic)
     print("      units", units, end=" ")
