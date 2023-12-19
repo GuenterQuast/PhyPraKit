@@ -1491,8 +1491,8 @@ class mnFit:
         self.options["use_GaussApprox"] = [
             0,
             "hist",
-            "using Poisson likelihood",
-            "using Gaussian approximation of Poisson distibution",
+            "using -2*ln Poisson likelihood",
+            "using Gaussian approximation of Poisson distribution",
         ]
         self.options["fit_density"] = [
             1,
