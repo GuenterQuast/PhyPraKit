@@ -3,13 +3,18 @@
   Darstellung der Daten aus einer im CASSY labx-Format gespeicherten Datei
   am Beispiel der Gamma-Spektroskopie
 
-  * Einlesen der Daten im .labx oger gezippten .labx-Format
+  * Einlesen der Daten im .labx oder gezippten .labx-Format
+
+  Args: 
+
+    - name of file in .labx format
+    - flag for file type:  0: text, 1: zipped
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 """
 
-# last changed: Nov. 16
+# last changed: Jan -2024
 
 # -----------------------------------------------------------
 import numpy as np, sys
@@ -26,7 +31,7 @@ if __name__ == "__main__":
     # check for / read command line arguments
     if len(sys.argv) >= 2:
         fname = sys.argv[1]  # file name
-        if len(sys.argv) == 3:  # 0: do not unzip, 1: unzip in input file
+        if len(sys.argv) == 3:  # 0: do not unzip, 1: unzip input file
             unzip = sys.argv[2]
     else:
         fname = "GammaSpektra.labx"
