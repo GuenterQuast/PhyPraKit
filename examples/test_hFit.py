@@ -71,7 +71,7 @@ if __name__ == "__main__":  # --------------------------------------
         plot_band=True,  # plot model confidence-band
         plot_cor=False,  # plot profiles likelihood and contours
         quiet=False,  # suppress informative printout
-        axis_labels=["x", "entries / bin   \  f(x, *par)"],
+        axis_labels=["x", "entries / bin   |  f(x, *par)"],
         data_legend="pseudo-data",
         model_legend="model",
     )

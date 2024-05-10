@@ -140,7 +140,7 @@ if __name__ == "__main__":  # --------------------------------------
                     #        plot_band=False,      # plot model confidence-band
                     plot_cor=False,  # plot profiles likelihood and contours
                     showplots=False,  # call plt.show() in user code if False
-                    axis_labels=["x", "y   \  f(x, *par)"],
+                    axis_labels=["x", "y   |  f(x, *par)"],
                     data_legend="pseudo-data",
                     model_legend="model",
                 )

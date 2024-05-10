@@ -76,7 +76,7 @@ if __name__ == "__main__":  # --------------------------------------
         plot_band=True,  # plot model confidence-band
         plot_cor=True,  # plot profiles likelihood and contours
         quiet=False,  # suppress informative printout
-        axis_labels=["x", "y   \  f(x, *par)"],
+        axis_labels=["x", "y   |  f(x, *par)"],
         data_legend="random data",
         model_legend="exponential model",
     )

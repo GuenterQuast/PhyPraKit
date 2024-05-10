@@ -71,7 +71,7 @@ if __name__ == "__main__":  # --------------------------------------
         plot_residual=True,  # show residual w.r.t. model
         plot_cor=True,  # plot profiles likelihood and contours
         quiet=False,  # suppress informative printout
-        axis_labels=["x", "entries / bin   \  f(x, *par)"],
+        axis_labels=["x", "entries / bin   |  f(x, *par)"],
         data_legend="pseudo-data",
         model_legend="model",
         model_name=r"N\,",  # name for model
