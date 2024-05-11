@@ -1,4 +1,4 @@
-"""**package phyTools**
+r"""**package phyTools**
 
    Collection of tools for data handling, visualisation and analysis 
    in Physics Lab Courses, recommended for "Physikalisches Praktikum am KIT"
@@ -145,7 +145,7 @@ from scipy import stats
 
 
 def readColumnData(fname, cchar="#", delimiter=None, pr=True):
-    """read column-data from file
+    r"""read column-data from file
 
     - input is assumed to be columns of floats
     - characters following <cchar>, and <cchar> itself, are ignored
@@ -162,7 +162,7 @@ def readColumnData(fname, cchar="#", delimiter=None, pr=True):
 
     # -- helper function to filter input lines
     def filter_lines(f, keys, cc="#", delim=None):
-        """filter lines for np.loadtxt and
+        r"""filter lines for np.loadtxt and
             extract non-numerical information
 
         Args:
@@ -220,7 +220,7 @@ def readColumnData(fname, cchar="#", delimiter=None, pr=True):
 
 
 def readCSV(file, nlhead=1, delim=","):
-    """read Data in .csv format, skip header lines
+    r"""read Data in .csv format, skip header lines
 
     Args:
       * file: string, file name
@@ -251,7 +251,7 @@ def readCSV(file, nlhead=1, delim=","):
 
 
 def readtxt(file, nlhead=1, delim="\t"):
-    """read floating point data in general txt format
+    r"""read floating point data in general txt format
     skip header lines, replace decimal comma, remove special characters
 
     Args:
@@ -266,7 +266,7 @@ def readtxt(file, nlhead=1, delim="\t"):
     # --------------------------------------------------------------------
     # -- helper function to filter input lines
     def specialCharFilter(f, delim):
-        """a generator to filter lines read from file
+        r"""a generator to filter lines read from file
         replace German ',' by '.', remove special characters
 
         Args:
@@ -320,7 +320,7 @@ def readtxt(file, nlhead=1, delim="\t"):
 
 
 def readPicoScope(file, delim=",", prlevel=0):
-    """
+    r"""
     read Data exported from PicoScope in .txt or .csv format
     use readtxt() to replace ',' in Geman decimal format
 
@@ -364,7 +364,7 @@ def readPicoScope(file, delim=",", prlevel=0):
 
 
 def readCassy(file, prlevel=0):
-    """read Data exported from Cassy in .txt format
+    r"""read Data exported from Cassy in .txt format
 
     Args:
       * file: string, file name
@@ -397,7 +397,7 @@ def readCassy(file, prlevel=0):
 
 
 def labxParser(file, prlevel=1, unzip=False):
-    """read files in xml-format or zipped xml-format produced with Leybold CASSY
+    r"""read files in xml-format or zipped xml-format produced with Leybold CASSY
 
     Args:
        * file:  input data in .labx format
@@ -529,7 +529,7 @@ def labxParser(file, prlevel=1, unzip=False):
 
 
 def writeCSV(file, ldata, hlines=[], fmt="%.10g", delim=",", nline="\n", **kwargs):
-    """write data in .csv format, including header lines
+    r"""write data in .csv format, including header lines
 
     Args:
       * file: string, file name
@@ -577,7 +577,7 @@ def writeCSV(file, ldata, hlines=[], fmt="%.10g", delim=",", nline="\n", **kwarg
 
 
 def writeTexTable(file, ldata, cnames=[], caption="", fmt="%.10g"):
-    """write data formatted as latex tabular
+    r"""write data formatted as latex tabular
 
     Args:
       * file: string, file name
@@ -621,7 +621,7 @@ def writeTexTable(file, ldata, cnames=[], caption="", fmt="%.10g"):
 
 
 def round_to_error(val, err, nsd_e=2):
-    """round float *val* to corresponding number of significant digits
+    r"""round float *val* to corresponding number of significant digits
     as uncertainty *err*
 
     Arguments:
@@ -654,7 +654,7 @@ def round_to_error(val, err, nsd_e=2):
 
 
 def ustring(v, e, pe=2):
-    """v +/- e as formatted string
+    r"""v +/- e as formatted string
     with number of significant digits corresponding to
     precision pe of uncertainty
 
@@ -678,7 +678,7 @@ def ustring(v, e, pe=2):
 
 
 def wmean(x, sx, V=None, pr=True):
-    """weighted mean of np-array x with uncertainties sx
+    r"""weighted mean of np-array x with uncertainties sx
     or covariance matrix V; if both are given, sx**2 is added
     to the diagonal elements of the covariance matrix
 
@@ -712,7 +712,7 @@ def wmean(x, sx, V=None, pr=True):
 
 
 def BuildCovarianceMatrix(sig, sigc=[]):
-    """Construct a covariance matrix
+    r"""Construct a covariance matrix
     from independent and correlated error components
 
     Args:
@@ -736,7 +736,7 @@ def BuildCovarianceMatrix(sig, sigc=[]):
 
 
 def Cov2Cor(V):
-    """Convert a covariance matrix into diagonal errors + correlation matrix
+    r"""Convert a covariance matrix into diagonal errors + correlation matrix
 
     Args:
      * V: covariance matrix as numpy array
@@ -751,7 +751,7 @@ def Cov2Cor(V):
 
 
 def Cor2Cov(sig, C):
-    """Convert a correlation matrix and error into covariance matrix
+    r"""Convert a correlation matrix and error into covariance matrix
 
     Args:
      * sig: 1d numpy array of correlated uncertainties
@@ -768,7 +768,7 @@ def Cor2Cov(sig, C):
 
 
 def chi2prob(chi2, ndf):
-    """chi2-probability
+    r"""chi2-probability
 
     Args:
       * chi2: chi2 value
@@ -785,14 +785,14 @@ def chi2prob(chi2, ndf):
 
 
 def propagatedError(function, pvals, pcov):
-    """determine propageted uncertainty (with covariance matrix)
+    r"""determine propagated uncertainty (with covariance matrix)
 
     Formula:
     Delta = sqrt( sum_i,j (df/dp_i df/dp_j Vp_i,j) )
 
     Args:
       * function: function of parameters pvals,
-        a 1-d array is also allowed, eg. function(\*p) = f(x, \*p)
+        a 1-d array is also allowed, e.g. function(\*p) = f(x, \*p)
       * pvals: parameter values
       * pcov: covariance matrix (or uncertainties) of parameters
 
@@ -836,7 +836,7 @@ def propagatedError(function, pvals, pcov):
 
 
 def getModelError(x, model, pvals, pcov):
-    """determine uncertainty of model at x from parameter uncertainties
+    r"""determine uncertainty of model at x from parameter uncertainties
 
     Formula:
       Delta(x) = sqrt( sum_i,j (df/dp_i(x) df/dp_j(x) Vp_i,j) )
@@ -861,7 +861,7 @@ def getModelError(x, model, pvals, pcov):
 
 
 def offsetFilter(a):
-    """
+    r"""
     correct an offset in array a
     (assuming a symmetric signal around zero)
     by subtracting the mean
@@ -870,7 +870,7 @@ def offsetFilter(a):
 
 
 def meanFilter(a, width=5):
-    """
+    r"""
     apply a sliding average to smoothen data,
 
     method:
@@ -910,7 +910,7 @@ def meanFilter(a, width=5):
 
 
 def resample(a, t=None, n=11):
-    """
+    r"""
     perform average over n data points of array a,
     return reduced array, eventually with corresponding time values
 
@@ -946,7 +946,7 @@ def resample(a, t=None, n=11):
 
 
 def Fourier_fft(t, a):
-    """
+    r"""
     Fourier transform of the amplitude spectrum a(t)
 
     method:
@@ -972,7 +972,7 @@ def Fourier_fft(t, a):
 
 
 def FourierSpectrum(t, a, fmax=None):
-    """
+    r"""
     Fourier transform of amplitude spectrum a(t), for equidistant sampling
     times (a simple implementation for didactical purpose only,
     consider using ``Fourier_fft()`` )
@@ -1017,7 +1017,7 @@ def FourierSpectrum(t, a, fmax=None):
 
 
 def simplePeakfinder(x, a, th=0.0):
-    """
+    r"""
     find positions of all maxima (peaks) in data
       x-coordinates are determined from weighted average over 3 data points
 
@@ -1056,7 +1056,7 @@ def simplePeakfinder(x, a, th=0.0):
 
 
 def convolutionFilter(a, v, th=0.0):
-    """
+    r"""
     convolute normalized array with template function and return maxima
 
     method:
@@ -1093,7 +1093,7 @@ def convolutionFilter(a, v, th=0.0):
 
 
 def convolutionPeakfinder(a, width=10, th=0.0):
-    """
+    r"""
     find positions of all Peaks in data
       (simple version for didactical purpose,
       consider using ``scipy.signal.find_peaks_cwt()`` )
@@ -1124,7 +1124,7 @@ def convolutionPeakfinder(a, width=10, th=0.0):
 
 
 def convolutionEdgefinder(a, width=10, th=0.0):
-    """
+    r"""
     find positions of maximal positive slope in data
 
     method:
@@ -1149,7 +1149,7 @@ def convolutionEdgefinder(a, width=10, th=0.0):
 
 
 def autocorrelate(a):
-    """calculate auto-correlation function of input array
+    r"""calculate auto-correlation function of input array
 
     method: for array of length l, calculate
     a[0]=sum_(i=0)^(l-1) a[i]*[i] and
@@ -1176,7 +1176,7 @@ def autocorrelate(a):
 
 
 def barstat(bincont, bincent, pr=True):
-    """statistics from a bar chart (histogram)
+    r"""statistics from a bar chart (histogram)
     with given bin contents and bin centres
 
     Args:
@@ -1199,7 +1199,7 @@ def barstat(bincont, bincent, pr=True):
 
 def nhist(data, bins=50, xlabel="x", ylabel="frequency"):
     # ### own implementation of one-dimensional histogram (numpy + matplotlib) ###
-    """Histogram.hist
+    r"""Histogram.hist
     show a one-dimensional histogram
 
     Args:
@@ -1223,7 +1223,7 @@ def nhist(data, bins=50, xlabel="x", ylabel="frequency"):
 
 
 def histstat(binc, bine, pr=True):
-    """Histogram.histstat
+    r"""Histogram.histstat
     calculate mean, standard deviation and uncertainty on mean
     of a histogram with bin-contents `binc` and bin-edges `bine`
 
@@ -1249,7 +1249,7 @@ def histstat(binc, bine, pr=True):
 
 def nhist2d(x, y, bins=10, xlabel="x axis", ylabel="y axis", clabel="counts"):
     # ### own implementation of two-dimensional histogram ###
-    """Histrogram.hist2d
+    r"""Histrogram.hist2d
     create and plot a 2-dimensional histogram
 
     Args:
@@ -1279,7 +1279,7 @@ def nhist2d(x, y, bins=10, xlabel="x axis", ylabel="y axis", clabel="counts"):
 
 
 def hist2dstat(H2d, xed, yed, pr=True):
-    """
+    r"""
     calculate statistical information from 2d Histogram
 
     Args:
@@ -1324,7 +1324,7 @@ def hist2dstat(H2d, xed, yed, pr=True):
 
 
 def profile2d(H2d, xed, yed):
-    """
+    r"""
     generate a profile plot from 2d histogram:
       - mean y at a centre of x-bins, standard deviations as error bars
 
@@ -1354,7 +1354,7 @@ def profile2d(H2d, xed, yed):
 
 
 def chi2p_indep2d(H2d, bcx, bcy, pr=True):
-    """
+    r"""
     perform a chi2-test on independence of x and y
 
     method: chi2-test on compatibility of 2d-distribution, f(x,y),
@@ -1391,7 +1391,7 @@ def chi2p_indep2d(H2d, bcx, bcy, pr=True):
 
 
 def plotCorrelations(vals, names=None):
-    """plot histograms and sctter plots of value pairs as array of axes
+    r"""plot histograms and sctter plots of value pairs as array of axes
 
     Args:
 
@@ -1466,7 +1466,7 @@ def plotCorrelations(vals, names=None):
 
 
 def linRegression(x, y, sy=None):
-    """linear regression y(x) = ax + b
+    r"""linear regression y(x) = ax + b
 
     method:
       analytical formula
@@ -1513,7 +1513,7 @@ def linRegression(x, y, sy=None):
 
 
 def odFit(fitf, x, y, sx=None, sy=None, p0=None):
-    """fit an arbitrary function with errors on x and y
+    r"""fit an arbitrary function with errors on x and y
     uses numerical "orthogonal distance regression" from package scipy.odr
 
     Args:
@@ -1607,7 +1607,7 @@ def k2Fit(
     showplots=True,
     quiet=True,
 ):
-    """Fit an arbitrary function func(x, \*par) to data points (x, y)
+    r"""Fit an arbitrary function func(x, \*par) to data points (x, y)
     with independent and correlated absolute and/or relative errors
     on x- and y- values with package iminuit.
 
@@ -1847,7 +1847,7 @@ def k2hFit(
     fit_info=True,
     asym_parerrs=True,
 ):
-    """Wrapper function to fit a density distribution f(x, \*par)
+    r"""Wrapper function to fit a density distribution f(x, \*par)
     to binned data (histogram) with class mnFit
 
     The cost function is two times the negative log-likelihood of the
@@ -2018,7 +2018,7 @@ def k2hFit(
 
 
 def xyFit(*args, **kwargs):
-    """call xyFit from .phyFit"""
+    r"""call xyFit from .phyFit"""
     # print('Calling xyFit() from package phyFit')
     from .phyFit import xyFit
 
@@ -2026,7 +2026,7 @@ def xyFit(*args, **kwargs):
 
 
 def hFit(*args, **kwargs):
-    """call hFit from .phyFit"""
+    r"""call hFit from .phyFit"""
     # print('Calling hFit() from package phyFit')
     from .phyFit import hFit
 
@@ -2034,7 +2034,7 @@ def hFit(*args, **kwargs):
 
 
 def mFit(*args, **kwargs):
-    """call mFit from .phyFit"""
+    r"""call mFit from .phyFit"""
     # print('Calling mFit() from package phyFit')
     from .phyFit import mFit
 
@@ -2042,7 +2042,7 @@ def mFit(*args, **kwargs):
 
 
 def xFit(*args, **kwargs):
-    """call xFit from .phyFit"""
+    r"""call xFit from .phyFit"""
     # print('Calling xFit() from package phyFit')
     from .phyFit import xFit
 
@@ -2053,7 +2053,7 @@ def xFit(*args, **kwargs):
 
 
 def smearData(d, s, srel=None, abscor=None, relcor=None):
-    """Generate measurement data from "true" input
+    r"""Generate measurement data from "true" input
     by adding random deviations according to the uncertainties
 
     Args:
@@ -2110,7 +2110,7 @@ def generateXYdata(
     xrelcor=None,
     yrelcor=None,
 ):
-    """Generate measurement data according to some model
+    r"""Generate measurement data according to some model
     assumes xdata is measured within the given uncertainties;
     the model function is evaluated at the assumed "true" values
     xtrue, and a sample of simulated measurements is obtained by
@@ -2159,7 +2159,7 @@ def generateXYdata(
 
 
 def check_function_code(code_string):
-    """Check Python code before using it in exec() command
+    r"""Check Python code before using it in exec() command
 
     Watch out for "dangerous" actions
 
@@ -2193,7 +2193,7 @@ def check_function_code(code_string):
 
 
 def plot_xy_from_yaml(d):
-    """plot (xy) data from yaml file
+    r"""plot (xy) data from yaml file
 
        Input:
 
@@ -2248,7 +2248,7 @@ def plot_xy_from_yaml(d):
         marker="x",
         color="grey",
     ):
-        """return figure with (x,y) data and uncertainties"""
+        r"""return figure with (x,y) data and uncertainties"""
         # draw data
         plt.plot(x, y, marker=marker, linestyle="", color=color, alpha=0.5)
         if (ex is not None) and (ey is not None):
@@ -2382,7 +2382,7 @@ def plot_xy_from_yaml(d):
 
 
 def csv2yaml(file, nlhead=1, delim="\t", keyline=0):
-    """read floating point data in general csv format and convert to yaml
+    r"""read floating point data in general csv format and convert to yaml
 
     skip header lines, replace decimal comma, remove special characters,
     and ouput as yaml data block
@@ -2404,7 +2404,7 @@ def csv2yaml(file, nlhead=1, delim="\t", keyline=0):
 
     # -- helper function to filter input lines
     def specialCharFilter(f, delim):
-        """a generator to filter lines read from file
+        r"""a generator to filter lines read from file
         replace German ',' by '.', remove special characters
 
         Args:
@@ -2485,7 +2485,7 @@ def csv2yaml(file, nlhead=1, delim="\t", keyline=0):
 
 
 def plot_hist_from_yaml(d):
-    """plot histogram data from yaml file
+    r"""plot histogram data from yaml file
 
        Input:
 
@@ -2535,7 +2535,7 @@ def plot_hist_from_yaml(d):
         grid=True,
         statistics=True,
     ):
-        """return figure with histogram data"""
+        r"""return figure with histogram data"""
         # global variable for statistics information
         global statinfo
 

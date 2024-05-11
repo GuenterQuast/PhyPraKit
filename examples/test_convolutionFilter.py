@@ -106,13 +106,13 @@ if __name__ == "__main__":
     ax2.text(
         0.1,
         0.85,
-        "peaks: (%.5g$\pm$%.2g) ms" % (m_dtp, sm_dtp),
+        r"peaks: (%.5g$\pm$%.2g) ms" % (m_dtp, sm_dtp),
         transform=ax2.transAxes,
     )
     ax2.text(
         0.1,
         0.75,
-        " edges: (%.5g$\pm$%.2g) ms" % (m_dtd, sm_dtd),
+        r" edges: (%.5g$\pm$%.2g) ms" % (m_dtd, sm_dtd),
         transform=ax2.transAxes,
     )
 

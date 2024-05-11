@@ -151,7 +151,7 @@ if __name__ == "__main__":  # --------------------------------------
         plot_cor=False,  # plot profiles likelihood and contours
         showplots=False,  # plt.show() in user code
         quiet=False,  # suppress informative printout
-        axis_labels=["U (V)", "$I_D$ (mA)   \  Shockley-Gl."],
+        axis_labels=["U (V)", r"$I_D$ (mA)   \  Shockley-Gl."],
         data_legend="Messwerte mit Unsicherheiten",
         model_legend="Shockley-Gleichung",
     )

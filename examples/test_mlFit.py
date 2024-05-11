@@ -209,11 +209,11 @@ if __name__ == "__main__":  # --------------------------------------
         showplots=False,  # show / don't show plots
         quiet=False,  # suppress informative printout if True
         axis_labels=[
-            "life time  " + "$\Delta$t ($\mu$s)",
-            "Probability Density  pdf($\Delta$t; *p)",
+            r"life time  " + "$\Delta$t ($\mu$s)",
+            r"Probability Density  pdf($\Delta$t; *p)",
         ],
-        data_legend="$\mu$ lifetime data",
-        model_legend="exponential decay + flat background",
+        data_legend=r"$\mu$ lifetime data",
+        model_legend=r"exponential decay + flat background",
     )
 
     plt.suptitle(

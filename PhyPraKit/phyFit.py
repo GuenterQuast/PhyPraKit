@@ -1,4 +1,4 @@
-"""**package phyFit**
+r"""**package phyFit**
   
   Physics Fitting with `iminiut` [https://iminuit.readthedocs.ios/en/stable/]
 
@@ -136,7 +136,7 @@ def xyFit(
     model_legend="model",
     return_fitObject=False,
 ):
-    """Wrapper function to fit an arbitrary function fitf(x, \*par)
+    r"""Wrapper function to fit an arbitrary function fitf(x, \*par)
     to data points (x, y) with independent and/or correlated absolute
     and/or relative uncertainites on x- and/or y- values with class mnFit.
 
@@ -658,7 +658,7 @@ def xFit(
     model_legend="model",
     return_fitObject=False,
 ):
-    """Wrapper function to fit an arbitrary function to data with
+    r"""Wrapper function to fit an arbitrary function to data with
     independent and/or correlated absolute and/or relative uncertainties
     with class mnFit. Uncertainties are assumed to be desribed by
     a multivariate Gaussian distribution, i.e. the covariance matrix of
@@ -808,7 +808,7 @@ def hFit(
     model_legend="Model",
     return_fitObject=False,
 ):
-    """Wrapper function to fit a density distribution f(x, \*par)
+    r"""Wrapper function to fit a density distribution f(x, \*par)
     to binned data (histogram) with class mnFit
 
     The cost function is two times the negative log-likelihood of the Poisson
@@ -1089,7 +1089,7 @@ def mFit(
     model_legend="model",
     return_fitObject=False,
 ):
-    """Wrapper function to directly fit a user-defined cost funtion
+    r"""Wrapper function to directly fit a user-defined cost funtion
 
     This is the simplest fit possible with the class mnFit. If no data is
     specified (data=None), a user-supplied cost function (ufcn) is minimized
@@ -1199,7 +1199,7 @@ def mFit(
 # --- helper functions
 #
 def get_functionSignature(f):
-    """get arguments and keyword arguments passed to a function"""
+    r"""get arguments and keyword arguments passed to a function"""
     pars = signature(f).parameters
     args = []
     kwargs = {}
@@ -1212,7 +1212,7 @@ def get_functionSignature(f):
 
 
 def round_to_error(val, err, nsd_e=2):
-    """round float *val* to same number of significant digits as uncertainty *err*
+    r"""round float *val* to same number of significant digits as uncertainty *err*
 
     Returns:
       * int:   number of significant digits for v
@@ -1236,7 +1236,7 @@ def round_to_error(val, err, nsd_e=2):
 
 
 def _build_Err2(e=None, erel=None, data=None):
-    """
+    r"""
     Build squared sum of independent absolute and/or
     relative error components
 
@@ -1256,7 +1256,7 @@ def _build_Err2(e=None, erel=None, data=None):
 
 
 def _build_CovMat(nd, e=None, erel=None, eabscor=None, erelcor=None, data=None):
-    """
+    r"""
     Build a covariance matrix from independent and correlated
     absolute and/or relative error components
 
@@ -1333,7 +1333,7 @@ def _build_CovMat(nd, e=None, erel=None, eabscor=None, erelcor=None, data=None):
 
 
 class mnFit:
-    """**Fit an arbitrary function f(x, *par) to data**
+    r"""**Fit an arbitrary function f(x, *par) to data**
     with independent and/or correlated absolute and/or relative uncertainties
 
     This implementation depends on and heavily uses features of
@@ -1416,7 +1416,7 @@ class mnFit:
     """
 
     def __init__(self, fit_type="xy"):
-        """
+        r"""
         Type of fit:
 
         - 'xy'   : fit model model y(f(x; par) to data
@@ -1559,7 +1559,7 @@ class mnFit:
         use_negLogL=None,
         quiet=None,
     ):
-        """Define options for xy fit
+        r"""Define options for xy fit
 
         Args:
          - rel. errors refer to model else data
@@ -1592,7 +1592,7 @@ class mnFit:
         cabsy=None,
         crely=None,
     ):
-        """initialize data object
+        r"""initialize data object
 
         Args:
           -  x:       abscissa of data points ("x values")
@@ -1639,7 +1639,7 @@ class mnFit:
         fixPars=None,
         limits=None,
     ):
-        """initialize fit object
+        r"""initialize fit object
 
         Args:
           - model: model function f(x; \*par)
@@ -1669,7 +1669,7 @@ class mnFit:
         self._setupMinuit(model_kwargs)
 
     class xyDataContainer:
-        """
+        r"""
         Handle data and uncertainties and
         build covariance matrices from components
 
@@ -1815,7 +1815,7 @@ class mnFit:
             #   self.iErr2: 1./self.err2
 
         def _initialCov(self, err2):
-            """Build initial (static) covariance matrix for y-errors
+            r"""Build initial (static) covariance matrix for y-errors
             (for pre-fit) and calculate inverse matrix
             """
             if err2.ndim == 2:
@@ -1908,7 +1908,7 @@ class mnFit:
                     self.err2x = None
 
         def _rebuild_Err2(self, mpar):
-            """
+            r"""
             (Re-)calculate uncertaingies
             """
             if self._staticErr2 is not None:
@@ -1935,7 +1935,7 @@ class mnFit:
                 self.err2 += _mprime * _mprime * self.err2x
 
         def _rebuild_Cov(self, mpar):
-            """
+            r"""
             (Re-)Build the covariance matrix from components
             and caclulate its inverse
             """
@@ -1968,7 +1968,7 @@ class mnFit:
                 self.covy = self.cov
 
         def get_Cov(self):
-            """return covariance matrix of data"""
+            r"""return covariance matrix of data"""
             if self.needs_covariance:
                 return self.cov
             else:
@@ -1978,7 +1978,7 @@ class mnFit:
                     return np.diag(self.err2)
 
         def get_xCov(self):
-            """return covariance matrix of x-data"""
+            r"""return covariance matrix of x-data"""
             if self.needs_covariance:
                 return self.covx
             else:
@@ -1988,7 +1988,7 @@ class mnFit:
                     return np.diag(self.err2x)
 
         def get_yCov(self):
-            """return covariance matrix of y-data"""
+            r"""return covariance matrix of y-data"""
             if self.needs_covariance:
                 return self.covy
             else:
@@ -1998,7 +1998,7 @@ class mnFit:
                     return np.diag(self.err2y)
 
         def get_iCov(self):
-            """return inverse of covariance matrix, as used in cost function"""
+            r"""return inverse of covariance matrix, as used in cost function"""
             if self.needs_covariance:
                 return self.iCov
             else:
@@ -2011,7 +2011,7 @@ class mnFit:
             data_label="data",
             plot_residual=False,
         ):
-            """return figure with xy data and uncertainties"""
+            r"""return figure with xy data and uncertainties"""
             #    # get data
             x = self.x
             if plot_residual and self.model_values is not None:
@@ -2040,7 +2040,7 @@ class mnFit:
 
     # define custom cost function for iminuit
     class xLSqCost:
-        """
+        r"""
          Custom e_x_tended Least-SQuares cost function with
          dynamically updated covariance matrix and -2log(L)
          correction term for parameter-dependent uncertainties.
@@ -2203,7 +2203,7 @@ class mnFit:
         use_negLogL=None,
         quiet=None,
     ):
-        """Define options for indexed fit
+        r"""Define options for indexed fit
 
         Args:
          - rel. errors refer to model else data
@@ -2224,7 +2224,7 @@ class mnFit:
             self.quiet = quiet
 
     def init_xData(self, x, e=None, erel=None, cabs=None, crel=None, names=None):
-        """initialize data object
+        r"""initialize data object
 
         Args:
           -  x:      data values
@@ -2252,7 +2252,7 @@ class mnFit:
         fixPars=None,
         limits=None,
     ):
-        """initialize fit object
+        r"""initialize fit object
 
         Args:
           - model: model function f(x; \*par)
@@ -2282,7 +2282,7 @@ class mnFit:
         self._setupMinuit(model_kwargs)
 
     class xDataContainer:
-        """
+        r"""
         Handle data and uncertainties and
         build covariance matrices from components
 
@@ -2371,7 +2371,7 @@ class mnFit:
             #   self.iErr2: 1./self.err2
 
         def _initialCov(self, err2):
-            """Build initial (static) covariance matrix for y-errors
+            r"""Build initial (static) covariance matrix for y-errors
             (for pre-fit) and calculate inverse matrix
             """
             if err2.ndim == 2:
@@ -2440,7 +2440,7 @@ class mnFit:
                     self._staticErr2 = _build_Err2(self.e, self.erel, self.x)
 
         def _rebuild_Err2(self, mpar):
-            """
+            r"""
             (Re-)calculate uncertaingies
             """
             if self._staticErr2 is not None:
@@ -2452,7 +2452,7 @@ class mnFit:
                 self.err2 += _er * _er
 
         def _rebuild_Cov(self, mpar):
-            """
+            r"""
             (Re-)Build the covariance matrix from components
             and caclulate its inverse
             """
@@ -2465,7 +2465,8 @@ class mnFit:
                 self.cov += self._covy0 * np.outer(_dat, _dat)
 
         def get_Cov(self):
-            """return covariance matrix of data"""
+            r"""return covariance matrix of data"""
+            mumin, mumax, steps = 0., 10., 500
             if self.needs_covariance:
                 return self.cov
             else:
@@ -2475,7 +2476,7 @@ class mnFit:
                     return np.diag(self.err2)
 
         def get_iCov(self):
-            """return inverse of covariance matrix, as used in cost function"""
+            r"""return inverse of covariance matrix, as used in cost function"""
             if self.needs_covariance:
                 return self.iCov
             else:
@@ -2488,7 +2489,7 @@ class mnFit:
             data_label="data",
             plot_residual=False,
         ):
-            """return figure with data and uncertainties"""
+            r"""return figure with data and uncertainties"""
             #    # get data
             if plot_residual and self.model_values is not None:
                 x = self.x - self.model_values
@@ -2514,7 +2515,7 @@ class mnFit:
 
     # define custom cost function for iminuit
     class indexedCost:
-        """
+        r"""
          Custom e_x_tended Least-SQuares cost function with
          dynamically updated covariance matrix and -2log(L)
          correction term for parameter-dependent uncertainties.
@@ -2671,7 +2672,7 @@ class mnFit:
     def set_hOptions(
         self, run_minos=None, use_GaussApprox=None, fit_density=None, quiet=None
     ):
-        """Define mnFit options
+        r"""Define mnFit options
 
         Args:
          - run minos else don*t run minos
@@ -2691,7 +2692,7 @@ class mnFit:
             self.quiet = quiet
 
     def init_hData(self, bin_contents, bin_edges, DeltaMu=None):
-        """
+        r"""
         initialize histogram data object
 
         Args:
@@ -2717,7 +2718,7 @@ class mnFit:
         fixPars=None,
         limits=None,
     ):
-        """initialize fit object
+        r"""initialize fit object
 
         Args:
           - model: model density function f(x; \*par)
@@ -2750,7 +2751,7 @@ class mnFit:
         self._setupMinuit(model_kwargs)
 
     class histDataContainer:
-        """
+        r"""
         Container for Histogram data
 
         Data Members:
@@ -2777,7 +2778,7 @@ class mnFit:
         """
 
         def __init__(self, outer, bin_contents, bin_edges, DeltaMu=None, quiet=True):
-            """
+            r"""
             initialize histogram Data
 
             Args:
@@ -2815,7 +2816,7 @@ class mnFit:
             data_label="Binned data",
             plot_residual=False,
         ):
-            """return figure with histogram data and uncertainties"""
+            r"""return figure with histogram data and uncertainties"""
 
             w = self.edges[1:] - self.edges[:-1]
             fig = plt.figure(num=num, figsize=figsize)
@@ -2895,7 +2896,7 @@ class mnFit:
 
         @staticmethod
         def Poisson_CI(lam, sigma=1.0):
-            """
+            r"""
             determine one-sigma Confidence Interval around the
             mean lambda of a Poisson distribution, Poiss(x, lambda).
 
@@ -2910,11 +2911,11 @@ class mnFit:
 
             # functions
             def nlLPoisson(x, lam):
-                """negative log-likelihood of Poissoin distrbution"""
+                r"""negative log-likelihood of Poissoin distrbution"""
                 return lam - x * np.log(lam) + loggamma(x + 1.0)
 
             def f(x, lam, dlL):
-                """Delta log-L - offset, input to Newton method"""
+                r"""Delta log-L - offset, input to Newton method"""
                 return nlLPoisson(x, lam) - nlLPoisson(lam, lam) - dlL
 
             dlL = 0.5 * sigma * sigma
@@ -2934,7 +2935,7 @@ class mnFit:
 
     # --- cost function for histogram data
     class hCost:
-        """Cost function for binned data
+        r"""Cost function for binned data
 
         The __call__ method of this class is called by iminuit.
 
@@ -3075,7 +3076,7 @@ class mnFit:
 
         @staticmethod
         def n2lLPoisson(x, lam):
-            """
+            r"""
             neg. logarithm of Poisson distribution for real-valued x
 
             """
@@ -3083,7 +3084,7 @@ class mnFit:
 
         @staticmethod
         def n2lLsPoisson(xk, lam, mu):
-            """
+            r"""
             2* neg. logarithm of generalized Poisson distribution:
             shifted to new mean mu for real-valued xk
             for lam=mu, the standard Poisson distribution is recovered
@@ -3094,7 +3095,7 @@ class mnFit:
 
         @staticmethod
         def n2lLGauss(x, lam):
-            """
+            r"""
             negative log-likelihood of Gaussian approximation
             Pois(x, lam) \simeq Gauss(x, mu=lam, sigma^2=lam)
             """
@@ -3103,7 +3104,7 @@ class mnFit:
 
         @staticmethod
         def integral_overBins(ledges, redges, f, *par):
-            """Calculate approx. integral of model over bins using Simpson's rule"""
+            r"""Calculate approx. integral of model over bins using Simpson's rule"""
             return (
                 (redges - ledges)
                 / 6.0
@@ -3122,7 +3123,7 @@ class mnFit:
     #
 
     def init_mlData(self, x):
-        """
+        r"""
         initialize data object
 
         Args:
@@ -3143,7 +3144,7 @@ class mnFit:
         fixPars=None,
         limits=None,
     ):
-        """initialize fit object for simple minuit fit with
+        r"""initialize fit object for simple minuit fit with
         * with user-supplied cost function or
         * a probability density function for an unbinned neg. log-L fit
 
@@ -3174,7 +3175,7 @@ class mnFit:
         self._setupMinuit(model_kwargs)
 
     def set_mnOptions(self, run_minos=None, neg2logL=None, quiet=None):
-        """Define options for minuit fit with user cost function
+        r"""Define options for minuit fit with user cost function
 
         Args:
 
@@ -3195,7 +3196,7 @@ class mnFit:
             self.quiet = quiet
 
     class mlDataContainer:
-        """
+        r"""
         Container for general (indexed) data
 
         Data Members:
@@ -3209,7 +3210,7 @@ class mnFit:
         """
 
         def __init__(self, outer, x):
-            """
+            r"""
             store data
 
             Args:
@@ -3228,7 +3229,7 @@ class mnFit:
             data_label="Data",
             plot_residual=False,
         ):
-            """return figure with histogram data and uncertainties"""
+            r"""return figure with histogram data and uncertainties"""
 
             fig = plt.figure(num=num, figsize=figsize)
 
@@ -3253,7 +3254,7 @@ class mnFit:
 
     # --- class encapsulating user-defined cost function
     class mnCost:
-        """
+        r"""
         Interface for simple minuit fit with user-supplied cost function.
 
         The __call__ method of this class is called by iminuit.
@@ -3310,7 +3311,7 @@ class mnFit:
             return cost + self.cost(*par)
 
         def nlLcost(self, *par):
-            """negative log likelihood of data and user-defined PDF and"""
+            r"""negative log likelihood of data and user-defined PDF and"""
             # check if PDF is nomalized to 1
             # ...
 
@@ -3324,7 +3325,7 @@ class mnFit:
     #
 
     def _setupFitParameters(self, model_kwargs, p0, dp0, constraints, fixPars, limits):
-        """set up parameters needed for Minuit and cost function"""
+        r"""set up parameters needed for Minuit and cost function"""
 
         # get parameter names from kwargs of model function
         self.pnams = list.copy(list(model_kwargs.keys()))
@@ -3409,7 +3410,7 @@ class mnFit:
             self.fixedParNams = []
 
     def _setupMinuit(self, model_kwargs):
-        """create Minuit object (depends on Minuit version)"""
+        r"""create Minuit object (depends on Minuit version)"""
         if self.iminuit_version < "2":
             if self.quiet:
                 print_level = 0
@@ -3550,7 +3551,7 @@ class mnFit:
         self.ResultDictionary = {k: rtuple[i] for (i, k) in enumerate(keys)}
 
     def getResult(self):
-        """return result dictionary"""
+        r"""return result dictionary"""
         if self.ResultDictionary is not None:
             return self.ResultDictionary
         else:
@@ -3560,7 +3561,7 @@ class mnFit:
 
     @staticmethod
     def getFunctionError(x, model, pvals, covp, fixedPars):
-        """determine error of model at x
+        r"""determine error of model at x
 
         Formula:
           Delta(x) = sqrt( sum_i,j (df/dp_i(x) df/dp_j(x) Vp_i,j) )
@@ -3601,7 +3602,7 @@ class mnFit:
         return np.sqrt(Delta)
 
     def do_fit(self):
-        """perform all necessary steps of fit sequence"""
+        r"""perform all necessary steps of fit sequence"""
         if self.data is None and self.fit_type != "user":
             raise ValueError(" !!! mnFit: no data object defined - call init_data()")
         if self.costf is None:
@@ -3667,7 +3668,7 @@ class mnFit:
         return self.migradResult, self.minosResult
 
     def setPlotOptions(self):
-        """Set options for nicer plotting"""
+        r"""Set options for nicer plotting"""
 
         # to be implemented
         pass
@@ -3681,7 +3682,7 @@ class mnFit:
         same_plot=False,
         plot_residual=False,
     ):
-        """
+        r"""
         Plot model function and data
 
         Uses iminuitObject, cost Function (and data object)
@@ -3801,7 +3802,7 @@ class mnFit:
                     sfac * (yplt - DeltaF),
                     alpha=0.3,
                     color="darkkhaki",
-                    label="  $\pm 1 \sigma$",
+                    label=r"  $\pm 1 \sigma$",
                 )
                 plt.plot(
                     xplt,
@@ -3838,7 +3839,7 @@ class mnFit:
                     color="darkgreen",
                 )
                 for i in range(len(xplt)):
-                    lbl = "$\pm 1 \sigma$" if i == 0 else ""
+                    lbl = r"$\pm 1 \sigma$" if i == 0 else ""
                     plt.axhspan(
                         yplt[i] - Delta[i],
                         yplt[i] + Delta[i],
@@ -3864,12 +3865,12 @@ class mnFit:
         if self.minosResult is not None and self.minos_ok:
             for pn, v, e in zip(free_pnams, free_pvals, pmerrs):
                 nd, _v, _e = round_to_error(v, min(abs(e[0]), abs(e[1])), nsd_e=pe)
-                txt = "{} = ${:#.{pv}g}^{{+{:#.{pe}g}}}_{{{:#.{pe}g}}}$"
+                txt = r"{} = ${:#.{pv}g}^{{+{:#.{pe}g}}}_{{{:#.{pe}g}}}$"
                 fit_info.append(txt.format(pn, _v, e[1], e[0], pv=nd, pe=pe))
         else:
             for pn, v, e in zip(free_pnams, free_pvals, pmerrs):
                 nd, _v, _e = round_to_error(v, e[1], nsd_e=pe)
-                txt = "{} = ${:#.{pv}g}\pm{:#.{pe}g}$"
+                txt = r"{} = ${:#.{pv}g}\pm{:#.{pe}g}$"
                 fit_info.append(txt.format(pn, _v, _e, pv=nd, pe=pe))
         if nfixed:
             for pn, v in zip(fixed_pnams, fixed_pvals):
@@ -3879,7 +3880,7 @@ class mnFit:
         #  2. goodness-of-fit
         if self.fit_type in ["xy", "indexed"]:
             fit_info.append(
-                "$\\chi^2$/$n_\\mathrm{{dof}}$={:.1f}/{}".format(gof, ndof)
+                r"$\chi^2$/$n_\mathrm{{dof}}$={:.1f}/{}".format(gof, ndof)
                 + ", p={:.1f}%".format(100 * chi2prb)
             )
         elif self.fit_type == "hist":
@@ -3891,7 +3892,7 @@ class mnFit:
 
     # plot array of profiles and contours
     def plotContours(self, figname="Profiles and Contours"):
-        """
+        r"""
         Plot grid of profile curves and one- and two-sigma
         contour lines from iminuit object
 
@@ -3940,9 +3941,9 @@ class mnFit:
                         plt.sca(axarr[ip, ip]) if npar != 1 else plt.sca(axarr)
                         m.draw_mnprofile(fpnams[i], subtract_min=True)
                         if self.ErrDef == 1:
-                            ylabel = "$\Delta (-2\ln\cal{L})$"
+                            ylabel = r"$\Delta (-2\ln\cal{L})$"
                         else:
-                            ylabel = "$\Delta (-\ln\cal{L})$"
+                            ylabel = r"$\Delta (-\ln\cal{L})$"
                         plt.ylabel(ylabel)
                         xmn, xmx = plt.gca().get_xlim()
                         # show horizontal line at self.ErrDef
@@ -3991,7 +3992,7 @@ class mnFit:
             return None
 
     def getProfile(self, pnam, range=3.0, npoints=30):
-        """return profile likelihood of parameter pnam
+        r"""return profile likelihood of parameter pnam
 
         Args:
           - parameter name
@@ -4007,7 +4008,7 @@ class mnFit:
             )
 
     def getContour(self, pnam1, pnam2, cl=None, npoints=100):
-        """return profile likelihood contour of parameters pnam1 and pnam2
+        r"""return profile likelihood contour of parameters pnam1 and pnam2
 
         Args:
           - 1st parameter name
@@ -4025,7 +4026,7 @@ class mnFit:
         return self.minuit.mncontour(pnam1, pnam2, cl=cl, size=npoints)
 
     def plot_Profile(self, pnam, range=2.0, npoints=30):
-        """plot profile likelihood of parameter pnam
+        r"""plot profile likelihood of parameter pnam
 
         Args:
           - parameter name
@@ -4040,14 +4041,14 @@ class mnFit:
         self.minuit.draw_mnprofile(pnam, bound=range, size=npoints, subtract_min=True)
 
         if self.ErrDef == 1:
-            ylabel = "$\Delta (-2\ln\cal{L})$"
+            ylabel = r"$\Delta (-2\ln\cal{L})$"
         else:
-            ylabel = "$\Delta (-\ln\cal{L})$"
+            ylabel = r"$\Delta (-\ln\cal{L})$"
         plt.ylabel(ylabel)
         return fig
 
     def plot_clContour(self, pnam1, pnam2, cl):
-        """plot a contour of parameters pnam1 and pnam2
+        r"""plot a contour of parameters pnam1 and pnam2
         with confidence level(s) cl
         """
         if self.iminuit_version < "2":
@@ -4061,7 +4062,7 @@ class mnFit:
             return fig
 
     def plot_nsigContour(self, pnam1, pnam2, nsig):
-        """plot nsig contours of parameters pnam1 and pnam2"""
+        r"""plot nsig contours of parameters pnam1 and pnam2"""
         fig = plt.figure(
             num="Contour(s) " + pnam1 + " vs. " + pnam2, figsize=(5.0, 5.0)
         )
@@ -4076,17 +4077,17 @@ class mnFit:
 
     @staticmethod
     def chi2prb(chi2, ndof):
-        """Calculate chi2-probability from chi2 and degrees of freedom"""
+        r"""Calculate chi2-probability from chi2 and degrees of freedom"""
         return 1.0 - stats.chi2.cdf(chi2, ndof)
 
     @staticmethod
     def CL2Chi2(CL):
-        """calculate DeltaChi2 from confidence level CL for 2-dim contours"""
+        r"""calculate DeltaChi2 from confidence level CL for 2-dim contours"""
         return -2.0 * np.log(1.0 - CL)
 
     @staticmethod
     def Chi22CL(dc2):
-        """calculate confidence level CL from DeltaChi2 for 2-dim contours"""
+        r"""calculate confidence level CL from DeltaChi2 for 2-dim contours"""
         return 1.0 - np.exp(-dc2 / 2.0)
 
 
@@ -4159,7 +4160,7 @@ if __name__ == "__main__":  # --- interface and example
             plot_cor=False,
             showplots=False,
             quiet=False,
-            axis_labels=["x", "y   \  f(x, *par)"],
+            axis_labels=["x", "y   |  f(x, *par)"],
             data_legend="random data",
             model_legend="model",
         )
@@ -4210,7 +4211,7 @@ if __name__ == "__main__":  # --- interface and example
             plot_cor=True,
             showplots=False,
             quiet=False,
-            axis_labels=["Index", "x   \  x(*par)"],
+            axis_labels=["Index", "x   |  x(*par)"],
             data_legend="Polar Data",
             model_legend="r-phi from x-y",
         )
@@ -4235,7 +4236,7 @@ if __name__ == "__main__":  # --- interface and example
 
         #    # define the model function to fit
         def SplusB_model(x, mu=6.987, sigma=0.5, a=0.0, s=0.2):
-            """pdf of a Gaussian signal on top of flat background"""
+            r"""pdf of a Gaussian signal on top of flat background"""
             normal = np.exp(-0.5 * ((x - mu) / sigma) ** 2) / np.sqrt(
                 2.0 * np.pi * sigma**2
             )
@@ -4308,7 +4309,7 @@ if __name__ == "__main__":  # --- interface and example
             plot_cor=True,  # plot profiles likelihood and contours
             showplots=False,  # show / don't show plots
             quiet=False,  # suppress informative printout
-            axis_labels=["x", "y   \  f(x, *par)"],
+            axis_labels=["x", "y   |  f(x, *par)"],
             data_legend="random data",
             model_legend="signal + background model",
         )
@@ -4328,7 +4329,7 @@ if __name__ == "__main__":  # --- interface and example
         print(" correlations : \n", cor)
 
     def example_userFit():
-        """**unbinned ML fit** with user-defined cost function
+        r"""**unbinned ML fit** with user-defined cost function
 
         This code illustrates usage of the wrapper function mFit()
         for  class **mnFit** user-defined cost function
@@ -4373,7 +4374,7 @@ if __name__ == "__main__":  # --- interface and example
         print(" correlations : \n", cor)
 
     def example_unbinnedMLFit():
-        """**unbinned ML fit** of pdf to unbinned data
+        r"""**unbinned ML fit** of pdf to unbinned data
 
         real data from measurement with a Water Cherenkov detector ("Kamiokanne")
 
@@ -4547,7 +4548,7 @@ if __name__ == "__main__":  # --- interface and example
         ]
 
         def exponentialDecayPDF(t, tau=2.0, fbg=0.2, a=1.0, b=11.5):
-            """Probability density function
+            r"""Probability density function
 
             for an exponential decay with flat background. The pdf is normed for
             the interval [a=1µs,  b=11.5µs); these parameters a and b must be
@@ -4578,10 +4579,10 @@ if __name__ == "__main__":  # --- interface and example
             showplots=False,  # show / don't show plots
             quiet=False,  # suppress informative printout if True
             axis_labels=[
-                "life time  " + "$\Delta$t ($\mu$s)",
-                "Probability Density  pdf($\Delta$t; *p)",
+                "life time  " + r"$\Delta$t ($\mu$s)",
+                r"Probability Density  pdf($\Delta$t; *p)",
             ],
-            data_legend="$\mu$ lifetime data",
+            data_legend=r"$\mu$ lifetime data",
             model_legend="exponential decay + flat background",
         )
 

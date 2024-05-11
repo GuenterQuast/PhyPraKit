@@ -177,7 +177,7 @@ if __name__ == "__main__":
     )
     # ax4.fill(Hplt, cs_bB(Hplt), 'g', alpha=0.5)
     # ax4.fill(Hplt, cs_Bm(Hplt), 'g', alpha=0.5)
-    ax4.text(-1.0, 0.0, "$\int\,=\,$%.4g" % integral)
+    ax4.text(-1.0, 0.0, r"$\int\,=\,$%.4g" % integral)
     ax4.set_xlabel("H uncalib. " + unitH)
     ax4.set_ylabel("B uncalib. " + unitB)
     ax4.grid(linestyle="dashed")

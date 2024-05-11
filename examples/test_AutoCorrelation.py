@@ -59,8 +59,8 @@ if __name__ == "__main__":
     )
     ax1 = fig.add_subplot(3, 1, 1)
     ax1.plot(t, a)
-    ax1.set_xlabel("$time$ (ms)", size="large")
-    ax1.set_ylabel("$amplitude$ (a.u.)", size="large")
+    ax1.set_xlabel(r"$time$ (ms)", size="large")
+    ax1.set_ylabel(r"$amplitude$ (a.u.)", size="large")
     ax1.grid()
 
     # 2. auto-correlation
@@ -69,9 +69,9 @@ if __name__ == "__main__":
     ax2.plot(ac_td, ac_ad, "gx", alpha=0.9, label="dips")
     ax2.plot([0.0, ac_t[-1]], [1.0, 0.0], "m--", alpha=0.3)  # maximum auto-correlation
     ax2.plot(ac_t, ac_a, "k-")
-    ax2.set_xlabel("$time \, displacement$ (ms) ", size="large")
-    ax2.set_ylabel("$autocorrelation$", size="large")
-    ax2.legend(loc="best", numpoints=1, prop={"size": 10})
+    ax2.set_xlabel(r"$time \, displacement$ (ms) ", size="large")
+    ax2.set_ylabel(r"$autocorrelation$", size="large")
+    ax2.legend(loc=r"best", numpoints=1, prop={"size": 10})
     #  ax2.set_yscale('log')
     ax2.grid()
 
@@ -108,13 +108,13 @@ if __name__ == "__main__":
     ax3.text(
         0.55,
         0.85,
-        "peaks: (%.5g$\pm$%.2g) ms" % (m_dtp, sm_dtp),
+        r"peaks: (%.5g$\pm$%.2g) ms" % (m_dtp, sm_dtp),
         transform=ax3.transAxes,
     )
     ax3.text(
         0.55,
         0.75,
-        "dips: (%.5g$\pm$%.2g) ms" % (m_dtd, sm_dtd),
+        r"dips: (%.5g$\pm$%.2g) ms" % (m_dtd, sm_dtd),
         transform=ax3.transAxes,
     )
 

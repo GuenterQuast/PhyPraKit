@@ -214,7 +214,7 @@ if __name__ == "__main__":  # --------------------------------------
             b = biases[i].mean()
             s = biases[i].std()
             e = s / np.sqrt(Nexp)
-            print("   {:d}: {:.3g} +\- {:.2g},  std {:.3g}".format(i, b, e, s))
+            print("   {:d}: {:.3g} +/- {:.2g},  std {:.3g}".format(i, b, e, s))
         print(" * coverage:")
         for i in range(npar):
             #  coverage: fraction of true val in confidence interval

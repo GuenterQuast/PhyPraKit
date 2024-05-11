@@ -113,7 +113,7 @@ if __name__ == "__main__":
     ax4.text(
         0.05,
         0.9,
-        "mean=(%.5g$\pm$%.2g) ms" % (m_dtp, max(sm_dtp, (be[1] - be[0]) / np.sqrt(12))),
+        r"mean=(%.5g$\pm$%.2g) ms" % (m_dtp, max(sm_dtp, (be[1] - be[0]) / np.sqrt(12))),
         transform=ax4.transAxes,
     )
 

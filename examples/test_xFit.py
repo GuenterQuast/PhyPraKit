@@ -48,7 +48,7 @@ if __name__ == "__main__":  # --------------------------------------
         plot_cor=True,
         showplots=False,
         quiet=False,
-        axis_labels=["Index", "x   \  x(*par)"],
+        axis_labels=["Index", "x   |  x(*par)"],
         data_legend="Polar Data",
         model_legend="r-phi from x-y",
     )
