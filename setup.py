@@ -1,19 +1,23 @@
-import PhyPraKit  # from this directory
 import pathlib
 from setuptools import setup
+import sys
+
+pkg_name = "PhyPraKit"
 
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
+# import _version_info from package
+sys.path[0:0] = [pkg_name]
+import _version_info
+_version = _version_info._get_version_string()
 
 # The text of the README file
 README = (HERE / "README.md").read_text()
 
-
 setup(
-    name="PhyPraKit",
-    packages=["PhyPraKit"],
-    version=PhyPraKit.__version__,
-    #
+    name=pkg_name,
+    packages=[pkg_name],
+    version=_version,
     author="Guenter Quast",
     author_email="Guenter.Quast@online.de",
     url="http://www.etp.kit.edu/~quast/",
@@ -39,6 +43,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
     install_requires=[
         "NumPy >= 1.17",
