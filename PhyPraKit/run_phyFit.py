@@ -143,9 +143,7 @@ def run_phyFit():
         os.environ["PYTHONINSPECT"] = "x"
 
     # - - - Parse command-line arguments
-    _parser = argparse.ArgumentParser(
-        description="Perform a fit with PhyPraKit.phyFit package driven by input file"
-    )
+    _parser = argparse.ArgumentParser(description="Perform a fit with PhyPraKit.phyFit package driven by input file")
     # _parser = argparse.ArgumentParser(usage=__doc__)
 
     _parser.add_argument(

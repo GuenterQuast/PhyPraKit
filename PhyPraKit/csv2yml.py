@@ -59,9 +59,7 @@ def csv2yml():
         default=False,
         help="quiet - no output to screen",
     )
-    parser.add_argument(
-        "-d", "--delimiter", type=str, default=",", help="delimiter, default=','"
-    )
+    parser.add_argument("-d", "--delimiter", type=str, default=",", help="delimiter, default=','")
     parser.add_argument(
         "-n",
         "--headerlines",

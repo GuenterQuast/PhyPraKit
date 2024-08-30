@@ -352,9 +352,7 @@ def readPicoScope(file, delim=",", prlevel=0):
         print("*==* readPicoScope: %i columns found:" % nc)
         if prlevel > 1:
             for i, d in enumerate(data):
-                print(
-                    "     channel %i,  %i values found, unit %s" % (i, len(d), units[i])
-                )
+                print("     channel %i,  %i values found, unit %s" % (i, len(d), units[i]))
 
     if len(data) != nc:
         print("  !!! number of data columns inconsistent with number of units")
@@ -385,9 +383,7 @@ def readCassy(file, prlevel=0):
         print(("*==* readCassy: %i columns found:" % nc))
         if prlevel > 1:
             for i, d in enumerate(data):
-                print(
-                    ("     channel %i,  %i values found, tag %s" % (i, len(d), tags[i]))
-                )
+                print(("     channel %i,  %i values found, tag %s" % (i, len(d), tags[i])))
 
     if len(data) != nc:
         print("  !!! number of data columns inconsistent with number of units")
@@ -1044,9 +1040,7 @@ def simplePeakfinder(x, a, th=0.0):
         apeak.append(a[0])
     for i in range(1, len(x) - 1):
         if y[i] - y[i - 1] > th and y[i] - y[i + 1] > th:
-            xpeak.append(
-                sum(x[i - 1 : i + 1] * y[i - 1 : i + 1]) / sum(y[i - 1 : i + 1])
-            )
+            xpeak.append(sum(x[i - 1 : i + 1] * y[i - 1 : i + 1]) / sum(y[i - 1 : i + 1]))
             apeak.append(a[i])
     if y[-1] - y[-2] > th and y[-1] - y[-3] > th:
         xpeak.append(x[-1])
@@ -1082,12 +1076,7 @@ def convolutionFilter(a, v, th=0.0):
     # store places of best agreement with the template
     pidx = []
     for i in range(1, len(anrm) - 1):
-        if (
-            c[i] > 0.0
-            and c[i] - c[i - 1] >= 0.0
-            and c[i] - c[i + 1] > 0.0
-            and anrm[i] > th
-        ):
+        if c[i] > 0.0 and c[i] - c[i - 1] >= 0.0 and c[i] - c[i + 1] > 0.0 and anrm[i] > th:
             pidx.append(i)
     return pidx
 
@@ -1115,9 +1104,7 @@ def convolutionPeakfinder(a, width=10, th=0.0):
     # construct a (rectangular) template for a peak
     k = int(width / 2)
     v = np.array(
-        [-0.5 for i in range(k)]
-        + [0.5 for i in range(2 * k + 1)]
-        + [-0.5 for i in range(k)],
+        [-0.5 for i in range(k)] + [0.5 for i in range(2 * k + 1)] + [-0.5 for i in range(k)],
         dtype=np.float32,
     )
     return convolutionFilter(a, v, th=th)
@@ -1142,9 +1129,7 @@ def convolutionEdgefinder(a, width=10, th=0.0):
 
     # construct a (rectangular) template for an edge
     k = int(width / 2)
-    v = np.array(
-        [-0.5 for i in range(k)] + [0.0] + [0.5 for i in range(k)], dtype=np.float32
-    )
+    v = np.array([-0.5 for i in range(k)] + [0.0] + [0.5 for i in range(k)], dtype=np.float32)
     return convolutionFilter(a, v, th=th)
 
 
@@ -1190,10 +1175,7 @@ def barstat(bincont, bincent, pr=True):
     rms = np.sqrt(sum(bincont * bincent**2) / sum(bincont) - mean**2)
     smean = rms / np.sqrt(sum(bincont))
     if pr:
-        print(
-            "bar chart statistics:\n"
-            "   mean=%g, sigma=%g, sigma mean=%g\n" % (mean, rms, smean)
-        )
+        print("bar chart statistics:\n" "   mean=%g, sigma=%g, sigma mean=%g\n" % (mean, rms, smean))
     return mean, rms, smean
 
 
@@ -1240,10 +1222,7 @@ def histstat(binc, bine, pr=True):
     rms = np.sqrt(sum(binc * bincent**2) / sum(binc) - mean**2)
     sigma_m = rms / np.sqrt(sum(binc))
     if pr:
-        print(
-            "hist statistics:\n"
-            "   mean=%g, sigma=%g  sigma of mean=%g\n" % (mean, rms, sigma_m)
-        )
+        print("hist statistics:\n" "   mean=%g, sigma=%g  sigma of mean=%g\n" % (mean, rms, sigma_m))
     return mean, rms, sigma_m
 
 
@@ -1410,9 +1389,7 @@ def plotCorrelations(vals, names=None):
 
     fig, axarr = plt.subplots(npar, npar, figsize=(3.0 * npar, 3.1 * npar))
     fig.tight_layout()
-    fig.subplots_adjust(
-        top=0.92, bottom=0.1, left=0.1, right=0.95, wspace=0.33, hspace=0.3
-    )
+    fig.subplots_adjust(top=0.92, bottom=0.1, left=0.1, right=0.95, wspace=0.33, hspace=0.3)
     nb1 = int(min(50, nd / 10))
     nb2 = int(min(50, nd / 10))
 
@@ -1488,9 +1465,7 @@ def linRegression(x, y, sy=None):
     # set y-errors to 1. if not given
     if sy is None:
         sy = np.ones(len(y))
-        print(
-            "\n!**! No y-errors given -> parameter errors from fit are meaningless!\n"
-        )
+        print("\n!**! No y-errors given -> parameter errors from fit are meaningless!\n")
 
     # calculate auxilary quantities
     S1 = sum(1.0 / sy**2)
@@ -1540,9 +1515,7 @@ def odFit(fitf, x, y, sx=None, sy=None, p0=None):
     # set y-errors to 1. if not given
     if sy is None:
         sy = np.ones(len(y))
-        print(
-            "\n!**! No y-errors given -> parameter errors from fit are meaningless!\n"
-        )
+        print("\n!**! No y-errors given -> parameter errors from fit are meaningless!\n")
     # transform uncertainties to numpy-arrays, if necessary
     if sx is not None:
         if not hasattr(sx, "__iter__"):
@@ -1746,14 +1719,10 @@ def k2Fit(
         fit.add_error(axis="y", err_val=srely, relative=True, reference=ref)
     if yrelcor is not None:
         if len(np.shape(np.array(yrelcor))) < 2:
-            fit.add_error(
-                axis="y", err_val=yrelcor, correlation=1.0, relative=True, reference=ref
-            )
+            fit.add_error(axis="y", err_val=yrelcor, correlation=1.0, relative=True, reference=ref)
         else:
             for c in yrelcor:
-                fit.add_error(
-                    axis="y", err_val=c, correlation=1.0, relative=True, reference=ref
-                )
+                fit.add_error(axis="y", err_val=c, correlation=1.0, relative=True, reference=ref)
 
     # initialize and run fit
     if p0 is not None:
@@ -1913,18 +1882,14 @@ def k2hFit(
         hfit = Fit(
             hdat,
             fitf,
-            cost_function=HistCostFunction_GaussApproximation(
-                errors_to_use="pointwise"
-            ),
+            cost_function=HistCostFunction_GaussApproximation(errors_to_use="pointwise"),
             density=fit_density,
         )
     else:
         hfit = Fit(
             hdat,
             fitf,
-            cost_function=HistCostFunction_NegLogLikelihood(
-                data_point_distribution="poisson"
-            ),
+            cost_function=HistCostFunction_NegLogLikelihood(data_point_distribution="poisson"),
             density=fit_density,
         )
     # text for labeling
@@ -2475,9 +2440,7 @@ def csv2yaml(file, nlhead=1, delim="\t", keyline=0):
     ylines = []
     for i, k in enumerate(keys):
         # yl = "{0}: [{1}]".format(k.strip(), ','.join(dlinesT[i]))
-        yl = yaml.dump(
-            {k.strip(): dlinesT[i]}, default_flow_style=True
-        )  # arrays as [ ... ]
+        yl = yaml.dump({k.strip(): dlinesT[i]}, default_flow_style=True)  # arrays as [ ... ]
         yl = yl.replace("{", "")  # remove { and }
         yl = yl.replace("}", "")
         ylines.append(yl)

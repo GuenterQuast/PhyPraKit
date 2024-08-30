@@ -97,14 +97,10 @@ def plotData():
         os.environ["PYTHONINSPECT"] = "x"
 
     # - - - Parse command-line arguments
-    parser = argparse.ArgumentParser(
-        description="Plot data with error bars or a histrogram from file in yaml format"
-    )
+    parser = argparse.ArgumentParser(description="Plot data with error bars or a histrogram from file in yaml format")
     # parser = argparse.ArgumentParser(usage=__doc__)
 
-    parser.add_argument(
-        "filename", type=str, nargs="+", help="name(s) of input file(s) in yaml format"
-    )
+    parser.add_argument("filename", type=str, nargs="+", help="name(s) of input file(s) in yaml format")
     parser.add_argument(
         "-s",
         "--saveplot",

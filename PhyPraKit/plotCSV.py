@@ -62,9 +62,7 @@ def plotCSV():
         default=",",
         help="character used as field separator ",
     )
-    parser.add_argument(
-        "-H", "--Headerlines", type=int, default=1, help="number of header lines"
-    )
+    parser.add_argument("-H", "--Headerlines", type=int, default=1, help="number of header lines")
     parser.add_argument(
         "-k",
         "--key_line",
@@ -103,9 +101,7 @@ def plotCSV():
     fig = plt.figure(1, figsize=(10, 2.25 * nColumns))
     fig.tight_layout()
     fig.suptitle("contents of file " + fname, size="x-large", color="b")
-    fig.subplots_adjust(
-        left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.33
-    )  #
+    fig.subplots_adjust(left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.33)  #
     x = data[0]
     axes = []
     ncol = nColumns - 1

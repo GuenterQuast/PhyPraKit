@@ -325,9 +325,7 @@ def decode_uDict(uDict):
             s = uDict
         return s, srel, sabscor, srelcor
 
-    if type(uDict[0]) is not type(
-        {}
-    ):  # array of uncertainties, one for each data point
+    if type(uDict[0]) is not type({}):  # array of uncertainties, one for each data point
         for i, v in enumerate(uDict):
             if type(v) is type(""):
                 uDict[i] = decode_rel(v)
@@ -376,33 +374,25 @@ def decode_uDict(uDict):
             if s is None:
                 s = e
             else:
-                raise ValueError(
-                    "!!! only one entry for independent uncertainties allowed!"
-                )
+                raise ValueError("!!! only one entry for independent uncertainties allowed!")
         elif cor == 0.0 and rel:
             # independent relative error
             if srel is None:
                 srel = e
             else:
-                raise ValueError(
-                    "!!! only one entry for relative uncertainties allowed!"
-                )
+                raise ValueError("!!! only one entry for relative uncertainties allowed!")
         elif cor != 0 and not rel:
             # correlated absolute error
             if sabscor is None:
                 sabscor = e
             else:
-                raise ValueError(
-                    "!!! only one entry for correlated absolute uncertainties allowed!"
-                )
+                raise ValueError("!!! only one entry for correlated absolute uncertainties allowed!")
         elif cor != 0 and rel:
             # correlated relative error
             if srelcor is None:
                 srelcor = e
             else:
-                raise ValueError(
-                    "!!! only one entry for correlated relative uncertainties allowed!"
-                )
+                raise ValueError("!!! only one entry for correlated relative uncertainties allowed!")
     # -- end for
     return s, srel, sabscor, srelcor
 
@@ -1625,9 +1615,7 @@ class mnFit:
         )
         self.data = self.xyData
         # set flags for steering of fit process in do_fit()
-        self.iterateFit = self.xyData.has_xErrors or (
-            self.xyData.has_rel_yErrors and self.refModel
-        )
+        self.iterateFit = self.xyData.has_xErrors or (self.xyData.has_rel_yErrors and self.refModel)
 
     def init_xyFit(
         self,
@@ -1653,9 +1641,7 @@ class mnFit:
         """
 
         if self.xyData is None:
-            raise ValueError(
-                " !!! mnFit.init_xyFit: no data object defined - call init_data()"
-            )
+            raise ValueError(" !!! mnFit.init_xyFit: no data object defined - call init_data()")
 
         # get parameters of model function to set start values for fit
         if model_kwargs is None:
@@ -1781,12 +1767,7 @@ class mnFit:
 
             # set flags for steering of fit process in do_fit()
             self.rebulildCov = None
-            self.has_xErrors = (
-                ex is not None
-                or erelx is not None
-                or cabsx is not None
-                or crelx is not None
-            )
+            self.has_xErrors = ex is not None or erelx is not None or cabsx is not None or crelx is not None
             self.has_rel_yErrors = erely is not None or crely is not None
             self.needs_covariance = (
                 self.needs_covariance
@@ -1798,9 +1779,7 @@ class mnFit:
 
             # build (initial) covariance matrix (without x-errors)
             if self.needs_covariance:
-                err2 = _build_CovMat(
-                    self.nd, self.ey, self.erely, self.cabsy, self.crely, self.y
-                )
+                err2 = _build_CovMat(self.nd, self.ey, self.erely, self.cabsy, self.crely, self.y)
             else:
                 err2 = _build_Err2(self.ey, self.erely, self.y)
 
@@ -1858,9 +1837,7 @@ class mnFit:
                 # build static (=parameter-independent) part of covariance matrix
                 if self.has_rel_yErrors and self.ref_toModel:
                     # some y-errors are parameter-independent
-                    self._staticCov = _build_CovMat(
-                        self.nd, self.ey, eabscor=self.cabsy
-                    )
+                    self._staticCov = _build_CovMat(self.nd, self.ey, eabscor=self.cabsy)
                 else:
                     # all y-errors are parameter-independent
                     self._staticCov = _build_CovMat(
@@ -1883,9 +1860,7 @@ class mnFit:
                     self._covy0 = None
                 # covariance matrix of x-uncertainties (all are parameter-dependent)
                 if self.has_xErrors:
-                    self.covx = _build_CovMat(
-                        self.nd, self.ex, self.erelx, self.cabsx, self.crelx, self.x
-                    )
+                    self.covx = _build_CovMat(self.nd, self.ex, self.erelx, self.cabsx, self.crelx, self.x)
                     #  determine dx for derivative from smallest x-uncertainty
                     self._dx = np.sqrt(min(np.diagonal(self.covx))) / 10.0
                 else:
@@ -1923,14 +1898,7 @@ class mnFit:
             # add projected x errors
             if self.err2x is not None:
                 # determine derivatives of model function w.r.t. x,
-                _mprime = (
-                    0.5
-                    / self._dx
-                    * (
-                        self.model(self.x + self._dx, *mpar)
-                        - self.model(self.x - self._dx, *mpar)
-                    )
-                )
+                _mprime = 0.5 / self._dx * (self.model(self.x + self._dx, *mpar) - self.model(self.x - self._dx, *mpar))
                 # project on y and add to covariance matrix
                 self.err2 += _mprime * _mprime * self.err2x
 
@@ -1954,14 +1922,7 @@ class mnFit:
                     self.covy = np.array(self.cov, copy=True)
 
                 # determine derivatives of model function w.r.t. x,
-                _mprime = (
-                    0.5
-                    / self._dx
-                    * (
-                        self.model(self.x + self._dx, *mpar)
-                        - self.model(self.x - self._dx, *mpar)
-                    )
-                )
+                _mprime = 0.5 / self._dx * (self.model(self.x + self._dx, *mpar) - self.model(self.x - self._dx, *mpar))
                 # project on y and add to covariance matrix
                 self.cov += np.outer(_mprime, _mprime) * self.covx
             else:  # no x-errors, y-covmat = covmat
@@ -2111,9 +2072,7 @@ class mnFit:
             # data object of type xyDataContainer
             self.data = outer.data
             if not isinstance(self.data, mnFit.xyDataContainer):
-                raise ValueError(
-                    " !!! mnFit.xLSqCost: expecting data container of type 'mnFit.xyDataContainer'"
-                )
+                raise ValueError(" !!! mnFit.xLSqCost: expecting data container of type 'mnFit.xyDataContainer'")
             self.model = model
             self.quiet = outer.quiet
             # use -2 * log(L) of Gaussian instead of Chi2
@@ -2235,9 +2194,7 @@ class mnFit:
         """
 
         # create data object and pass all input arguments
-        self.xData = self.xDataContainer(
-            self, x, e, erel, cabs, crel, names=names, quiet=self.quiet
-        )
+        self.xData = self.xDataContainer(self, x, e, erel, cabs, crel, names=names, quiet=self.quiet)
         self.data = self.xData
         # set flags for steering of fit process in do_fit()
         self.iterateFit = self.xData.has_rel_Errors and self.refModel
@@ -2266,9 +2223,7 @@ class mnFit:
         """
 
         if self.xData is None:
-            raise ValueError(
-                " !!! mnFit.init_xFit: no data object defined - call init_data()"
-            )
+            raise ValueError(" !!! mnFit.init_xFit: no data object defined - call init_data()")
 
         # get parameters of model function to set start values for fit
         if model_kwargs is None:
@@ -2348,15 +2303,11 @@ class mnFit:
             # set flags for steering of fit process in do_fit()
             self.rebulildCov = None
             self.has_rel_Errors = erel is not None or crel is not None
-            self.needs_covariance = (
-                self.needs_covariance or self.cabs is not None or self.crel is not None
-            )
+            self.needs_covariance = self.needs_covariance or self.cabs is not None or self.crel is not None
 
             # build (initial) covariance matrix (without x-errors)
             if self.needs_covariance:
-                err2 = _build_CovMat(
-                    self.nd, self.e, self.erel, self.cabs, self.crel, self.x
-                )
+                err2 = _build_CovMat(self.nd, self.e, self.erel, self.cabs, self.crel, self.x)
             else:
                 err2 = _build_Err2(self.e, self.erel, self.x)
 
@@ -2466,7 +2417,7 @@ class mnFit:
 
         def get_Cov(self):
             r"""return covariance matrix of data"""
-            mumin, mumax, steps = 0., 10., 500
+            mumin, mumax, steps = 0.0, 10.0, 500
             if self.needs_covariance:
                 return self.cov
             else:
@@ -2586,9 +2537,7 @@ class mnFit:
             # data object of type xyDataContainer
             self.data = outer.data
             if not isinstance(self.data, mnFit.xDataContainer):
-                raise ValueError(
-                    " !!! mnFit.indexedCost: expecting data container of type 'mnFit.xDataContainer'"
-                )
+                raise ValueError(" !!! mnFit.indexedCost: expecting data container of type 'mnFit.xDataContainer'")
             self.model = model
             self.quiet = outer.quiet
             # use -2 * log(L) of Gaussian instead of Chi2
@@ -2669,9 +2618,7 @@ class mnFit:
     # --- special code for histogram Fit
     #
 
-    def set_hOptions(
-        self, run_minos=None, use_GaussApprox=None, fit_density=None, quiet=None
-    ):
+    def set_hOptions(self, run_minos=None, use_GaussApprox=None, fit_density=None, quiet=None):
         r"""Define mnFit options
 
         Args:
@@ -2703,9 +2650,7 @@ class mnFit:
         """
 
         # create data object and pass all input arguments
-        self.hData = self.histDataContainer(
-            self, bin_contents, bin_edges, DeltaMu, quiet=self.quiet
-        )
+        self.hData = self.histDataContainer(self, bin_contents, bin_edges, DeltaMu, quiet=self.quiet)
         self.data = self.hData
 
     def init_hFit(
@@ -2733,9 +2678,7 @@ class mnFit:
         """
 
         if self.hData is None:
-            raise ValueError(
-                " !!! mnFit.init_hFit: no data object defined - call init_data()"
-            )
+            raise ValueError(" !!! mnFit.init_hFit: no data object defined - call init_data()")
 
         # get parameters of model function to set start values for fit
         if model_kwargs is None:
@@ -2745,9 +2688,7 @@ class mnFit:
         self._setupFitParameters(*par)
 
         # create cost function
-        self.costf = self.hCost(
-            self, model, use_GaussApprox=self.use_GaussApprox, density=self.fit_density
-        )
+        self.costf = self.hCost(self, model, use_GaussApprox=self.use_GaussApprox, density=self.fit_density)
         self._setupMinuit(model_kwargs)
 
     class histDataContainer:
@@ -2861,12 +2802,7 @@ class mnFit:
                     )
                 else:  # show symmetric error bars
                     ep = np.sqrt(self.model_values + np.abs(self.DeltaMu))
-                    em = [
-                        ep[i]
-                        if self.model_values[i] - ep[i] > 0.0
-                        else self.model_values[i]
-                        for i in range(len(ep))
-                    ]
+                    em = [ep[i] if self.model_values[i] - ep[i] > 0.0 else self.model_values[i] for i in range(len(ep))]
                     plt.errorbar(
                         self.centers,
                         self.model_values,
@@ -2878,10 +2814,7 @@ class mnFit:
                     )
             else:  # no model values available (yet), show error bars related to data
                 ep = np.sqrt(self.contents + np.abs(self.DeltaMu))
-                em = [
-                    ep[i] if self.contents[i] - ep[i] > 0.0 else self.contents[i]
-                    for i in range(len(ep))
-                ]
+                em = [ep[i] if self.contents[i] - ep[i] > 0.0 else self.contents[i] for i in range(len(ep))]
                 plt.errorbar(
                     self.centers,
                     bconts,
@@ -2993,9 +2926,7 @@ class mnFit:
             # data object of type histDataContainter
             self.data = outer.hData
             if not isinstance(self.data, mnFit.histDataContainer):
-                raise ValueError(
-                    " !!! mnFit.hCost: expecting data container of type 'histDataContainer'"
-                )
+                raise ValueError(" !!! mnFit.hCost: expecting data container of type 'histDataContainer'")
 
             self.model = model
             self.density = density
@@ -3039,9 +2970,7 @@ class mnFit:
 
             # - calculate 2*negLogL Poisson;
             #  model prediction as approximate integral over bin
-            model_values = self.norm * self.integral_overBins(
-                self.data.lefts, self.data.rights, self.model, *par
-            )
+            model_values = self.norm * self.integral_overBins(self.data.lefts, self.data.rights, self.model, *par)
             #
 
             n2lL += np.sum(
@@ -3054,9 +2983,7 @@ class mnFit:
             if self.final_call:
                 if self.GaussApprox:
                     # return standard chi^2
-                    self.gof = (
-                        n2lL - np.log(model_values + np.abs(self.data.DeltaMu)).sum()
-                    )
+                    self.gof = n2lL - np.log(model_values + np.abs(self.data.DeltaMu)).sum()
                 else:
                     # store goodness-of-fit (difference of nlL2 w.r.t. saturated model)
                     n2lL_saturated = np.sum(
@@ -3106,13 +3033,7 @@ class mnFit:
         def integral_overBins(ledges, redges, f, *par):
             r"""Calculate approx. integral of model over bins using Simpson's rule"""
             return (
-                (redges - ledges)
-                / 6.0
-                * (
-                    f(ledges, *par)
-                    + 4.0 * f((ledges + redges) / 2.0, *par)
-                    + f(redges, *par)
-                )
+                (redges - ledges) / 6.0 * (f(ledges, *par) + 4.0 * f((ledges + redges) / 2.0, *par) + f(redges, *par))
             )
 
     # --- end definition of class hCost ----
@@ -3159,9 +3080,7 @@ class mnFit:
             [parameter index, min, max]
         """
         if self.data is None and self.fit_type != "user":
-            raise ValueError(
-                " !!! mnFit.init_mnFit: no data object defined - call init_data()"
-            )
+            raise ValueError(" !!! mnFit.init_mnFit: no data object defined - call init_data()")
 
         # get parameters of model function to set start values for fit
         if model_kwargs is None:
@@ -3234,9 +3153,7 @@ class mnFit:
             fig = plt.figure(num=num, figsize=figsize)
 
             if plot_residual:
-                print(
-                    " !!! mnFit.mlData.plot: plotting residuals not possible for user ML fit"
-                )
+                print(" !!! mnFit.mlData.plot: plotting residuals not possible for user ML fit")
 
             if self.x is None:
                 print(" !!! mnFit.mlData.plot: no data object defined")
@@ -3246,9 +3163,7 @@ class mnFit:
             mx = max(self.x)
             ymn = 0.0
             ymx = 0.25 / (mx - mn)
-            plt.vlines(
-                self.x, ymn, ymx, lw=1, color="grey", alpha=0.5, label=data_label
-            )
+            plt.vlines(self.x, ymn, ymx, lw=1, color="grey", alpha=0.5, label=data_label)
 
             return fig
 
@@ -3274,15 +3189,11 @@ class mnFit:
                     print("*==* mnFit.mnCost: fit with user-supplied cost function'")
             else:
                 if not isinstance(self.data, mnFit.mlDataContainer):
-                    raise ValueError(
-                        " !!! mnFit.mnCost: expecting data container of type 'mlDataContainer'"
-                    )
+                    raise ValueError(" !!! mnFit.mnCost: expecting data container of type 'mlDataContainer'")
                 self.model = userFunction
                 self.cost = self.nlLcost
                 if not self.quiet:
-                    print(
-                        "*==* mnFit.mnCost: negLogL fit with user-defined density function'"
-                    )
+                    print("*==* mnFit.mnCost: negLogL fit with user-defined density function'")
 
             # take account of possible parameter constraints
             self.constraints = outer.constraints
@@ -3465,9 +3376,7 @@ class mnFit:
             cov = np.asarray(m.covariance)  # covariance matrix of all(!) parameters
             # produce reduced covariance matrix for free parameters only
             if self.nfixed != 0:
-                for i in range(
-                    len(parnames) - 1, -1, -1
-                ):  # start from largest index and work back
+                for i in range(len(parnames) - 1, -1, -1):  # start from largest index and work back
                     if self.fixedPars[i]:
                         cov = np.delete(np.delete(cov, i, 0), i, 1)
         npar = len(parnames)  # number of parameters
@@ -3502,16 +3411,10 @@ class mnFit:
         self.GoF = self.costf.gof
         #   parameter values at best-fit point
         self.ParameterValues = np.array(parvals, copy=True)
-        self.freeParVals = np.array(
-            [parvals[i] for i in range(npar) if not self.fixedPars[i]]
-        )
-        self.freeParErrs = np.array(
-            [parerrs[i] for i in range(npar) if not self.fixedPars[i]]
-        )
+        self.freeParVals = np.array([parvals[i] for i in range(npar) if not self.fixedPars[i]])
+        self.freeParErrs = np.array([parerrs[i] for i in range(npar) if not self.fixedPars[i]])
         # fixed parameter names and values
-        self.fixedParVals = np.array(
-            [parvals[i] for i in range(npar) if self.fixedPars[i]]
-        )
+        self.fixedParVals = np.array([parvals[i] for i in range(npar) if self.fixedPars[i]])
         # * names of fixed parameters in self.fixedParNams
         #   number of degrees of freedom
         self.NDoF = ndof
@@ -3555,9 +3458,7 @@ class mnFit:
         if self.ResultDictionary is not None:
             return self.ResultDictionary
         else:
-            raise RuntimeError(
-                " !!! mnFit.getResult: no results available - run fit first"
-            )
+            raise RuntimeError(" !!! mnFit.getResult: no results available - run fit first")
 
     @staticmethod
     def getFunctionError(x, model, pvals, covp, fixedPars):
@@ -3616,10 +3517,7 @@ class mnFit:
                 print("*==* mnFit starting fit")
             print("  Options:")
             for key in self.options.keys():
-                relevant = (
-                    self.options[key][1] == "all"
-                    or self.fit_type in self.options[key][1]
-                )
+                relevant = self.options[key][1] == "all" or self.fit_type in self.options[key][1]
                 if relevant:
                     iopt = self.options[key][0] + 2
                     print(5 * " " + "- ", self.options[key][iopt])
@@ -3730,9 +3628,7 @@ class mnFit:
         nfixed = len(fixed_pvals)
 
         # plot data
-        fig_model = d.plot(
-            figsize=(7.5, 6.5), data_label=data_legend, plot_residual=plot_residual
-        )
+        fig_model = d.plot(figsize=(7.5, 6.5), data_label=data_legend, plot_residual=plot_residual)
 
         # overlay model function
         # histogram fit provides normalised distribution,
@@ -3880,8 +3776,7 @@ class mnFit:
         #  2. goodness-of-fit
         if self.fit_type in ["xy", "indexed"]:
             fit_info.append(
-                r"$\chi^2$/$n_\mathrm{{dof}}$={:.1f}/{}".format(gof, ndof)
-                + ", p={:.1f}%".format(100 * chi2prb)
+                r"$\chi^2$/$n_\mathrm{{dof}}$={:.1f}/{}".format(gof, ndof) + ", p={:.1f}%".format(100 * chi2prb)
             )
         elif self.fit_type == "hist":
             fit_info.append("g.o.f./$n_\\mathrm{{dof}}$ = {:.1f}/{}".format(gof, ndof))
@@ -3947,9 +3842,7 @@ class mnFit:
                         plt.ylabel(ylabel)
                         xmn, xmx = plt.gca().get_xlim()
                         # show horizontal line at self.ErrDef
-                        plt.hlines(
-                            self.ErrDef, xmn, xmx, color="orange", linestyle="--"
-                        )
+                        plt.hlines(self.ErrDef, xmn, xmx, color="orange", linestyle="--")
                         plt.errorbar(
                             fpvals[i],
                             0.0,
@@ -4003,9 +3896,7 @@ class mnFit:
             print("!!! getProfile not implemented vor iminuit vers.<2")
             return
         else:
-            return self.minuit.mnprofile(
-                pnam, bound=range, size=npoints, subtract_min=True
-            )
+            return self.minuit.mnprofile(pnam, bound=range, size=npoints, subtract_min=True)
 
     def getContour(self, pnam1, pnam2, cl=None, npoints=100):
         r"""return profile likelihood contour of parameters pnam1 and pnam2
@@ -4055,17 +3946,13 @@ class mnFit:
             print("!!! plot_clContour not implemented vor iminuit vers.<2")
             return
         else:
-            fig = plt.figure(
-                num="Contour(s) " + pnam1 + " vs. " + pnam2, figsize=(5.0, 5.0)
-            )
+            fig = plt.figure(num="Contour(s) " + pnam1 + " vs. " + pnam2, figsize=(5.0, 5.0))
             self.minuit.draw_mncontour(pnam1, pnam2, cl=cl)
             return fig
 
     def plot_nsigContour(self, pnam1, pnam2, nsig):
         r"""plot nsig contours of parameters pnam1 and pnam2"""
-        fig = plt.figure(
-            num="Contour(s) " + pnam1 + " vs. " + pnam2, figsize=(5.0, 5.0)
-        )
+        fig = plt.figure(num="Contour(s) " + pnam1 + " vs. " + pnam2, figsize=(5.0, 5.0))
         if self.iminuit_version < "2":
             self.minuit.draw_mncontour(pnam1, pnam2, nsigma=nsig)
         else:
@@ -4164,9 +4051,7 @@ if __name__ == "__main__":  # --- interface and example
             data_legend="random data",
             model_legend="model",
         )
-        plt.suptitle(
-            "mnFit example: fit to x-y data", size="xx-large", color="darkblue"
-        )
+        plt.suptitle("mnFit example: fit to x-y data", size="xx-large", color="darkblue")
 
         # Print results
         pvals, perrs, cor, chi2, pnams = resultDict.values()
@@ -4215,9 +4100,7 @@ if __name__ == "__main__":  # --- interface and example
             data_legend="Polar Data",
             model_legend="r-phi from x-y",
         )
-        plt.suptitle(
-            "mnFit example: fit to indexed data", size="xx-large", color="darkblue"
-        )
+        plt.suptitle("mnFit example: fit to indexed data", size="xx-large", color="darkblue")
 
         # Print results
         pvals, perrs, cor, chi2, pnams = resultDict.values()
@@ -4237,9 +4120,7 @@ if __name__ == "__main__":  # --- interface and example
         #    # define the model function to fit
         def SplusB_model(x, mu=6.987, sigma=0.5, a=0.0, s=0.2):
             r"""pdf of a Gaussian signal on top of flat background"""
-            normal = np.exp(-0.5 * ((x - mu) / sigma) ** 2) / np.sqrt(
-                2.0 * np.pi * sigma**2
-            )
+            normal = np.exp(-0.5 * ((x - mu) / sigma) ** 2) / np.sqrt(2.0 * np.pi * sigma**2)
             linear = (a * (xmx + xmn) / 2 + 1.0) / (xmx - xmn)
             return s * normal + (1 - s) * linear
 
@@ -4314,9 +4195,7 @@ if __name__ == "__main__":  # --- interface and example
             model_legend="signal + background model",
         )
 
-        plt.suptitle(
-            "mnFit example: fit to histogram data", size="xx-large", color="darkblue"
-        )
+        plt.suptitle("mnFit example: fit to histogram data", size="xx-large", color="darkblue")
 
         # Print results
         print("\n*==* histogram fit Result:")

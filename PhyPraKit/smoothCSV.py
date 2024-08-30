@@ -71,9 +71,7 @@ def smoothCSV():
         default=",",
         help="character used as field separator ",
     )
-    parser.add_argument(
-        "-H", "--Headerlines", type=int, default=1, help="number of header lines"
-    )
+    parser.add_argument("-H", "--Headerlines", type=int, default=1, help="number of header lines")
     parser.add_argument("-w", "--WindowSize", type=int, default=10, help="window size")
     parser.add_argument(
         "-k",
@@ -144,9 +142,7 @@ def smoothCSV():
     fig = plt.figure(1, figsize=(10, 2.25 * nColumns))
     fig.tight_layout()
     fig.suptitle("smoothed contents in " + fn, size="x-large", color="b")
-    fig.subplots_adjust(
-        left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.33
-    )  #
+    fig.subplots_adjust(left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.33)  #
     axes = []
     ncol = nColumns - 1
     for i in range(1, ncol + 1):
