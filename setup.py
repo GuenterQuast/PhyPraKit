@@ -7,7 +7,7 @@ pkg_name = "PhyPraKit"
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
 # import _version_info from package
-sys.path[0:0] = [pkg_name]
+sys.path[0] = pkg_name
 import _version_info
 _version = _version_info._get_version_string()
 
