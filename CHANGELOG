@@ -29,4 +29,11 @@ v1.2.0dev May 2021  new version:
 	PhyPraKit.meanFilter()
 1.2.5 Apr. 23 some small fixes
       Jul 23  changed setup to pyproject.toml
-      
+      Aug 23  linting with black
+1.2.6 Oct 23  version for winter 2023/24
+1.2.7 Apr 24 version for summer 2024
+1.2.8rc1 Aug 24 initial version for winter 24/25
+      minor fixes, python 3.12 compatibility, linting with black
+
+
+	
