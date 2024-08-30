@@ -5,5 +5,4 @@ scipy
 pandas
 iminuit
 kafe2
-PhyPraKit
 uncertainties
