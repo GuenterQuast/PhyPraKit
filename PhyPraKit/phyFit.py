@@ -1,52 +1,52 @@
 r"""**package phyFit**
-  
+
   Physics Fitting with `iminiut` [https://iminuit.readthedocs.ios/en/stable/]
 
   Author: Guenter Quast, initial version Jan. 2021, updated July 2023
 
-  Requirements: 
+  Requirements:
    - Python >= 3.6
    - iminuit vers. > 2.0
    - scipy > 1.5.0
    - matplotlib > 3
 
   The class `mnFit.py` uses the optimization and uncertainty-estimation
-  package `iminuit` for fitting a parameter-dependent model f(x, \*par) 
-  to data points (x, y) or a probability density function to binned 
-  histogram data or to unbinned data. Parameter estimation is based on 
-  pre-implemented Maximum-Likelihood methods, or on a user-defined 
+  package `iminuit` for fitting a parameter-dependent model f(x, \*par)
+  to data points (x, y) or a probability density function to binned
+  histogram data or to unbinned data. Parameter estimation is based on
+  pre-implemented Maximum-Likelihood methods, or on a user-defined
   cost function in the latter case, which provides maximum flexibility.
-  Classical least-square methods are optionally available for comparison 
-  with other packages. 
+  Classical least-square methods are optionally available for comparison
+  with other packages.
 
-  A unique feature of the package is the support of different kinds 
-  of uncertainties for x-y data, namely independent and/or correlated 
-  absolute and/or relative uncertainties in the x and/or y directions. 
-  Parameter estimation for density distributions is based on the shifted 
-  Poisson distribution, Poisson(x - loc, lambda), of the number of entries 
-  in each bin of a histogram. 
+  A unique feature of the package is the support of different kinds
+  of uncertainties for x-y data, namely independent and/or correlated
+  absolute and/or relative uncertainties in the x and/or y directions.
+  Parameter estimation for density distributions is based on the shifted
+  Poisson distribution, Poisson(x - loc, lambda), of the number of entries
+  in each bin of a histogram.
 
   Parameter constraints, i.e. external knowledge of parameters within
-  Gaussian uncertainties, limits on parameters in order to avoid 
-  problematic regions in parameter space during the minimization process, 
+  Gaussian uncertainties, limits on parameters in order to avoid
+  problematic regions in parameter space during the minimization process,
   and fixing of parameters, e.g. to include the validity range of a model
   in the parameters without affecting the fit, are also supported by *mnFit*.
 
   Method:
-    Uncertainties that depend on model parameters are treated by dynamically 
+    Uncertainties that depend on model parameters are treated by dynamically
     updating the cost function during the fitting process with `iminuit`.
-    Data points with relative errors can thus be referred to the model 
-    instead of the data. The derivative of the model function w.r.t. x is 
-    used to project the covariance matrix of x-uncertainties on the y-axis. 
+    Data points with relative errors can thus be referred to the model
+    instead of the data. The derivative of the model function w.r.t. x is
+    used to project the covariance matrix of x-uncertainties on the y-axis.
 
-  Example functions *xyFit()*, *hFit()* and *mFit()*, illustrate how to 
-  control the  interface of `mnFit`. A short example script is also 
+  Example functions *xyFit()*, *hFit()* and *mFit()*, illustrate how to
+  control the  interface of `mnFit`. A short example script is also
   provided to perform fits on sample data. The sequence of steps performed
   by these interface functions is rather general and straight-forward:
-  
+
   .. code-block:: python
-  
-     Fit = mnFit(fit_type)                # initialize a mnFit object 
+
+     Fit = mnFit(fit_type)                # initialize a mnFit object
      Fit.setOptions(run_minos=True, ...)  # set options
      Fit.init_data(data, parameters ...)  # initialize data container
      Fit.init_fit(ufcn, p0 = p0, ...)     # initialize Fit (and minuit)
@@ -57,34 +57,34 @@ r"""**package phyFit**
 
   It is also possible to run a fit without the need to provide own
   Python code. In this case, the data, uncertainties and the model
-  are read from a file in yaml format and passed to the function 
-  xyFit_from_yaml() as a dictionary. 
+  are read from a file in yaml format and passed to the function
+  xyFit_from_yaml() as a dictionary.
 
-  The implementation of the fitting procedure in this package is 
-  - intentionally - rather minimalistic, and it is meant to 
-  illustrate the principles of an advanced usage of `iminuit`. It 
-  is also intended to stimulate own applications of special, 
+  The implementation of the fitting procedure in this package is
+  - intentionally - rather minimalistic, and it is meant to
+  illustrate the principles of an advanced usage of `iminuit`. It
+  is also intended to stimulate own applications of special,
   user-defined cost functions.
 
   The main features of this package are:
-    - provisioning of cost functions for x-y and binned histogram fits 
+    - provisioning of cost functions for x-y and binned histogram fits
     - implementation of the least-squares method for correlated Gaussian errors
     - support for correlated x-uncertainties by projection on the y-axis
     - support of relative errors with reference to the model values
-    - shifted Poisson distribution for binned likelihood fits to histograms 
+    - shifted Poisson distribution for binned likelihood fits to histograms
     - evaluation of profile likelihoods to determine asymmetric uncertainties
     - plotting of profile likelihood and confidence contours
 
-  The **cost function** that is optimized for x-y fits basically is a 
-  least-squares one, which is extended if parameter-dependent uncertainties 
-  are present. In the latter case, the logarithm of the determinant of the 
-  covariance matrix is added to the least-squares cost function, so that it 
-  corresponds to twice the negative log-likelihood of a multivariate Gaussian 
+  The **cost function** that is optimized for x-y fits basically is a
+  least-squares one, which is extended if parameter-dependent uncertainties
+  are present. In the latter case, the logarithm of the determinant of the
+  covariance matrix is added to the least-squares cost function, so that it
+  corresponds to twice the negative log-likelihood of a multivariate Gaussian
   distribution. Fits to histogram data rely on the negative log-likelihood
-  of the Poisson distribution, generalized to support fractional observed 
-  values, which may occur if corrections to the observed bin counts have 
+  of the Poisson distribution, generalized to support fractional observed
+  values, which may occur if corrections to the observed bin counts have
   to be applied. If there is a difference *DeltaMu* between the mean value
-  and the variance of the number of entries in a bin due to corrections, 
+  and the variance of the number of entries in a bin due to corrections,
   a "shifted Poisson distribution", Poiss(x-DeltaMu, lambda), is supported.
 
   Fully functional applications of the package are illustrated in executable
@@ -94,8 +94,8 @@ r"""**package phyFit**
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
 
-import sys
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 from scipy import stats, linalg
 from scipy.special import loggamma
 from scipy.optimize import newton
@@ -524,10 +524,11 @@ def xyFit_from_yaml(
     #  y errors
     try:  # look at to two different places
         uDict = fd["parametric_model"]["y_errors"]
-    except:
+    except Exception:
         try:
             uDict = fd["y_errors"]
-        except:
+        except Excption as e1:
+            print(str(e1))
             raise ValueError("!!! no y-errors found !")  # must have y uncertainties
     sy, srely, sabscory, srelcory = decode_uDict(uDict)
 
@@ -555,11 +556,11 @@ def xyFit_from_yaml(
         model_label = "model"
     try:
         code_str = fd["model_function"]["python_code"]
-    except:
+    except Esception as e:
         try:
             code_str = fd["model_function"]
-        except:
-            raise ValueError("!!! no code to fit found !")
+        except Exception as e:
+            raise ValueError("!!! no code to fit found ! " + str(e))
     fitf_name, code = check_function_code(code_str)
 
     # print input and model
@@ -1014,13 +1015,13 @@ def hFit_from_yaml(
         model_label = "model"
     try:
         code_str = fd["model_density_function"]["python_code"]
-    except:
+    except Exception:
         try:
             code_str = fd["model_density_function"]
-        except:
+        except Exception:
             try:
                 code_str = fd["model_function"]
-            except:
+            except Exception:
                 raise ValueError("!!! no code to fit found !")
     fitf_name, code = check_function_code(code_str)
 
@@ -2859,7 +2860,7 @@ class mnFit:
             cp = newton(f, x0=lam + dl, x1=lam, args=(lam, dlL))
             try:  # may not converge for small lambda, as there is no intersection < lam
                 cm = newton(f, x0=lam - dlm, x1=lam, args=(lam, dlL))
-            except:
+            except Exception:
                 cm = 0.0
             if (cp - cm) < lam / 100.0:  # found same intersection,
                 cm = 0.0  #  set 1st one to 0.
@@ -3251,12 +3252,12 @@ class mnFit:
             if len(np.shape(constraints)) == 2:
                 for c in constraints:
                     # name to parameter id
-                    if type(c[0]) == type(" "):
+                    if type(c[0]) is type(" "):
                         c[0] = self.pnam2id[c[0]]
                     self.constraints.append(c)
             else:
                 # name to parameter id
-                if type(constraints[0]) == type(" "):
+                if type(constraints[0]) is type(" "):
                     constraints[0] = self.pnam2id[constraints[0]]
                 self.constraints.append(constraints)
         self.nconstraints = len(self.constraints)
@@ -3276,13 +3277,13 @@ class mnFit:
             self.limits = [[None, None]] * len(self.pnams)
             if len(np.shape(limits)) == 2:
                 for l in limits:
-                    if type(l[0]) == type(" "):
+                    if type(l[0]) is type(" "):
                         p_id = self.pnam2id[l[0]]
                     else:
                         p_id = l[0]
                     self.limits[p_id] = [l[1], l[2]]
             else:
-                if type(limits[0]) == type(" "):
+                if type(limits[0]) is type(" "):
                     p_id = self.pnam2id[limits[0]]
                 else:
                     p_id = limits[0]
@@ -3295,14 +3296,14 @@ class mnFit:
             # get parameter names or indices to fix
             if len(np.shape(fixPars)) == 1:
                 for f in fixPars:
-                    if type(f) == type(" "):
+                    if type(f) is type(" "):
                         p_id = self.pnam2id[f]
                     else:
                         p_id = f
                     self.fixedPars[p_id] = True
                 self.nfixed = len(fixPars)
             else:
-                if type(fixPars) == type(" "):
+                if type(fixPars) is type(" "):
                     p_id = self.pnam2id[fixPars]
                 else:
                     p_id = fixPars
@@ -3529,8 +3530,7 @@ class mnFit:
             self.migrad_ok = True
         except Exception as e:
             self.migrad_ok = False
-            print(e)
-            raise RuntimeError("*==* !!! fit with migrad failed")
+            raise RuntimeError("*==* !!! fit with migrad failed! " + str(e))
 
         # possibly, need to iterate
         if self.iterateFit:
@@ -3548,8 +3548,7 @@ class mnFit:
                 self.migrad_ok = True
             except Exception as e:
                 self.migrad_ok = False
-                print(e)
-                raise RuntimeError("*==* !!! iteration of fit with migrad failed")
+                raise RuntimeError("*==* !!! iteration of fit with migrad failed! " + str(e))
 
         # run profile likelihood scan to check for asymmetric errors
         if self.run_minos:

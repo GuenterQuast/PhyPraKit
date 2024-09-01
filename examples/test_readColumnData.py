@@ -5,7 +5,8 @@
 """
 
 from PhyPraKit import readColumnData
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 
 # ---------------------------------------------------------------
 if __name__ == "__main__":
@@ -33,7 +34,7 @@ if __name__ == "__main__":
 
     print("keywords found:")
     for key in info_dict:
-        if info_dict[key] != None:
+        if info_dict[key] is not None:
             print((key, ":", info_dict[key]))
 
     # make a plot

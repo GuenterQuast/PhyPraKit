@@ -6,7 +6,8 @@
 
 """
 
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 
 ##from PhyPraKit.phyFit import xFit
 from PhyPraKit import xFit
@@ -52,9 +53,7 @@ if __name__ == "__main__":  # --------------------------------------
         data_legend="Polar Data",
         model_legend="r-phi from x-y",
     )
-    plt.suptitle(
-        "mnFit example: fit to indexed data", size="xx-large", color="darkblue"
-    )
+    plt.suptitle("mnFit example: fit to indexed data", size="xx-large", color="darkblue")
 
     # Print results
     pvals, perrs, cor, chi2, pnams = resultDict.values()

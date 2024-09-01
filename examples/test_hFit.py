@@ -6,7 +6,7 @@
 
 """
 
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
 
 ##from PhyPraKit.phyFit import hFit
 from PhyPraKit import hFit
@@ -19,9 +19,7 @@ if __name__ == "__main__":  # --------------------------------------
     # define the model function to fit
     def model(x, mu=6.0, sigma=0.5, s=0.3):
         """pdf of a Gaussian signal on top of flat background"""
-        normal = np.exp(-0.5 * ((x - mu) / sigma) ** 2) / np.sqrt(
-            2.0 * np.pi * sigma**2
-        )
+        normal = np.exp(-0.5 * ((x - mu) / sigma) ** 2) / np.sqrt(2.0 * np.pi * sigma**2)
         flat = 1.0 / (max - min)
         return s * normal + (1 - s) * flat
 

@@ -5,14 +5,14 @@
    Uses function PhyPraKit.xyFit, which in turn uses mnFit from phyFit
 
    This is a rather complete example showing a fit to
-   data with independent and correlated, absolute and 
-   relative uncertainties in the x and y directions. 
-   
+   data with independent and correlated, absolute and
+   relative uncertainties in the x and y directions.
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 """
 
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
 from PhyPraKit import generateXYdata, xyFit
 
 if __name__ == "__main__":  # --------------------------------------

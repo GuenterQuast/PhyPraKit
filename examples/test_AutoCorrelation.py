@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 """test_AutoCorrelation.py
-   test function `autocorrelate()` in PhyPraKit; 
+   test function `autocorrelate()` in PhyPraKit;
    determines the frequency of a periodic signal from maxima and minima
    of the autocorrelation function and performs statistical analysis
    of time between peaks/dips
 
-   uses `readCSV()`, `autocorrelate()`, `convolutionPeakfinder()` 
+   uses `readCSV()`, `autocorrelate()`, `convolutionPeakfinder()`
    and `histstat()` from PhyPraKit
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
@@ -14,7 +14,9 @@
 
 # ---------------------------------------------------------------
 if __name__ == "__main__":
-    import sys, numpy as np, matplotlib.pyplot as plt
+    import sys
+    import numpy as np
+    import matplotlib.pyplot as plt
     from PhyPraKit import readCSV, autocorrelate, convolutionPeakfinder, histstat
 
     # read signal file
@@ -54,9 +56,7 @@ if __name__ == "__main__":
     # make plots
     # 1. signal
     fig = plt.figure(1, figsize=(7.5, 9.0))
-    fig.subplots_adjust(
-        left=0.1, bottom=0.1, right=0.98, top=0.98, wspace=0.3, hspace=0.5
-    )
+    fig.subplots_adjust(left=0.1, bottom=0.1, right=0.98, top=0.98, wspace=0.3, hspace=0.5)
     ax1 = fig.add_subplot(3, 1, 1)
     ax1.plot(t, a)
     ax1.set_xlabel(r"$time$ (ms)", size="large")
@@ -79,9 +79,7 @@ if __name__ == "__main__":
     ax3 = fig.add_subplot(3, 1, 3)
     ac_dtp = ac_tp[1:] - ac_tp[:-1]
     ac_dtd = ac_td[1:] - ac_td[:-1]
-    bins = np.linspace(
-        min(min(ac_dtp), min(ac_dtd)), max(max(ac_dtp), max(ac_dtd)), 100
-    )
+    bins = np.linspace(min(min(ac_dtp), min(ac_dtd)), max(max(ac_dtp), max(ac_dtd)), 100)
     bc, be, _ = ax3.hist(
         [ac_dtp, ac_dtd],
         bins,

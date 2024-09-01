@@ -1,21 +1,22 @@
 #! /usr/bin/env python3
 """Beispiel_Diodenkennlinie.py
-   Messung einer Strom-Spannungskennlinie und Anpassung der Schockley-Gleichung. 
+   Messung einer Strom-Spannungskennlinie und Anpassung der Schockley-Gleichung.
 
-   - Konstruktion der Kovarianzmatrix für reale Messinstrumente mit 
-     Signalrauschen, Anzeigeunsicherheiten und korrelierten, realtiven 
+   - Konstruktion der Kovarianzmatrix für reale Messinstrumente mit
+     Signalrauschen, Anzeigeunsicherheiten und korrelierten, realtiven
      Kalibratsionsunsicherheiten für die Strom- und Spannungsmessung.
 
-   - Ausführen der Anpassung der Shockley-Gleichung mit *k2Fit* oder *mFit* 
-     aus dem Paket *PhyPraKit*. Wichtig: die Modellfunktion ist nicht 
-     nach oben beschränkt, sondern divergiert sehr schnell. Daher muss der 
+   - Ausführen der Anpassung der Shockley-Gleichung mit *k2Fit* oder *mFit*
+     aus dem Paket *PhyPraKit*. Wichtig: die Modellfunktion ist nicht
+     nach oben beschränkt, sondern divergiert sehr schnell. Daher muss der
      verwendete numerische Optimierer Parameterlimits unterstützen.
-   
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
 
-import numpy as np, matplotlib.pyplot as plt
-from PhyPraKit import xyFit, k2Fit
+import numpy as np
+import matplotlib.pyplot as plt
+from PhyPraKit import xyFit
 
 
 # define the model function to fit
@@ -122,9 +123,7 @@ if __name__ == "__main__":  # --------------------------------------
 
     # - Anzeigegenauigkeit des Stroms (mA), 3 Messbereiche
     sy = np.asarray(
-        2 * [Idigits * Irange1 / Icounts]
-        + 12 * [Idigits * Irange2 / Icounts]
-        + 6 * [Idigits * Irange3 / Icounts]
+        2 * [Idigits * Irange1 / Icounts] + 12 * [Idigits * Irange2 / Icounts] + 6 * [Idigits * Irange3 / Icounts]
     )
     sabsy = np.sqrt(deltaI**2 + sy**2)  # Rauschanteil addieren
     # - korrelierte Kalibrationsunsicherheit

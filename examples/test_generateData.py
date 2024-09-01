@@ -5,13 +5,14 @@
    random deviations are then added to arrive at the true values, from
    which the true y-values are then calculated according to a model
    function. In the last step, these true y-values are smeared
-   by adding random deviations to obtain a sample of measured values 
+   by adding random deviations to obtain a sample of measured values
 
 ..  moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 """
 
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 from PhyPraKit import generateXYdata
 
 

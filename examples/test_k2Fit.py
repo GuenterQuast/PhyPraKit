@@ -1,9 +1,9 @@
 #! /usr/bin/env python3
 """
 test_k2Fit
-   Illustrate fitting of an arbitrary function with kafe2   
+   Illustrate fitting of an arbitrary function with kafe2
      This example illustrates the special features of kafe2:
-     - correlated errors for x and y data  
+     - correlated errors for x and y data
      - relative errors with reference to model
      - profile likelihood method to evaluate asymmetric errors
      - plotting of profile likeliood and confidence contours
@@ -13,7 +13,7 @@ test_k2Fit
 
 # import kafe2 # must be imported first to properly set matplotlib backend
 from PhyPraKit import generateXYdata, k2Fit
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
 
 
 # -- the model function

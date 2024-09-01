@@ -1,26 +1,26 @@
 #! /usr/bin/env python3
-from __future__ import print_function  # for python2.7 compatibility
-
 """analyisis. py
    simple template analysis with kafe and LaTeX output
 
-   - test fiting an arbitrary fucntion with kafe, 
-     with uncertainties in x and y and correlated 
+   - test fiting an arbitrary fucntion with kafe,
+     with uncertainties in x and y and correlated
      absolute and relative uncertainties, then
 
    - write figure and table to be included in LaTeX document
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
+
 import kafe  # must be imported first to properly set matplotlib backend
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 
 # some more useful functions from kafe
 from kafe.function_tools import FitFunction, LaTeX, ASCII
 from kafe.fit import round_to_significance
 
 #
-from PhyPraKit import readCSV, writeTexTable, writeCSV
+from PhyPraKit import readCSV, writeTexTable
 
 
 # -- the model function (as in kafe, with decorator functions)
@@ -44,9 +44,7 @@ syabscor = 0.1  #  an absolute, correlated error on y
 
 ### --- perform a fit with kafe
 #    create the kafe data set ...
-dat = kafe.Dataset(
-    data=(xdat, ydat), title="ToyData", axis_labels=["X", "Y"], basename="kRegression"
-)
+dat = kafe.Dataset(data=(xdat, ydat), title="ToyData", axis_labels=["X", "Y"], basename="kRegression")
 #    ... and add all error sources
 dat.add_error_source("x", "simple", sigx_abs)
 dat.add_error_source("x", "simple", sxrelcor, relative=True, correlated=True)

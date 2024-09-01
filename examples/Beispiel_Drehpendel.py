@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Beispiel_Drehpendel.py  
+"""Beispiel_Drehpendel.py
    Auswertung der Daten aus einer im CASSY labx-Format gespeicherten Datei
    am Beispiel des Drehpendels
 
@@ -9,20 +9,20 @@
      - offset-Korrektur
      - Glättung durch gleitenden Mittelwert
      - Zusammenfassung benachberter Daten durch Mittelung
-  
-   * Fourier-Transformation (einfach und fft) 
+
+   * Fourier-Transformation (einfach und fft)
 
    * Suche nach Extrema (`peaks` und `dips`)
 
    * Anpassung von Funkionen an Einhüllende der Maxima und Minima
 
-   * Interpolation durch Spline-Funktionen 
+   * Interpolation durch Spline-Funktionen
 
    * numerische Ableitung und Ableitung der Splines
 
    * Phasenraum-Darstellung (aufgezeichnete Wellenfunktion
      gegen deren Ableitung nach der Zeit)
-     
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 """
@@ -36,10 +36,11 @@ import PhyPraKit as ppk
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":
-    import sys, numpy as np, matplotlib.pyplot as plt
+    import sys
+    import numpy as np
+    import matplotlib.pyplot as plt
     from PhyPraKit import odFit, labxParser
     from scipy import interpolate
-    from scipy import signal
 
     #  filename="CassyExample.labx"
     filename = "Drehpendel.labx"
@@ -76,9 +77,7 @@ if __name__ == "__main__":
     # * use, if sampling rate is too high
     if len(phi) > 2000:
         print("  resampling")
-        phi, t = ppk.resample(
-            phi, t, n=int(len(phi) / 1000)
-        )  # average n samples into 1
+        phi, t = ppk.resample(phi, t, n=int(len(phi) / 1000))  # average n samples into 1
 
     # numerical differentiation with numpy
     print("** numerical derivative")
@@ -142,9 +141,7 @@ if __name__ == "__main__":
     # ... and fit parameters
     print("** envelope fit")
     parp, parpe, corp, chi2p = odFit(envp, tp, phip, 0.0, 0.1, p0=p0p)
-    print(
-        "** fit of positive envelope, chi2/df= %.2g" % (chi2p / (len(tp) - len(parp)))
-    )
+    print("** fit of positive envelope, chi2/df= %.2g" % (chi2p / (len(tp) - len(parp))))
     np.set_printoptions(precision=3)
     print(" --> parameters:   ", parp)
     np.set_printoptions(precision=2)
@@ -162,9 +159,7 @@ if __name__ == "__main__":
     # plot data and analysis results
     fig = plt.figure("Amplitude", figsize=(7.5, 10.0))
     fig.suptitle("Script: Beispiel_Drehpendel.py", size="x-large", color="b")
-    fig.subplots_adjust(
-        left=0.1, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25
-    )  #
+    fig.subplots_adjust(left=0.1, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25)  #
 
     ax1 = fig.add_subplot(3, 1, 1)
     ax1.plot(t, phi)
@@ -192,9 +187,7 @@ if __name__ == "__main__":
 
     # Phasenraumdiagramme mit interpolierten Daten
     fig2 = plt.figure("PhaseSpace", figsize=(10, 5.0))
-    fig2.subplots_adjust(
-        left=0.1, bottom=0.1, right=0.97, top=0.93, wspace=0.25, hspace=None
-    )
+    fig2.subplots_adjust(left=0.1, bottom=0.1, right=0.97, top=0.93, wspace=0.25, hspace=None)
     axa = fig2.add_subplot(1, 2, 1)
     tplt = np.linspace(t[0], t[-1], 50000)
     axa.plot(cs_phi(tplt), cs_omega(tplt), "b-", alpha=0.5, linewidth=1)

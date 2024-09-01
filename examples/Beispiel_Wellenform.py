@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
-"""Beispiel_Wellenform.py 
+"""Beispiel_Wellenform.py
    Einlesen von mit PicoScope erstellten Dateien am Beispiel
    der akustischen Anregung eines Stabes
 
    - Fourier-Analyse des Signals
 
    - Bestimmung der Resonanzfrequenz mittels Autokorrelation
-  
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 """
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":
-    import numpy as np, matplotlib.pyplot as plt, PhyPraKit as ppk
-    from scipy import interpolate, signal
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import PhyPraKit as ppk
     import sys
 
     # check for / read command line arguments
@@ -71,9 +72,7 @@ if __name__ == "__main__":
     # make a plots
     fig = plt.figure(1, figsize=(10.0, 7.5))
     fig.suptitle("Script: Beispiel_Wellenform.py", size="x-large", color="b")
-    fig.subplots_adjust(
-        left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25
-    )  #
+    fig.subplots_adjust(left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25)  #
     # Signalverlauf
     ax1 = fig.add_subplot(2, 2, 1)
     ax1.plot(t, a)

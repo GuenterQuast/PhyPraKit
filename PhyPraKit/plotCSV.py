@@ -1,28 +1,28 @@
 #!/usr/bin/python3
 
-"""plotCSV.py 
-   uses PhyPraKit.readtxt() to read floating-point column-data in csv format
+"""plotCSV.py
+ uses PhyPraKit.readtxt() to read floating-point column-data in csv format
 
-   replaces decimal comma by dot if needed. 
+ replaces decimal comma by dot if needed.
 
 
-  usage: 
+usage:
 
-    ./plotCSV.py [options] <input file name>
+  ./plotCSV.py [options] <input file name>
 
-  Input: 
+Input:
 
-    - input file in csv format
+  - input file in csv format
 
-  Options:
+Options:
 
-    - s : character used as field separator, default ','
-    - H : number of header lines, default 1
+  - s : character used as field separator, default ','
+  - H : number of header lines, default 1
 
-  Output:
+Output:
 
-    - figure
- 
+  - figure
+
 
 
 """
@@ -33,7 +33,8 @@ from PhyPraKit import readtxt
 # --- helper function
 def wexit(code):
     # keep Python window open on MS Windows
-    import os, sys
+    import os
+    import sys
 
     if os.name == "nt":
         _ = input("\n      ==> type <ret> to end > ")
@@ -41,7 +42,9 @@ def wexit(code):
 
 
 def plotCSV():
-    import sys, argparse, numpy as np, matplotlib.pyplot as plt
+    import sys
+    import argparse
+    import matplotlib.pyplot as plt
 
     # - - - Parse command-line arguments
     parser = argparse.ArgumentParser(description="plot contents of CSV file")

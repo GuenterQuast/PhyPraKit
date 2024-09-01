@@ -1,5 +1,5 @@
-"""**PhyPraKit**  
-   a collection of tools for data handling, visualisation and analysis 
+"""**PhyPraKit**
+   a collection of tools for data handling, visualisation and analysis
    in Physics Lab Courses, recommended for "Physikalisches Praktikum am KIT"
 
    Sub-modules phyTools and phyFit
@@ -7,7 +7,7 @@
    type help(PhyPraKit.phyTools) or help(PhyPraKit.phyFit) for
    an overview of the functionality.
 
-.. module PhyPraKit   
+.. module PhyPraKit
    :synopsis: a collection of tools for data analysis
      recommended for "Physikalisches Praktikum am KIT"
 

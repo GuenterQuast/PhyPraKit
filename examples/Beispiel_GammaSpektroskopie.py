@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""Beispiel_GammaSpektroskopie.py  
+"""Beispiel_GammaSpektroskopie.py
   Darstellung der Daten aus einer im CASSY labx-Format gespeicherten Datei
   am Beispiel der Gamma-Spektroskopie
 
   * Einlesen der Daten im .labx oder gezippten .labx-Format
 
-  Args: 
+  Args:
 
     - name of file in .labx format
     - flag for file type:  0: text, 1: zipped
@@ -17,15 +17,15 @@
 # last changed: Jan -2024
 
 # -----------------------------------------------------------
-import numpy as np, sys
-import PhyPraKit as ppk
+import numpy as np
+import sys
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":
-    import sys, numpy as np, matplotlib.pyplot as plt
-    from PhyPraKit import odFit, labxParser
-    from scipy import interpolate
-    from scipy import signal
+    import sys
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from PhyPraKit import labxParser
 
     unzip = False
     # check for / read command line arguments
@@ -56,9 +56,7 @@ if __name__ == "__main__":
     # define a Figure
     fig = plt.figure("Gammaspektren", figsize=(10.0, 7.5))
     fig.suptitle("Script Beispiel_GammaSpektroskopie.py", size="x-large", color="b")
-    fig.subplots_adjust(
-        left=0.1, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25
-    )  #
+    fig.subplots_adjust(left=0.1, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25)  #
     # define subplots
     ax1 = fig.add_subplot(1, 1, 1)
     for i in range(len(k)):

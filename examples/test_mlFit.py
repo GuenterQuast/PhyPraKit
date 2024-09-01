@@ -6,7 +6,8 @@
 
 """
 
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 
 # from PhyPraKit.phyFit import mFit
 from PhyPraKit import mFit

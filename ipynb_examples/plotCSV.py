@@ -1,28 +1,28 @@
 #!/usr/bin/env python3
 
-"""plotCSV.py 
-   uses PhyPraKit.readtxt() to read floating-point column-data in csv format
+"""plotCSV.py
+ uses PhyPraKit.readtxt() to read floating-point column-data in csv format
 
-   replaces decimal comma by dot if needed. 
+ replaces decimal comma by dot if needed.
 
 
-  usage: 
+usage:
 
-    ./plotCSV.py [options] <input file name>
+  ./plotCSV.py [options] <input file name>
 
-  Input: 
+Input:
 
-    - input file in csv format
+  - input file in csv format
 
-  Options:
+Options:
 
-    - s : character used as field separator, default ','
-    - H : number of header lines, default 1
+  - s : character used as field separator, default ','
+  - H : number of header lines, default 1
 
-  Output:
+Output:
 
-    - figure
- 
+  - figure
+
 
 
 """

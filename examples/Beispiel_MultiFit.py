@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-"""Beispiel_MultiFit.py   
+"""Beispiel_MultiFit.py
    general example for fitting multiple distributions with kafe2
       - define models
       - set up data objects
@@ -13,7 +13,7 @@
 
 # Imports  #
 from kafe2 import XYContainer, Fit, MultiFit, Plot
-import numpy as np, matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 # -- define two model functions with common parameter p0
 #      remark:

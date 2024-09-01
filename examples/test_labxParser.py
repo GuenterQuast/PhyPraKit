@@ -1,5 +1,5 @@
 """test_labxParser.py
-   read files in xml-format produced with the Leybold Cassy system  
+   read files in xml-format produced with the Leybold Cassy system
    uses PhyPraPit.labxParser()
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
@@ -8,9 +8,8 @@
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":
-    import sys, numpy as np, matplotlib.pyplot as plt
-    from PhyPraKit import odFit, labxParser
-    from scipy import interpolate
+    import sys
+    from PhyPraKit import labxParser
 
     # check for / read command line arguments
     if len(sys.argv) == 2:

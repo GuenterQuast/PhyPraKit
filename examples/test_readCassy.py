@@ -1,5 +1,5 @@
-"""test_readCassy.py 
-   read data exported by Leybold Cassylab in .txt format 
+"""test_readCassy.py
+   read data exported by Leybold Cassylab in .txt format
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
@@ -7,10 +7,8 @@
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":
-    import numpy as np, matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt
     from PhyPraKit import readCassy
-    from scipy import interpolate
-    from scipy import signal
     import sys
 
     # check for / read command line arguments

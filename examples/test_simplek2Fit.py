@@ -7,8 +7,8 @@
 """
 
 # import kafe2 # must be imported first to properly set matplotlib backend
-from PhyPraKit import generateXYdata, k2Fit
-import numpy as np, matplotlib.pyplot as plt
+from PhyPraKit import k2Fit
+import numpy as np
 
 
 # -- the model function

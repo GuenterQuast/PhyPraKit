@@ -3,9 +3,10 @@
    Beispiel: Numerische Fehlerfortpflanzung mit PhyPraKit.prpagatedError()
    Illustriert auch die Verwendung der Rundung auf die Genauigkeit der
    Unsicherheit.
-   
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
+
 from PhyPraKit import propagatedError, ustring
 import numpy as np
 

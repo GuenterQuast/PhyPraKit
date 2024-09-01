@@ -1,19 +1,20 @@
 #
-"""test_Fourier.py 
+"""test_Fourier.py
    Read data exported with PicoScope usb-oscilloscpe,
    here the accoustic excitation of a steel rod
 
    Demonstraion of a Fourier transformation of the signal
 
-  
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 """
 
 # -----example Code illustrating usage of FourierSpectrum ------
 if __name__ == "__main__":
-    import numpy as np, matplotlib.pyplot as plt, PhyPraKit as ppk
-    from scipy import interpolate, signal
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import PhyPraKit as ppk
     import sys
 
     # check for / read command line arguments
@@ -40,9 +41,7 @@ if __name__ == "__main__":
     # make  plots
     fig = plt.figure(1, figsize=(7.5, 7.5))
     fig.suptitle("Script: test_Fourier.py", size="x-large", color="b")
-    fig.subplots_adjust(
-        left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25
-    )  #
+    fig.subplots_adjust(left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25)  #
     ax1 = fig.add_subplot(2, 1, 1)
     ax1.plot(t, a)
     ax1.set_xlabel("$time$ " + units[0], size="large")

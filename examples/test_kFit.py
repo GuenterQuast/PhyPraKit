@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 """test_kFit
-   test fitting an arbitrary function with kafe, 
-   with uncertainties in x and y and correlated 
+   test fitting an arbitrary function with kafe,
+   with uncertainties in x and y and correlated
    absolute and relative uncertainties
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
@@ -9,9 +9,8 @@
 
 from __future__ import print_function  # for python2.7 compatibility
 
-import kafe  # must be imported first to properly set matplotlib backend
 from PhyPraKit import generateXYdata, kFit
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
 
 
 # -- the model function

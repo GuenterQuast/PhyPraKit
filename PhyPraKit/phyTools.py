@@ -1,101 +1,101 @@
 r"""**package phyTools**
 
-   Collection of tools for data handling, visualisation and analysis 
-   in Physics Lab Courses, recommended for "Physikalisches Praktikum am KIT"
+ Collection of tools for data handling, visualisation and analysis
+ in Physics Lab Courses, recommended for "Physikalisches Praktikum am KIT"
 
-   Author: Guenter Quast, initial version Aug. 2017, updated July 2023
+ Author: Guenter Quast, initial version Aug. 2017, updated July 2023
 
-  phyTools contains the following functions:
+phyTools contains the following functions:
 
-    1. Data input/output:
+  1. Data input/output:
 
-      - readColumnData() read data and meta-data from text file
-      - readCSV()        read data in csv-format from file with header
-      - readtxt()        read data in "txt"-format from file with header
-      - readPicoScope()  read data from PicoScope
-      - readCassy()      read CASSY output file in .txt format   
-      - labxParser()     read CASSY output file, .labx format   
-      - writeCSV()       write data in csv-format (opt. with header)
-      - writeTexTable()  write data in LaTeX table format
-      - round_to_error() round to same number of significant digits as uncertainty
-      - ustring()        return rounded value +/- uncertainty as formatted string;   
-        alternative: the data type *ufloat(v,u)* of package *uncertainties* comfortably 
-        supports printing of values *v* with uncertainties *u*.
+    - readColumnData() read data and meta-data from text file
+    - readCSV()        read data in csv-format from file with header
+    - readtxt()        read data in "txt"-format from file with header
+    - readPicoScope()  read data from PicoScope
+    - readCassy()      read CASSY output file in .txt format
+    - labxParser()     read CASSY output file, .labx format
+    - writeCSV()       write data in csv-format (opt. with header)
+    - writeTexTable()  write data in LaTeX table format
+    - round_to_error() round to same number of significant digits as uncertainty
+    - ustring()        return rounded value +/- uncertainty as formatted string;
+      alternative: the data type *ufloat(v,u)* of package *uncertainties* comfortably
+      supports printing of values *v* with uncertainties *u*.
 
-    2. signal processing:
+  2. signal processing:
 
-      - offsetFilter()      subtract an offset in array a
-      - meanFilter()        apply sliding average to smoothen data
-      - resample()          average over n samples
-      - simplePeakfinder()  find peaks and dips in an array,    
-        `(recommend to use convolutionPeakfinder)`
-      - convolutionPeakfinder() find maxima (peaks) in an array
-      - convolutionEdgefinder() find maxima of slope (rising) edges in an array
-      - Fourier_fft()       fast Fourier transformation of an array
-      - FourierSpectrum()   Fourier transformation of an array   
-        `(slow, preferably use fft version)`
-      - autocorrelate()     auto-correlation function
+    - offsetFilter()      subtract an offset in array a
+    - meanFilter()        apply sliding average to smoothen data
+    - resample()          average over n samples
+    - simplePeakfinder()  find peaks and dips in an array,
+      `(recommend to use convolutionPeakfinder)`
+    - convolutionPeakfinder() find maxima (peaks) in an array
+    - convolutionEdgefinder() find maxima of slope (rising) edges in an array
+    - Fourier_fft()       fast Fourier transformation of an array
+    - FourierSpectrum()   Fourier transformation of an array
+      `(slow, preferably use fft version)`
+    - autocorrelate()     auto-correlation function
 
-    3. statistics:
+  3. statistics:
 
-      - wmean                  calculate weighted mean
-      - BuildCovarianceMatrix  build covariance matrix from individual uncertainties
-      - Cov2Cor                convert covariance matrix to correlation matrix
-      - Cor2Cov                convert correlation matrix + errors to covariance matrix 
-      - chi2prob               caclulate chi^2 probability 
-      - propagatedError        determine propagated uncertainty, with covariance;  
-        hint: the data type *ufloat(v,u)* of package *uncertainties* comfortably supports 
-        functions of values *v* with uncertainties *u* with correct error propagation
-      - getModelError          determine uncertainty of parameter-dependent model function  
+    - wmean                  calculate weighted mean
+    - BuildCovarianceMatrix  build covariance matrix from individual uncertainties
+    - Cov2Cor                convert covariance matrix to correlation matrix
+    - Cor2Cov                convert correlation matrix + errors to covariance matrix
+    - chi2prob               caclulate chi^2 probability
+    - propagatedError        determine propagated uncertainty, with covariance;
+      hint: the data type *ufloat(v,u)* of package *uncertainties* comfortably supports
+      functions of values *v* with uncertainties *u* with correct error propagation
+    - getModelError          determine uncertainty of parameter-dependent model function
 
-    4. histograms tools:
+  4. histograms tools:
 
-      - barstat()   statistical information (mean, sigma, error_on_mean) from bar chart
-      - nhist()    histogram plot based on np.historgram() and plt.bar()    
-        `better use matplotlib.pyplot.hist()`  
-      - histstat() statistical information from 1d-histogram
-      - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()  
-        `(better use matplotlib.pyplot.hist2d)`  
-      - hist2dstat() statistical information from 2d-histogram
-      - profile2d()  "profile plot" for 2d data
-      - chi2p_indep2d() chi2 test on independence of data
-      - plotCorrelations()  distributions and correlations of a multivariate data set
+    - barstat()   statistical information (mean, sigma, error_on_mean) from bar chart
+    - nhist()    histogram plot based on np.historgram() and plt.bar()
+      `better use matplotlib.pyplot.hist()`
+    - histstat() statistical information from 1d-histogram
+    - nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()
+      `(better use matplotlib.pyplot.hist2d)`
+    - hist2dstat() statistical information from 2d-histogram
+    - profile2d()  "profile plot" for 2d data
+    - chi2p_indep2d() chi2 test on independence of data
+    - plotCorrelations()  distributions and correlations of a multivariate data set
 
-    5. linear regression and function fitting:
+  5. linear regression and function fitting:
 
-      - linRegression()    linear regression, y=ax+b, with analytical formula
-      - odFit()            fit function with x and y errors (wit package *scipy* *ODR*)
-      - xyFit()            fit with with correlated x and y errors,
-        profile likelihood and contour lines (module phyFit) 
-      - xFit()             fit of parameters to indexed data x_i (module *phyFit*)
-      - hFit()             fit of a density to histogram data (module *phyFit*)
-      - mFit()             fit of a user-defined cost function, or of a density 
-        to unbinned data (module *phyFit*)
-      - k2Fit()            fit function with (correlated) errors on x and y  
-        with package kafe2
-      - k2hFit()            fit of a density to histogram data   
-        with package kafe2
+    - linRegression()    linear regression, y=ax+b, with analytical formula
+    - odFit()            fit function with x and y errors (wit package *scipy* *ODR*)
+    - xyFit()            fit with with correlated x and y errors,
+      profile likelihood and contour lines (module phyFit)
+    - xFit()             fit of parameters to indexed data x_i (module *phyFit*)
+    - hFit()             fit of a density to histogram data (module *phyFit*)
+    - mFit()             fit of a user-defined cost function, or of a density
+      to unbinned data (module *phyFit*)
+    - k2Fit()            fit function with (correlated) errors on x and y
+      with package kafe2
+    - k2hFit()            fit of a density to histogram data
+      with package kafe2
 
-    6. simulated data with MC-method:
+  6. simulated data with MC-method:
 
-      - smearData()          add random deviations to input data
-      - generateXYdata()     generate simulated data 
+    - smearData()          add random deviations to input data
+    - generateXYdata()     generate simulated data
 
-    phyFit fitting package for binned and unbinned ML fits and ML fits to (x,y) data
+  phyFit fitting package for binned and unbinned ML fits and ML fits to (x,y) data
 
-      - mFit()             unbinned ML fit with user-defined negLogL or PDF
-      - hFit()             fit to binned histogram data
-      - xFit()             fit of parameters to indexed data x_i, with x_i=x_i(x_j, \*par)
-      - xyFit()            fit to (x,y) data with y = f(x; \*par) 
+    - mFit()             unbinned ML fit with user-defined negLogL or PDF
+    - hFit()             fit to binned histogram data
+    - xFit()             fit of parameters to indexed data x_i, with x_i=x_i(x_j, \*par)
+    - xyFit()            fit to (x,y) data with y = f(x; \*par)
 
-    7. helper functions
+  7. helper functions
 
-      - check_function_code()    check Python code before using it in exec() command
-      - csv2yaml()               convert csv format to yaml data block
-      - plot_xy_from_yaml()      plot (xy) data from yaml file
-      - plot_hist_from_yaml()    plot histogram data from yaml file
+    - check_function_code()    check Python code before using it in exec() command
+    - csv2yaml()               convert csv format to yaml data block
+    - plot_xy_from_yaml()      plot (xy) data from yaml file
+    - plot_hist_from_yaml()    plot histogram data from yaml file
 
-  """
+"""
 
 # Author:       G. Quast   Dec. 2015
 # dependencies: PYTHON v2.7 or >v3.5, numpy, matplotlib.pyplot
@@ -138,7 +138,8 @@ r"""**package phyTools**
 #   12-Jul-23    GQ  setup via pyproject.toml
 # ----------------------------------------------------------------------------------
 
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 from scipy import stats
 
 ## ------- section 1: input from text files ------------------------
@@ -234,7 +235,7 @@ def readCSV(file, nlhead=1, delim=","):
     # --------------------------------------------------------------------
 
     # open file for read (if necessary)
-    if type(file) == type(" "):
+    if type(file) is type(" "):
         f = open(file, "r")  # file is a file name
     else:
         f = file  # assume input is file handle of an open file
@@ -299,7 +300,7 @@ def readtxt(file, nlhead=1, delim="\t"):
     #   -- end specialCharFilter
 
     # open file for read (if necessary)
-    if type(file) == type(" "):
+    if type(file) is type(" "):
         f = open(file, "r")  # file is a file name
     else:
         f = file  # assume input is file handle of an open file
@@ -411,8 +412,9 @@ def labxParser(file, prlevel=1, unzip=False):
     # changes : 20-Jul-23 support of zipped format
     # --------------------------------------------------------------------
     from xml.etree import ElementTree
-    import numpy as np, matplotlib.pyplot as plt
-    import sys, zipfile
+    import numpy as np
+    import sys
+    import zipfile
 
     if unzip:
         with zipfile.ZipFile(file, "r") as zf:
@@ -542,7 +544,7 @@ def writeCSV(file, ldata, hlines=[], fmt="%.10g", delim=",", nline="\n", **kwarg
     # --------------------------------------------------------------------
 
     # open file for read (if necessary)
-    if type(file) == type(" "):
+    if type(file) is type(" "):
         f = open(file, "w")  # file is a file name
     else:
         f = file  # assume input is file handle of an open file
@@ -551,9 +553,9 @@ def writeCSV(file, ldata, hlines=[], fmt="%.10g", delim=",", nline="\n", **kwarg
     if "\n" not in nline:
         nline += "\n"
 
-    if type(hlines) == type(" "):
+    if type(hlines) is type(" "):
         f.write(hlines + nline)
-    elif type(hlines) == type([]):
+    elif type(hlines) is type([]):
         for i in range(len(hlines)):
             f.write(hlines[i] + nline)
 
@@ -568,7 +570,7 @@ def writeCSV(file, ldata, hlines=[], fmt="%.10g", delim=",", nline="\n", **kwarg
         )
         f.close()
         return 0
-    except:
+    except Exception:
         return 1
 
 
@@ -591,9 +593,9 @@ def writeTexTable(file, ldata, cnames=[], caption="", fmt="%.10g"):
 
     # create header for latex tabular environment
     head = "\\begin{tabular}{" + len(ldata) * "c" + "}\n\\hline\n"
-    if type(cnames) == type(""):
+    if type(cnames) is type(""):
         head += cnames
-    elif type(cnames) == type([]) and len(cnames) > 0:
+    elif type(cnames) is type([]) and len(cnames) > 0:
         for element in cnames:
             head += element + " & "
         head = head[:-3] + "\\\\"  # remove last '&' and replace by '\\'
@@ -1296,8 +1298,7 @@ def hist2dstat(H2d, xed, yed, pr=True):
             "hist2d statistics:\n"
             "   <x>=%g, <y>=%g\n\
     var_x=%.2g, var_y=%.2g\n\
-    cov=%.2g, cor=%.2g\n"
-            % (meanx, meany, varx, vary, cov, cor)
+    cov=%.2g, cor=%.2g\n" % (meanx, meany, varx, vary, cov, cor)
         )
     return meanx, meany, varx, vary, cov, cor
 
@@ -1711,7 +1712,7 @@ def k2Fit(
 
     # finally, add relative errors with reference to model
     #   - do this here, because this needs methods of fit object
-    if ref_to_model == True:
+    if ref_to_model is True:
         ref = "model"
     else:
         ref = "data"
@@ -2197,7 +2198,8 @@ def plot_xy_from_yaml(d):
       <Python code of model function>
     """
 
-    import numpy as np, matplotlib.pyplot as plt
+    import numpy as np
+    import matplotlib.pyplot as plt
     from PhyPraKit import check_function_code
     from .phyFit import decode_uDict
 
@@ -2275,10 +2277,10 @@ def plot_xy_from_yaml(d):
         uyDict = None
         try:  # look at to two different places
             uyDict = d["parametric_model"]["y_errors"]
-        except:
+        except Exception:
             try:
                 uyDict = d["y_errors"]
-            except:
+            except Exception:
                 pass
         if uyDict is not None:
             sy, srely, sabscory, srelcory = decode_uDict(uyDict)
@@ -2327,10 +2329,10 @@ def plot_xy_from_yaml(d):
             model_label = ""
         try:
             code_str = d["model_function"]["python_code"]
-        except:
+        except Exception:
             try:
                 code_str = d["model_function"]
-            except:
+            except Exception:
                 pass
         if code_str is not None:
             # check and execute provided model code
@@ -2401,7 +2403,7 @@ def csv2yaml(file, nlhead=1, delim="\t", keyline=0):
     #   -- end specialCharFilter
 
     # open file for read (if necessary)
-    if type(file) == type(" "):
+    if type(file) is type(" "):
         f = open(file, "r")  # file is a file name
     else:
         f = file  # assume input is file handle of an open file
@@ -2478,7 +2480,8 @@ def plot_hist_from_yaml(d):
        ...
        ---
     """
-    import numpy as np, matplotlib.pyplot as plt
+    import numpy as np
+    import matplotlib.pyplot as plt
     from PhyPraKit import histstat, check_function_code
 
     # trick to generate a global variable for accumulated statistics
@@ -2599,10 +2602,10 @@ def plot_hist_from_yaml(d):
             model_label = ""
         try:
             code_str = d["model_density_function"]["python_code"]
-        except:
+        except Exception:
             try:
                 code_str = d["model_density_function"]
-            except:
+            except Exception:
                 pass
         if code_str is not None:
             # check and execute provide model code

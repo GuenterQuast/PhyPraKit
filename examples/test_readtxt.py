@@ -1,5 +1,5 @@
-"""test_readtxt.py 
-   uses readtxt() to read floating-point column-data in very general 
+"""test_readtxt.py
+   uses readtxt() to read floating-point column-data in very general
    .txt formats, here the output from PicoTech 8 channel data logger,
    with '\t' separated values, 2 header lines,
    german decimal comma and special character '^@'
@@ -10,8 +10,8 @@
 
 # -----example Code illustrating usage of readtxt() -------------
 if __name__ == "__main__":
-    import numpy as np, matplotlib.pyplot as plt, PhyPraKit as ppk
-    from scipy import interpolate, signal
+    import matplotlib.pyplot as plt
+    import PhyPraKit as ppk
     import sys
 
     # check for / read command line arguments
@@ -35,9 +35,7 @@ if __name__ == "__main__":
     # make a plots
     fig = plt.figure(1, figsize=(10, 7.5))
     fig.suptitle("Script: test_readtxt.py", size="x-large", color="b")
-    fig.subplots_adjust(
-        left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25
-    )  #
+    fig.subplots_adjust(left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25)  #
 
     ax1 = fig.add_subplot(1, 1, 1)
     t = data[0]

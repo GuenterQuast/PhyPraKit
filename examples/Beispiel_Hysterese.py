@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Beispiel_Hysterese.py 
+"""Beispiel_Hysterese.py
    Auswertung der Daten aus einer mit PicoScope erstellten Datei
    im txt-Format am Beispiel des Hystereseversuchs
 
@@ -28,9 +28,9 @@
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":
-    import numpy as np, matplotlib.pyplot as plt
+    import numpy as np
+    import matplotlib.pyplot as plt
     from PhyPraKit import readPicoScope, resample, meanFilter
-    from scipy import signal
     from scipy import interpolate
     import sys
 
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     )
 
     print(delimiter)
-    
+
     # read data from PicoScope
     units, data = readPicoScope(fname, delim=delimiter)
     ic = len(data)
@@ -125,9 +125,7 @@ if __name__ == "__main__":
     # plot results
     fig = plt.figure(1, figsize=(10.0, 10.0))
     fig.suptitle("Script: Beispiel_Hysterese.py", size="x-large", color="b")
-    fig.subplots_adjust(
-        left=0.1, bottom=0.1, right=0.97, top=0.93, wspace=0.4, hspace=0.3
-    )
+    fig.subplots_adjust(left=0.1, bottom=0.1, right=0.97, top=0.93, wspace=0.4, hspace=0.3)
 
     # plot raw data ...
     unitH = "(A/m)"

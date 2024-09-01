@@ -1,15 +1,16 @@
-"""Beispiel_GeomOptik.py 
+"""Beispiel_GeomOptik.py
   Parameter transformation in Geometrical Optics:
      - determine f1, f2 and d of a two-lense system
-       from system focal widhts f and postions h1 and h2 of princpal planes 
+       from system focal widhts f and postions h1 and h2 of princpal planes
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 """
 
 # Imports  #
-from kafe2 import IndexedContainer, Fit, Plot, ContoursProfiler
-import numpy as np, matplotlib.pyplot as plt
+from kafe2 import IndexedContainer, Fit, Plot
+import numpy as np
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":  # --------------------------------------
     # the input data

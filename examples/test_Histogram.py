@@ -6,7 +6,8 @@
 
 """
 
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 from PhyPraKit import histstat, hist2dstat, profile2d, chi2p_indep2d
 
 

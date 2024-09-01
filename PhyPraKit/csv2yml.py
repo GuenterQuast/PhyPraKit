@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""csv2yml.py 
-  read floating-point column-data in very general .txt  formats 
+"""csv2yml.py
+  read floating-point column-data in very general .txt  formats
   and write an output block in yaml format
 
   keys taken from 1st header line
@@ -9,14 +9,14 @@
 
     ./cvs2yml [options] <input file name>
 
-  Input: 
+  Input:
 
-    - file name 
+    - file name
 
   Output:
 
-    - yaml data block 
-  
+    - yaml data block
+
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
@@ -24,7 +24,9 @@
 
 
 def csv2yml():
-    import sys, os, yaml, argparse
+    import sys
+    import os
+    import argparse
     from PhyPraKit import csv2yaml
 
     if os.name == "nt":  # interactive mode on windows if error occurs

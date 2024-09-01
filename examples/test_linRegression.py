@@ -1,11 +1,12 @@
 #! /usr/bin/env python3
 """test linear regression with errors in x an y with odFIT
    (using ODR package from scipy)
- 
+
 ..  author:: Guenter Quast <g.quast@kit.edu>
 """
 
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 from PhyPraKit import generateXYdata, odFit
 
 

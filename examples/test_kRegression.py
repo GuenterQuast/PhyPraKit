@@ -1,16 +1,15 @@
 #! /usr/bin/env python3
 """test_kRegression
    test linear regression with kafe using kFit from PhyPrakKit
-   uncertainties in x and y and correlated 
+   uncertainties in x and y and correlated
    absolute and relative uncertainties
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
 
-import kafe  # must be imported first to set backend
 from PhyPraKit import generateXYdata, kFit
 from kafe.function_library import linear_2par
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
 
 
 # -- the model function for data generation
@@ -32,9 +31,7 @@ if __name__ == "__main__":  # --------------------------------------
     xdata = np.arange(xmin, xmax + 1.0, 1.0)
     nd = len(xdata)
     # generate pseudo data
-    xt, yt, ydata = generateXYdata(
-        xdata, model, sigx_abs, 0.0, srely=sigy_rel, xrelcor=sxrelcor, yabscor=syabscor
-    )
+    xt, yt, ydata = generateXYdata(xdata, model, sigx_abs, 0.0, srely=sigy_rel, xrelcor=sxrelcor, yabscor=syabscor)
     ey = sigy_rel * yt * np.ones(nd)  # set array of relative y errors
 
     # (numerical) linear regression

@@ -1,18 +1,19 @@
-"""test_convolutionFilter.py 
+"""test_convolutionFilter.py
    Read data exported with PicoScope usb-oscilloscpe,
    here the accoustic excitation of a steel rod
 
    Demonstrates usage of convolutionFilter for detection
    of signal maxima and falling edges
-  
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 """
 
 # -----example Code illustrating usage --------------------
 if __name__ == "__main__":
-    import numpy as np, matplotlib.pyplot as plt, PhyPraKit as ppk
-    from scipy import interpolate, signal
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import PhyPraKit as ppk
     import sys
 
     # check for / read command line arguments
@@ -68,9 +69,7 @@ if __name__ == "__main__":
     # make a plots
     fig = plt.figure(1, figsize=(7.5, 7.5))
     fig.suptitle("Script: test_convolutionFilter.py", size="x-large", color="b")
-    fig.subplots_adjust(
-        left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25
-    )  #
+    fig.subplots_adjust(left=0.14, bottom=0.1, right=0.97, top=0.93, wspace=None, hspace=0.25)  #
     ax1 = fig.add_subplot(2, 1, 1)
     ax1.plot(tpm, apm, "rx", alpha=0.9, label="large peaks")
     ax1.plot(tdm, adm, "mx", alpha=0.9, label="falling edges")

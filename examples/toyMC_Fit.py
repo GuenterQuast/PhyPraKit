@@ -3,10 +3,10 @@
    run a large number of fits on toyMC data
    to check for biases and chi2-probability distribution
 
-   This rather complete example uses eight different kinds of uncertainties, 
-   namely independent and correlated, absolute and relative ones  
-   in the x and y directions. 
-   
+   This rather complete example uses eight different kinds of uncertainties,
+   namely independent and correlated, absolute and relative ones
+   in the x and y directions.
+
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 
 """
@@ -15,8 +15,9 @@
 
 # --- end helper functions ----
 import sys
-import numpy as np, matplotlib.pyplot as plt
-from PhyPraKit import generateXYdata, xyFit, k2Fit, plotCorrelations
+import numpy as np
+import matplotlib.pyplot as plt
+from PhyPraKit import generateXYdata, xyFit, plotCorrelations
 from PhyPraKit.phyFit import get_functionSignature
 
 from scipy import stats
@@ -105,9 +106,7 @@ if __name__ == "__main__":  # --------------------------------------
         # run MC loop
         for iexp in range(Nexp):
             # generate pseudo data
-            np.random.seed(
-                314159 + (iexp * 2718281) % 100000
-            )  # initialize random generator
+            np.random.seed(314159 + (iexp * 2718281) % 100000)  # initialize random generator
 
             xt, yt, data_y = generateXYdata(
                 data_x,
@@ -160,12 +159,12 @@ if __name__ == "__main__":  # --------------------------------------
                 np.set_printoptions(precision=6)
                 print("\n*==*  Fit {:d} Result:".format(iexp))
                 print(f" chi2: {chi2:.3g}")
-                print(f" parameter names:  ", pnams)
-                print(f" parameter values:  ", pvals)
+                print(" parameter names:  ", pnams)
+                print(" parameter values:  ", pvals)
                 np.set_printoptions(precision=3)
-                print(f" parameter errors:\n ", perrs)
+                print(" parameter errors:\n ", perrs)
                 np.set_printoptions(precision=3)
-                print(f" correlations : \n", cor)
+                print(" correlations : \n", cor)
                 np.set_printoptions(precision=8)  # default output precision
 
                 #  calculate chi2 probability
@@ -261,9 +260,7 @@ if __name__ == "__main__":  # --------------------------------------
         mean = (Nexp - nfail) / nbins
         chi2flat = np.sum((binc - mean) ** 2 / mean)
         prb = 1.0 - stats.chi2.cdf(chi2flat, nbins)
-        print(
-            "compatibility of chi2prb with flat distribution: {:f}%".format(prb * 100)
-        )
+        print("compatibility of chi2prb with flat distribution: {:f}%".format(prb * 100))
 
     #
     # -- execute all of the above --

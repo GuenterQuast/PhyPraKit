@@ -9,6 +9,7 @@ HERE = pathlib.Path(__file__).parent
 # import _version_info from package
 sys.path[0] = pkg_name
 import _version_info
+
 _version = _version_info._get_version_string()
 
 # The text of the README file

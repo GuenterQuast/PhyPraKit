@@ -1,79 +1,79 @@
 #!/usr/bin/env python3
 """**plotData.py** [options] <input file name>
 
-  Plot (several) data set(s) with error bars in x- and y- directions 
-  or histograms from file in yaml format
+Plot (several) data set(s) with error bars in x- and y- directions
+or histograms from file in yaml format
 
-  usage: 
+usage:
 
-    ./plotData.py [options] <input file name>
+  ./plotData.py [options] <input file name>
 
-  Input: 
+Input:
 
-    - input file in yaml format
+  - input file in yaml format
 
-  Output:
+Output:
 
-    - figure
- 
-  yaml-format for (x-y) data:
+  - figure
 
-  .. code-block:: yaml
+yaml-format for (x-y) data:
 
-     title: <title of plot>
-     x_label: <label for x-axis>
-     y_label: <label for y-axis>
+.. code-block:: yaml
 
-     label: <name of data set>
-     x_data: [ x values ]
-     y_data: [ y values ]
-     x_errors: x-uncertainty or [x-uncertainties]
-     y_errors: y-uncertainty or [y-uncertainties]
+   title: <title of plot>
+   x_label: <label for x-axis>
+   y_label: <label for y-axis>
 
-  *Remark*: more than one input data sets are also possible. 
-  Data sets and models can be overlayed in one plot if option 
-  `showplots = False` ist specified. Either provide more than
-  one input file, or use yaml syntax, as shown here:
+   label: <name of data set>
+   x_data: [ x values ]
+   y_data: [ y values ]
+   x_errors: x-uncertainty or [x-uncertainties]
+   y_errors: y-uncertainty or [y-uncertainties]
 
-  .. code-block:: yaml
+*Remark*: more than one input data sets are also possible.
+Data sets and models can be overlayed in one plot if option
+`showplots = False` ist specified. Either provide more than
+one input file, or use yaml syntax, as shown here:
 
-    # several input sets to be separated by 
-    ...
-    ---   
+.. code-block:: yaml
 
-  yaml-format for histogram:
+  # several input sets to be separated by
+  ...
+  ---
 
-  .. code-block:: yaml
+yaml-format for histogram:
 
-     title: <title of plot>
-     x_label: <label for x-axis>
-     y_label: <label for y-axis>
+.. code-block:: yaml
 
-     label: <name of data set>
-     raw_data: [x1, ... , xn]
-     # define binning
-     n_bins: n
-     bin_range: [x_min, x_max]
-     #   alternatively: 
-     # bin edges: [e0, ..., en]
+   title: <title of plot>
+   x_label: <label for x-axis>
+   y_label: <label for y-axis>
 
-     several input sets to be separated by 
-     ...
-     ---   
+   label: <name of data set>
+   raw_data: [x1, ... , xn]
+   # define binning
+   n_bins: n
+   bin_range: [x_min, x_max]
+   #   alternatively:
+   # bin edges: [e0, ..., en]
 
-  In case a model function is supplied, it is overlayed in the 
-  output graph. The corresponding *yaml* block looks as follows:
+   several input sets to be separated by
+   ...
+   ---
 
-  .. code-block:: yaml
+In case a model function is supplied, it is overlayed in the
+output graph. The corresponding *yaml* block looks as follows:
 
-    # optional model specification
-    model_label: <model name>
-    model_function: |
-      <Python code of model function>
+.. code-block:: yaml
 
-  If no `y_data` or `raw_data` keys are provided, only the model function 
-  is shown. Note that minimalistic `x_data` and `bin_range` or `bin_edges`
-  information must be given to define the x-range of the graph. 
+  # optional model specification
+  model_label: <model name>
+  model_function: |
+    <Python code of model function>
+
+If no `y_data` or `raw_data` keys are provided, only the model function
+is shown. Note that minimalistic `x_data` and `bin_range` or `bin_edges`
+information must be given to define the x-range of the graph.
 
 """
 
@@ -83,7 +83,8 @@ from PhyPraKit import plot_xy_from_yaml, plot_hist_from_yaml
 # --- helper function
 def wexit(code):
     # keep Python window open on MS Windows
-    import os, sys
+    import os
+    import sys
 
     if os.name == "nt":
         _ = input("\n      ==> type <ret> to end > ")
@@ -91,7 +92,11 @@ def wexit(code):
 
 
 def plotData():
-    import os, sys, yaml, argparse, matplotlib.pyplot as plt
+    import os
+    import sys
+    import yaml
+    import argparse
+    import matplotlib.pyplot as plt
 
     if os.name == "nt":  # interactive mode on windows if error occurs
         os.environ["PYTHONINSPECT"] = "x"

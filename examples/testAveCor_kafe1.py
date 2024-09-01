@@ -1,6 +1,6 @@
 # Mittelung korrelierter Messwerte mit kafe2 / k2Fit
 
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
 import PhyPraKit as ppk
 
 

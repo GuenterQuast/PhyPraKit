@@ -1,13 +1,13 @@
 #! /usr/bin/env python3
 """test_odFit
-   test and illustrate fitting an arbitrary function with scipy odr, 
+   test and illustrate fitting an arbitrary function with scipy odr,
    with uncertainties in x and y directions
 
 .. moduleauthor:: Guenter Quast <g.quast@kit.edu>
 """
 
 from PhyPraKit import generateXYdata, odFit
-import numpy as np, matplotlib.pyplot as plt
+import numpy as np
 
 
 # -- the model function
@@ -30,7 +30,12 @@ if __name__ == "__main__":  # --------------------------------------
 
     # fit with odFit (uses scipy.curve_fit and scipy.odr)
     par, pare, cor, chi2 = odFit(
-        model, xdata, ydata, sigx_abs, sigy_abs, p0=None  # data and uncertaintites
+        model,
+        xdata,
+        ydata,
+        sigx_abs,
+        sigy_abs,
+        p0=None,  # data and uncertaintites
     )
 
     # setting any of the above names to None will remove the entry from the legend,
