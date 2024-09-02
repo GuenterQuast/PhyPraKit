@@ -3,7 +3,7 @@ numpy
 matplotlib
 scipy
 #pandas
-#iminuit
+iminuit
 #kafe2
 #uncertainties
 
