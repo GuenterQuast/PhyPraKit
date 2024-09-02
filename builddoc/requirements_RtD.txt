@@ -1,3 +1,10 @@
 # empty requirements file for Read the Docs
 numpy
 matplotlib
+scipy
+#pandas
+#iminuit
+#kafe2
+#uncertainties
+
+
