@@ -59,4 +59,4 @@ formats:
 
 python:
     install:
-    - requirements: builddoc/requirements_RTD.txt
+    - requirements: builddoc/requirements_RtD.txt
