@@ -52,6 +52,13 @@ python3 Beispiel_GeomOptik.py
 python3 Beispiel_GammaSpektroskopie.py
 
 rm -rf .kafe
+
+
+# check stand-alone tools
+cd ../tools
+plotData.py data.ydat
+run_phyFit.py simpleFit.yfit
+
 echo ""
 echo "all tests done"
 echo ""
