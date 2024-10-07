@@ -2526,8 +2526,8 @@ def plot_hist_from_yaml(d):
                 statinfo.append("Statistics:")
             else:
                 statinfo.append("  - - - - - - - ")
-            statinfo.append("  $<>$:  {:.3g}".format(mean))
-            statinfo.append("     $\sigma$   : {:.3g}".format(sigma))
+            statinfo.append(r"  $<>$:  {:.3g}".format(mean))
+            statinfo.append(r"     $\sigma$   : {:.3g}".format(sigma))
 
         if x_label is not None:
             plt.xlabel(x_label, size="x-large")

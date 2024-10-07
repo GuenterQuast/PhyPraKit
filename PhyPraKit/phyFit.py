@@ -1714,10 +1714,10 @@ class mnFit:
             nd = len(x)
             # store input data as numpy float arrays, ensure length nd if needed
             self.dlength = nd
-            self.x = np.asfarray(x)  # abscissa - "x values"
-            self.y = np.asfarray(y)  # ordinate - "y values"
+            self.x = np.asarray(x)  # abscissa - "x values"
+            self.y = np.asarray(y)  # ordinate - "y values"
             if ex is not None:
-                self.ex = np.asfarray(ex)  # independent uncertainties x
+                self.ex = np.asarray(ex)  # independent uncertainties x
                 if self.ex.ndim == 0:
                     self.ex = self.ex * np.ones(nd)
                 elif self.ex.ndim == 2:
@@ -1725,7 +1725,7 @@ class mnFit:
             else:
                 self.ex = None
             if ey is not None:
-                self.ey = np.asfarray(ey)  # independent uncertainties y
+                self.ey = np.asarray(ey)  # independent uncertainties y
                 if self.ey.ndim == 0:
                     self.ey = self.ey * np.ones(nd)
                 elif self.ey.ndim == 2:
@@ -1733,31 +1733,31 @@ class mnFit:
             else:
                 self.ey = None
             if erelx is not None:
-                self.erelx = np.asfarray(erelx)  # independent relative uncertainties x
+                self.erelx = np.asarray(erelx)  # independent relative uncertainties x
             else:
                 self.erelx = None
             if erely is not None:
-                self.erely = np.asfarray(erely)  # independent relative uncertainties y
+                self.erely = np.asarray(erely)  # independent relative uncertainties y
             else:
                 self.erely = None
             if cabsx is not None:
-                self.cabsx = np.asfarray(cabsx)  # correlated abolute uncertainties x
+                self.cabsx = np.asarray(cabsx)  # correlated abolute uncertainties x
                 if self.cabsx.ndim == 0:
                     self.cabsx = self.cabsx * np.ones(nd)
             else:
                 self.cabsx = None
             if crelx is not None:
-                self.crelx = np.asfarray(crelx)  # correlated relative uncertainties x
+                self.crelx = np.asarray(crelx)  # correlated relative uncertainties x
             else:
                 self.crelx = None
             if cabsy is not None:
-                self.cabsy = np.asfarray(cabsy)  # correlated absolute uncertainties y
+                self.cabsy = np.asarray(cabsy)  # correlated absolute uncertainties y
                 if self.cabsy.ndim == 0:
                     self.cabsy = self.cabsy * np.ones(nd)
             else:
                 self.cabsy = None
             if crely is not None:
-                self.crely = np.asfarray(crely)  # correlated relative uncertainties y
+                self.crely = np.asarray(crely)  # correlated relative uncertainties y
             else:
                 self.crely = None
             self.quiet = quiet  # no informative printout if True
@@ -2274,24 +2274,24 @@ class mnFit:
 
             nd = len(x)
             # store input data as numpy float arrays, ensure length nd if needed
-            self.x = np.asfarray(x)  # abscissa - "x values"
-            self.e = np.asfarray(e)  # independent uncertainties y
+            self.x = np.asarray(x)  # abscissa - "x values"
+            self.e = np.asarray(e)  # independent uncertainties y
             if self.e.ndim == 0:
                 self.e = self.e * np.ones(nd)
             elif self.e.ndim == 2:
                 self.needs_covariance = True
             if erel is not None:
-                self.erel = np.asfarray(erel)  # independent relative uncertainties x
+                self.erel = np.asarray(erel)  # independent relative uncertainties x
             else:
                 self.erel = None
             if cabs is not None:
-                self.cabs = np.asfarray(cabs)  # correlated abolute uncertainties x
+                self.cabs = np.asarray(cabs)  # correlated abolute uncertainties x
                 if self.cabs.ndim == 0:
                     self.cabs = self.cabs * np.ones(nd)
             else:
                 self.cabs = None
             if crel is not None:
-                self.crel = np.asfarray(crel)  # correlated relative uncertainties x
+                self.crel = np.asarray(crel)  # correlated relative uncertainties x
             else:
                 self.crel = None
             self.quiet = quiet  # no informative printout if True
