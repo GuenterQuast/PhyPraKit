@@ -1,8 +1,8 @@
 # requirements to run jupyter tutorials in this repo
-numpy
-matplotlib
+numpy <2.0
+matplotlib <3.8
 scipy
 pandas
-iminuit
+iminuit 
 kafe2
 uncertainties
