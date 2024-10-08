@@ -9,7 +9,7 @@
 major = 1
 minor = 2
 revision = 8
-suffix = "rc2"
+suffix = ""
 
 
 def _get_version_tuple():
