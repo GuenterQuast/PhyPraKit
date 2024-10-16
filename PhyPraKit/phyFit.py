@@ -556,7 +556,7 @@ def xyFit_from_yaml(
         model_label = "model"
     try:
         code_str = fd["model_function"]["python_code"]
-    except Esception as e:
+    except Exception as e:
         try:
             code_str = fd["model_function"]
         except Exception as e:
@@ -3560,7 +3560,7 @@ class mnFit:
             except Exception as e:
                 self.minos_ok = False
                 if not self.quiet:
-                    print("*==* mnFit: !!! minos failed \n", e)
+                    print("*==* mnFit: !!! minos failed \n", str(e))
         self._storeResult()
         return self.migradResult, self.minosResult
 
@@ -3880,7 +3880,7 @@ class mnFit:
 
         except Exception as e:
             print("*==* !!! profile and contour scan failed")
-            print(e)
+            print(str(e))
             return None
 
     def getProfile(self, pnam, range=3.0, npoints=30):

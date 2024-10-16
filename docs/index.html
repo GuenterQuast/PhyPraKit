@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>PhyPraKit Documentation &#8212; PhyPraKit 1.2.6 documentation</title>
+    <title>PhyPraKit Documentation &#8212; PhyPraKit 1.2.8 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css?v=601dbdee" />
-    <script src="_static/documentation_options.js?v=010db75e"></script>
+    <script src="_static/documentation_options.js?v=4d6f9085"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.8 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>  
@@ -39,7 +39,7 @@
 <section id="about">
 <h2>About<a class="headerlink" href="#about" title="Link to this heading">¶</a></h2>
 <blockquote>
-<div><p>Version 1.2.6, Date 2023-10-14</p>
+<div><p>Version 1.2.8, Date 2024-10-08</p>
 </div></blockquote>
 <p><strong>PhyPraKit</strong> is a collection of python modules
 for data visualization and analysis in experimental laboratory
@@ -576,7 +576,7 @@ konvertiert.</p>
 <section id="module-PhyPraKit">
 <span id="module-documentation"></span><h2>Module Documentation<a class="headerlink" href="#module-PhyPraKit" title="Link to this heading">¶</a></h2>
 <dl>
-<dt><strong>PhyPraKit</strong>  </dt><dd><p>a collection of tools for data handling, visualisation and analysis 
+<dt><strong>PhyPraKit</strong></dt><dd><p>a collection of tools for data handling, visualisation and analysis
 in Physics Lab Courses, recommended for “Physikalisches Praktikum am KIT”</p>
 <p>Sub-modules phyTools and phyFit</p>
 <p>type help(PhyPraKit.phyTools) or help(PhyPraKit.phyFit) for
@@ -585,7 +585,7 @@ an overview of the functionality.</p>
 </dl>
 <p id="module-PhyPraKit.phyTools"><strong>package phyTools</strong></p>
 <blockquote>
-<div><p>Collection of tools for data handling, visualisation and analysis 
+<div><p>Collection of tools for data handling, visualisation and analysis
 in Physics Lab Courses, recommended for “Physikalisches Praktikum am KIT”</p>
 <p>Author: Guenter Quast, initial version Aug. 2017, updated July 2023</p>
 </div></blockquote>
@@ -605,8 +605,8 @@ in Physics Lab Courses, recommended for “Physikalisches Praktikum am KIT”</p
 <li><p>writeCSV()       write data in csv-format (opt. with header)</p></li>
 <li><p>writeTexTable()  write data in LaTeX table format</p></li>
 <li><p>round_to_error() round to same number of significant digits as uncertainty</p></li>
-<li><p>ustring()        return rounded value +/- uncertainty as formatted string;   
-alternative: the data type <em>ufloat(v,u)</em> of package <em>uncertainties</em> comfortably 
+<li><p>ustring()        return rounded value +/- uncertainty as formatted string;
+alternative: the data type <em>ufloat(v,u)</em> of package <em>uncertainties</em> comfortably
 supports printing of values <em>v</em> with uncertainties <em>u</em>.</p></li>
 </ul>
 </div></blockquote>
@@ -618,12 +618,12 @@ supports printing of values <em>v</em> with uncertainties <em>u</em>.</p></li>
 <li><p>offsetFilter()      subtract an offset in array a</p></li>
 <li><p>meanFilter()        apply sliding average to smoothen data</p></li>
 <li><p>resample()          average over n samples</p></li>
-<li><p>simplePeakfinder()  find peaks and dips in an array,    
+<li><p>simplePeakfinder()  find peaks and dips in an array,
 <cite>(recommend to use convolutionPeakfinder)</cite></p></li>
 <li><p>convolutionPeakfinder() find maxima (peaks) in an array</p></li>
 <li><p>convolutionEdgefinder() find maxima of slope (rising) edges in an array</p></li>
 <li><p>Fourier_fft()       fast Fourier transformation of an array</p></li>
-<li><p>FourierSpectrum()   Fourier transformation of an array   
+<li><p>FourierSpectrum()   Fourier transformation of an array
 <cite>(slow, preferably use fft version)</cite></p></li>
 <li><p>autocorrelate()     auto-correlation function</p></li>
 </ul>
@@ -638,8 +638,8 @@ supports printing of values <em>v</em> with uncertainties <em>u</em>.</p></li>
 <li><p>Cov2Cor                convert covariance matrix to correlation matrix</p></li>
 <li><p>Cor2Cov                convert correlation matrix + errors to covariance matrix</p></li>
 <li><p>chi2prob               caclulate chi^2 probability</p></li>
-<li><p>propagatedError        determine propagated uncertainty, with covariance;  
-hint: the data type <em>ufloat(v,u)</em> of package <em>uncertainties</em> comfortably supports 
+<li><p>propagatedError        determine propagated uncertainty, with covariance;
+hint: the data type <em>ufloat(v,u)</em> of package <em>uncertainties</em> comfortably supports
 functions of values <em>v</em> with uncertainties <em>u</em> with correct error propagation</p></li>
 <li><p>getModelError          determine uncertainty of parameter-dependent model function</p></li>
 </ul>
@@ -650,10 +650,10 @@ functions of values <em>v</em> with uncertainties <em>u</em> with correct error 
 <blockquote>
 <div><ul class="simple">
 <li><p>barstat()   statistical information (mean, sigma, error_on_mean) from bar chart</p></li>
-<li><p>nhist()    histogram plot based on np.historgram() and plt.bar()    
+<li><p>nhist()    histogram plot based on np.historgram() and plt.bar()
 <cite>better use matplotlib.pyplot.hist()</cite></p></li>
 <li><p>histstat() statistical information from 1d-histogram</p></li>
-<li><p>nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()  
+<li><p>nhist2d()  2d-histotram plot based on np.histrogram2d, plt.colormesh()
 <cite>(better use matplotlib.pyplot.hist2d)</cite></p></li>
 <li><p>hist2dstat() statistical information from 2d-histogram</p></li>
 <li><p>profile2d()  “profile plot” for 2d data</p></li>
@@ -672,11 +672,11 @@ functions of values <em>v</em> with uncertainties <em>u</em> with correct error 
 profile likelihood and contour lines (module phyFit)</p></li>
 <li><p>xFit()             fit of parameters to indexed data x_i (module <em>phyFit</em>)</p></li>
 <li><p>hFit()             fit of a density to histogram data (module <em>phyFit</em>)</p></li>
-<li><p>mFit()             fit of a user-defined cost function, or of a density 
+<li><p>mFit()             fit of a user-defined cost function, or of a density
 to unbinned data (module <em>phyFit</em>)</p></li>
-<li><p>k2Fit()            fit function with (correlated) errors on x and y  
+<li><p>k2Fit()            fit function with (correlated) errors on x and y
 with package kafe2</p></li>
-<li><p>k2hFit()            fit of a density to histogram data   
+<li><p>k2hFit()            fit of a density to histogram data
 with package kafe2</p></li>
 </ul>
 </div></blockquote>
@@ -1487,13 +1487,13 @@ output graph. The corresponding <em>yaml</em> block looks as follows:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="PhyPraKit.phyTools.propagatedError">
 <span class="sig-prename descclassname"><span class="pre">PhyPraKit.phyTools.</span></span><span class="sig-name descname"><span class="pre">propagatedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcov</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhyPraKit.phyTools.propagatedError" title="Link to this definition">¶</a></dt>
-<dd><p>determine propageted uncertainty (with covariance matrix)</p>
+<dd><p>determine propagated uncertainty (with covariance matrix)</p>
 <p>Formula:
 Delta = sqrt( sum_i,j (df/dp_i df/dp_j Vp_i,j) )</p>
 <dl class="simple">
 <dt>Args:</dt><dd><ul class="simple">
 <li><p>function: function of parameters pvals,
-a 1-d array is also allowed, eg. function(*p) = f(x, *p)</p></li>
+a 1-d array is also allowed, e.g. function(*p) = f(x, *p)</p></li>
 <li><p>pvals: parameter values</p></li>
 <li><p>pcov: covariance matrix (or uncertainties) of parameters</p></li>
 </ul>
@@ -1798,7 +1798,7 @@ to the diagonal elements of the covariance matrix</p>
 <div><p>Physics Fitting with <cite>iminiut</cite> [<a class="reference external" href="https://iminuit.readthedocs.ios/en/stable/">https://iminuit.readthedocs.ios/en/stable/</a>]</p>
 <p>Author: Guenter Quast, initial version Jan. 2021, updated July 2023</p>
 <dl class="simple">
-<dt>Requirements: </dt><dd><ul class="simple">
+<dt>Requirements:</dt><dd><ul class="simple">
 <li><p>Python &gt;= 3.6</p></li>
 <li><p>iminuit vers. &gt; 2.0</p></li>
 <li><p>scipy &gt; 1.5.0</p></li>
@@ -1807,37 +1807,37 @@ to the diagonal elements of the covariance matrix</p>
 </dd>
 </dl>
 <p>The class <cite>mnFit.py</cite> uses the optimization and uncertainty-estimation
-package <cite>iminuit</cite> for fitting a parameter-dependent model f(x, *par) 
-to data points (x, y) or a probability density function to binned 
-histogram data or to unbinned data. Parameter estimation is based on 
-pre-implemented Maximum-Likelihood methods, or on a user-defined 
+package <cite>iminuit</cite> for fitting a parameter-dependent model f(x, *par)
+to data points (x, y) or a probability density function to binned
+histogram data or to unbinned data. Parameter estimation is based on
+pre-implemented Maximum-Likelihood methods, or on a user-defined
 cost function in the latter case, which provides maximum flexibility.
-Classical least-square methods are optionally available for comparison 
+Classical least-square methods are optionally available for comparison
 with other packages.</p>
-<p>A unique feature of the package is the support of different kinds 
-of uncertainties for x-y data, namely independent and/or correlated 
-absolute and/or relative uncertainties in the x and/or y directions. 
-Parameter estimation for density distributions is based on the shifted 
-Poisson distribution, Poisson(x - loc, lambda), of the number of entries 
+<p>A unique feature of the package is the support of different kinds
+of uncertainties for x-y data, namely independent and/or correlated
+absolute and/or relative uncertainties in the x and/or y directions.
+Parameter estimation for density distributions is based on the shifted
+Poisson distribution, Poisson(x - loc, lambda), of the number of entries
 in each bin of a histogram.</p>
 <p>Parameter constraints, i.e. external knowledge of parameters within
-Gaussian uncertainties, limits on parameters in order to avoid 
-problematic regions in parameter space during the minimization process, 
+Gaussian uncertainties, limits on parameters in order to avoid
+problematic regions in parameter space during the minimization process,
 and fixing of parameters, e.g. to include the validity range of a model
 in the parameters without affecting the fit, are also supported by <em>mnFit</em>.</p>
 <dl class="simple">
-<dt>Method:</dt><dd><p>Uncertainties that depend on model parameters are treated by dynamically 
+<dt>Method:</dt><dd><p>Uncertainties that depend on model parameters are treated by dynamically
 updating the cost function during the fitting process with <cite>iminuit</cite>.
-Data points with relative errors can thus be referred to the model 
-instead of the data. The derivative of the model function w.r.t. x is 
+Data points with relative errors can thus be referred to the model
+instead of the data. The derivative of the model function w.r.t. x is
 used to project the covariance matrix of x-uncertainties on the y-axis.</p>
 </dd>
 </dl>
-<p>Example functions <em>xyFit()</em>, <em>hFit()</em> and <em>mFit()</em>, illustrate how to 
-control the  interface of <cite>mnFit</cite>. A short example script is also 
+<p>Example functions <em>xyFit()</em>, <em>hFit()</em> and <em>mFit()</em>, illustrate how to
+control the  interface of <cite>mnFit</cite>. A short example script is also
 provided to perform fits on sample data. The sequence of steps performed
 by these interface functions is rather general and straight-forward:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Fit</span> <span class="o">=</span> <span class="n">mnFit</span><span class="p">(</span><span class="n">fit_type</span><span class="p">)</span>                <span class="c1"># initialize a mnFit object </span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Fit</span> <span class="o">=</span> <span class="n">mnFit</span><span class="p">(</span><span class="n">fit_type</span><span class="p">)</span>                <span class="c1"># initialize a mnFit object</span>
 <span class="n">Fit</span><span class="o">.</span><span class="n">setOptions</span><span class="p">(</span><span class="n">run_minos</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>  <span class="c1"># set options</span>
 <span class="n">Fit</span><span class="o">.</span><span class="n">init_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">parameters</span> <span class="o">...</span><span class="p">)</span>  <span class="c1"># initialize data container</span>
 <span class="n">Fit</span><span class="o">.</span><span class="n">init_fit</span><span class="p">(</span><span class="n">ufcn</span><span class="p">,</span> <span class="n">p0</span> <span class="o">=</span> <span class="n">p0</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>     <span class="c1"># initialize Fit (and minuit)</span>
@@ -1849,12 +1849,12 @@ by these interface functions is rather general and straight-forward:</p>
 </div>
 <p>It is also possible to run a fit without the need to provide own
 Python code. In this case, the data, uncertainties and the model
-are read from a file in yaml format and passed to the function 
+are read from a file in yaml format and passed to the function
 xyFit_from_yaml() as a dictionary.</p>
-<p>The implementation of the fitting procedure in this package is 
-- intentionally - rather minimalistic, and it is meant to 
-illustrate the principles of an advanced usage of <cite>iminuit</cite>. It 
-is also intended to stimulate own applications of special, 
+<p>The implementation of the fitting procedure in this package is
+- intentionally - rather minimalistic, and it is meant to
+illustrate the principles of an advanced usage of <cite>iminuit</cite>. It
+is also intended to stimulate own applications of special,
 user-defined cost functions.</p>
 <dl class="simple">
 <dt>The main features of this package are:</dt><dd><ul class="simple">
@@ -1868,16 +1868,16 @@ user-defined cost functions.</p>
 </ul>
 </dd>
 </dl>
-<p>The <strong>cost function</strong> that is optimized for x-y fits basically is a 
-least-squares one, which is extended if parameter-dependent uncertainties 
-are present. In the latter case, the logarithm of the determinant of the 
-covariance matrix is added to the least-squares cost function, so that it 
-corresponds to twice the negative log-likelihood of a multivariate Gaussian 
+<p>The <strong>cost function</strong> that is optimized for x-y fits basically is a
+least-squares one, which is extended if parameter-dependent uncertainties
+are present. In the latter case, the logarithm of the determinant of the
+covariance matrix is added to the least-squares cost function, so that it
+corresponds to twice the negative log-likelihood of a multivariate Gaussian
 distribution. Fits to histogram data rely on the negative log-likelihood
-of the Poisson distribution, generalized to support fractional observed 
-values, which may occur if corrections to the observed bin counts have 
+of the Poisson distribution, generalized to support fractional observed
+values, which may occur if corrections to the observed bin counts have
 to be applied. If there is a difference <em>DeltaMu</em> between the mean value
-and the variance of the number of entries in a bin due to corrections, 
+and the variance of the number of entries in a bin due to corrections,
 a “shifted Poisson distribution”, Poiss(x-DeltaMu, lambda), is supported.</p>
 <p>Fully functional applications of the package are illustrated in executable
 script below, which contains sample data, executes the fitting procedure
@@ -3106,18 +3106,18 @@ fitting procedure uses phyfit.xyFit().</p>
 </dd>
 </dl>
 <dl class="simple" id="module-test_readtxt">
-<dt>test_readtxt.py </dt><dd><p>uses readtxt() to read floating-point column-data in very general 
+<dt>test_readtxt.py</dt><dd><p>uses readtxt() to read floating-point column-data in very general
 .txt formats, here the output from PicoTech 8 channel data logger,
 with ‘       ‘ separated values, 2 header lines,
 german decimal comma and special character ‘^&#64;’</p>
 </dd>
 </dl>
 <dl class="simple" id="module-test_readPicoScope">
-<dt>test_readPicoSocpe.py </dt><dd><p>read data exported by PicoScope usb-oscilloscope</p>
+<dt>test_readPicoSocpe.py</dt><dd><p>read data exported by PicoScope usb-oscilloscope</p>
 </dd>
 </dl>
 <dl class="simple" id="module-test_labxParser">
-<dt>test_labxParser.py</dt><dd><p>read files in xml-format produced with the Leybold Cassy system  
+<dt>test_labxParser.py</dt><dd><p>read files in xml-format produced with the Leybold Cassy system
 uses PhyPraPit.labxParser()</p>
 </dd>
 </dl>
@@ -3126,23 +3126,23 @@ uses PhyPraPit.labxParser()</p>
 </dd>
 </dl>
 <dl id="module-test_convolutionFilter">
-<dt>test_convolutionFilter.py </dt><dd><p>Read data exported with PicoScope usb-oscilloscpe,
+<dt>test_convolutionFilter.py</dt><dd><p>Read data exported with PicoScope usb-oscilloscpe,
 here the accoustic excitation of a steel rod</p>
 <p>Demonstrates usage of convolutionFilter for detection
 of signal maxima and falling edges</p>
 </dd>
 </dl>
 <dl id="module-test_AutoCorrelation">
-<dt>test_AutoCorrelation.py</dt><dd><p>test function <cite>autocorrelate()</cite> in PhyPraKit; 
+<dt>test_AutoCorrelation.py</dt><dd><p>test function <cite>autocorrelate()</cite> in PhyPraKit;
 determines the frequency of a periodic signal from maxima and minima
 of the autocorrelation function and performs statistical analysis
 of time between peaks/dips</p>
-<p>uses <cite>readCSV()</cite>, <cite>autocorrelate()</cite>, <cite>convolutionPeakfinder()</cite> 
+<p>uses <cite>readCSV()</cite>, <cite>autocorrelate()</cite>, <cite>convolutionPeakfinder()</cite>
 and <cite>histstat()</cite> from PhyPraKit</p>
 </dd>
 </dl>
 <dl id="module-test_Fourier">
-<dt>test_Fourier.py </dt><dd><p>Read data exported with PicoScope usb-oscilloscpe,
+<dt>test_Fourier.py</dt><dd><p>Read data exported with PicoScope usb-oscilloscpe,
 here the accoustic excitation of a steel rod</p>
 <p>Demonstraion of a Fourier transformation of the signal</p>
 </dd>
@@ -3154,7 +3154,7 @@ Unsicherheit.</p>
 </dd>
 </dl>
 <dl class="simple" id="module-test_odFit">
-<dt>test_odFit</dt><dd><p>test and illustrate fitting an arbitrary function with scipy odr, 
+<dt>test_odFit</dt><dd><p>test and illustrate fitting an arbitrary function with scipy odr,
 with uncertainties in x and y directions</p>
 </dd>
 </dl>
@@ -3162,7 +3162,7 @@ with uncertainties in x and y directions</p>
 <dt>test_xyFit.py</dt><dd><p>Fitting example for x-y data with iminiut</p>
 <p>Uses function PhyPraKit.xyFit, which in turn uses mnFit from phyFit</p>
 <p>This is a rather complete example showing a fit to
-data with independent and correlated, absolute and 
+data with independent and correlated, absolute and
 relative uncertainties in the x and y directions.</p>
 </dd>
 </dl>
@@ -3172,8 +3172,8 @@ relative uncertainties in the x and y directions.</p>
 </dl>
 <dl class="simple" id="module-test_k2Fit">
 <dt>test_k2Fit</dt><dd><dl class="simple">
-<dt>Illustrate fitting of an arbitrary function with kafe2   </dt><dd><p>This example illustrates the special features of kafe2:
-- correlated errors for x and y data  
+<dt>Illustrate fitting of an arbitrary function with kafe2</dt><dd><p>This example illustrates the special features of kafe2:
+- correlated errors for x and y data
 - relative errors with reference to model
 - profile likelihood method to evaluate asymmetric errors
 - plotting of profile likeliood and confidence contours</p>
@@ -3201,39 +3201,26 @@ by adding random deviations to obtain a sample of measured values</p>
 <dl id="module-toyMC_Fit">
 <dt>toyMC_Fit.py</dt><dd><p>run a large number of fits on toyMC data
 to check for biases and chi2-probability distribution</p>
-<p>This rather complete example uses eight different kinds of uncertainties, 
-namely independent and correlated, absolute and relative ones  
+<p>This rather complete example uses eight different kinds of uncertainties,
+namely independent and correlated, absolute and relative ones
 in the x and y directions.</p>
-</dd>
-</dl>
-<dl class="simple" id="module-Beispiel_MultiFit">
-<dt>Beispiel_MultiFit.py   </dt><dd><dl class="simple">
-<dt>general example for fitting multiple distributions with kafe2</dt><dd><ul class="simple">
-<li><p>define models</p></li>
-<li><p>set up data objects</p></li>
-<li><p>set up fit objects</p></li>
-<li><p>perform fit</p></li>
-<li><p>show and save output</p></li>
-</ul>
-</dd>
-</dl>
 </dd>
 </dl>
 <dl class="simple" id="module-Beispiel_Diodenkennlinie">
 <dt>Beispiel_Diodenkennlinie.py</dt><dd><p>Messung einer Strom-Spannungskennlinie und Anpassung der Schockley-Gleichung.</p>
 <ul class="simple">
-<li><p>Konstruktion der Kovarianzmatrix für reale Messinstrumente mit 
-Signalrauschen, Anzeigeunsicherheiten und korrelierten, realtiven 
+<li><p>Konstruktion der Kovarianzmatrix für reale Messinstrumente mit
+Signalrauschen, Anzeigeunsicherheiten und korrelierten, realtiven
 Kalibratsionsunsicherheiten für die Strom- und Spannungsmessung.</p></li>
-<li><p>Ausführen der Anpassung der Shockley-Gleichung mit <em>k2Fit</em> oder <em>mFit</em> 
-aus dem Paket <em>PhyPraKit</em>. Wichtig: die Modellfunktion ist nicht 
-nach oben beschränkt, sondern divergiert sehr schnell. Daher muss der 
+<li><p>Ausführen der Anpassung der Shockley-Gleichung mit <em>k2Fit</em> oder <em>mFit</em>
+aus dem Paket <em>PhyPraKit</em>. Wichtig: die Modellfunktion ist nicht
+nach oben beschränkt, sondern divergiert sehr schnell. Daher muss der
 verwendete numerische Optimierer Parameterlimits unterstützen.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="simple" id="module-Beispiel_Drehpendel">
-<dt>Beispiel_Drehpendel.py  </dt><dd><p>Auswertung der Daten aus einer im CASSY labx-Format gespeicherten Datei
+<dt>Beispiel_Drehpendel.py</dt><dd><p>Auswertung der Daten aus einer im CASSY labx-Format gespeicherten Datei
 am Beispiel des Drehpendels</p>
 <ul class="simple">
 <li><p>Einlesen der Daten im .labx-Format</p></li>
@@ -3251,8 +3238,8 @@ gegen deren Ableitung nach der Zeit)</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="simple" id="module-Beispiel_Hysterese">
-<dt>Beispiel_Hysterese.py </dt><dd><p>Auswertung der Daten aus einer mit PicoScope erstellten Datei
+<dl id="module-Beispiel_Hysterese">
+<dt>Beispiel_Hysterese.py</dt><dd><p>Auswertung der Daten aus einer mit PicoScope erstellten Datei
 im txt-Format am Beispiel des Hystereseversuchs</p>
 <ul class="simple">
 <li><p>Einlesen der Daten aus PicoScope-Datei vom Typ .txt oder .csv</p></li>
@@ -3262,10 +3249,12 @@ im txt-Format am Beispiel des Hystereseversuchs</p>
 <li><p>Interpolation durch kubische Splines</p></li>
 <li><p>Integration der Spline-Funktionen</p></li>
 </ul>
+<p>Usage: python3 Beispiel_Hysterese.py &lt;file_name&gt; &lt;separator&gt;</p>
+<p>Note that ; as separator  must be escaped with preceeding backslash</p>
 </dd>
 </dl>
 <dl class="simple" id="module-Beispiel_Wellenform">
-<dt>Beispiel_Wellenform.py </dt><dd><p>Einlesen von mit PicoScope erstellten Dateien am Beispiel
+<dt>Beispiel_Wellenform.py</dt><dd><p>Einlesen von mit PicoScope erstellten Dateien am Beispiel
 der akustischen Anregung eines Stabes</p>
 <ul class="simple">
 <li><p>Fourier-Analyse des Signals</p></li>
@@ -3274,7 +3263,7 @@ der akustischen Anregung eines Stabes</p>
 </dd>
 </dl>
 <dl class="simple" id="module-Beispiel_GeomOptik">
-<dt>Beispiel_GeomOptik.py </dt><dd><dl class="simple">
+<dt>Beispiel_GeomOptik.py</dt><dd><dl class="simple">
 <dt>Parameter transformation in Geometrical Optics:</dt><dd><ul class="simple">
 <li><p>determine f1, f2 and d of a two-lense system
 from system focal widhts f and postions h1 and h2 of princpal planes</p></li>
@@ -3283,12 +3272,19 @@ from system focal widhts f and postions h1 and h2 of princpal planes</p></li>
 </dl>
 </dd>
 </dl>
-<dl class="simple" id="module-Beispiel_GammaSpektroskopie">
-<dt>Beispiel_GammaSpektroskopie.py  </dt><dd><p>Darstellung der Daten aus einer im CASSY labx-Format gespeicherten Datei
+<dl id="module-Beispiel_GammaSpektroskopie">
+<dt>Beispiel_GammaSpektroskopie.py</dt><dd><p>Darstellung der Daten aus einer im CASSY labx-Format gespeicherten Datei
 am Beispiel der Gamma-Spektroskopie</p>
 <ul class="simple">
-<li><p>Einlesen der Daten im .labx oger gezippten .labx-Format</p></li>
+<li><p>Einlesen der Daten im .labx oder gezippten .labx-Format</p></li>
 </ul>
+<p>Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>name of file in .labx format</p></li>
+<li><p>flag for file type:  0: text, 1: zipped</p></li>
+</ul>
+</div></blockquote>
 </dd>
 </dl>
 <p id="module-run_phyFit"><strong>run_phyFit.py</strong> [options] &lt;input file name&gt;</p>
@@ -3297,7 +3293,7 @@ am Beispiel der Gamma-Spektroskopie</p>
 <p>This code performs fits</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>to x-y data with independent and correlated, absolute 
+<li><p>to x-y data with independent and correlated, absolute
 and relative uncertainties in the x and y directions</p></li>
 <li><p>and to histogram data with a binned likelihood fit.</p></li>
 </ul>
@@ -3323,16 +3319,16 @@ and relative uncertainties in the x and y directions</p></li>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;str data-set name&gt;</span>
 
 <span class="nt">x_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;str name x-data&gt;</span>
-<span class="nt">x_data</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w">  </span><span class="nv">list of float</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w">   </span>
+<span class="nt">x_data</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w">  </span><span class="nv">list of float</span><span class="w"> </span><span class="p p-Indicator">]</span>
 
-<span class="nt">y_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;str name y-data&gt;</span><span class="w">  </span>
+<span class="nt">y_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;str name y-data&gt;</span>
 <span class="nt">y_data</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">list of float</span><span class="w"> </span><span class="p p-Indicator">]</span>
 
 <span class="nt">x_errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;float&gt;, [list of floats], or {dictionary/ies}</span>
 <span class="nt">y_errors</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;float&gt;, [list of floats], or {dictionary/ies}</span>
 
 <span class="c1"># optionally, add Gaussian constraints on parameters</span>
-<span class="nt">parameter_constraints</span><span class="p">:</span><span class="w"> </span>
+<span class="nt">parameter_constraints</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">&lt;parameter name&gt;</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;value&gt;</span>
 <span class="w">    </span><span class="nt">uncertaintiy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;value&gt;</span>
@@ -3341,7 +3337,7 @@ and relative uncertainties in the x and y directions</p></li>
 <span class="nt">model_function</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">&lt;Python code&gt;</span>
 
-<span class="nt">format of uncertainty dictionary</span><span class="p">:</span><span class="w"> </span>
+<span class="nt">format of uncertainty dictionary</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">error_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;float&gt; or [list of floats]</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">correlation_coefficient</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0. or 1.</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">relative</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true or false</span>
@@ -3370,7 +3366,7 @@ and relative uncertainties in the x and y directions</p></li>
 <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">histogram</span>
 
 <span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example data</span>
-<span class="nt">x_label</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;h&#39;</span><span class="w"> </span>
+<span class="nt">x_label</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;h&#39;</span>
 <span class="nt">y_label</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;pdf(h)&#39;</span>
 
 <span class="c1"># data:</span>
@@ -3387,17 +3383,17 @@ and relative uncertainties in the x and y directions</p></li>
 <span class="w">    </span><span class="no">return np.exp(-0.5*((x - mu)/sigma)** 2)/np.sqrt(2.*np.pi*sigma** 2)</span>
 </pre></div>
 </div>
-<p><em>Remark</em>: more than one input data sets are also possible. 
-Data sets and models can be overlayed in one plot if option 
+<p><em>Remark</em>: more than one input data sets are also possible.
+Data sets and models can be overlayed in one plot if option
 <cite>showplots = False</cite> ist specified. Either provide more than
 one input file, or use yaml syntax, as shown here:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># several input sets to be separated by </span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># several input sets to be separated by</span>
 <span class="nn">...</span>
-<span class="nn">---</span><span class="w">   </span>
+<span class="nn">---</span>
 </pre></div>
 </div>
 <p id="module-plotData"><strong>plotData.py</strong> [options] &lt;input file name&gt;</p>
-<p>Plot (several) data set(s) with error bars in x- and y- directions 
+<p>Plot (several) data set(s) with error bars in x- and y- directions
 or histograms from file in yaml format</p>
 <p>usage:</p>
 <blockquote>
@@ -3427,13 +3423,13 @@ or histograms from file in yaml format</p>
 <span class="nt">y_errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">y-uncertainty or [y-uncertainties]</span>
 </pre></div>
 </div>
-<p><em>Remark</em>: more than one input data sets are also possible. 
-Data sets and models can be overlayed in one plot if option 
+<p><em>Remark</em>: more than one input data sets are also possible.
+Data sets and models can be overlayed in one plot if option
 <cite>showplots = False</cite> ist specified. Either provide more than
 one input file, or use yaml syntax, as shown here:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># several input sets to be separated by </span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># several input sets to be separated by</span>
 <span class="nn">...</span>
-<span class="nn">---</span><span class="w">   </span>
+<span class="nn">---</span>
 </pre></div>
 </div>
 <p>yaml-format for histogram:</p>
@@ -3446,15 +3442,15 @@ one input file, or use yaml syntax, as shown here:</p>
 <span class="c1"># define binning</span>
 <span class="nt">n_bins</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">n</span>
 <span class="nt">bin_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">x_min</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">x_max</span><span class="p p-Indicator">]</span>
-<span class="c1">#   alternatively: </span>
+<span class="c1">#   alternatively:</span>
 <span class="c1"># bin edges: [e0, ..., en]</span>
 
-<span class="l l-Scalar l-Scalar-Plain">several input sets to be separated by</span><span class="w"> </span>
+<span class="l l-Scalar l-Scalar-Plain">several input sets to be separated by</span>
 <span class="nn">...</span>
-<span class="nn">---</span><span class="w">   </span>
+<span class="nn">---</span>
 </pre></div>
 </div>
-<p>In case a model function is supplied, it is overlayed in the 
+<p>In case a model function is supplied, it is overlayed in the
 output graph. The corresponding <em>yaml</em> block looks as follows:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># optional model specification</span>
 <span class="nt">model_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;model name&gt;</span>
@@ -3462,11 +3458,11 @@ output graph. The corresponding <em>yaml</em> block looks as follows:</p>
 <span class="w">  </span><span class="no">&lt;Python code of model function&gt;</span>
 </pre></div>
 </div>
-<p>If no <cite>y_data</cite> or <cite>raw_data</cite> keys are provided, only the model function 
+<p>If no <cite>y_data</cite> or <cite>raw_data</cite> keys are provided, only the model function
 is shown. Note that minimalistic <cite>x_data</cite> and <cite>bin_range</cite> or <cite>bin_edges</cite>
 information must be given to define the x-range of the graph.</p>
 <dl id="module-csv2yml">
-<dt>csv2yml.py </dt><dd><p>read floating-point column-data in very general .txt  formats 
+<dt>csv2yml.py</dt><dd><p>read floating-point column-data in very general .txt  formats
 and write an output block in yaml format</p>
 <p>keys taken from 1st header line</p>
 <p>Usage:</p>
@@ -3668,7 +3664,7 @@ and write an output block in yaml format</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="#">PhyPraKit 1.2.8 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href=""><strong>PhyPraKit Documentation</strong></a></li> 
       </ul>
     </div>
