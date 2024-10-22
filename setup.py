@@ -24,7 +24,8 @@ setup(
     url="http://www.etp.kit.edu/~quast/",
     license="GNU Public Licence",
     description="Tools for data visualisation and analysis in Physics Lab Courses",
-    long_description=README,
+    long_description="README.md",
+    long_description_content_type="text/markdown",
     scripts=[
         "tools/run_phyFit.py",
         "tools/plotData.py",
