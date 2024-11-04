@@ -12,9 +12,6 @@ import _version_info
 
 _version = _version_info._get_version_string()
 
-# The text of the README file
-README = (HERE / "README.md").read_text()
-
 setup(
     name=pkg_name,
     packages=[pkg_name],
@@ -24,7 +21,7 @@ setup(
     url="http://www.etp.kit.edu/~quast/",
     license="GNU Public Licence",
     description="Tools for data visualisation and analysis in Physics Lab Courses",
-    long_description="README.md",
+    long_description=(HERE / "README.md").read_text(),
     long_description_content_type="text/markdown",
     scripts=[
         "tools/run_phyFit.py",
