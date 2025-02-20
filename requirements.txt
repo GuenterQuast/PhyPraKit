@@ -1,6 +1,6 @@
 # requirements to run jupyter tutorials in this repo
-numpy <2.0
-matplotlib <3.8
+numpy
+matplotlib
 scipy
 pandas
 iminuit 
