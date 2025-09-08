@@ -45,10 +45,13 @@ setup(
         "Programming Language :: Python :: 3.12",
     ],
     install_requires=[
-        "NumPy >= 1.17",
-        "SciPy >= 1.3",
-        "matplotlib >= 3",
-        "iminuit >=2",
-        "kafe2 >=2.8.0",
+         "argparse",
+         "pathlib",
+         "npy_append_array",
+         "NumPy",
+         "SciPy",
+         "matplotlib",
+         "scikit-learn",
+         "matplotlib" ,
     ],
 )
