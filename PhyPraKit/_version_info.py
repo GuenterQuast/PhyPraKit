@@ -8,7 +8,7 @@
 
 major = 1
 minor = 2
-revision = 9
+revision = 10
 suffix = ""
 
 
