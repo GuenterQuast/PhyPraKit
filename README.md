@@ -2,6 +2,8 @@
 **PhyPraKit**
 *************
 
+![PhyPraKit Logo](https://gitlab.kit.edu/kit/etp-lehre/praktoolkit/phyprakit/-/raw/master/docs/_static/Praktoolkit.png?ref_type=heads)
+
 About
 -----
 
