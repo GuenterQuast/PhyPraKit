@@ -2,7 +2,9 @@
 **PhyPraKit**
 *************
 
-![PhyPraKit Logo](https://gitlab.kit.edu/kit/etp-lehre/praktoolkit/phyprakit/-/raw/master/docs/_static/Praktoolkit.png?ref_type=heads)
+![PhyPraKit Logo](
+https://github.com/GuenterQuast/PhyPraKit/blob/master/docs/_static/Praktoolkit.png?raw=true)
+
 
 About
 -----
