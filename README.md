@@ -9,11 +9,9 @@ https://github.com/GuenterQuast/PhyPraKit/blob/master/docs/_static/Praktoolkit.p
 About
 -----
 
-PhyPraKit is a collection of python modules `(supporting python 2.7
-(deprecated) and python >=3.6)` for data visualization and analysis
-in experimental laboratory courses in physics, developed at the
-faculty of physics at Karlsruhe Institute of Technology (KIT).
-As the modules are intended primarily for use by undergraduate
+PhyPraKit is a collection of Python modules `(supporting python 2.7
+(deprecated) and Python >=3.6)` for data visualization and analysis
+in experimental laboratory courses in physics. The package bas been developed at the Faculty of Physics at Karlsruhe Institute of Technology (KIT). As the modules are intended primarily for use by undergraduate
 students in Karlsruhe, the documentation is partly in German
 language, in particular the description of the examples.
 
@@ -54,7 +52,7 @@ execute:
 
 PhyPraKit ist eine Sammlung nützlicher Funktionen in der Sprache 
 `Python (vers. >=3.6, 2.7 noch für manche Module lauffähig)`
-zum Aufnehmen, zur Bearbeitung, Visualisierung  und  Auswertung
+zum Aufnehmen und zur Bearbeitung, Visualisierung und Auswertung
 von Daten in den physikalischen Praktika.
 Die Anwendung der verschiedenen Funktionen des Pakets
 werden jeweils durch konkrete Beispiele illustriert.
