@@ -53,5 +53,6 @@ setup(
          "matplotlib",
          "scikit-learn",
          "matplotlib" ,
+          "iminuit",
     ],
 )
