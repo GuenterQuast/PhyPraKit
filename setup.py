@@ -45,8 +45,6 @@ setup(
         "Programming Language :: Python :: 3.12",
     ],
     install_requires=[
-         "argparse",
-         "pathlib",
          "npy_append_array",
          "NumPy",
          "SciPy",
