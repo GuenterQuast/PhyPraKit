@@ -511,8 +511,8 @@ wird dies bei der *Python*-Installation erledigt.
      y_data: [ y1, y2, ... , yn ]
      x_errors: x-uncertainty or [ex1, ex2, ..., exn]
      y_errors: y-uncertainty or [ey1, ey2, ..., eyn]
-
-     Bei Eingabe von mehreren Datensätzen werden diese getrennt durch
+     #
+     # Bei Eingabe von mehreren Datensätzen werden diese getrennt durch
      ...
      ---  
      label: <name of 2nd data set>
@@ -536,7 +536,7 @@ wird dies bei der *Python*-Installation erledigt.
     bin_range: [x_min, x_max]
     #   alternatively: 
     # bin edges: [e0, ..., en]
-
+    #
     # wie oben ist Eingabe von mehreren Datensätzen möglich, getrennt durch
     ...
     ---  
