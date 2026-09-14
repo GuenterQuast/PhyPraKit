@@ -375,9 +375,9 @@ Eine direkt im Browser ausführbare Installation von *PhyPraKit* gibt es auf
     :math:`\chi^2` Kostenfunktion behandelt und so auch die Konfidenzkonturen
     der neuen Parameter bestimmt. 
   
-  * `Beispiel_GammaSpektroskopie.py` liest mit dem Vielkanalanalysator
-    des CASSY-Systems im `.labx` -Format gespeicherten Dateien ein
-    (Beispieldatei `GammaSpektra.labx`).
+  * `Beispiel_GammaSpektum.py` liest ein mit dem RedPitaya im Versuch
+    Gamma-Spektoskopie aufgezeichnetes Spektrum ein, sucht Peaks und
+    passt Gaußverteilungen an (Beispieldatei `Co60.hst`).
 
 
 **Stand-alone Tools für Standard-Aufgaben:**    

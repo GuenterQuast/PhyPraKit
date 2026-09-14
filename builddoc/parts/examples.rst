@@ -49,5 +49,5 @@ Application examples of the classes phyTools and phyFit of the PhyPraKit pakcage
 
 ..  automodule:: Beispiel_GeomOptik
 
-..  automodule:: Beispiel_GammaSpektroskopie
+..  automodule:: Beispiel_GammaSpektrum
 
